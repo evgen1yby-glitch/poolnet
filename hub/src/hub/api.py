@@ -29,9 +29,10 @@ import secrets
 import time
 from pathlib import Path
 
-from .checkproxy import check_proxy, parse_proxy
+from .gateway import PAGE_SLUGS, client_address, hash_ip, register_gateway
 from .gate import RateLimiter
 from .models import Format, Tier
+from .poolstatus import _counts, _last_funnel, vpn_payload
 from .store import Store
 
 #: Where the landing page and its assets live, resolved relative to this file
@@ -548,9 +549,7 @@ def create_app(store: Store | None, sources: dict | None = None):
         _CachePolicy,
         site_index=(site_dir / "index.html").is_file(),
         site_slugs=tuple(
-            name
-            for name in ("vpn", "proxy", "verify", "premium", "status")
-            if (site_dir / f"{name}.html").is_file()
+            name for name in PAGE_SLUGS if (site_dir / f"{name}.html").is_file()
         ),
     )
 
@@ -560,48 +559,6 @@ def create_app(store: Store | None, sources: dict | None = None):
         # in `_CachePolicy` above, which also explains why `StaticFiles` needs
         # one: it sends validators but no `Cache-Control`.
         app.mount("/static", StaticFiles(directory=str(_UI_DIR)), name="static")
-
-    def _client_address(request: Request) -> str:
-        """Trust X-Forwarded-For only from a loopback nginx peer."""
-        import ipaddress
-
-        peer = request.client.host if request.client else ""
-        try:
-            if ipaddress.ip_address(peer).is_loopback:
-                forwarded = request.headers.get("x-forwarded-for", "").strip()
-                if forwarded and "," not in forwarded:
-                    return str(ipaddress.ip_address(forwarded))
-        except ValueError:
-            pass
-        return peer
-
-    def _hash_ip(address: str) -> str:
-        """Hash a per-/24 IPv4 or per-/64 IPv6 subnet, never retaining the IP."""
-        import ipaddress
-
-        try:
-            ip = ipaddress.ip_address(address)
-        except ValueError:
-            return "unknown"
-        network = ipaddress.ip_network(f"{ip}/{24 if ip.version == 4 else 64}", strict=False)
-        return hashlib.sha256(str(network).encode()).hexdigest()[:16]
-
-    @app.get("/", response_class=HTMLResponse)
-    async def index() -> Response:
-        """The landing page.
-
-        With the merged public site present, `/` is `web/site/index.html` —
-        the evilgate page, read from disk so a page edit goes live on the next
-        request. Without a site (`HUB_SITE` unset, no sibling `web/site`), the
-        hub keeps its own landing: the copy there carries the two words the
-        product is defined by — "FREE VPN" and "decentralised" — and the
-        landing tests still pin them, because `bot._intro` carries the same
-        ones on the subscription surface.
-        """
-        site_index = site_dir / "index.html"
-        if site_index.is_file():
-            return FileResponse(str(site_index), media_type="text/html")
-        return _UI_DIR.joinpath("index.html").read_text(encoding="utf-8")
 
     @app.get("/help")
     async def help_page() -> HTMLResponse:
@@ -701,7 +658,7 @@ def create_app(store: Store | None, sources: dict | None = None):
     async def _subscription(
         request: Request, token: str, tier: Tier, *, country: str = ""
     ):
-        ip_key = _hash_ip(_client_address(request))
+        ip_key = hash_ip(client_address(request))
         # IP limiting happens before token lookup to keep random-token scans
         # bounded. Token buckets are allocated only for a valid subscription.
         if not ip_limiter.allow(ip_key):
@@ -1063,20 +1020,6 @@ def create_app(store: Store | None, sources: dict | None = None):
     # because a URL here tells a reader where to fetch the same list directly,
     # which is the one thing an index has.
 
-    @app.get("/status", response_class=HTMLResponse)
-    async def status_page():
-        """The merged site's status page, or the hub's own on a standalone install.
-
-        `/status` is the one path both projects published. The merged site's
-        page carries both pools, so when `web/site` is present it wins;
-        without a site the hub keeps its own page, exactly as before the
-        merge — a hub checkout with no site still has working status.
-        """
-        site_status = site_dir / "status.html"
-        if site_status.is_file():
-            return FileResponse(str(site_status), media_type="text/html")
-        return HTMLResponse(_status_html())
-
     @app.get("/mockup", response_class=HTMLResponse)
     async def mockup_page() -> HTMLResponse:
         """The interface mockup, for reviewing the design without a checkout.
@@ -1145,31 +1088,6 @@ def create_app(store: Store | None, sources: dict | None = None):
                 # panel drawn with fixture data, so they must not be indexed.
                 "X-Robots-Tag": "noindex, nofollow",
             },
-        )
-
-    def _site_file(rel: str) -> Path | None:
-        """Resolve a request path inside the site directory, or `None`.
-
-        Same rules as `_design_file` — `resolve()` first, containment after,
-        allow-list of suffixes on the resolved name — for the same traversal
-        reason: a link pointing out of the tree is refused rather than
-        followed. No `X-Robots-Tag` here: the site is the public surface and
-        is meant to be indexed.
-        """
-        if not site_dir.is_dir():
-            return None
-        candidate = (site_dir / rel).resolve()
-        try:
-            candidate.relative_to(site_dir.resolve())
-        except ValueError:
-            return None
-        if candidate.suffix not in _DESIGN_TYPES or not candidate.is_file():
-            return None
-        return candidate
-
-    def _site_response(path: Path, status_code: int = 200) -> Response:
-        return FileResponse(
-            str(path), media_type=_DESIGN_TYPES[path.suffix], status_code=status_code
         )
 
     @app.get("/design", include_in_schema=False)
@@ -1255,71 +1173,6 @@ def create_app(store: Store | None, sources: dict | None = None):
         """Return the configured bot username for the landing page."""
         return JSONResponse({"username": app.state.bot_username})
 
-    def _vpn_pool_payload() -> dict:
-        """The published VPN-pool aggregates, shared by both status callers.
-
-        `GET /api/v1/stats` and `GET /api/status.json` answer the same store,
-        so the SQL lives here once: `/api/v1/stats` predates the merge and
-        keeps its exact shape (clients depend on the key set), while the
-        unified status page wraps it in a `vpn` section.
-        """
-        conn = store.connect()
-        try:
-            generation = store.current_generation()
-            # Nodes in the published `verified` tier. `MAX`, not `SUM`: the
-            # tier is written once per core and format, and every one of those
-            # rows carries the same count.
-            verified = conn.execute(
-                "SELECT COALESCE(MAX(node_count), 0) FROM publishes"
-                " WHERE generation = ? AND tier = ? AND core NOT LIKE 'cc:%'",
-                (generation, Tier.VERIFIED.value),
-            ).fetchone()[0]
-            total = conn.execute("SELECT COUNT(*) FROM nodes").fetchone()[0]
-            by_protocol = _counts(conn, "SELECT protocol, COUNT(*) FROM nodes GROUP BY protocol")
-            # The shards, one row per country, in the same `verified` format a
-            # country link serves. `MIN(node_count)` collapses the duplicate
-            # rows a country gets from being rendered in several formats: they
-            # describe the same nodes, and only the count matters here.
-            #
-            # The country is `SUBSTR(core, 4)` because the column holds
-            # `cc:NL`; the four-character offset is the `cc:` prefix, and the
-            # shard writer in `pipeline._publish` is what puts it there.
-            rows = conn.execute(
-                "SELECT SUBSTR(core, 4) AS cc, MIN(node_count) AS n"
-                " FROM publishes"
-                " WHERE generation = ? AND tier = ?"
-                "   AND core LIKE 'cc:%' AND fmt = ?"
-                " GROUP BY cc ORDER BY cc",
-                (generation, Tier.VERIFIED.value, Format.SINGBOX.value),
-            ).fetchall()
-            by_country = [{"name": row[0], "n": row[1]} for row in rows if row[0] and row[1]]
-            by_score = {
-                "60+": conn.execute("SELECT COUNT(*) FROM nodes WHERE score >= 60").fetchone()[0],
-                "30-59": conn.execute(
-                    "SELECT COUNT(*) FROM nodes WHERE score >= 30 AND score < 60"
-                ).fetchone()[0],
-                "0-29": conn.execute("SELECT COUNT(*) FROM nodes WHERE score < 30").fetchone()[0],
-            }
-            tier_rows = conn.execute(
-                "SELECT tier, MAX(node_count) AS n, MIN(created_at) AS first_at"
-                " FROM publishes WHERE generation = ? AND core NOT LIKE 'cc:%'"
-                " GROUP BY tier ORDER BY first_at",
-                (generation,),
-            ).fetchall()
-            funnel = _last_funnel(store)
-        finally:
-            conn.close()
-        return {
-            "generation": generation,
-            "verified": verified,
-            "known": total,
-            "by_protocol": by_protocol,
-            "by_country": by_country,
-            "by_score": by_score,
-            "published": [{"tier": row[0], "nodes": row[1], "at": row[2]} for row in tier_rows],
-            "funnel": funnel,
-        }
-
     @app.get("/api/v1/stats")
     async def stats() -> JSONResponse:
         """Return aggregate pool statistics for the landing page.
@@ -1353,196 +1206,21 @@ def create_app(store: Store | None, sources: dict | None = None):
         the pool we check" is a different and still useful number; the labels
         on the page say which is which.
         """
-        return JSONResponse(_vpn_pool_payload())
+        return JSONResponse(vpn_payload(store))
 
-    def _pool_payload() -> dict:
-        """The published proxy-pool aggregates, read from the TS engine's data dir.
+    def _legacy_index() -> str:
+        return _UI_DIR.joinpath("index.html").read_text(encoding="utf-8")
 
-        The proxy base is built by the TypeScript engine in `../pool`; the only
-        thing this app reads is its published files — `stats.json` (the pool's
-        own aggregates), `meta.json` (the run's counts, the way the run was
-        made) and `benchmark.json` (what each public list is worth). Line
-        files (`http.txt`, `proxies.json`) are deliberately not read: a reader
-        that needs the entries fetches them straight from the published dir,
-        parsing 30 MB of JSON on every status request serves one number.
-
-        `EVILGATE_POOL_DIR` moves the dir for tests and for layouts where hub
-        and pool do not share a parent; a hub installed without a proxy base
-        answers `"pool": {"available": false}` — the page keeps its static
-        numbers and nothing errors.
-        """
-        pool_dir = Path(
-            os.environ.get("EVILGATE_POOL_DIR", "") or store.root.parent / "pool" / "data"
-        )
-
-        def load(name: str) -> dict | list | None:
-            path = pool_dir / name
-            if not path.is_file():
-                return None
-            try:
-                return json.loads(path.read_text(encoding="utf-8"))
-            except (json.JSONDecodeError, OSError):
-                return None
-
-        stats = load("stats.json") or {}
-        meta = load("meta.json") or {}
-        bench = load("benchmark.json") or {}
-        if not (stats or meta or bench):
-            return {"available": False}
-        countries = stats.get("countries") or []
-
-        def bench_rows(rows: list) -> list:
-            return [
-                {
-                    "id": row.get("id"),
-                    "candidates": row.get("candidates"),
-                    "alive": row.get("alive"),
-                    "live_rate": row.get("liveRate"),
-                    "published": row.get("published"),
-                    "median_ms": row.get("medianLatency"),
-                    "elite_rate": row.get("eliteRate"),
-                }
-                for row in (rows or [])[:8]
-            ]
-
-        return {
-            "available": True,
-            "generated_iso": meta.get("generatedIso") or stats.get("generatedIso"),
-            "run_id": meta.get("runId"),
-            "pipeline": meta.get("pipeline"),
-            "total": stats.get("total") or (meta.get("counts") or {}).get("published"),
-            "by_protocol": stats.get("byProtocol") or meta.get("byProtocol") or {},
-            "grades": stats.get("anonymity") or {},
-            "median_ms": stats.get("medianLatencyMs"),
-            "p95_ms": stats.get("p95LatencyMs"),
-            "mitm": stats.get("mitm"),
-            "tls_capable": stats.get("tlsCapable"),
-            "countries_count": len(countries),
-            "countries_top": [
-                {"cc": row.get("country"), "n": row.get("count")}
-                for row in countries[:12]
-                if row.get("country")
-            ],
-            "cycle": bench.get("cycle"),
-            "sources": len(bench.get("sources") or []),
-            "benchmark_top": bench_rows(bench.get("sources")),
-        }
-
-    @app.get("/api/status.json", include_in_schema=False)
-    async def unified_status() -> JSONResponse:
-        """The whole platform's status in one request: both pools.
-
-        The site's status page is static markup whose numbers were frozen on
-        write; two separately published pools answering in two places was the
-        drift this merge is meant to kill. One endpoint carries both, so the
-        page reads it once: `vpn` — exactly what `/api/v1/stats` returns
-        (same store, same key set, one shared payload builder), `pool` — the
-        proxies the TypeScript engine published into `pool/data`. With no proxy base on
-        the install, `pool.available` is `false` and the page keeps its
-        static copy instead of lying with an empty section.
-        """
-        return JSONResponse({"vpn": _vpn_pool_payload(), "pool": _pool_payload()})
-
-    #: The published proxy-pool files a visitor downloads. A fixed allow-list:
-    #: these are the only names the pool's data dir contains that a reader is
-    #: pointed at, and a request for anything else is a probe. `country/XX.txt`
-    #: is the one wildcard — two uppercase letters, exactly the shard naming
-    #: the generator writes.
-    _POOL_FILES = {
-        "http.txt": "text/plain; charset=utf-8",
-        "socks4.txt": "text/plain; charset=utf-8",
-        "socks5.txt": "text/plain; charset=utf-8",
-        "all.txt": "text/plain; charset=utf-8",
-        "proxies.json": "application/json",
-        "meta.json": "application/json",
-        "stats.json": "application/json",
-    }
-
-    @app.get("/pool/{name:path}", include_in_schema=False)
-    async def pool_file(name: str) -> Response:
-        """The proxy base's published files, straight from the shared data dir.
-
-        The pool engine writes its output to one dir (`EVILGATE_POOL_DIR`);
-        `/api/status.json` reads its aggregates, and this route hands out the
-        files themselves — the line lists, the country shards, the full JSON
-        distribution. Served by the hub because the site's copy points the
-        reader at these paths and :8931 is the demo port this merge retires.
-        Streaming (`FileResponse`) matters for `proxies.json` at this size —
-        a full read would hold pages of the file in memory per request.
-        """
-        rel = Path(name)
-        ctype = None
-        if rel.parent == Path("country"):
-            if re.fullmatch(r"^[A-Z]{2}\.txt", rel.name):
-                ctype = "text/plain; charset=utf-8"
-        else:
-            ctype = _POOL_FILES.get(name)
-        candidate = (
-            Path(os.environ.get("EVILGATE_POOL_DIR", "") or store.root.parent / "pool" / "data")
-            / name
-        )
-        if ctype is None or not candidate.is_file():
-            return PlainTextResponse("нет такой страницы", status_code=404)
-        return FileResponse(
-            candidate,
-            media_type=ctype,
-            headers={"Cache-Control": "max-age=60", "Content-Disposition": "inline"},
-        )
-
-    @app.get("/api/check", include_in_schema=False)
-    def check_one(proxy: str = "", proto: str = "socks5") -> JSONResponse:
-        """Live check of one address the visitor pasted into the check page.
-
-        A blocking probe (socket handshake, one HTTP GET through the tunnel),
-        hence a sync handler: FastAPI runs it in its threadpool instead of
-        stalling the event loop. `no-store` because a verdict describes this
-        moment and caching it would make a dead proxy look alive later.
-        """
-        parsed = parse_proxy(proxy, proto)
-        if isinstance(parsed, str):
-            return JSONResponse(
-                {"error": parsed}, status_code=400, headers={"Cache-Control": "no-store"}
-            )
-        protocol, host, port = parsed
-        outcome = check_proxy(protocol, host, port)
-        return JSONResponse(
-            {"proxy": f"{protocol}://{host}:{port}", **outcome},
-            headers={"Cache-Control": "no-store"},
-        )
-
-    @app.get("/data/{name:path}", include_in_schema=False)
-    async def old_data_path(name: str) -> RedirectResponse:
-        """The demo pool's data URLs, kept as redirects to the merged paths.
-
-        `…:8931/data/http.txt` was the address the old copy handed out; on
-        the merged host the same suffix lives under `/pool/`. A permanent
-        redirect keeps a bookmark or a script pointed at the old shape
-        working while the old service is retired.
-        """
-        return RedirectResponse(f"/pool/{name}", status_code=307)
-
-    @app.get("/{path:path}", include_in_schema=False)
-    async def site_page(path: str) -> Response:
-        """Every public page and asset of the merged evilgate site.
-
-        Registered after every other route, so nothing is shadowed: `/sub/`,
-        `/admin`, the API and the status page keep their handlers even if a
-        site file ever shares their name. An extensionless page path
-        (`/vpn`) resolves to its `.html` file; anything the site does not
-        have is a plain-text 404, never a directory listing.
-        """
-        rel = (
-            f"{path}.html"
-            if (site_dir / f"{path}.html").is_file() and not (site_dir / path).is_file()
-            else path
-        )
-        found = _site_file(rel)
-        if found is None:
-            not_found = _site_file("404.html")
-            if not_found is not None:
-                return _site_response(not_found, status_code=404)
-            return PlainTextResponse("нет такой страницы", status_code=404)
-        return _site_response(found)
+    # The platform surface registers last, so every core route above wins over
+    # its catch-all. `legacy_index`/`legacy_status` keep a standalone hub
+    # install — one without `web/site` — serving its own pages.
+    register_gateway(
+        app,
+        store=store,
+        site_dir=site_dir,
+        legacy_index=_legacy_index,
+        legacy_status=_status_html,
+    )
 
     # Outermost of the app's own wrappers so a HEAD is rewritten before routing
     # decides whether the method is allowed. Added last, and therefore runs
@@ -1566,66 +1244,6 @@ def _token_status(token: str, subscriptions: dict, store: Store) -> str | None:
 
 def _token_exists(token: str, subscriptions: dict, store: Store) -> bool:
     return _token_status(token, subscriptions, store) == "active"
-
-
-def _last_funnel(store: Store) -> dict:
-    """Node counts at each verification stage, from the most recent run.
-
-    This is the one number on the landing page that says what the pool *is*
-    rather than how big it is: of ~46 000 lines the sources offer, the stages
-    discard all but a couple of hundred, and each stage discards for a
-    different reason. Publishing the funnel is the honest counterpart to
-    publishing the count — a reader who sees only "177 nodes" cannot tell a
-    healthy small pool from a large one that is being filtered to death.
-
-    Read from the event log rather than the database because the stages are a
-    property of one *run*: `checks` keeps a row per node per stage across all
-    history, so counting there would mix runs and report a funnel wider than
-    any single pass.
-
-    Always returns the six keys, zeroed when no probing run has been recorded.
-    A stable shape rather than `{}`, because the client draws the block when
-    `raw` is non-zero and a missing key would be a `TypeError` in the renderer
-    instead of an empty section.
-    """
-    import json
-
-    last: dict | None = None
-    try:
-        with store.log.open("r", encoding="utf-8") as handle:
-            for line in handle:
-                # Tail-only would be cheaper, but the file is one line per run
-                # (`run_done` only) and a bounded read is not worth a seek that
-                # can split a line.
-                if '"run_done"' not in line:
-                    continue
-                try:
-                    event = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if event.get("kind") != "run_done":
-                    continue
-                # Keep the most recent run that actually **probed**. The test
-                # is the presence of stage counts, not `nodes_verified`: a
-                # fetch-only pass carries no stages at all, and a run whose
-                # `nodes_verified` came from carrying nodes forward has none
-                # either — both would draw a funnel of zeros, which reads as a
-                # broken pool rather than as a pass that did not probe.
-                if (event.get("stage_survivors") or {}).get("survivors.tcp") is not None:
-                    last = event
-    except OSError:
-        last = None
-    if not last:
-        return {"raw": 0, "parsed": 0, "tcp": 0, "tls": 0, "config": 0, "http": 0}
-    stages = last.get("stage_survivors") or {}
-    return {
-        "raw": last.get("nodes_raw", 0),
-        "parsed": last.get("nodes_parsed", 0),
-        "tcp": stages.get("survivors.tcp", 0),
-        "tls": stages.get("survivors.tls", 0),
-        "config": stages.get("survivors.config", 0),
-        "http": stages.get("survivors.http", 0),
-    }
 
 
 #: The operator panel, read from disk on first use so a `git pull` that changes
@@ -1969,16 +1587,6 @@ def _admin_tokens(conn) -> list[dict]:
             "source": "bot" if int(tid) else "panel",
         }
         for prefix, tid, status, created, label in rows
-    ]
-
-
-def _counts(conn, sql: str) -> list[dict]:
-    """`{name, n}` rows in name order, empty cells dropped."""
-    rows = conn.execute(sql).fetchall()
-    return [
-        {"name": (row[0] or "unknown"), "n": row[1]}
-        for row in sorted(rows, key=lambda r: (r[0] or ""))
-        if row[1]
     ]
 
 

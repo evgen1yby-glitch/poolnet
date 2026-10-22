@@ -32,7 +32,7 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
-      <span class="chip"><i></i>бесплатно · без регистрации · 29 стран</span>
+      <span class="chip"><i></i>бесплатно · без регистрации · {{vpn.countries|29}} стран</span>
       <h1>VPN, собранный из <span class="grad-txt">проверенных узлов</span></h1>
       <p class="sub">Конфигурация для VPN-клиента на базе узла, прошедшего полную проверку. Проверка общая с базой прокси-пула платформы: один стандарт качества.</p>
       <div class="cta-row">
@@ -79,7 +79,7 @@
       <div class="bento">
         <div class="b-mod b7">
           <div class="pk">СТРАНЫ</div>
-          <h3>29 стран прямо сейчас</h3>
+          <h3>{{vpn.countries|29}} стран прямо сейчас</h3>
           <div class="chips" style="margin-top:.9rem">
             <span>US <b>25</b></span><span>DE <b>20</b></span><span>FR <b>19</b></span><span>NL <b>13</b></span><span>PL <b>12</b></span><span>FI <b>10</b></span><span>SG <b>6</b></span><span>GB <b>4</b></span><span>JP <b>4</b></span><span>TR <b>4</b></span><span>CA <b>3</b></span><span>IN <b>3</b></span><span>LT <b>3</b></span><span>LV <b>3</b></span><span>TH <b>3</b></span><span>CL <b>2</b></span><span>+13 · в боте</span>
           </div>
@@ -94,7 +94,7 @@
             <li style="color:var(--mut);font-size:.94rem">— Все узлы проверены в последнем прогоне</li>
             <li style="color:var(--mut);font-size:.94rem">— Трафик не проходит и не хранится на наших серверах</li>
           </ul>
-          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t">Германия · подключено</div><div class="cm-s">шард из 20 узлов · 10:29 UTC</div></div></div>
+          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t">Германия · подключено</div><div class="cm-s">шард из 20 узлов · {{vpn.updated_utc|10:29}} UTC</div></div></div>
         </div>
       </div>
     </div>

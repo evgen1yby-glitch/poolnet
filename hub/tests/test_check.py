@@ -126,6 +126,7 @@ def test_route_validates_and_never_caches(monkeypatch):
     from fastapi.testclient import TestClient
 
     from hub import api as api_module
+    from hub import gateway as gateway_module
     from hub.store import Store
 
     seen: list[tuple[str, str, int]] = []
@@ -134,7 +135,7 @@ def test_route_validates_and_never_caches(monkeypatch):
         seen.append((proto, host, port))
         return {"alive": True, "remote_ip": "203.0.113.9", "latency_ms": 42, "error": None}
 
-    monkeypatch.setattr(api_module, "check_proxy", fake_check)
+    monkeypatch.setattr(gateway_module, "check_proxy", fake_check)
     client = TestClient(api_module.create_app(store=Store(Path("/tmp/opencode/checkroute"))))
 
     r = client.get("/api/check", params={"proxy": "8.8.8.8:1080", "proto": "socks5"})

@@ -45,12 +45,14 @@
         <p>Значения соответствуют воронке последнего прогона.</p>
       </div>
       <div class="big-funnel">
+        <!--begin:rows:funnel-->
         <div class="fcard"><div class="fk">01 · ИСТОЧНИКИ</div><div class="fv">55 149</div><div class="fd">адресов из 189 публичных источников</div></div>
         <div class="fcard"><div class="fk">02 · РАЗБОР</div><div class="fv">11 076</div><div class="fd">записей распознаны по протоколу и адресу</div></div>
         <div class="fcard"><div class="fk">03 · TCP</div><div class="fv">6 208</div><div class="fd">соединений установлено успешно</div></div>
         <div class="fcard"><div class="fk">04 · TLS</div><div class="fv">3 571</div><div class="fd">рукопожатий TLS завершено</div></div>
         <div class="fcard"><div class="fk">05 · КОНФИГ</div><div class="fv">904</div><div class="fd">рабочих конфигураций VPN создано</div></div>
         <div class="fcard fr-final"><div class="fk">06 · СКВОЗНОЙ ЗАПРОС</div><div class="fv">98</div><div class="fd">HTTP-запросов выполнены через цепочку полностью</div></div>
+        <!--end:rows:funnel-->
       </div>
     </div>
   </section>
@@ -81,7 +83,7 @@
         <h2>Прокси-база: <span class="grad-txt">цикл прогона</span></h2>
         <p>Тот же принцип — реальные соединения, другая очередь: очередь в 40 раз больше, поэтому выборка циклическая.</p>
       </div>
-      <div class="big-funnel big-funnel-4"><div class="fcard"><div class="fk">01 · ОЧЕРЕДЬ</div><div class="fv">3 330 205</div><div class="fd">строк в очереди из 187 источников</div></div><div class="fcard"><div class="fk">02 · УНИКАЛЬНЫЕ</div><div class="fv">753 682</div><div class="fd">после дедупликации адреса</div></div><div class="fcard"><div class="fk">03 · ВЫБОРКА</div><div class="fv">3 000</div><div class="fd">адресов берётся на проверку за цикл</div></div><div class="fcard"><div class="fk">04 · ЖИВЫЕ</div><div class="fv">3 519</div><div class="fd">прокси подтвердили соединения</div></div></div>
+      <div class="big-funnel big-funnel-4"><div class="fcard"><div class="fk">01 · ОЧЕРЕДЬ</div><div class="fv">{{pool.cycle.parsed|3 330 205}}</div><div class="fd">строк в очереди из {{pool.sources_ok|187}} источников</div></div><div class="fcard"><div class="fk">02 · УНИКАЛЬНЫЕ</div><div class="fv">{{pool.cycle.unique|753 682}}</div><div class="fd">после дедупликации адреса</div></div><div class="fcard"><div class="fk">03 · ВЫБОРКА</div><div class="fv">{{pool.cycle.sampled|3 000}}</div><div class="fd">адресов берётся на проверку за цикл</div></div><div class="fcard"><div class="fk">04 · ЖИВЫЕ</div><div class="fv">{{pool.cycle.alive|3 519}}</div><div class="fd">прокси подтвердили соединения</div></div></div>
     </div>
   </section>
 </main>
