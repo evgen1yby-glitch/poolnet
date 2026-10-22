@@ -1,0 +1,37 @@
+# Retired surfaces → evilgate.online.
+#
+# Installed after the new vhost works, before the old services are stopped:
+# bookmarks, subscriptions already handed out and the old demo links keep
+# resolving instead of failing. Remove this file and the old units together
+# once the redirect logs show no traffic.
+#
+# :8444 is the old hub's TLS listener, whose certificate is the IP-address
+# lineage (`hub-ip-<IP-DASHED>`), not a domain one — a domain certificate would
+# not satisfy clients that verify the IP SAN.
+server {
+    listen 8444 ssl http2;
+    listen [::]:8444 ssl http2;
+    server_name _;
+
+    ssl_certificate     /etc/letsencrypt/live/hub-ip-@IP_DASHED@/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/hub-ip-@IP_DASHED@/privkey.pem;
+
+    return 301 https://evilgate.online$request_uri;
+}
+
+# :8931 was the pool's demo server. Plain HTTP, so the redirect is too.
+server {
+    listen 8931;
+    listen [::]:8931;
+    server_name _;
+
+    # `/data/http.txt` -> `https://evilgate.online/pool/http.txt`; a `return`
+    # with `$request_uri` would keep the `/data/` prefix and land on `/pool//data/`.
+    location /data/ {
+        rewrite ^/data/(.*)$ https://evilgate.online/pool/$1 permanent;
+    }
+
+    location / {
+        return 301 https://evilgate.online/proxy;
+    }
+}

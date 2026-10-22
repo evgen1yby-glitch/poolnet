@@ -1,0 +1,35 @@
+[Unit]
+Description=evilgate — hub API and the public site
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# `@DIR@`, `@USER@`, `@GROUP@` are substituted before the unit is installed;
+# systemd does not expand variables in User=/WorkingDirectory=, so a unit
+# cannot carry one operator's paths and work anywhere else.
+User=@USER@
+Group=@GROUP@
+WorkingDirectory=@DIR@/hub
+# The merged tree: hub code under hub/src, the site under web/site, the pool's
+# published files under pool/data. The app serves the site at `/` and reads the
+# pool's published dir through EVILGATE_POOL_DIR — no copying, one source.
+Environment=PYTHONPATH=@DIR@/hub/src
+Environment=HUB_ROOT=@DIR@/hub
+Environment=HUB_SITE=@DIR@/web/site
+Environment=EVILGATE_POOL_DIR=@DIR@/pool/data
+Environment=HUB_HOST=127.0.0.1
+Environment=HUB_PORT=8090
+EnvironmentFile=-/etc/evilgate/evilgate.env
+ExecStart=/usr/bin/python3 -m hub.cli serve
+Restart=on-failure
+RestartSec=5
+# Writes stay in the hub's data dir; the pool dir is read-only for this unit.
+ReadWritePaths=@DIR@/hub/data
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

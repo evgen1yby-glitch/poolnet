@@ -1,0 +1,15 @@
+[Unit]
+Description=evilgate — proxy-pool refresh every 15 minutes
+
+[Timer]
+# :07, :22, :37, :52 — the same cadence the pool's publishing contract states
+# ("updated every 15 minutes"). OnCalendar minute lists keep the offsets stable
+# instead of drifting with boot time.
+OnCalendar=*:07/15
+# A cycle that overruns does not stack: systemd skips the next trigger while
+# the previous oneshot is still running, and the following one picks up.
+AccuracySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
