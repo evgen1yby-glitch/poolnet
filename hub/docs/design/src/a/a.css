@@ -1,0 +1,902 @@
+/* ==========================================================================
+   Направление A — «Вахта».
+
+   Предмет: хаб СМОТРИТ на чужие узлы. Он ничего не проксирует; его работа —
+   каждые шесть часов перемерить пул и опубликовать то, что выжило. Это работа
+   вахты: тёмное помещение, приборы, одна шкала, показания за прошлый обход.
+
+   Отсюда три решения, и ни одно из них не про моду:
+
+   1. Тёмный грунт — синий, не чёрный и не зелёный. Приборная комната ночью.
+      Не «тёмная тема» с кислотным акцентом: фон здесь — среда, в которой
+      светятся только показания, а не поверхность, на которую наклеили ярлыки.
+
+   2. Один хроматический цвет — сине-фиолетовый #8f9bff. Он значит ровно одно:
+      «этот узел подтверждён в последнем обходе». Им нельзя красить кнопки
+      ради украшения: кнопка — это действие, а не измерение. Жёлтый и красный
+      объявлены, но появляются только при отказе.
+
+   3. Числа — моноширинные и табличные. Вахта читается сверху вниз по столбцу
+      цифр; проза — обычным шрифтом. Смешать наоборот значит получить буклет.
+
+   Шрифты вложены в файл (build_directions.py), внешних запросов нет: страница
+   не должна выдавать адрес посетителя третьей стороне.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Unbounded";
+  src: url("../assets/fonts/unbounded-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-weight: 200 900; font-display: swap;
+}
+@font-face {
+  font-family: "Unbounded";
+  src: url("../assets/fonts/unbounded-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 200 900; font-display: swap;
+}
+@font-face {
+  font-family: "Golos Text";
+  src: url("../assets/fonts/golos-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-weight: 400 900; font-display: swap;
+}
+@font-face {
+  font-family: "Golos Text";
+  src: url("../assets/fonts/golos-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 400 900; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/jbmono-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-weight: 100 800; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/jbmono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 100 800; font-display: swap;
+}
+
+:root {
+  /* Грунт, панель, приподнятая панель. Три уровня глубины, разница в 3–4%
+     яркости: этого достаточно, чтобы блок отделился, и мало, чтобы появилась
+     «карточка». */
+  --void:    #080b12;
+  --ground:  #0b101a;
+  --panel:   #111826;
+  --panel-2: #162032;
+
+  /* Линии двух весов: разделитель между разделами и между строками. */
+  --line:    #222d42;
+  --line-2:  #19212f;
+
+  /* Три уровня текста. `--ink-3` сознательно тише AA: это служебные подписи
+     осей и меток, и поднимать их до уровня основного — значит стереть
+     иерархию. */
+  --ink:     #e9eef7;
+  --ink-2:   #9aa7bf;
+  --ink-3:   #6f7c96;
+
+  /* Единственный хроматический цвет. `--live` — показание «подтверждён»,
+     `--live-dim` — его же след в дорожке. */
+  --live:     #8f9bff;
+  --live-dim: #3c4580;
+
+  /* Появляются только при отказе. На здоровом экране их нет. */
+  --warn: #f0b45e;
+  --fail: #ff7070;
+
+  --mono: "JetBrains Mono", ui-monospace, "Liberation Mono", monospace;
+  --text: "Golos Text", system-ui, "Liberation Sans", sans-serif;
+  --display: "Unbounded", "Golos Text", system-ui, sans-serif;
+
+  --r: 6px;
+  --r-sm: 3px;
+  --col: 1240px;
+  --prose: 66ch;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--void); }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 15px/1.62 var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--live); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+::selection { background: var(--live); color: var(--void); }
+
+:focus-visible {
+  outline: 2px solid var(--live);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+code, .m { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ---- каркас -------------------------------------------------------------
+   Рельс слева — не декор: он держит место для навигации, пока содержимое
+   прокручивается, и напоминает, что страница — один прибор, а не лента
+   блоков. На узком экране он уходит, освобождая всю ширину. */
+
+.shell {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 0 22px;
+  border-right: 1px solid var(--line);
+  background: var(--void);
+}
+
+.rail .wordmark {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font: 500 1.05rem/1 var(--display);
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.rail .wordmark b { color: var(--live); font-weight: 500; }
+
+.rail nav { display: flex; flex-direction: column; gap: 18px; }
+.rail nav a {
+  writing-mode: vertical-rl;
+  font: 500 0.68rem/1 var(--text);
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  text-decoration: none;
+}
+.rail nav a:hover, .rail nav a[aria-current] { color: var(--ink); }
+.rail .stamp {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--ink-3);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+}
+
+.page {
+  min-width: 0;
+  padding: 0 clamp(20px, 4vw, 56px);
+}
+.wrap { max-width: var(--col); margin: 0 auto; }
+
+/* ---- верхняя строка ----------------------------------------------------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.topbar .where { display: flex; gap: 16px; align-items: baseline; }
+.topbar .where b { color: var(--ink-2); font-weight: 500; }
+.topbar .lang { display: flex; gap: 6px; }
+.topbar .lang button {
+  font: 500 0.72rem/1 var(--text);
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.topbar .lang button[aria-pressed="true"] {
+  color: var(--ink);
+  border-color: var(--line);
+  background: var(--panel);
+}
+
+/* ---- шапка-причал ------------------------------------------------------- */
+.pier {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: end;
+  padding: clamp(40px, 7vw, 86px) 0 clamp(28px, 4vw, 48px);
+}
+
+.pier h1 {
+  margin: 0;
+  font: 500 clamp(2rem, 4.3vw, 3.55rem)/1.04 var(--display);
+  letter-spacing: -0.025em;
+  max-width: 20ch;
+  text-wrap: balance;
+}
+.pier h1 em { font-style: normal; color: var(--live); }
+
+.pier .read { display: grid; gap: 14px; }
+.pier .read p { margin: 0; color: var(--ink-2); max-width: 34ch; }
+
+.pier .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* Кнопка набрана действием, а не цветом штампа: заливка — чернила панели,
+   обводка — линейка. Единственная залитая кнопка на странице — там, где
+   действие необратимо (выдача ключа). */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 0.86rem/1 var(--text);
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 11px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+.btn:hover { background: var(--panel-2); border-color: #2d3a53; text-decoration: none; }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--void); }
+.btn.primary:hover { background: #c9d3e6; border-color: #c9d3e6; }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--ink-2); padding-inline: 6px; }
+.btn.ghost:hover { color: var(--ink); background: transparent; }
+.btn.mini { padding: 7px 10px; font-size: 0.76rem; }
+.btn.danger { color: var(--fail); border-color: #4a2530; background: transparent; }
+.btn.danger:hover { background: #2a151b; border-color: #6b3340; }
+
+.meta-note { font: 400 0.76rem/1.4 var(--mono); color: var(--ink-3); }
+
+/* ---- разделы ------------------------------------------------------------
+   Заголовок стоит НА линии, а не под ней: линейка и заголовок — одно
+   устройство, и это экономит вертикаль, которой на вахте мало. */
+.sec { margin-top: clamp(36px, 5vw, 62px); }
+
+.sec-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-bottom: 18px;
+}
+.sec-h h2 {
+  margin: 0;
+  font: 500 1.02rem/1.3 var(--text);
+  letter-spacing: -0.005em;
+}
+.sec-h .aside { font: 400 0.74rem/1.4 var(--mono); color: var(--ink-3); white-space: nowrap; }
+
+.lede { margin: 0 0 22px; color: var(--ink-2); max-width: var(--prose); }
+.note { margin: 14px 0 0; color: var(--ink-3); font-size: 0.82rem; max-width: var(--prose); }
+.note code { color: var(--ink-2); font-size: 0.78rem; }
+
+/* ---- табло воронки ------------------------------------------------------
+   Шесть ступеней, каждая — полоса, заполненная на долю ОТ ПРЕДЫДУЩЕЙ. Так
+   видно, где теряется больше: если считать от входа, после третьей ступени
+   все полосы станут уже пикселя, и табло перестанет показывать что-либо.
+   Пунктир справа — потерянная часть ступени; она видна, а не спрятана. */
+
+.board {
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  overflow: hidden;
+}
+.board-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 200px) 104px minmax(0, 1fr) 88px;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 18px;
+  border-top: 1px solid var(--line-2);
+}
+.board-row:first-child { border-top: 0; }
+.board-row .k { color: var(--ink-2); font-size: 0.84rem; line-height: 1.25; }
+.board-row .k small { display: block; color: var(--ink-3); font-size: 0.7rem; margin-top: 3px; }
+.board-row .n {
+  font-family: var(--mono);
+  font-size: 1.02rem;
+  text-align: right;
+  color: var(--ink);
+}
+.board-row .n.live { color: var(--live); }
+
+.track {
+  position: relative;
+  height: 16px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    135deg, var(--line-2) 0 1px, transparent 1px 7px
+  );
+  overflow: hidden;
+}
+.track i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  background: var(--live-dim);
+  border-radius: 2px 0 0 2px;
+  transform-origin: left center;
+  animation: draw 900ms cubic-bezier(.2,.7,.2,1) both;
+}
+.track i.live { background: var(--live); }
+.board-row .d {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  text-align: right;
+  color: var(--ink-3);
+}
+.board-row .d.drop { color: var(--ink-2); }
+@keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.board-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 13px 18px;
+  border-top: 1px solid var(--line);
+  background: var(--panel-2);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.board-foot b { color: var(--ink); font-weight: 500; font-family: var(--mono); }
+
+/* ---- реестр стран -------------------------------------------------------
+   Не карточки: строка страны — это запись. Код, имя, число, полоска. Три
+   колонки, потому что 29 записей в один столбец — это прокрутка, а в три —
+   один взгляд. */
+.ledger {
+  columns: 3 260px;
+  column-gap: clamp(24px, 3vw, 44px);
+}
+.ledger .row {
+  display: grid;
+  grid-template-columns: 2.4ch minmax(0, 1fr) auto 42px;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line-2);
+  break-inside: avoid;
+  text-decoration: none;
+  color: inherit;
+}
+.ledger .row:hover { background: linear-gradient(90deg, var(--panel), transparent 85%); }
+.ledger .cc { font: 500 0.72rem/1 var(--mono); color: var(--ink-3); letter-spacing: 0.04em; }
+.ledger .nm { font-size: 0.9rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ledger .ct { font: 400 0.86rem/1 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ledger .gauge { height: 4px; border-radius: 2px; background: var(--panel-2); align-self: center; }
+.ledger .gauge i { display: block; height: 100%; background: var(--live); border-radius: 2px; }
+
+/* ---- клиенты ------------------------------------------------------------ */
+.clients { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--line-2); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.clients div { background: var(--panel); padding: 16px 18px; }
+.clients b { display: block; font-weight: 500; font-size: 0.8rem; color: var(--ink); }
+.clients span { display: block; margin-top: 5px; font-size: 0.78rem; color: var(--ink-3); }
+
+/* ---- предупреждение ----------------------------------------------------- */
+.warn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin: 30px 0 0;
+  padding: 15px 18px;
+  border: 1px solid #4a3a1d;
+  border-radius: var(--r);
+  background: #1c170e;
+  color: var(--ink-2);
+  font-size: 0.86rem;
+}
+.warn b { color: var(--warn); font-weight: 600; }
+.warn .mark { font-family: var(--mono); color: var(--warn); }
+
+/* ---- подвал ------------------------------------------------------------- */
+footer {
+  margin-top: clamp(48px, 7vw, 90px);
+  padding: 22px 0 40px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ---- состояние «нет поколения» ----------------------------------------- */
+.empty-note {
+  border: 1px dashed var(--line);
+  border-radius: var(--r);
+  padding: 26px;
+  background: var(--panel);
+}
+.empty-note h3 { margin: 0 0 6px; font: 500 1rem/1.3 var(--text); }
+.empty-note p { margin: 0; color: var(--ink-3); font-size: 0.86rem; max-width: 56ch; }
+.empty-note p + p { margin-top: 10px; }
+
+/* ==========================================================================
+   Статус пула
+   ========================================================================== */
+
+.status-head { padding: clamp(40px, 6vw, 72px) 0 26px; }
+.status-head h1 {
+  margin: 0 0 10px;
+  font: 500 clamp(1.9rem, 3.6vw, 2.9rem)/1.08 var(--display);
+  letter-spacing: -0.02em;
+}
+.status-head p { margin: 0; max-width: 62ch; color: var(--ink-2); }
+
+.readings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--panel);
+}
+.readings div { padding: 18px 20px; border-left: 1px solid var(--line-2); }
+.readings div:first-child { border-left: 0; }
+.readings .v { font: 400 1.9rem/1 var(--mono); letter-spacing: -0.03em; }
+.readings .v.live { color: var(--live); }
+.readings .k { margin-top: 7px; font-size: 0.76rem; color: var(--ink-3); }
+
+.runs { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); overflow: hidden; }
+.run {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 64px 64px;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--line-2);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+.run:first-child { border-top: 0; }
+.run .at { color: var(--ink-3); }
+.run .rail { height: 10px; background: var(--line-2); border-radius: 2px; overflow: hidden; }
+.run .rail i { display: block; height: 100%; background: var(--live-dim); border-radius: 2px; }
+.run .rail i.best { background: var(--live); }
+.run .n { text-align: right; color: var(--ink); }
+.run .p { text-align: right; color: var(--ink-3); }
+.run .p::before { content: "+"; opacity: 0.6; }
+.run-head {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 64px 64px;
+  gap: 16px;
+  padding: 10px 16px;
+  font-size: 0.68rem;
+  color: var(--ink-3);
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+}
+.run-head span:nth-child(3), .run-head span:nth-child(4) { text-align: right; }
+.runs .foot { padding: 12px 16px; font-size: 0.78rem; color: var(--ink-3); border-top: 1px solid var(--line); }
+
+/* ---- таблицы ------------------------------------------------------------ */
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.tbl th {
+  text-align: left;
+  font: 500 0.72rem/1.3 var(--text);
+  color: var(--ink-3);
+  padding: 9px 12px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--line-2); color: var(--ink-2); }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl td:first-child { color: var(--ink); }
+.tbl .num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tbl .url { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-2); word-break: break-all; }
+.tbl-wrap { border: 1px solid var(--line); border-radius: var(--r); overflow: auto; background: var(--panel); }
+
+/* ---- состояния ---------------------------------------------------------- */
+.state { display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; white-space: nowrap; }
+.state::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.state[data-s="ok"] { color: var(--live); }
+.state[data-s="warn"] { color: var(--warn); }
+.state[data-s="warn"]::before { background: transparent; border: 1.5px solid currentColor; }
+.state[data-s="fail"] { color: var(--fail); }
+.state[data-s="off"] { color: var(--ink-3); }
+.state[data-s="off"]::before { background: transparent; border: 1px solid currentColor; }
+
+/* ==========================================================================
+   Вход
+   ========================================================================== */
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+  background:
+    radial-gradient(900px 500px at 50% -10%, #131b2b 0%, transparent 70%),
+    var(--ground);
+}
+.login {
+  width: min(420px, 100%);
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  padding: 34px 32px 30px;
+}
+/* Уголки-засечки: единственное украшение во всём наборе, и оно функционально —
+   обозначает поле прицела, то есть «сюда вводят ключ». */
+.login::before, .login::after {
+  content: "";
+  position: absolute;
+  width: 14px; height: 14px;
+  border: 1px solid var(--live);
+  opacity: 0.55;
+}
+.login::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.login::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.login .wordmark { font: 500 1.2rem/1 var(--display); text-decoration: none; color: var(--ink); }
+.login .wordmark b { color: var(--live); font-weight: 500; }
+.login h1 { margin: 22px 0 8px; font: 500 1.25rem/1.25 var(--text); }
+.login p { margin: 0 0 22px; color: var(--ink-3); font-size: 0.84rem; }
+.login label { display: block; font-size: 0.76rem; color: var(--ink-2); margin-bottom: 7px; }
+.login input {
+  width: 100%;
+  font: 400 0.9rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--void);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 13px 14px;
+}
+.login input:focus { outline: none; border-color: var(--live); }
+.login .btn { width: 100%; justify-content: center; margin-top: 16px; }
+.login .foot { margin: 18px 0 0; font-size: 0.74rem; color: var(--ink-3); line-height: 1.5; }
+.login .foot code { font-size: 0.72rem; color: var(--ink-2); }
+
+/* ==========================================================================
+   Панель оператора
+   ========================================================================== */
+
+.admin-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px clamp(16px, 3vw, 28px);
+  border-bottom: 1px solid var(--line);
+  background: var(--void);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.admin-bar .id { display: flex; align-items: baseline; gap: 14px; }
+.admin-bar .id b { font: 500 0.95rem/1 var(--display); color: var(--ink); }
+.admin-bar .id b i { font-style: normal; color: var(--live); }
+.admin-bar .id span { font: 400 0.72rem/1 var(--mono); color: var(--ink-3); }
+.admin-bar .live { display: flex; align-items: center; gap: 10px; font: 400 0.74rem/1 var(--mono); color: var(--ink-3); }
+
+.admin {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 0;
+  min-height: calc(100vh - 53px);
+}
+.admin nav {
+  border-right: 1px solid var(--line);
+  padding: 22px 14px;
+  background: var(--void);
+}
+.admin nav a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  color: var(--ink-3);
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+.admin nav a:hover { color: var(--ink); background: var(--panel); }
+.admin nav a[aria-current] { color: var(--ink); background: var(--panel); box-shadow: inset 2px 0 0 var(--live); }
+.admin nav .grp { margin: 18px 0 6px 12px; font-size: 0.66rem; color: var(--ink-3); letter-spacing: 0.04em; }
+
+.admin main { padding: 26px clamp(18px, 3vw, 34px) 60px; min-width: 0; }
+
+.stat-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  overflow: hidden;
+}
+.stat-rail div { padding: 16px 18px; border-left: 1px solid var(--line-2); }
+.stat-rail div:first-child { border-left: 0; }
+.stat-rail .v { font: 400 1.65rem/1 var(--mono); letter-spacing: -0.03em; }
+.stat-rail .v.live { color: var(--live); }
+.stat-rail .k { margin-top: 7px; font-size: 0.74rem; color: var(--ink-3); }
+
+/* Квитанция выданного ключа. Ключ показывается один раз; он должен выглядеть
+   как то, что забирают с собой, а не как ещё одна строка таблицы. */
+.receipt {
+  position: relative;
+  margin-top: 18px;
+  border: 1px solid var(--live-dim);
+  border-radius: var(--r);
+  background: var(--panel-2);
+  padding: 22px 22px 20px;
+}
+.receipt::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 14px; right: 14px;
+  height: 6px;
+  background: radial-gradient(circle at 4px 0, transparent 3.5px, var(--live-dim) 3.5px 4px, transparent 4px) repeat-x;
+  background-size: 8px 6px;
+  opacity: 0.9;
+}
+.receipt .rk { font-size: 0.74rem; color: var(--warn); }
+.receipt .rv {
+  margin: 10px 0 16px;
+  font: 400 clamp(0.95rem, 1.6vw, 1.2rem)/1.35 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  word-break: break-all;
+}
+.receipt .ru {
+  font: 400 0.8rem/1.5 var(--mono);
+  color: var(--live);
+  word-break: break-all;
+  padding: 10px 12px;
+  background: var(--void);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.receipt .rk2 { margin-top: 14px; font-size: 0.72rem; color: var(--ink-3); }
+
+.issue {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.issue input {
+  flex: 1 1 240px;
+  font: 400 0.86rem/1 var(--text);
+  color: var(--ink);
+  background: var(--void);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 11px 13px;
+}
+.issue input::placeholder { color: var(--ink-3); }
+.issue input:focus { outline: none; border-color: var(--live); }
+
+/* ==========================================================================
+   Карта выходов
+   ==========================================================================
+   Структура взята из направления «Атлас выходов»: равнопромежуточная
+   проекция, кадр 5:2 — ровно тот, что считает `make_world.py` (360° долготы
+   на 1000 единиц, 144° широты на 400). Поэтому берег и точки масштабируются
+   вместе, и точка над Германией стоит над Германией.
+
+   Цвет — от «Вахты»: берег нарисован цветом линейки, а не цветом показания.
+   Берег здесь ориентир, а не измерение хаба; смешать их в одном цвете значило
+   бы выдать карту за данные. Акцент остаётся один — точка, за которой стоит
+   проверенный выход. */
+
+.map-wrap { margin-top: 26px; container-type: inline-size; }
+.map-box {
+  position: relative;
+  aspect-ratio: 5 / 2;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background:
+    repeating-linear-gradient(to right, var(--line-2) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(to bottom, var(--line-2) 0 1px, transparent 1px 11.1111%),
+    var(--panel);
+  overflow: hidden;
+}
+.map-box .land {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #0e1521;
+  stroke: var(--line);
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.map-box::after {
+  /* Экватор. Единственная линия на этой карте, которую можно утверждать
+     точно: точка отсчёта широты, а не граница чего-либо. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      transparent calc(44.444% - .5px), var(--line) calc(44.444% - .5px),
+      var(--line) calc(44.444% + .5px), transparent calc(44.444% + .5px));
+  pointer-events: none;
+}
+.dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 3px rgba(143, 155, 255, 0.16);
+}
+/* Подпись ставится на ту сторону, где сборщик нашёл свободное место
+   (`data-side`): под точкой, над ней, справа или слева. Направление задаётся
+   в разметке, потому что решается по координатам, а координаты знает только
+   сборщик; CSS отвечает лишь за то, как подпись к этой стороне прилипает. */
+.dot::after {
+  content: attr(data-c);
+  position: absolute;
+  font: 500 0.56rem/1 var(--mono);
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  display: none;
+}
+/* Подписи живут только там, где карта достаточно широка, чтобы под ними
+   оставалось место. Это ширина карточки, а не окна: рельс и отступы съедают
+   разное число пикселей, поэтому по `@media` граница съезжала бы. Порог
+   940 px повторяет `LABEL_MIN` в `dir_a.py` — по нему там считается
+   расстановка. Уже — подписи не показываются вовсе: 29 точек на 700 px
+   стоят вплотную, и любая подпись закрыла бы чужое измерение. Страну на
+   таких экранах называют реестр ниже и всплывающая подсказка точки. */
+@container (min-width: 940px) {
+  .dot[data-lab][data-side="b"]::after { display: block; left: 50%; top: 100%; transform: translate(-50%, 5px); }
+  .dot[data-lab][data-side="t"]::after { display: block; left: 50%; bottom: 100%; transform: translate(-50%, -5px); }
+  .dot[data-lab][data-side="r"]::after { display: block; left: 100%; top: 50%; transform: translate(5px, -50%); }
+  .dot[data-lab][data-side="l"]::after { display: block; right: 100%; top: 50%; transform: translate(-5px, -50%); }
+}
+.map-cap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 9px 0 0;
+  font: 400 0.66rem/1.4 var(--mono);
+  color: var(--ink-3);
+}
+.map-cap b { color: var(--ink-2); font-weight: 500; }
+
+/* ==========================================================================
+   Цена и состав
+   ========================================================================== */
+
+.price {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 1px;
+  margin-top: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--line);
+  overflow: hidden;
+}
+.price > div { background: var(--panel); padding: 22px 24px; }
+.price .v {
+  font: 400 clamp(2.2rem, 4.6vw, 3.1rem)/1 var(--mono);
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+.price .v small { font-size: 0.86rem; letter-spacing: 0; color: var(--ink-3); margin-left: 4px; }
+.price .sub { margin: 10px 0 0; font-size: 0.82rem; color: var(--ink-2); max-width: 30ch; }
+.price .sub b { color: var(--ink); font-weight: 500; }
+.price dl { margin: 0; display: grid; gap: 10px; }
+.price dt { font: 500 0.72rem/1 var(--mono); color: var(--ink-3); letter-spacing: 0.03em; }
+.price dd { margin: 4px 0 0; font-size: 0.84rem; color: var(--ink-2); }
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--line-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.cols > div { background: var(--panel); padding: 20px 22px; }
+.cols h3 { margin: 0 0 12px; font: 500 0.9rem/1.2 var(--text); color: var(--ink); }
+.cols ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.cols li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.cols li::before {
+  position: absolute;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+.cols .yes li::before { content: "+"; color: var(--live); }
+.cols .no li::before { content: "−"; color: var(--ink-3); }
+
+/* Открытые вопросы — не аккордеон: ответ виден сразу. Аккордеон экономит
+   вертикаль ценой того, что человек не узнаёт ответ, который ему нужен. */
+.faq { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 clamp(24px, 4vw, 56px); }
+.qa { padding: 16px 0; border-top: 1px solid var(--line-2); break-inside: avoid; }
+.qa:first-child { border-top: 0; }
+.qa dt { font: 500 0.88rem/1.35 var(--text); color: var(--ink); }
+.qa dd { margin: 7px 0 0; font-size: 0.84rem; line-height: 1.55; color: var(--ink-2); max-width: 52ch; }
+.qa dd b { color: var(--ink); font-weight: 500; }
+
+/* ==========================================================================
+   Узкий экран
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  .shell { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  .pier { grid-template-columns: 1fr; gap: 26px; padding-top: 34px; }
+  .pier h1 { max-width: none; }
+  .admin { grid-template-columns: 1fr; }
+  .admin nav { display: flex; gap: 4px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 10px 12px; }
+  .admin nav .grp { display: none; }
+  .admin nav a { white-space: nowrap; }
+  .admin nav a[aria-current] { box-shadow: inset 0 -2px 0 var(--live); }
+}
+
+@media (max-width: 620px) {
+  .board-row { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; }
+  .board-row .n { font-size: 1rem; }
+  .board-row .track { grid-column: 1 / -1; grid-row: 3; }
+  .board-row .d { grid-column: 2; grid-row: 1; }
+  .ledger { columns: 1; }
+  .run, .run-head { grid-template-columns: 76px minmax(0, 1fr) 44px; }
+  .run .p, .run-head span:nth-child(4) { display: none; }
+  .topbar .where { display: none; }
+  footer { flex-direction: column; gap: 8px; }
+
+  /* Карта на телефоне: кадр 5:2 при ширине 350 px — это 140 px высоты, где
+     точки сходятся вплотную. Кадр меняется на 3:2, чтобы точки разошлись по
+     вертикали. Подписи здесь не нужны и не показываются — контейнерный
+     запрос на 1080 px их уже выключил; страну называют реестр ниже и
+     подсказка точки. */
+  .map-box { aspect-ratio: 3 / 2; }
+  .map-cap { flex-direction: column; gap: 4px; }
+  .price { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

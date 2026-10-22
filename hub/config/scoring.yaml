@@ -1,0 +1,36 @@
+# Scoring rubric (versioned). Changing a weight bumps `rubric_version` and
+# history is keyed by it, so scores stay comparable across a rubric change.
+rubric_version: 2026-10-14.1
+
+weights:
+  latency: 25            # max(0, 25 * (1 - p50_ms/1000))
+  availability: 20       # EWMA of success rate; one good run is worth ~1/3
+  jitter: 15             # max(0, 15 * (1 - stdev/300ms))
+  source_history: 10     # per-source 30-day pass rate
+  protocol_history: 10   # per-protocol reliability, RU vantage
+  throughput: 10         # min(10, 10 * speed/2MBps); unmeasured = half
+  fingerprint_resistance: 5  # REALITY/uTLS > plain TLS > none; 443 bonus
+  geo_integrity: 5       # penalty if cdn-cgi/trace contradicts the remark
+
+# Per-protocol reliability, RU/CIS vantage, last 30 days. Re-derivable from
+# the `checks` table; these are the seeds until we have history.
+protocol_reliability:
+  vless: 0.85
+  trojan: 0.45
+  shadowsocks: 0.35
+  vmess: 0.40
+  hysteria2: 0.60
+  tuic: 0.50
+  wireguard: 0.05
+  socks: 0.55
+  http: 0.45
+
+# Anti-fingerprinting credit: REALITY resists active probing, not just blocks.
+fingerprint_bonus:
+  vless: 1.0
+  hysteria2: 0.7
+  tuic: 0.7
+  trojan: 0.4
+  vmess: 0.3
+  shadowsocks: 0.1
+  wireguard: 0.0

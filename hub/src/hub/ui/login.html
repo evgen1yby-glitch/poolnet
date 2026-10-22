@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>PoolNet — вход</title>
+<meta name="theme-color" content="#070b13">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23070b13'/%3E%3Cpath%20d='M12.3%203V29'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'/%3E%3Cpath%20d='M12.3%204.8A9%209%200%200%201%2012.3%2022.8'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'%20fill='none'/%3E%3Ccircle%20cx='21.3'%20cy='13.8'%20r='3.4'%20fill='%236be1ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/base.css">
+<link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+<main>
+<!--
+  The login form. It exists because a browser cannot set a request header, so
+  the panel's first authentication scheme — `x-hub-secret` only — was reachable
+  by curl and by nothing else. An operator told to "open /admin" got 403 with no
+  way to find out why.
+
+  The secret is the same one the bot uses. There is no username: this is one
+  operator, not a user table, and a second field would suggest an account system
+  that does not exist.
+-->
+<a class="wordmark" href="/"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="12.3" cy="4.8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12.3" cy="27.2" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="21.3" cy="13.8" r="3.4" fill="currentColor"/><path d="M12.3 4.5V27.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M12.3 4.8A9 9 0 0 1 12.3 22.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>poolnet <span>панель</span></a>
+<p class="lede">Введите секрет оператора. Он лежит в <code>/etc/hub/hub.env</code> как <code>HUB_BOT_SECRET</code>.</p>
+
+<form method="post" action="/admin/login">
+  <label for="secret">Секрет оператора</label>
+  <input id="secret" name="secret" type="password" autocomplete="current-password"
+         autofocus required spellcheck="false">
+  <button type="submit" class="btn">Войти</button>
+</form>
+
+<p class="note">
+  Панель доступна только с этой машины. Снаружи её закрывает nginx, а внутри
+  проверяется, что запрос пришёл с localhost.
+</p>
+</main>
+</body>
+</html>

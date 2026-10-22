@@ -1,0 +1,61 @@
+[Unit]
+Description=hub subscription pipeline (one run)
+Documentation=https://example.com/abuse
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@HUB_USER@
+Group=@HUB_GROUP@
+WorkingDirectory=@HUB_DIR@
+Environment=HUB_ROOT=@HUB_DIR@
+# `hub` is a source-tree package, not an installed one: `python -m hub.cli`
+# resolves only from the project root with `src` on the path. Without this the
+# unit dies immediately with `ModuleNotFoundError: No module named 'hub'`,
+# which systemd reports as a bare start failure with no hint about the path.
+Environment=PYTHONPATH=@HUB_DIR@/src
+Environment=HUB_LOCALE=ru
+EnvironmentFile=-/etc/hub/hub.env
+# No --allow-network: the worker never constructs the sing-box driver, so it
+# opens no probe socket at all. See README, "Network safety".
+#
+# Network is, however, still required for one thing that is safe by construction:
+# `fetcher` makes outbound-only HTTPS GETs to raw.githubusercontent.com and
+# jsDelivr. It never listens and never routes. The risky half of the pipeline —
+# `prober`, which dials third-party nodes — is gated behind --allow-network and
+# is expected to run in its own unit inside `unshare -rn`.
+# `/usr/bin/python3`, not a `.venv`: the interpreter that has this
+# project's dependencies installed is the system one. A unit pointing at a
+# virtualenv that was never created fails with "Command ... is not
+# executable", which `systemd-analyze verify` reports before you ever
+# install it.
+ExecStart=/usr/bin/python3 -m hub.cli run
+# The pipeline writes data/hub.db and data/events.ndjson.
+ReadWritePaths=@HUB_DIR@/data
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+# Loopback only for anything the process *listens* on; outbound is unaffected.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# `SocketBindAllow=` takes an address *family* and `any`, not an `ip:port` pair.
+# `SocketBindAllow=127.0.0.1:0` (the obvious spelling) is rejected by
+# `systemd-analyze verify` and silently ignored, which leaves
+# `SocketBindDeny=any` in force with no exception at all. That is the failure
+# mode a sandbox has to avoid: the unit *looks* like it may bind loopback and in
+# fact may not bind anything, so the next person debugging "why is the API
+# unreachable" is chasing a rule that was never applied.
+#
+# `tcp:any` therefore means "may bind any TCP port", and what actually pins it
+# to loopback is the default `--host 127.0.0.1` in `cli.py` plus the unit's
+# `HUB_HOST`, not this pair. The bind is constrained by the address it is given,
+# and the deny/allow pair here only governs whether binding is permitted at all.
+SocketBindDeny=any
+SocketBindAllow=tcp:any
+NoNewPrivileges=yes
+TimeoutStartSec=600
+Nice=10
+IOSchedulingClass=idle
+
+[Install]
+WantedBy=multi-user.target

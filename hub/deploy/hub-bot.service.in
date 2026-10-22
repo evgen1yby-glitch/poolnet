@@ -1,0 +1,48 @@
+[Unit]
+Description=hub Telegram bot (optional delivery channel)
+After=network-online.target
+# The bot is never a dependency of the API: if Telegram is down, which it is
+# under de-facto blocking in RU, subscriptions must keep working from the web
+# page. This unit has no Requires=/Wants= link to hub-api.service, on purpose.
+
+[Service]
+Type=simple
+User=@HUB_USER@
+Group=@HUB_GROUP@
+WorkingDirectory=@HUB_DIR@
+Environment=HUB_ROOT=@HUB_DIR@
+# `hub` is a source-tree package, not an installed one: `python -m hub.cli`
+# resolves only from the project root with `src` on the path. Without this the
+# unit dies immediately with `ModuleNotFoundError: No module named 'hub'`,
+# which systemd reports as a bare start failure with no hint about the path.
+Environment=PYTHONPATH=@HUB_DIR@/src
+Environment=HUB_LOCALE=ru
+EnvironmentFile=-/etc/hub/hub.env
+# The channel to gate on, without which `hub bot` exits 2 with "HUB_CHANNEL_ID
+# is required". `--channel-id` is the CLI's own default and is read from the
+# environment, so the unit needs no override and a token can be added to
+# /etc/hub/hub.env at any time without touching this file.
+#
+# Ships as `-1001234567890` — the Telegram convention for a channel (the -100
+# prefix plus the channel's id). A placeholder that follows the convention is
+# used deliberately: a bot that polls against a channel that does not exist
+# fails its admin check and the unit stops, which is the honest failure. What it
+# must not do is silently start with channel 0, which `cli.py` rejects — that
+# would look like a broken bot rather than an unconfigured one. Override this
+# with the real channel id in the environment file.
+Environment=HUB_CHANNEL_ID=-1001234567890
+# `/usr/bin/python3`, not a `.venv`: the interpreter that has this
+# project's dependencies installed is the system one. A unit pointing at a
+# virtualenv that was never created fails with "Command ... is not
+# executable", which `systemd-analyze verify` reports before you ever
+# install it.
+ExecStart=/usr/bin/python3 -m hub.cli bot
+Restart=on-failure
+RestartSec=30
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,86 @@
+# hub-ns — recreate the `hubns` sandbox after a reboot.
+#
+# ## The problem this unit exists to solve
+#
+# `hubns` is the network namespace `hub-probe.service` probes from. It is a bind
+# mount on `/run/netns/hubns`, and `/run` is tmpfs, so **a reboot deletes it**.
+# Nothing else on this box creates it.
+#
+# That is not a cosmetic gap, because of how `hub-probe.timer` is configured:
+# `Persistent=true` means a round missed while the machine was down fires on the
+# next boot. So the dead-man's-switch is guaranteed to point the prober at the
+# one moment in the machine's life when its sandbox provably does not exist. The
+# result is a boot-time run that dies with:
+#
+#     sudo[..]: Cannot open network namespace "hubns": No such file or directory
+#
+# which is an honest error — it names the missing file — but tells an operator
+# nothing about a namespace, an uplink, or what the prober was meant to do. And
+# it recurs on every boot until someone happens to read the prober's header.
+#
+# ## Why a script and not inline `ExecStartPre=` lines
+#
+# The restore is nine commands, three of which must be run inside the namespace.
+# Inlining them into `ExecStartPre=` gives nine chances to get the quoting wrong
+# and no way to test the result without booting the box — `ip netns exec` inside
+# a `ExecStartPre=` line cannot be exercised except by a real boot.
+#
+# `deploy/hubns-ensure.sh` is a file, so it can be read, reviewed, and run by
+# hand *right now* with `--verify`, which is how its output below was produced.
+# It is also what an operator will want at 3am.
+
+[Unit]
+Description=Recreate the `hubns` probe namespace (tmpfs, does not survive reboot)
+Documentation=https://example.com/abuse
+# Before network-online.target, deliberately: the probe timer is ordered after
+# that target, so putting the namespace's creation before it is what makes "the
+# namespace exists before anything wants to enter it" true by ordering rather
+# than by luck. It also means a boot that hangs on network never reaches a point
+# where a probe could have run against a missing namespace.
+Before=network-online.target
+DefaultDependencies=no
+# `systemd-networkd`/`NetworkManager` are what would otherwise own this point in
+# boot; nothing here depends on any of them, and depending on them would make
+# the namespace's existence contingent on a network stack this script neither
+# uses nor needs.
+After=systemd-sysctl.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Creating a namespace and a veth pair needs CAP_SYS_ADMIN and CAP_NET_ADMIN,
+# neither of which an unprivileged unit can get. The service account is a
+# sudoer on this host (see hub-probe.service for why that is the accepted path),
+# and `sudo -n` keeps a boot-time failure visible rather than hanging on a
+# password prompt that nobody is there to answer.
+# `/usr/bin/bash` by absolute path, and not because it is prettier than `bash`:
+# sudo's `secure_path` on this box is fine for `ip` and `iptables` (both in
+# /usr/sbin, which is on it), but guessing an interpreter's location is how a
+# unit ends up running a *different* shell than the one its script was written
+# against. `/bin/bash` and `/usr/bin/bash` are the same file here; the `usr` path
+# is the one `which` resolves and the one that survives a merged-/usr symlink
+# change in either direction. Verified: `which -a bash` reports it.
+#
+# The script itself is invoked rather than sourced, so its `#!/usr/bin/env bash`
+# shebang is not what runs it — this is. That means the shebang and this line are
+# two independent statements about which interpreter to use, and they can
+# disagree. They currently agree; if that ever changes, this line is the one
+# that decides what actually executes.
+ExecStart=/usr/bin/sudo -n /usr/bin/bash @HUB_DIR@/deploy/hubns-ensure.sh --verify
+# Idempotent, so a re-run after an upgrade, a manual restart, or a
+# `sysinit.target` re-walk costs one `ip netns list` and changes nothing.
+#
+# If the namespace already exists the script exits 0 without touching it, which
+# is the property that makes RemainAfterExit=yes safe: a later
+# `systemctl start hub-ns.service` cannot tear down a sandbox that a probe is
+# currently using.
+Restart=no
+# The script creates links and one NAT rule. It modifies nothing on eth0, adds
+# no route to the host's own networks, and its only iptables rule is scoped to
+# 10.99.0.0/24 — which is why it is safe on a box running other projects.
+Nice=10
+
+[Install]
+# Wanted by multi-user.target, not by anything network-flavoured: this is
+# infrastructure other units may want, and the standard place for that at boot.
+WantedBy=multi-user.target

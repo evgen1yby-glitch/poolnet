@@ -1,0 +1,460 @@
+/* ==========================================================================
+   PoolNet — токены и общие примитивы.
+
+   Единственный файл, которому позволено объявлять цвет, шрифт и радиус.
+
+   ЗАМЫСЕЛ: НОЧЬ И СИГНАЛ, А НЕ БУМАГА.
+
+   До этого была светлая «бумага реестра» — и её перевернули сознательно:
+   направление «Созвездие» (docs/design/pages/d-*.html) выбрано из четырёх,
+   доведено до листа и утверждено владельцем: тёмный премиум-интерфейс.
+   Отсюда всё остальное:
+
+   1. Ночь, а не бумага. Фон почти чёрный синеватый (#070b13) — это небо,
+      на котором выведена карта узлов, а не «тёмный режим из переключателя».
+      Три уровня: --paper — небо, --paper-2 — утопленная полоса (подложки
+      дорожек, шапки таблиц), --paper-3 — приподнятое стекло (ключи,
+      карточки).
+
+   2. Два цвета с разными обязанностями. Синий --sig — голос бренда и
+      интерфейса: кнопка, фокус, знак, активная ссылка. Зелёный --live —
+      состояния: зелёный существует ровно там, где проверка вынесла
+      вердикт (штамп, последняя ступень воронки, метка «прошёл»), и не
+      тратится на украшение. warn/fail — только при отказе; их отсутствие
+      на экране — норма.
+
+   3. Мера — счёт. Числа набраны --mono с tabular-nums посреди --sans
+      прозы; заголовки — --disp (Unbounded): витринный голос для H1 и
+      wordmark, нигде больше.
+
+   4. Ничего внешнего. Все три шрифта — woff2 рядом с файлом (fonts/),
+      с unicode-range и font-display: swap. Ни иконок, ни CDN, ни внешних
+      @import: страница не выдаёт адрес посетителя третьей стороне.
+
+   5. Контраст посчитан, а не подобран. Пары «цвет на фоне» пересчитывает
+      tests/test_palette.py (уже под тёмный контракт; направление
+      приглушения на тёмном — наоборот, «тише» значит ТЕМНЕЕ).
+   ========================================================================== */
+
+/* ---- шрифты --------------------------------------------------------------
+   Само-хостинг, три семейства, каждый со своим unicode-range: латиница
+   не качает кириллический файл. font-display: swap читает страницу
+   системным шрифтом, пока файл грузится. */
+
+@font-face{font-family:"Unbounded";src:url("fonts/unbounded-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-weight:200 900;
+  font-display:swap}
+@font-face{font-family:"Unbounded";src:url("fonts/unbounded-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,
+  U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-weight:200 900;font-display:swap}
+@font-face{font-family:"Manrope";src:url("fonts/manrope-cyrillic-wght-normal.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-weight:300 800;
+  font-display:swap}
+@font-face{font-family:"Manrope";src:url("fonts/manrope-latin-wght-normal.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,
+  U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-weight:300 800;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("fonts/jbmono-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-weight:100 800;
+  font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("fonts/jbmono-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,
+  U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-weight:100 800;font-display:swap}
+
+:root {
+  color-scheme: dark;
+
+  /* ---- поверхности -------------------------------------------------------
+     Небо и два уровня стекла. Синеватый уклон всех поверхностей —
+     намеренный нейтраль бренда, «холодная ночь». Порог «поверхность
+     тонирована» в тесте стоит на 60: выше уклон начинает врать штампам. */
+  --paper:   #070b13;
+  --paper-2: #0d1522;
+  --paper-3: #111a2c;
+
+  /* ---- текст -------------------------------------------------------------
+     Три уровня, и только три. --ink — 17.5:1 на небе; --ink-2 — 9.07;
+     --ink-3 — намеренно ниже AA (4.10): он несёт служебное. Значения
+     пересчитаны тестом. */
+  --ink:   #eaf2ff;
+  --ink-2: #9db1d4;
+  --ink-3: #5f7395;
+
+  /* ---- линейки -----------------------------------------------------------
+     Разделитель держится на линии: --rule 1.36:1 на небе (блоки),
+     --rule-2 1.10:1 на подложке (строки внутри блока), --mark — подсветка
+     строки под курсором. */
+  --rule:   #1d2942;
+  --rule-2: #141e2f;
+  --mark:   #0e1728;
+
+  /* ---- сигнальный синий: голос интерфейса --------------------------------
+     Кнопка, ссылки, фокус, знак. Яркий на ночь — бренд видит гость. */
+  --sig:      #6be1ff;
+  --sig-deep: #2fb9ff; /* тот же тон (Δ8°), темнее: спицы/обводки/хавер */
+
+  /* Текст НА сигнальной кнопке: тёмная ночь темнее --paper, контраст
+     12.5:1 — тест считает пару. */
+  --on-sig:   #04121c;
+
+  /* ---- роль: штамп «годен» ----------------------------------------------
+     Зелёный появляется только там, где узел ПРОШЁЛ проверку. --live —
+     чернила штампа (12.5:1), --live-fill — плашка дорожки: на тёмном
+     фоне «тише» значит ТЕМНЕЕ (#1f9d60 lum < --live), и тест пинает
+     именно эту сторону. */
+  --live:      #58e6a6;
+  --live-fill: #1f9d60;
+
+  /* Шкала распределения (страна/протокол): 2.3:1 на подложке. Тон —
+     сине-серое стекло: полоса видна, но с зелёным штампом не спорит. */
+  --gauge: #3f5173;
+
+  /* Появляются только при отказе. Их отсутствие на экране — норма. */
+  --warn: #f4c469;
+  --fail: #ff8a8a;
+
+  /* ---- шрифты ------------------------------------------------------------
+     Роли: --disp — голос бренда (Unbounded: заголовки, wordmark), --sans —
+     проза (Manrope), --mono — измерения (JetBrains Mono). Стекимый generic
+     в конце — страховка: без файла типографика не разваливается. */
+  --disp: "Unbounded", "Manrope", system-ui, sans-serif;
+  --sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+          monospace;
+
+  /* ---- метрики -----------------------------------------------------------
+     Два радиуса: 10px у кнопок и полей, 6px — у дорожек. Стеклянные панели
+   скругляет страница своей раскладкой. */
+  --r: 10px;
+  --r-sm: 6px;
+
+  /* Ширина колонки: как у направления D (1240px), но rem. */
+  --col: 77.5rem;
+  --prose: 66ch;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--paper);
+  scrollbar-color: var(--rule) var(--paper);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- типографика --------------------------------------------------------
+   Заголовки — голос бренда (--disp); проза — --sans; крупные числа — --mono. */
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+
+h1 { font-family: var(--disp); font-weight: 600; }
+h2 { font-family: var(--sans); font-weight: 700; }
+h3 { font-weight: 700; }
+
+p { margin: 0; }
+
+a { color: inherit; }
+
+/* Ссылка в прозе — синим сигнальным: на тёмном фоне чернильное
+   подчёркивание не читается, и синий вернулся в ссылки. */
+a.link {
+  color: var(--sig);
+  text-decoration: underline;
+  text-decoration-color: rgba(107, 225, 255, .38);
+  text-underline-offset: 3px;
+}
+
+a.link:hover { color: var(--sig-deep); }
+
+code, kbd, samp {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  color: var(--ink);
+}
+
+/* Значение-измерение: счётчик, доля, идентификатор, метка времени. */
+.m {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Подпись над значением: моно-набор, не капслок в разрядку. */
+.label {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-2);
+  letter-spacing: 0.01em;
+}
+
+.caption {
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: var(--prose);
+}
+
+/* Для скринридера и краулера; на экране не видно. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- линейка ------------------------------------------------------------
+   Разделитель блоков. Линия делает работу, для которой не хватает коробки:
+   отделяет, ничего не добавляя. */
+.rule {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 0;
+}
+
+/* Заголовок блока: линия сверху во всей ширине, подпись под ней. */
+.block { margin-top: 2.6rem; }
+
+.block > .block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+  margin-bottom: 1.1rem;
+}
+
+.block-head h2 { font-weight: 700; }
+
+.block-head .aside {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- метка состояния ----------------------------------------------------
+   Форма различает состояния независимо от цвета: «прошёл» — залитый круг,
+   «предупреждение» — штрих, «отказ» — крест в круге, «выключено» — пустой
+   круг. Работает на чёрно-белой печати и в скрееншоте из мессенджера. */
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.state::before {
+  content: "";
+  width: 0.52rem; height: 0.52rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  flex: none;
+}
+
+.state[data-s="ok"]   { color: var(--live); }
+.state[data-s="ok"]::before { background: currentColor; }
+/* Предупреждение — вертикальный штрих, а не круг. */
+.state[data-s="warn"] { color: var(--warn); }
+.state[data-s="warn"]::before {
+  background: linear-gradient(currentColor, currentColor);
+  border-radius: 1px;
+  width: 0.22rem;
+}
+.state[data-s="fail"] { color: var(--fail); }
+.state[data-s="fail"]::before {
+  background:
+    linear-gradient(45deg, transparent 44%, currentColor 44%, currentColor 56%, transparent 56%),
+    linear-gradient(-45deg, transparent 44%, currentColor 44%, currentColor 56%, transparent 56%);
+  border-color: currentColor;
+}
+.state[data-s="off"]  { color: var(--ink-3); }
+.state[data-s="off"]::before { background: transparent; }
+
+/* ---- таблица ------------------------------------------------------------
+   Одна таблица на всё приложение. Строки разделены тонкой линией, а не
+   «зеброй»: на тёмном стекле чередование плашек рябит. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  padding: 0 0.7rem 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.46rem 0.7rem 0.46rem 0;
+  border-bottom: 1px solid var(--rule-2);
+  vertical-align: baseline;
+}
+
+th:last-child, td:last-child { padding-right: 0; }
+
+td.num, th.num {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+tbody tr:hover td { background: var(--mark); }
+
+/* ---- дорожка ------------------------------------------------------------
+   Шкала доли. Подложка — утопленная полоса --paper-2 (тёмный фон читается
+   как углубление), полоса по умолчанию — тихая --gauge. */
+.track {
+  position: relative;
+  height: 100%;
+  background: var(--paper-2);
+  overflow: hidden;
+  border-radius: var(--r-sm);
+}
+
+.track > i {
+  display: block;
+  height: 100%;
+  background: var(--gauge);
+  border-radius: var(--r-sm);
+}
+
+/* Заливка штампа — приглушённый цвет: на тёмном «тише» значит темнее
+   (в светлой теме было наоборот, тест пинует направление). */
+.track > i.live { background: var(--live-fill); }
+
+/* Нулевая полоса не рисуется вовсе. */
+.track > i[style*="width:0"] { background: transparent; }
+
+/* ---- кнопка ------------------------------------------------------------
+   Действие залито сигнальным, текст — темнее неба: контраст 12.5:1 и
+   пересчитан тестом. Зелёного на кнопке нет и быть не может: кнопка не
+   утверждает «узел прошёл проверку». */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font: inherit;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.55rem 1.05rem;
+  border-radius: var(--r);
+  border: 1px solid var(--sig);
+  background: var(--sig);
+  color: var(--on-sig);
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.btn:hover { filter: brightness(1.08); }
+
+.btn.ghost {
+  background: transparent;
+  border-color: var(--rule);
+  color: var(--ink);
+}
+
+.btn.ghost:hover { border-color: var(--sig-deep); color: var(--sig); filter: none; }
+
+.btn.mini {
+  font-size: 0.75rem;
+  padding: 0.22rem 0.55rem;
+  font-weight: 600;
+}
+
+/* «Отозвать» намеренно нейтральна и краснеет только при наведении. */
+.btn.danger {
+  background: transparent;
+  border-color: var(--rule);
+  color: var(--ink-2);
+}
+
+.btn.danger:hover {
+  border-color: var(--fail);
+  color: var(--fail);
+  filter: none;
+}
+
+/* ---- поле ввода ---------------------------------------------------------- */
+
+input, select, textarea {
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  color: var(--ink);
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  padding: 0.45rem 0.6rem;
+}
+
+input::placeholder { color: var(--ink-3); }
+
+/* Фокус виден всегда и одинаково: синее кольцо читается на тёмном фоне
+   с любого края, тёмное на светлой бумаге — нет. */
+:focus-visible {
+  outline: 2px solid var(--sig);
+  outline-offset: 2px;
+}
+
+/* ---- ошибка и предупреждение --------------------------------------------
+   Ошибка — цветом отказа и линией слева. Предупреждение — линией и текстом,
+   не тонированной плашкой: это единственный абзац, который читают целиком. */
+.error {
+  color: var(--fail);
+  font-size: 0.86rem;
+  max-width: var(--prose);
+}
+
+.warn {
+  border-left: 2px solid var(--warn);
+  padding: 0.1rem 0 0.1rem 0.9rem;
+  max-width: var(--prose);
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.warn b, .warn strong { color: var(--warn); font-weight: 600; }
+
+/* ---- движение -----------------------------------------------------------
+   Здесь его почти нет, и это решение, а не незаполненное место.
+
+   Единственный разрешённый носитель движения — свет: на тёмном фоне
+   изменение цвета говорит «внимание» ничуть не хуже сложного перехода.
+   Транзиции стоят ровно в двух местах (кнопка, ссылка), и это граница:
+   четвёртый переход на страницу — уже оформление, а не сигнал.
+
+   Если понадобится движение — оно работает ПОСЛЕ действия: движение на
+   первый экран — это отложенное показание. */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

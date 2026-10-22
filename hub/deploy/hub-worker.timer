@@ -1,0 +1,16 @@
+[Unit]
+Description=Run the hub pipeline every 15 minutes
+Documentation=https://example.com/abuse
+
+[Timer]
+# OnCalendar with Persistent=true is the dead-man's-switch the GitHub Actions
+# approach lacks: a run missed while the machine was down is executed on the
+# next boot instead of being silently dropped (GitHub schedules also disable
+# themselves after 60 days of repo inactivity, with no notification).
+OnCalendar=*:0/15
+Persistent=true
+AccuracySec=1min
+Unit=hub-worker.service
+
+[Install]
+WantedBy=timers.target

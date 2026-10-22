@@ -1,0 +1,43 @@
+{
+  "name": "open-proxy-pool",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source aggregator of public proxies: collect from public sources, deduplicate, verify, enrich and publish continuously via GitHub Actions.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "bin": {
+    "opp": "src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "cycle": "tsx src/index.ts cycle",
+    "fetch": "tsx src/index.ts fetch",
+    "validate": "tsx src/index.ts validate",
+    "merge": "tsx src/index.ts merge",
+    "publish": "tsx src/index.ts publish",
+    "discover": "tsx src/index.ts discover",
+    "og": "node scripts/make-og.mjs"
+  },
+  "dependencies": {
+    "maxmind": "^4.2.0",
+    "pg": "^8.13.1",
+    "three": "^0.170.0",
+    "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^22.20.5",
+    "@types/pg": "^8.11.10",
+    "eslint": "^9.39.5",
+    "playwright-core": "^1.57.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.71.2"
+  }
+}

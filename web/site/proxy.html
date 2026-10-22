@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>Прокси-пул — evilgate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="system.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="evilgate — на главную">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
+      <span class="bn">evilgate</span>
+    </a>
+    <nav class="main" aria-label="Разделы">
+      <a href="index.html">Главная</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html" class="on">Прокси-пул</a>
+      <a href="verify.html">Проверка</a>
+      <a href="premium.html">Премиум</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>база живых прокси · обновление каждые 15 минут · медиана 123 ms</span>
+      <h1>Открытый <span class="grad-txt">прокси-пул</span></h1>
+      <p class="sub">30 301 живых записей: HTTP, SOCKS5, SOCKS4. Анонимность, задержка и аптайм измеряются реальными соединениями — не пингом. Выдача публикуется сразу и без ограничений.</p>
+      <div class="cta-row">
+        <a class="btn btn-1" href="http://193.34.212.154:8931" target="_blank" rel="noopener">Открыть пул</a>
+        <a class="btn btn-2" href="verify.html">Методика проверки узлов</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="mrow">
+        <div class="mcard"><div class="mv">30 301</div><div class="mk">живых записей</div></div>
+        <div class="mcard"><div class="mv">111</div><div class="mk">стран</div></div>
+        <div class="mcard"><div class="mv grad-txt">24 832</div><div class="mk">elite-прокси · 82%</div></div>
+        <div class="mcard"><div class="mv">123 <small style="font-size:1.2rem;color:var(--dim)">ms</small></div><div class="mk">медиана задержки · p95 5570 ms</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Пул <span class="grad-txt">прямо сейчас</span></h2>
+        <p>Поисковый индекс адреса, сети и страны; сортировка по аптайму за 30 дней.</p>
+      </div>
+      <div class="toolbar">
+        <div class="tool-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Поиск по адресу, стране или сети" disabled></div>
+        <div class="fchips"><button class="fchip on">HTTP</button><button class="fchip on">SOCKS5</button><button class="fchip on">SOCKS4</button></div>
+      </div>
+      <div class="toolbar" style="margin-top:0">
+        <div class="fchips"><span class="pa" style="align-self:center">ГРЕЙД</span><button class="fchip on">elite</button><button class="fchip on">anonymous</button><button class="fchip">transparent</button><button class="fchip">unknown</button></div>
+        <div class="tool-x">страна · все (111) ▾</div>
+        <div class="tool-x">50 на странице ▾</div>
+      </div>
+      <div class="tcard"><div class="tscroll"><table class="pt"><thead><tr><th>#</th><th>Proxy</th><th>Protocol</th><th>Grade</th><th>Latency</th><th>Uptime 7d</th><th>Country</th></tr></thead><tbody><tr><td class="pa">1</td><td class="addr">45.85.119.124:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">7 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">GB</td></tr><tr><td class="pa">2</td><td class="addr">172.67.194.35:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">CA</td></tr><tr><td class="pa">3</td><td class="addr">185.148.105.221:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">RU</td></tr><tr><td class="pa">4</td><td class="addr">206.238.238.39:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">SG</td></tr><tr><td class="pa">5</td><td class="addr">172.67.167.117:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">CA</td></tr><tr><td class="pa">6</td><td class="addr">104.27.19.230:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">CA</td></tr><tr><td class="pa">7</td><td class="addr">198.41.200.112:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">CA</td></tr><tr><td class="pa">8</td><td class="addr">63.141.128.78:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">US</td></tr><tr><td class="pa">9</td><td class="addr">104.254.140.6:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">US</td></tr><tr><td class="pa">10</td><td class="addr">104.18.14.32:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num">CA</td></tr></tbody></table></div></div>
+      <div class="pager"><span>показано 10 из 30 301 · обновлено 15 минут назад</span><span>‹ предыдущая · <b style="color:var(--txt)">1</b> /607 · следующая ›</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="comp2">
+        <div class="cpanel">
+          <div class="pk">АНОНИМНОСТЬ</div>
+          <h3>Грейды выдачи</h3>
+          <div class="segbar"><i style="width:81.95%;background:#38bdf8"></i><i style="width:1.50%;background:#8b5cff"></i><i style="width:2.06%;background:#f59e0b"></i><i style="width:14.49%;background:#3d3d52"></i></div>
+          <div class="cleg"><span><i style="background:#38bdf8"></i>elite <b>24 832</b></span><span><i style="background:#8b5cff"></i>anonymous <b>455</b></span><span><i style="background:#f59e0b"></i>transparent <b>624</b></span><span><i style="background:#3d3d52"></i>unknown <b>4 390</b></span></div>
+          <p style="margin-top:.9rem;color:var(--mut);font-size:.88rem">elite не раскрывает адрес клиента и факт проксирования; unknown — прокси подтвердил живость, но уровень не измерен.</p>
+        </div>
+        <div class="cpanel">
+          <div class="pk">ПРОГОН</div>
+          <h3>Цикл проверки очереди</h3>
+          <div class="funnel-6" style="margin-top:.9rem"><div class="frow"><span class="fn">01</span><span class="fl">распознано строк</span><span class="fv num">3 811 493</span></div><div class="frow"><span class="fn">02</span><span class="fl">уникальных адресов</span><span class="fv num">754 973</span></div><div class="frow"><span class="fn">03</span><span class="fl">взято на проверку</span><span class="fv num">3 000</span></div><div class="frow"><span class="fn">04</span><span class="fl">живых после прогона</span><span class="fv num">3 507</span></div></div>
+          <p style="margin-top:.9rem;color:var(--mut);font-size:.88rem">189 из 194 источников ответили в последнем цикле.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Источники <span class="grad-txt">и их вклад</span></h2>
+        <p>Бенчмарк внешних листов: сколько адресов переживёт проверку. Данные оживают только после полного прохода.</p>
+      </div>
+      <div class="tcard"><div class="tscroll"><table class="pt"><thead><tr><th>#</th><th>Источник</th><th>Живые</th><th>Медиана</th><th>Elite</th><th>Публикаций</th></tr></thead><tbody><tr><td class="pa">1</td><td class="addr">gnxd3riftt2we-rh-http</td><td class="num">95.7%</td><td class="num">22 / 23</td><td class="num">17 ms</td><td class="num">95.5%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">2</td><td class="addr">gnxd3riftt2we-st-http</td><td class="num">95.5%</td><td class="num">21 / 22</td><td class="num">17 ms</td><td class="num">95.2%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">3</td><td class="addr">ch4120n-zw</td><td class="num">94.4%</td><td class="num">17 / 18</td><td class="num">1254 ms</td><td class="num">0.0%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">4</td><td class="addr">maximilianfeix-http</td><td class="num">78.4%</td><td class="num">40 / 51</td><td class="num">3107 ms</td><td class="num">27.5%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">5</td><td class="addr">relayglass-all</td><td class="num">77.0%</td><td class="num">57 / 74</td><td class="num">1258 ms</td><td class="num">8.8%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">6</td><td class="addr">stormsia-socks5</td><td class="num">75.9%</td><td class="num">22 / 29</td><td class="num">3676 ms</td><td class="num">9.1%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">7</td><td class="addr">zaeem20-socks5</td><td class="num">75.0%</td><td class="num">54 / 72</td><td class="num">1258.5 ms</td><td class="num">13.0%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr></tbody></table></div></div>
+      <p class="pa" style="margin-top:.8rem">полный бенчмарк — 194 источников · обновляется вместе с прогоном</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Файлы <span class="grad-txt">и API</span></h2>
+        <p>Выдача публикуется полностью, включая узлы, не попавшие в сортировку демо-страницы.</p>
+      </div>
+      <div class="filelist"><div class="lr"><span class="ff">data/proxies.json</span><span class="fd2">полная выдача с метаданными · ~5 МБ</span><a href="http://193.34.212.154:8931/data/proxies.json" target="_blank" rel="noopener">30 301</a></div><div class="lr"><span class="ff">data/meta.json</span><span class="fd2">метаданные прогона: цикл, источники, грейды</span><a href="http://193.34.212.154:8931/data/meta.json" target="_blank" rel="noopener">структура</a></div><div class="lr"><span class="ff">data/http.txt</span><span class="fd2">текстовый список HTTP</span><span class="pa">28 766</span></div><div class="lr"><span class="ff">data/socks5.txt</span><span class="fd2">текстовый список SOCKS5</span><span class="pa">1 172</span></div><div class="lr"><span class="ff">data/socks4.txt</span><span class="fd2">текстовый список SOCKS4</span><span class="pa">363</span></div><div class="lr"><span class="ff">data/country/CA.txt</span><span class="fd2">шард по стране (111 шардов)</span><span class="pa">12 214</span></div></div>
+      <p style="margin-top:1rem;color:var(--mut);font-size:.88rem">Каждую запись считайте враждебной: публичный прокси может перехватывать и подменять трафик. Не отправляйте через него аккаунты, пароли и приватные данные.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="bento">
+        <div class="b-mod b6">
+          <div class="pk">ПРАВОВЫЕ РАМКИ</div>
+          <h3>Каталог, а не оператор</h3>
+          <p>Соединение устанавливается напрямую между клиентом и узлом. Мы публикуем проверенные адреса из открытых листов и не участвуем в передаче трафика.</p>
+        </div>
+        <div class="b-mod b6">
+          <div class="pk">ГРАНИЦА</div>
+          <h3>к чем пул не применим</h3>
+          <p>За действия на узлах отвечает оператор узла. Для чувствительных данных используйте VPN-конфигурации платформы.</p>
+          <a class="golink" href="vpn.html">VPN — конфигурации с полной проверкой</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
+        <span>evilgate</span>
+      </div>
+      <p>Каталог проверенных публичных узлов. Пул агрегирует только опубликованные списки; соединение устанавливается напрямую между клиентом и узлом, трафик не проходит через наши серверы. Мы не являемся оператором узлов.</p>
+      <p class="cop">© 2026 evilgate</p>
+    </div>
+    <nav aria-label="Ссылки">
+      <a href="index.html">Главная</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="verify.html">Проверка</a>
+      <a href="premium.html">Премиум</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,8 @@
+This product includes GeoLite2 data created by MaxMind, available from
+https://www.maxmind.com.
+
+The mmdb provider (`OPP_GEOIP_PROVIDER=mmdb`) reads a GeoLite2 database
+mounted at runtime via `OPP_GEOIP_MMDB`. The database itself is not
+distributed in this repository; download it from MaxMind under your own
+license (free for many uses, registration required) and honour their
+attribution requirements when you publish derived data.

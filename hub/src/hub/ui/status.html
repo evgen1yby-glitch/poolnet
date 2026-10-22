@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoolNet — состояние пула</title>
+<meta name="description" content="Живое состояние пула: сколько узлов прошло проверку, как менялась выживаемость, какие источники работают.">
+<meta name="theme-color" content="#070b13">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23070b13'/%3E%3Cpath%20d='M12.3%203V29'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'/%3E%3Cpath%20d='M12.3%204.8A9%209%200%200%201%2012.3%2022.8'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'%20fill='none'/%3E%3Ccircle%20cx='21.3'%20cy='13.8'%20r='3.4'%20fill='%236be1ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/base.css">
+<link rel="stylesheet" href="/static/status.css">
+</head>
+<body>
+<!--
+  The public status page. It reads one JSON document and draws tables; it makes
+  no other request and loads nothing external.
+
+  What it deliberately does not show, and why — the two are the same reason an
+  index exists at all:
+
+    * node addresses: that is the pool, and this endpoint would become the
+      scrape that `/api/v1/stats` exists not to be;
+    * source URLs: the operator's panel names them, because a health table
+      without a name is unusable for them. Here a URL would tell a reader where
+      to fetch the same list directly, bypassing the hub.
+
+  Counts, timestamps and ratios only.
+-->
+<header class="top">
+  <a class="wordmark" href="/"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="12.3" cy="4.8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12.3" cy="27.2" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="21.3" cy="13.8" r="3.4" fill="currentColor"/><path d="M12.3 4.5V27.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M12.3 4.8A9 9 0 0 1 12.3 22.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>poolnet</a>
+  <nav>
+    <a href="/#cull">Как это работает</a>
+    <a href="/#pool">Пул</a>
+    <a href="/#clients">Клиенты</a>
+    <span class="cur" aria-current="page">Состояние</span>
+  </nav>
+</header>
+
+<main>
+<section class="head">
+  <h1>Состояние пула</h1>
+  <p class="caption">
+    Пул публичный и нестабильный по своей природе: узлы — чужие серверы, и они
+    умирают. Эта страница показывает, что происходило на самом деле, а не только
+    сколько узлов сейчас.
+  </p>
+</section>
+
+<div id="app"><p class="caption">Читаю состояние…</p></div>
+
+<div class="warn" style="margin-top:2.2rem">
+  <strong>Узлы не проверены на честность.</strong> Проверяется доступность и то,
+  что через узел действительно идёт трафик — не то, что владелец узла не
+  подменяет содержимое. Не используйте для входа в аккаунты и денежных операций.
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var app = document.getElementById("app");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function dur(s) {
+    if (s == null) return "—";
+    if (s < 90) return Math.round(s) + " с";
+    if (s < 5400) return (s / 60).toFixed(1) + " мин";
+    if (s < 172800) return (s / 3600).toFixed(1) + " ч";
+    return (s / 86400).toFixed(1) + " дн";
+  }
+
+  /// A block: a rule across the top, a heading on it, content below.
+  /// The separator does the work a card's box would have done, and adds
+  /// nothing to the reading.
+  function block(title, aside, content) {
+    return '<section class="block"><div class="block-head"><h2>' + esc(title) +
+      "</h2>" + (aside ? '<span class="aside">' + esc(aside) + "</span>" : "") +
+      '</div>' + content + "</section>";
+  }
+
+  function row(k, v) {
+    return '<div class="tally"><span class="state" data-s="off">' + esc(k) +
+      '</span><span class="m">' + esc(v) + "</span></div>";
+  }
+
+  /// `2026-10-16T18:35:04+00:00` as `16.10 18:35`, which is what an axis needs
+  /// and what a full ISO string buries.
+  function stamp(iso) {
+    if (!iso || iso.length < 16) return iso || "—";
+    return iso.slice(8, 10) + "." + iso.slice(5, 7) + " " + iso.slice(11, 16);
+  }
+
+  function render(d) {
+    var html = "";
+
+    // The trend, which is what the page is for. Bars scaled against the tallest
+    // reading rather than a fixed maximum: the point is the shape, and a scale
+    // that fits a 239-node spike would flatten the 49-node runs to nothing.
+    if (d.runs.length) {
+      var max = d.runs.reduce(function (m, r) { return Math.max(m, r.http || 0); }, 0) || 1;
+      var best = d.runs.reduce(function (b, r) { return (r.http || 0) > (b.http || 0) ? r : b; }, d.runs[0]);
+      var rows = d.runs.slice().reverse().map(function (r) {
+        var w = Math.max(0.5, ((r.http || 0) / max) * 100);
+        return '<div class="run" data-best="' + (r === best ? "1" : "0") + '">' +
+          '<span class="at">' + esc(stamp(r.at)) + "</span>" +
+          '<span class="rail"><i style="width:' + w.toFixed(2) + '%"></i></span>' +
+          '<span class="n">' + esc(r.http || 0) + "</span></div>";
+      }).join("");
+      html += block("Сколько узлов проходит все проверки", d.runs.length + " прогонов",
+        '<div class="runs">' + rows + "</div>" +
+        '<p class="caption">Каждый столбик — один прогон проверки. Разброс в разы или десятки раз — это норма для публичного пула: узлы приходят и уходят, и список обновляется по результатам последнего прогона.</p>');
+    } else {
+      html += block("Сколько узлов проходит все проверки", "",
+        '<p class="caption">Прогонов пока не было. Первый появится после того, как конвейер завершит проверку.</p>');
+    }
+
+    // Now, as a line of readings: three values, each with the word it means.
+    html += block("Сейчас", d.now.generation || "",
+      '<div class="tally"><span class="state" data-s="ok">' + esc(d.now.verified) +
+      " узлов проверено</span>" +
+      '<span class="state" data-s="off">' + esc(d.now.countries) + " стран</span>" +
+      '<span class="state" data-s="off">поколение ' + esc(dur(d.now.age_s)) + " назад</span>" +
+      "</div>");
+
+    if (d.sources && d.sources.total) {
+      html += block("Источники", d.sources.total + " всего",
+        '<div class="tally">' +
+        '<span class="state" data-s="ok">' + esc(d.sources.working) + " работают</span>" +
+        (d.sources.failing
+          ? '<span class="state" data-s="warn">' + esc(d.sources.failing) + " сбоят</span>"
+          : "") +
+        (d.sources.disabled
+          ? '<span class="state" data-s="off">' + esc(d.sources.disabled) + " отключены</span>"
+          : "") +
+        "</div>" +
+        '<p class="caption">Проект не собирает узлы сам — он читает публично опубликованные списки. Источник отключается, если 20 раундов подряд не отдаёт ничего.</p>');
+    }
+
+    if (d.generations && d.generations.length) {
+      var body = d.generations.slice(0, 12).map(function (g) {
+        var current = g.generation === (d.now || {}).generation;
+        return "<tr><td>" + esc(g.generation) +
+          (current ? ' <span class="state" data-s="ok">текущее</span>' : "") +
+          '</td><td class="m">' + esc(stamp(g.at)) + "</td>" +
+          '<td class="num">' + esc(g.nodes) + "</td></tr>";
+      }).join("");
+      html += block("Публикации", "", "<table><thead><tr><th>Поколение</th><th>Когда</th>" +
+        '<th class="num">Узлов</th></tr></thead><tbody>' + body + "</tbody></table>" +
+        '<p class="caption">Поколения адресуются содержимым: одинаковый пул всегда даёт один и тот же номер. Поэтому откат — это смена указателя, а не пересборка.</p>');
+    }
+
+    app.innerHTML = html;
+  }
+
+  fetch("/status/data", { headers: { accept: "application/json" } })
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(render)
+    .catch(function (e) {
+      app.innerHTML = '<p class="error">Не удалось прочитать состояние: ' + esc(e.message) + "</p>";
+    });
+})();
+</script>
+</body>
+</html>

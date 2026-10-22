@@ -1,0 +1,811 @@
+# Registry of proxy sources.
+#
+# Every entry describes where raw proxies come from and how to parse them.
+# The pipeline never scans the network: it only consumes published lists,
+# which keeps outbound behaviour to one request per source per cycle.
+#
+# Fields:
+#   id       stable identifier, used in stats and the disable log
+#   url      fetchable URL (redirects are followed, max 3 hops)
+#   format   plain  - text lines: ip:port, scheme://ip:port, user:pass@host:port
+#             json   - { "data": [ { "ip", "port", "protocols": [...] } ] } (geonode)
+#   protocol default protocol when a line carries no scheme
+#   enabled  false removes the source without deleting its history
+#
+# Keep the protocols list in sync with the docs/sources.md health digest.
+
+sources:
+  # ---------------- SOCKS5 ----------------
+  - id: gitrecon1455-fresh
+    url: https://raw.githubusercontent.com/gitrecon1455/fresh-proxy-list/refs/heads/main/proxylist.txt
+    format: plain
+    protocol: socks5
+  - id: fifzzsenze-master-socks5
+    url: https://raw.githubusercontent.com/FifzzSENZE/Master-Proxy/master/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: fyvri-classic-socks5
+    url: https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: sevenworksdev-socks5
+    url: https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: tsprnay-socks5
+    url: https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: murongpig-master-socks5
+    url: https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: hookzof-socks5
+    url: https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt
+    format: plain
+    protocol: socks5
+  - id: proxifly-socks5
+    url: https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt
+    format: plain
+    protocol: socks5
+  - id: proxifly-socks5-jsdelivr
+    url: https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt
+    format: plain
+    protocol: socks5
+  - id: ercindedeoglu-socks5
+    url: https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: tuanminpay-socks5
+    url: https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: zevtyardt-socks5
+    url: https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: iplocate-socks5
+    url: https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: casals-ar-socks5
+    url: https://raw.githubusercontent.com/casals-ar/proxy-list/refs/heads/main/socks5
+    format: plain
+    protocol: socks5
+  - id: casa-ls-socks5
+    url: https://raw.githubusercontent.com/casa-ls/proxy-list/refs/heads/main/socks5
+    format: plain
+    protocol: socks5
+  - id: ebrasha-abdal-socks5
+    url: https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/refs/heads/main/socks5-proxy-list-by-EbraSha.txt
+    format: plain
+    protocol: socks5
+  - id: r00tee-socks5
+    url: https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt
+    format: plain
+    protocol: socks5
+  - id: sunny9577-scraper
+    url: https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt
+    format: plain
+    protocol: socks5
+  - id: zebbern-socks5
+    url: https://raw.githubusercontent.com/zebbern/Proxy-Scraper/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: vmheaven-socks5
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven-Free-Proxy-Updated/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: aliiLapro-socks5
+    url: https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: noarche-socks5
+    url: https://raw.githubusercontent.com/noarche/proxylist-socks5-sock4-exported-updates/main/socks5-online.txt
+    format: plain
+    protocol: socks5
+  - id: vpslabcloud-socks5
+    url: https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/refs/heads/main/socks5_all.txt
+    format: plain
+    protocol: socks5
+  - id: databaylabs-socks5
+    url: https://raw.githubusercontent.com/databay-labs/free-proxy-list/refs/heads/master/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: jetkai-socks5
+    url: https://raw.githubusercontent.com/jetkai/proxy-list/refs/heads/main/online-proxies/txt/proxies-socks5.txt
+    format: plain
+    protocol: socks5
+  - id: monosans-socks5
+    url: https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: thespeedx-socks5
+    url: https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: imrazvan-socks5
+    url: https://raw.githubusercontent.com/im-razvan/proxy_list/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: themiralay-world
+    url: https://raw.githubusercontent.com/themiralay/Proxy-List-World/master/data.txt
+    format: plain
+    protocol: socks5
+  - id: vanndev-socks5
+    url: https://raw.githubusercontent.com/Vann-Dev/proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: zaeem20-socks5
+    url: https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: stormsia-socks5
+    url: https://raw.githubusercontent.com/stormsia/proxy-list/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: dpangestuw-all
+    url: https://raw.githubusercontent.com/dpangestuw/Free-Proxy/refs/heads/main/All_proxies.txt
+    format: plain
+    protocol: socks5
+  - id: proxyscrape-repo-all
+    url: https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/all/data.txt
+    format: plain
+    protocol: socks5
+  - id: pxysio-daily
+    url: https://raw.githubusercontent.com/Pxys-io/DailyProxyList/refs/heads/master/working_proxies.txt
+    format: plain
+    protocol: socks5
+  - id: bes-js-public
+    url: https://raw.githubusercontent.com/Bes-js/public-proxy-list/main/proxies.txt
+    format: plain
+    protocol: socks5
+  - id: trio666-checker-all
+    url: https://raw.githubusercontent.com/trio666/proxy-checker/refs/heads/main/all.txt
+    format: plain
+    protocol: socks5
+  - id: iplocate-all
+    url: https://raw.githubusercontent.com/iplocate/free-proxy-list/refs/heads/main/all-proxies.txt
+    format: plain
+    protocol: socks5
+  - id: litportnet-all
+    url: https://raw.githubusercontent.com/litportnet/free-proxy-list/refs/heads/main/proxies/all.txt
+    format: plain
+    protocol: socks5
+  - id: maximilianfeix-all
+    url: https://raw.githubusercontent.com/maximilianfeix/free-proxy-list/refs/heads/main/all.txt
+    format: plain
+    protocol: socks5
+  - id: proxmint-all
+    url: https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/all.txt
+    format: plain
+    protocol: socks5
+  - id: monosans-all
+    url: https://raw.githubusercontent.com/monosans/proxy-list/refs/heads/main/proxies/all.txt
+    format: plain
+    protocol: socks5
+  - id: azestkingscrown-working
+    url: https://raw.githubusercontent.com/azestkingscrown/Free_Proxy_List/refs/heads/main/working_proxies.txt
+    format: plain
+    protocol: socks5
+  - id: blacksnowdot0-pulse
+    url: https://raw.githubusercontent.com/BlacKSnowDot0/Proxy-Pulse/refs/heads/main/all.txt
+    format: plain
+    protocol: socks5
+  - id: ch4120n-ae
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/AE/proxies.txt
+    format: plain
+    protocol: socks5
+  - id: chengaopan-automerge
+    url: https://raw.githubusercontent.com/chengaopan/AutoMergePublicNodes/refs/heads/master/list_raw.txt
+    format: plain
+    protocol: socks5
+  - id: lonekingcode-db
+    url: https://raw.githubusercontent.com/LoneKingCode/free-proxy-db/refs/heads/main/proxies/all.txt
+    format: plain
+    protocol: socks5
+  - id: relayglass-all
+    url: https://raw.githubusercontent.com/Relayglass/free-proxy-list/main/all.txt
+    format: plain
+    protocol: socks5
+
+  # ---------------- HTTP / HTTPS ----------------
+  - id: fyvri-classic-http
+    url: https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/http.txt
+    format: plain
+    protocol: http
+  - id: fifzzsenze-master-http
+    url: https://raw.githubusercontent.com/FifzzSENZE/Master-Proxy/master/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: sevenworksdev-http
+    url: https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: tsprnay-http
+    url: https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: proxifly-http
+    url: https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt
+    format: plain
+    protocol: http
+  - id: proxifly-https
+    url: https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/https/data.txt
+    format: plain
+    protocol: http
+  - id: ercindedeoglu-http
+    url: https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: zevtyardt-http
+    url: https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt
+    format: plain
+    protocol: http
+  - id: tuanminpay-http
+    url: https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/http.txt
+    format: plain
+    protocol: http
+  - id: vmheaven-http
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven-Free-Proxy-Updated/main/http.txt
+    format: plain
+    protocol: http
+  - id: vmheaven-https
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven-Free-Proxy-Updated/main/https.txt
+    format: plain
+    protocol: http
+  - id: databaylabs-http
+    url: https://raw.githubusercontent.com/databay-labs/free-proxy-list/refs/heads/master/http.txt
+    format: plain
+    protocol: http
+  - id: r00tee-https
+    url: https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt
+    format: plain
+    protocol: http
+  - id: zebbern-http
+    url: https://raw.githubusercontent.com/zebbern/Proxy-Scraper/main/http.txt
+    format: plain
+    protocol: http
+  - id: monosans-http
+    url: https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: thespeedx-http
+    url: https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt
+    format: plain
+    protocol: http
+  - id: iplocate-http
+    url: https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/http.txt
+    format: plain
+    protocol: http
+  - id: jetkai-http
+    url: https://raw.githubusercontent.com/jetkai/proxy-list/refs/heads/main/online-proxies/txt/proxies-http.txt
+    format: plain
+    protocol: http
+  - id: jetkai-https
+    url: https://raw.githubusercontent.com/jetkai/proxy-list/refs/heads/main/online-proxies/txt/proxies-https.txt
+    format: plain
+    protocol: http
+  - id: javadbazokar-http
+    url: https://raw.githubusercontent.com/javadbazokar/PROXY-List/main/http.txt
+    format: plain
+    protocol: http
+  - id: murongpig-master-http
+    url: https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt
+    format: plain
+    protocol: http
+  - id: mzyui-http
+    url: https://raw.githubusercontent.com/mzyui/proxy-list/main/http.txt
+    format: plain
+    protocol: http
+  - id: proxyspace-http
+    url: https://proxyspace.pro/http.txt
+    format: plain
+    protocol: http
+  - id: prxchk-all
+    url: https://raw.githubusercontent.com/prxchk/proxy-list/refs/heads/main/all.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-af
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/AF/proxies.txt
+    format: plain
+    protocol: http
+  - id: czech-proxy-list
+    url: https://raw.githubusercontent.com/4x4x4x4x/free-czech-proxy-list/refs/heads/main/proxy.txt
+    format: plain
+    protocol: http
+  - id: naravid19-checked
+    url: https://raw.githubusercontent.com/naravid19/checked-proxies/refs/heads/main/proxies/all.txt
+    format: plain
+    protocol: http
+  - id: thespeedx-socks4
+    url: https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: proxifly-socks4
+    url: https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks4/data.txt
+    format: plain
+    protocol: socks4
+  - id: proxifly-all
+    url: https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.txt
+    format: plain
+    protocol: http
+  - id: noarche-socks4
+    url: https://raw.githubusercontent.com/noarche/proxylist-socks5-sock4-exported-updates/main/socks4-online.txt
+    format: plain
+    protocol: socks4
+
+  # ---------------- JSON APIs ----------------
+  - id: geonode-elite-socks5
+    url: https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=upTime&sort_type=desc&protocols=socks5&anonymityLevel=elite
+    format: json
+  - id: geonode-socks5
+    url: https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=upTime&sort_type=desc&protocols=socks5
+    format: json
+  - id: geonode-http
+    url: https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=upTime&sort_type=desc&protocols=http
+    format: json
+  - id: geonode-socks4
+    url: https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=upTime&sort_type=desc&protocols=socks4
+    format: json
+  - id: geonode-fast
+    url: https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&speed=fast
+    format: json
+  - id: geonode-page2-fast
+    url: https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc
+    format: json
+  - id: flashproxy
+    url: https://www.flashproxy.com/api/proxies/txt?limit=2000
+    format: plain
+
+  # ---------------- Scraper APIs ----------------
+  - id: proxyscrape-v4-all
+    url: https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&proxy_format=protocolipport&format=text&protocol=http,socks5
+    format: plain
+  - id: proxyscrape-v2-http
+    url: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000
+    format: plain
+    protocol: http
+  - id: proxyscrape-v2-socks5
+    url: https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000
+    format: plain
+    protocol: socks5
+  - id: openproxylist-http
+    url: https://api.openproxylist.xyz/http.txt
+    format: plain
+    protocol: http
+  - id: openproxylist-socks5
+    url: https://api.openproxylist.xyz/socks5.txt
+    format: plain
+    protocol: socks5
+
+  # ---------------- Added after first live runs ----------------
+  - id: fifzzsenze-master-all
+    url: https://raw.githubusercontent.com/FifzzSENZE/Master-Proxy/master/proxies/all.txt
+    format: plain
+    protocol: socks5
+  - id: ch4120n-lu
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/LU/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-us
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/US/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-id
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/ID/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ru
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/RU/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-nl
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/NL/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-de
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/DE/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-cn
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/CN/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-gb
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/GB/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-vn
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/VN/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-sg
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/SG/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-hk
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/HK/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ph
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/PH/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-in
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/IN/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-th
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/TH/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-br
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/BR/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-bd
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/BD/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-jp
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/JP/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-fr
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/FR/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-pk
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/PK/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-co
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/CO/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-mx
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/MX/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ca
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/CA/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-kr
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/KR/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-my
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/MY/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ir
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/IR/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-tr
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/TR/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ar
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/AR/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ua
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/UA/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-ec
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/EC/proxies.txt
+    format: plain
+    protocol: http
+  - id: ch4120n-zw
+    url: https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/refs/heads/master/countries/ZW/proxies.txt
+    format: plain
+    protocol: http
+
+  # ---------------- Scraper APIs (v3 + socks5) ----------------
+  - id: proxyscrape-v3-all
+    url: https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&proxy_format=protocolipport&format=text&protocol=http,socks5
+    format: plain
+  - id: proxyspace-socks5
+    url: https://proxyspace.pro/socks5.txt
+    format: plain
+    protocol: socks5
+
+  # ---------------- Classic repos ----------------
+  - id: clarketm-proxy-list
+    url: https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list.txt
+    format: plain
+    protocol: http
+  - id: opsxcq-proxy-list
+    url: https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt
+    format: plain
+    protocol: http
+
+  # ---------------- HTML directories ----------------
+  - id: free-proxy-list-net
+    url: https://free-proxy-list.net/
+    format: html
+    protocol: http
+  - id: sslproxies-org
+    url: https://sslproxies.org/
+    format: html
+    protocol: http
+  - id: us-proxy-org
+    url: https://us-proxy.org/
+    format: html
+    protocol: http
+  - id: socks-proxy-net
+    url: https://socks-proxy.net/
+    format: html
+    protocol: socks5
+
+  # ---------------- Added by the discover sweep ----------------
+  - id: ndt-scraper-socks5
+    url: https://raw.githubusercontent.com/nguyenduytan/NDT-Proxy-Scraper/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: ndt-scraper-http
+    url: https://raw.githubusercontent.com/nguyenduytan/NDT-Proxy-Scraper/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: ndt-scraper-socks4
+    url: https://raw.githubusercontent.com/nguyenduytan/NDT-Proxy-Scraper/HEAD/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: hproxy-all
+    url: https://raw.githubusercontent.com/hproxy-com/free-proxy-list/HEAD/all.txt
+    format: plain
+    protocol: http
+  - id: hproxy-socks5
+    url: https://raw.githubusercontent.com/hproxy-com/free-proxy-list/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: hproxy-http
+    url: https://raw.githubusercontent.com/hproxy-com/free-proxy-list/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: hproxy-https
+    url: https://raw.githubusercontent.com/hproxy-com/free-proxy-list/HEAD/https.txt
+    format: plain
+    protocol: http
+  - id: hproxy-socks4
+    url: https://raw.githubusercontent.com/hproxy-com/free-proxy-list/HEAD/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: ercindedeoglu-socks4
+    url: https://raw.githubusercontent.com/ErcinDedeoglu/proxies/HEAD/proxies/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: ercindedeoglu-https
+    url: https://raw.githubusercontent.com/ErcinDedeoglu/proxies/HEAD/proxies/https.txt
+    format: plain
+    protocol: http
+  - id: proxio-all
+    url: https://raw.githubusercontent.com/proxio-io/proxy-list/HEAD/all.txt
+    format: plain
+    protocol: http
+  - id: proxio-http
+    url: https://raw.githubusercontent.com/proxio-io/proxy-list/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: proxio-https
+    url: https://raw.githubusercontent.com/proxio-io/proxy-list/HEAD/https.txt
+    format: plain
+    protocol: http
+  - id: proxio-socks5
+    url: https://raw.githubusercontent.com/proxio-io/proxy-list/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: proxio-socks4
+    url: https://raw.githubusercontent.com/proxio-io/proxy-list/HEAD/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: health-list-all
+    url: https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/HEAD/all.txt
+    format: plain
+    protocol: http
+  - id: health-list-http
+    url: https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: health-list-https
+    url: https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/HEAD/https.txt
+    format: plain
+    protocol: http
+  - id: health-list-socks5
+    url: https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: health-list-socks4
+    url: https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/HEAD/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: vmheaven-io-http
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven.io-Free-Proxy-List/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: vmheaven-io-https
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven.io-Free-Proxy-List/HEAD/https.txt
+    format: plain
+    protocol: http
+  - id: vmheaven-io-socks5
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven.io-Free-Proxy-List/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: vmheaven-io-socks4
+    url: https://raw.githubusercontent.com/vmheaven/VMHeaven.io-Free-Proxy-List/HEAD/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: ianusule-socks5
+    url: https://raw.githubusercontent.com/Ian-Lusule/Proxies/HEAD/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: ianusule-http
+    url: https://raw.githubusercontent.com/Ian-Lusule/Proxies/HEAD/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: ianusule-socks4
+    url: https://raw.githubusercontent.com/Ian-Lusule/Proxies/HEAD/proxies/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: mrmarble-all
+    url: https://raw.githubusercontent.com/MrMarble/proxy-list/HEAD/all.txt
+    format: plain
+    protocol: http
+  - id: proxmint-branch-socks5
+    url: https://raw.githubusercontent.com/proxmint/free-proxy-list/HEAD/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: proxmint-branch-http
+    url: https://raw.githubusercontent.com/proxmint/free-proxy-list/HEAD/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: proxmint-branch-socks4
+    url: https://raw.githubusercontent.com/proxmint/free-proxy-list/HEAD/proxies/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: maximilianfeix-socks5
+    url: https://raw.githubusercontent.com/maximilianfeix/free-proxy-list/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: maximilianfeix-http
+    url: https://raw.githubusercontent.com/maximilianfeix/free-proxy-list/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: maximilianfeix-https
+    url: https://raw.githubusercontent.com/maximilianfeix/free-proxy-list/HEAD/https.txt
+    format: plain
+    protocol: http
+  - id: databaylabs-https
+    url: https://raw.githubusercontent.com/databay-labs/free-proxy-list/HEAD/https.txt
+    format: plain
+    protocol: http
+  - id: databaylabs-socks4
+    url: https://raw.githubusercontent.com/databay-labs/free-proxy-list/HEAD/socks4.txt
+    format: plain
+    protocol: socks4
+  - id: pwnx0-http
+    url: https://raw.githubusercontent.com/pwnx0/proxy/HEAD/proxies/http.txt
+    format: plain
+    protocol: http
+  - id: pwnx0-https
+    url: https://raw.githubusercontent.com/pwnx0/proxy/HEAD/proxies/https.txt
+    format: plain
+    protocol: http
+  - id: gnxd3riftt2we-rh-socks5
+    url: https://raw.githubusercontent.com/gnxD3RfTT2WE/rotating-http-proxies/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: gnxd3riftt2we-rh-http
+    url: https://raw.githubusercontent.com/gnxD3RfTT2WE/rotating-http-proxies/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: gnxd3riftt2we-st-socks5
+    url: https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-http-socks/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: gnxd3riftt2we-st-http
+    url: https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-http-socks/HEAD/http.txt
+    format: plain
+    protocol: http
+  - id: stormsia-working
+    url: https://raw.githubusercontent.com/stormsia/proxy-list/HEAD/working_proxies.txt
+    format: plain
+    protocol: http
+
+  # ---------------- getfreeproxy.com (API, key required) ----------------
+  # Auth template: ${GFP_API_KEY} is expanded from the environment at load
+  # time; without the variable the source is skipped quietly, so public CI
+  # without the secret keeps working. Get a key at getfreeproxy.com.
+  - id: gfp-http
+    url: https://api.getfreeproxy.com/v1/proxies?protocol=http
+    format: gfp
+    auth: bearer:${GFP_API_KEY}
+  - id: gfp-https
+    url: https://api.getfreeproxy.com/v1/proxies?protocol=https
+    format: gfp
+    auth: bearer:${GFP_API_KEY}
+  - id: gfp-socks4
+    url: https://api.getfreeproxy.com/v1/proxies?protocol=socks4
+    format: gfp
+    auth: bearer:${GFP_API_KEY}
+  - id: gfp-socks5
+    url: https://api.getfreeproxy.com/v1/proxies?protocol=socks5
+    format: gfp
+    auth: bearer:${GFP_API_KEY}
+
+  # ---------------- spys.one (obfuscated HTML, vm-parsed) ----------------
+  # Ports are emitted by a packed script; src/parse/spys.ts runs the page's
+  # own scripts in a sandbox and recovers them. The mixed list serves the
+  # most recent 30 entries; the type-filtered lists serve 500 per request,
+  # but only through POST with the rows-per-page form field (GET is the
+  # 30-row teaser). The source's own type/anonymity/uptime claims ride along.
+  - id: spys-one-en
+    url: https://spys.one/en/free-proxy-list/
+    format: spys
+  - id: spys-one-socks
+    url: https://spys.one/en/socks-proxy-list/
+    format: spys
+    method: post
+    body: xpp=5
+  - id: spys-one-http
+    url: https://spys.one/en/http-proxy-list/
+    format: spys
+    method: post
+    body: xpp=5
+  - id: spys-one-anonymous
+    url: https://spys.one/en/anonymous-proxy-list/
+    format: spys
+    method: post
+    body: xpp=5
+
+  # ---------------- advanced.name (base64 attributes, 5 pages) ----------------
+  # 100 rows per page, address/port base64-encoded in td attributes; the
+  # source publishes its own type and country, which we carry as claims.
+  - id: advname-1
+    url: https://advanced.name/freeproxy?page=1
+    format: advname
+  - id: advname-2
+    url: https://advanced.name/freeproxy?page=2
+    format: advname
+  - id: advname-3
+    url: https://advanced.name/freeproxy?page=3
+    format: advname
+  - id: advname-4
+    url: https://advanced.name/freeproxy?page=4
+    format: advname
+  - id: advname-5
+    url: https://advanced.name/freeproxy?page=5
+    format: advname
+
+  # ---------------- roundproxies.com (public JSON API, 8x500) ----------------
+  # /api/get-free-proxies returns the whole pool the "Download all" button
+  # serves: 500 entries per page, 8 pages for 3,947, each with the source's
+  # own anonymity/latency/uptime/geo claims (our checker still measures).
+  - id: roundproxies-api-1
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=1
+    format: json
+  - id: roundproxies-api-2
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=2
+    format: json
+  - id: roundproxies-api-3
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=3
+    format: json
+  - id: roundproxies-api-4
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=4
+    format: json
+  - id: roundproxies-api-5
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=5
+    format: json
+  - id: roundproxies-api-6
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=6
+    format: json
+  - id: roundproxies-api-7
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=7
+    format: json
+  - id: roundproxies-api-8
+    url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=8
+    format: json

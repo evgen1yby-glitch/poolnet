@@ -1,0 +1,722 @@
+/* ==========================================================================
+   Направление B — «Атлас выходов».
+
+   Предмет: у хаба есть ровно одно знание о мире — список СТРАН, где стоят
+   узлы, через которые прошёл трафик. Не города, не провайдеры, не маршруты:
+   страна выхода, измеренная через `cdn-cgi/trace`. Поэтому страница — атлас,
+   а не карта мира: на ней есть координатная сетка и точки, и нет береговых
+   линий, потому что хаб не знает берегов. Нарисовать их значило бы выдумать
+   данные, которых нет.
+
+   Отсюда:
+
+   1. Светлый лист с холодным уклоном, а не тёплая бумага. Атлас печатают на
+      мелованной бумаге, и она нейтральна; тёплый кремовый — это другой жанр.
+
+   2. Одна антиква на всё: Literata, переменная по оптическому кеглю. Крупные
+      заголовки набраны ею же, но в дисплейном размере — у переменного шрифта
+      это разные начертания, а не один растянутый. Второго шрифта нет, кроме
+      моноширинного для координат: числа — это подписи на полях карты.
+
+   3. Сетка видна. Двенадцать колонок и гратикула — не декор, а координатная
+      система: карта без сетки не карта, а картинка. Линии слабые, но они есть,
+      и по ним выровнено всё остальное.
+
+   4. Один акцент — оксид меди #0f6b5c. Это цвет, которым на картах печатают
+      глубину и подтверждённые отметки. Он же — цвет точки, прошедшей проверку.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Literata";
+  src: url("../assets/fonts/literata-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-weight: 200 900; font-display: swap;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("../assets/fonts/literata-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 200 900; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/jbmono-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-weight: 100 800; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/jbmono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 100 800; font-display: swap;
+}
+
+:root {
+  /* Лист и два утопленных тона: полоса подписи и фон полей. Не серые —
+     с зеленоватым уклоном, чтобы лист читался как бумага атласа, а не как
+     экран монитора. */
+  --sheet:  #f7f7f3;
+  --sheet-2: #ebece4;
+  --sheet-3: #e1e3d9;
+
+  /* Сетка. Три веса: гратикула карты, колонки вёрстки, подчёркивание строки. */
+  --grid:   #d8dbcf;
+  --grid-2: #c9ccbe;
+  --grid-3: #e6e8de;
+
+  /* Чернила. */
+  --ink:    #14161a;
+  --ink-2:  #5c6157;
+  --ink-3:  #8a8f83;
+
+  /* Единственный хроматический цвет. */
+  --exit:     #0f6b5c;
+  --exit-mid: #4e9387;
+  --exit-dim: #b9d3cd;
+
+  --fail: #a5502a;
+  --warn: #8a6a1f;
+
+  --sans: "Literata", Georgia, "Noto Serif", serif;
+  --mono: "JetBrains Mono", ui-monospace, "Liberation Mono", monospace;
+
+  --col: 1180px;
+  --prose: 64ch;
+  --gutter: clamp(20px, 4vw, 48px);
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--sheet); }
+
+body {
+  margin: 0;
+  background: var(--sheet);
+  color: var(--ink);
+  font: 400 16px/1.66 var(--sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--exit); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+::selection { background: var(--exit-dim); }
+
+:focus-visible { outline: 2px solid var(--exit); outline-offset: 3px; }
+
+code, .m { font-family: var(--mono); font-size: 0.82em; font-variant-numeric: tabular-nums; }
+
+/* ---- полоса-легенда -----------------------------------------------------
+   Тонкая чернильная полоса над листом: на картах так печатают выходные
+   данные — масштаб, проекцию, дату съёмки. Здесь она несёт то же: чем
+   измерено, когда, сколько. */
+.legend {
+  background: var(--ink);
+  color: var(--sheet-2);
+  font: 400 0.68rem/1 var(--mono);
+  letter-spacing: 0.03em;
+}
+.legend .in {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 9px var(--gutter);
+  display: flex;
+  gap: 26px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.legend b { color: #fff; font-weight: 400; }
+.legend .right { display: flex; gap: 22px; }
+
+/* ---- лист --------------------------------------------------------------- */
+.wrap { max-width: var(--col); margin: 0 auto; padding: 0 var(--gutter); }
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px 0 18px;
+}
+.masthead .wordmark {
+  font: 600 1.35rem/1 var(--sans);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.masthead .wordmark b { color: var(--exit); font-weight: 600; }
+.masthead nav { display: flex; gap: 24px; font-size: 0.86rem; }
+.masthead nav a { color: var(--ink-2); text-decoration: none; }
+.masthead nav a:hover { color: var(--ink); text-decoration: underline; }
+
+/* ---- герой: заголовок слева, карта справа -------------------------------
+   Асимметрия 5/7: текст уже 40 символов читается одним движением, карта
+   получает остальное. Сетка нарисована вертикальными линиями по 12 колонкам —
+   они совпадают с колонками вёрстки, и это проверяемо глазом. */
+.hero {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0 22px;
+  align-items: end;
+  padding: 14px 0 8px;
+}
+
+.hero .title { grid-column: 1 / span 5; padding-bottom: 14px; }
+.hero h1 {
+  margin: 0 0 18px;
+  font: 400 clamp(2.1rem, 3.8vw, 3.15rem)/1.1 var(--sans);
+  letter-spacing: -0.018em;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.hero h1 b { font-weight: 600; color: var(--exit); }
+.hero .stand { margin: 0; color: var(--ink-2); max-width: 40ch; font-size: 1.02rem; }
+.hero .cta { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+.hero .map { grid-column: 6 / span 7; align-self: stretch; }
+
+/* Кнопка — не цветная плашка: атлас не кричит. Залитая чернилами, потому что
+   это единственное действие на листе. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 0.88rem/1 var(--sans);
+  color: var(--sheet);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 12px 18px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { background: #000; }
+.btn.line { background: transparent; color: var(--ink); border-color: var(--grid-2); }
+.btn.line:hover { background: var(--sheet-2); }
+.btn.mini { padding: 7px 11px; font-size: 0.78rem; }
+.btn.danger { color: var(--fail); border-color: #d9c2b5; background: transparent; }
+
+/* ---- карта --------------------------------------------------------------
+   Равнопромежуточная проекция, кадр 5:2 — ровно тот, что считает
+   `make_world.py`: 360° долготы на 1000 единиц, 144° широты на 400. Поэтому
+   берег и точки масштабируются вместе, и точка над Германией стоит над
+   Германией, а не рядом.
+
+   Берег нарисован цветом сетки, не цветом выхода: он ориентир, а не
+   измерение. Акцент остаётся один — точка, прошедшая проверку. */
+.map { container-type: inline-size; }
+.map-box {
+  position: relative;
+  aspect-ratio: 5 / 2;
+  border: 1px solid var(--grid-2);
+  background:
+    repeating-linear-gradient(to right, var(--grid-3) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(to bottom, var(--grid-3) 0 1px, transparent 1px 11.1111%),
+    var(--sheet);
+  overflow: hidden;
+}
+.map-box .land {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--sheet-2);
+  stroke: var(--grid-2);
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.map-box::after {
+  /* Рамка-поле: чуть более плотная линия через 1/6 по вертикали — экватор и
+     тропики. Это единственная линия, которую здесь можно утверждать точно. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      transparent calc(44.444% - .5px), var(--grid) calc(44.444% - .5px),
+      var(--grid) calc(44.444% + .5px), transparent calc(44.444% + .5px));
+  pointer-events: none;
+}
+.dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--exit);
+  box-shadow: 0 0 0 3px rgba(15, 107, 92, 0.16);
+}
+/* Подпись ставится на ту сторону, где сборщик нашёл место (`data-side`).
+   Направление решается по координатам, а координаты знает только сборщик;
+   CSS отвечает лишь за то, как подпись к этой стороне прилипает. */
+.dot::after {
+  content: attr(data-c);
+  position: absolute;
+  font: 400 0.56rem/1 var(--mono);
+  color: var(--ink-2);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  display: none;
+}
+/* Подписи показываются, только когда полоса карты достаточно широка: у
+   атласа она вдвое уже приборной и стоит рядом с текстом, поэтому порог
+   свой — 500 px, он же `LABEL_MIN` в `dir_b.py`. Уже — точки стоят
+   вплотную, и подпись закрыла бы соседнее измерение; страну называют
+   оглавление атласа и всплывающая подсказка точки. */
+@container (min-width: 500px) {
+  .dot[data-side="b"]::after { display: block; left: 50%; top: 100%; transform: translate(-50%, 5px); }
+  .dot[data-side="t"]::after { display: block; left: 50%; bottom: 100%; transform: translate(-50%, -5px); }
+  .dot[data-side="r"]::after { display: block; left: 100%; top: 50%; transform: translate(5px, -50%); }
+  .dot[data-side="l"]::after { display: block; right: 100%; top: 50%; transform: translate(-5px, -50%); }
+}
+.map-cap {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 9px 0 0;
+  font: 400 0.66rem/1.4 var(--mono);
+  color: var(--ink-3);
+}
+.map-cap b { color: var(--ink-2); font-weight: 400; }
+
+/* ---- разделы ------------------------------------------------------------
+   Отбивка — линия сетки во всю ширину плюс номер колонки. Номер здесь не
+   украшение: он говорит, в какой колонке оглавления атласа находится раздел,
+   и совпадает с порядком чтения. */
+.sec { margin-top: clamp(38px, 5vw, 66px); }
+.sec-h {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: baseline;
+  border-top: 1px solid var(--grid-2);
+  padding-top: 12px;
+  margin-bottom: 20px;
+}
+.sec-h .no { font: 400 0.7rem/1 var(--mono); color: var(--ink-3); }
+.sec-h h2 {
+  margin: 0;
+  font: 400 1.28rem/1.25 var(--sans);
+  letter-spacing: -0.008em;
+}
+.sec-h .aside { font: 400 0.68rem/1.4 var(--mono); color: var(--ink-3); white-space: nowrap; }
+
+.lede { margin: 0 0 24px; max-width: var(--prose); color: var(--ink-2); font-size: 1rem; }
+.note { margin: 16px 0 0; max-width: var(--prose); color: var(--ink-3); font-size: 0.86rem; }
+.note code { color: var(--ink-2); }
+
+/* ---- профиль воронки ----------------------------------------------------
+   Шесть столбиков. Высота — ЛОГАРИФМИЧЕСКАЯ: размах здесь три порядка
+   (59 013 → 75), и на линейной шкале последняя ступень была бы ниже пикселя.
+   Шкала подписана прямо под диаграммой — иначе она врёт формой. */
+.profile {
+  border: 1px solid var(--grid-2);
+  background: var(--sheet);
+  padding: 22px 24px 16px;
+}
+.profile .bars {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(8px, 1.6vw, 22px);
+  height: 190px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 0;
+}
+.profile .col { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.profile .n {
+  font: 400 0.76rem/1 var(--mono);
+  color: var(--ink);
+  margin-bottom: 7px;
+  font-variant-numeric: tabular-nums;
+}
+.profile .col.live .n { color: var(--exit); font-weight: 700; }
+.profile .bar {
+  background: var(--exit-dim);
+  border: 1px solid var(--exit-mid);
+  border-bottom: 0;
+  min-height: 2px;
+}
+.profile .col.live .bar { background: var(--exit); border-color: var(--exit); }
+.profile .x {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(8px, 1.6vw, 22px);
+  margin-top: 9px;
+}
+.profile .x div {
+  font: 400 0.68rem/1.35 var(--mono);
+  color: var(--ink-2);
+}
+.profile .x div span { display: block; color: var(--ink-3); font-size: 0.62rem; }
+.profile .scale {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--grid);
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font: 400 0.64rem/1.4 var(--mono);
+  color: var(--ink-3);
+}
+
+/* ---- оглавление атласа --------------------------------------------------
+   Строка = запись: код, имя с отточием (dotted leader — приём именно
+   оглавления, а не таблицы), число, полоса. Три колонки, потому что атлас
+   листают, а не прокручивают. */
+.atlas { columns: 3 250px; column-gap: 34px; }
+.atlas .row {
+  display: grid;
+  grid-template-columns: 2.6ch auto minmax(18px, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--grid-3);
+  break-inside: avoid;
+  text-decoration: none;
+  color: inherit;
+}
+.atlas .row:hover .nm { color: var(--exit); }
+.atlas .cc { font: 400 0.68rem/1 var(--mono); color: var(--ink-3); }
+.atlas .nm { font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.atlas .ld {
+  border-bottom: 1px dotted var(--grid-2);
+  transform: translateY(-4px);
+}
+.atlas .ct { font: 400 0.78rem/1 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* ---- таблицы ------------------------------------------------------------ */
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.tbl th {
+  text-align: left;
+  font: 400 0.66rem/1.3 var(--mono);
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--ink);
+  white-space: nowrap;
+}
+.tbl td { padding: 9px 10px; border-bottom: 1px solid var(--grid-3); color: var(--ink-2); vertical-align: top; }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl td:first-child { color: var(--ink); }
+.tbl .num { text-align: right; font-family: var(--mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.tbl .url { font-family: var(--mono); font-size: 0.7rem; line-height: 1.45; word-break: break-all; }
+.tbl-wrap { overflow: auto; }
+
+/* ---- источники и клиенты ------------------------------------------------ */
+.facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 22px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.facts dt { font: 400 0.68rem/1.6 var(--mono); color: var(--ink-3); }
+.facts dd { margin: 0; color: var(--ink-2); }
+
+.clients {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--grid-2);
+}
+.clients div { border-right: 1px solid var(--grid-2); border-bottom: 1px solid var(--grid-2); padding: 14px 16px; }
+.clients b { display: block; font-weight: 600; font-size: 0.9rem; }
+.clients span { display: block; margin-top: 4px; font-size: 0.82rem; color: var(--ink-3); }
+
+/* ---- предупреждение ----------------------------------------------------- */
+.warn {
+  margin: 34px 0 0;
+  padding: 16px 20px 16px 18px;
+  border-left: 3px solid var(--fail);
+  background: var(--sheet-2);
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  max-width: var(--prose);
+}
+.warn b { color: var(--fail); font-weight: 600; }
+
+footer {
+  margin-top: clamp(46px, 6vw, 80px);
+  border-top: 1px solid var(--ink);
+  padding: 18px 0 60px;
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+/* ---- пустое состояние --------------------------------------------------- */
+.empty-map {
+  position: relative;
+  aspect-ratio: 5 / 2;
+  border: 1px solid var(--grid-2);
+  background:
+    repeating-linear-gradient(to right, var(--grid-3) 0 1px, transparent 1px 8.3333%),
+    repeating-linear-gradient(to bottom, var(--grid-3) 0 1px, transparent 1px 11.1111%),
+    var(--sheet);
+  display: grid;
+  place-items: center;
+}
+.empty-map p {
+  margin: 0;
+  max-width: 34ch;
+  padding: 18px 22px;
+  background: var(--sheet);
+  border: 1px solid var(--grid-2);
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+/* ==========================================================================
+   Состояние пула
+   ========================================================================== */
+
+.status-head { padding: 30px 0 26px; max-width: 46ch; }
+.status-head h1 {
+  margin: 0 0 12px;
+  font: 400 clamp(1.9rem, 3.2vw, 2.6rem)/1.12 var(--sans);
+  letter-spacing: -0.018em;
+}
+.status-head p { margin: 0; color: var(--ink-2); }
+
+.readings {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--grid-2);
+  margin-bottom: 34px;
+}
+.readings div { padding: 16px 18px 14px; border-left: 1px solid var(--grid-2); }
+.readings div:first-child { border-left: 0; padding-left: 0; }
+.readings .v { font: 400 1.9rem/1 var(--sans); letter-spacing: -0.02em; font-variant-numeric: lining-nums; }
+.readings .v.live { color: var(--exit); }
+.readings .k { margin-top: 6px; font: 400 0.66rem/1.35 var(--mono); color: var(--ink-3); }
+
+/* История обходов: столбики по оси времени, подписи на полях. */
+.history {
+  border: 1px solid var(--grid-2);
+  padding: 18px 20px 12px;
+  background: var(--sheet);
+}
+.history .plot {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(2px, 0.9vw, 8px);
+  height: 168px;
+  border-bottom: 1px solid var(--ink);
+}
+.history .plot div { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.history .plot i { display: block; background: var(--exit-dim); border-top: 1px solid var(--exit-mid); }
+.history .plot div.best i { background: var(--exit); border-color: var(--exit); }
+.history .axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font: 400 0.64rem/1 var(--mono);
+  color: var(--ink-3);
+}
+.history .foot {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--grid);
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+
+/* ---- состояния ---------------------------------------------------------- */
+.state { display: inline-flex; align-items: center; gap: 6px; font: 400 0.76rem/1 var(--sans); white-space: nowrap; }
+.state::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.state[data-s="ok"] { color: var(--exit); }
+.state[data-s="warn"] { color: var(--warn); }
+.state[data-s="warn"]::before { background: transparent; border: 1.5px solid currentColor; }
+.state[data-s="fail"] { color: var(--fail); }
+.state[data-s="off"] { color: var(--ink-3); }
+.state[data-s="off"]::before { background: transparent; border: 1px solid currentColor; }
+
+/* ==========================================================================
+   Вход — бланк
+   ========================================================================== */
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 44px 20px;
+  background:
+    repeating-linear-gradient(to right, var(--grid-3) 0 1px, transparent 1px 8.3333%),
+    var(--sheet);
+}
+.login { width: min(440px, 100%); background: var(--sheet); border: 1px solid var(--grid-2); padding: 34px 34px 30px; }
+.login .wordmark { font: 600 1.25rem/1 var(--sans); color: var(--ink); text-decoration: none; }
+.login .wordmark b { color: var(--exit); font-weight: 600; }
+.login h1 { margin: 22px 0 10px; font: 400 1.4rem/1.2 var(--sans); }
+.login > p { margin: 0 0 24px; color: var(--ink-2); font-size: 0.9rem; }
+.login label {
+  display: block;
+  font: 400 0.66rem/1 var(--mono);
+  color: var(--ink-3);
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+.login input {
+  width: 100%;
+  font: 400 0.9rem/1 var(--mono);
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  padding: 10px 2px;
+}
+.login input:focus { outline: none; border-bottom-color: var(--exit); box-shadow: 0 1px 0 var(--exit); }
+.login .btn { width: 100%; justify-content: center; margin-top: 22px; }
+.login .foot { margin: 18px 0 0; font-size: 0.78rem; color: var(--ink-3); line-height: 1.55; }
+
+/* ==========================================================================
+   Панель оператора — рабочий лист
+   ========================================================================== */
+
+.admin-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px var(--gutter);
+  border-bottom: 1px solid var(--ink);
+  background: var(--sheet);
+}
+.admin-bar .id { display: flex; align-items: baseline; gap: 14px; }
+.admin-bar .id b { font: 600 1.05rem/1 var(--sans); }
+.admin-bar .id b i { font-style: normal; color: var(--exit); }
+.admin-bar .id span { font: 400 0.68rem/1 var(--mono); color: var(--ink-3); }
+.admin-bar .live { display: flex; align-items: center; gap: 14px; font: 400 0.7rem/1 var(--mono); color: var(--ink-3); }
+
+.admin { max-width: var(--col); margin: 0 auto; padding: 0 var(--gutter); }
+.admin .tabs { display: flex; gap: 26px; border-bottom: 1px solid var(--grid-2); margin-bottom: 26px; }
+.admin .tabs a {
+  padding: 13px 0 11px;
+  font-size: 0.86rem;
+  color: var(--ink-3);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.admin .tabs a[aria-current] { color: var(--ink); border-bottom-color: var(--exit); }
+
+.stat-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--grid-2);
+}
+.stat-rail div { padding: 16px 18px 14px; border-left: 1px solid var(--grid-2); }
+.stat-rail div:first-child { border-left: 0; padding-left: 0; }
+.stat-rail .v { font: 400 1.8rem/1 var(--sans); letter-spacing: -0.02em; }
+.stat-rail .v.live { color: var(--exit); }
+.stat-rail .k { margin-top: 6px; font: 400 0.64rem/1.35 var(--mono); color: var(--ink-3); }
+
+.two { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 34px; }
+
+/* Отрывной талон. Ключ показывают один раз — он должен выглядеть как то,
+   что забирают с собой. Перфорация сверху — единственная «графика» в наборе,
+   и она означает «здесь отрывают». */
+.slip {
+  position: relative;
+  margin-top: 20px;
+  border: 1px solid var(--ink);
+  background: var(--sheet-2);
+  padding: 24px 24px 20px;
+}
+.slip::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 7px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 10px);
+  opacity: 0.35;
+}
+.slip .k { font: 400 0.66rem/1 var(--mono); color: var(--ink-3); }
+.slip .v {
+  margin: 10px 0 18px;
+  font: 400 clamp(1rem, 1.7vw, 1.3rem)/1.3 var(--mono);
+  letter-spacing: 0.03em;
+  word-break: break-all;
+}
+.slip .u {
+  font: 400 0.76rem/1.55 var(--mono);
+  color: var(--exit);
+  word-break: break-all;
+  padding: 10px 0;
+  border-top: 1px dashed var(--grid-2);
+  border-bottom: 1px dashed var(--grid-2);
+}
+.slip .meta { margin-top: 12px; display: flex; gap: 18px; flex-wrap: wrap; font: 400 0.66rem/1.5 var(--mono); color: var(--ink-3); }
+
+.issue { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+.issue label { font: 400 0.66rem/1 var(--mono); color: var(--ink-3); display: block; margin-bottom: 6px; }
+.issue input {
+  flex: 1 1 240px;
+  font: 400 0.9rem/1 var(--sans);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  padding: 10px 2px;
+}
+.issue input:focus { outline: none; border-bottom-color: var(--exit); box-shadow: 0 1px 0 var(--exit); }
+
+.empty-note {
+  border: 1px dashed var(--grid-2);
+  padding: 26px;
+  background: var(--sheet);
+}
+.empty-note h3 { margin: 0 0 8px; font: 400 1.05rem/1.3 var(--sans); }
+.empty-note p { margin: 0; color: var(--ink-2); font-size: 0.9rem; max-width: 58ch; }
+.empty-note p + p { margin-top: 10px; }
+
+/* ==========================================================================
+   Узкий экран
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .hero .title { grid-column: 1 / -1; }
+  .hero .map { grid-column: 1 / -1; margin-top: 24px; }
+  .readings, .stat-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .readings div:nth-child(3), .stat-rail div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .two { grid-template-columns: 1fr; }
+  .history .plot { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+  .history .plot div:nth-child(-n+9) { display: none; }
+}
+
+@media (max-width: 620px) {
+  body { font-size: 15px; }
+  .masthead { flex-wrap: wrap; gap: 10px; }
+  .masthead nav { gap: 16px; font-size: 0.8rem; }
+  .profile .bars { height: 140px; }
+  .profile .x div { font-size: 0.58rem; }
+  .atlas { columns: 1; }
+  .sec-h { grid-template-columns: 34px minmax(0, 1fr); }
+  .sec-h .aside { grid-column: 2; }
+  .readings { grid-template-columns: 1fr 1fr; }
+  .map-box, .empty-map { aspect-ratio: 3 / 2; }
+  /* Кадр меняется с 5:2 на 3:2, а расстановка подписей считалась для 5:2:
+     по вертикали координаты растягиваются, и подписи, свободные в старом
+     кадре, наезжают друг на друга. На телефоне полный список стран всё равно
+     стоит оглавлением ниже, поэтому подписи здесь только мешают. */
+  .map .dot::after { display: none; }
+  .dot[data-small] { display: none; }
+  footer { flex-direction: column; gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

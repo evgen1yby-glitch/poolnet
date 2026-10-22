@@ -1,0 +1,171 @@
+/* status — публичное состояние пула. Только раскладка этой страницы.
+
+   Токены и примитивы — в `base.css`, подключён до этого файла.
+
+   Замысел. Это ЖУРНАЛ, а не панель: страница отвечает на вопрос «что
+   происходило на самом деле», и поэтому её главное изображение — лента
+   прогонов, а не текущее число. Лента показывает разброс, который одиночное
+   число скрывает: публичный пул прыгает в разы, и это его свойство, а не
+   сбой.
+
+   Столбики, а не линия: прогоны дискретны, между ними нет непрерывной
+   величины, и линия обещала бы интерполяцию, которой не существует.
+   Масштаб — относительно лучшего прогона, а не фиксированного максимума:
+   цель — форма, а шкала, подогнанная под выброс в 239 узлов, расплющила бы
+   прогоны по 49 в ничто. */
+
+:root { --col: 58rem; }
+
+/* ---- шапка --------------------------------------------------------------
+   Та же конструкция, что на главной: шапка документа с толстой линией
+   снизу. Одна система на все страницы — не потому, что «так принято», а
+   потому, что реестр и журнал должны читаться как части одного документа. */
+.top {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 1.4rem 1.5rem 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--disp);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wordmark .mark {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--sig);
+  flex: none;
+}
+
+
+/* Навигация — те же четыре ссылки, что в шапке главной, только «Состояние»
+   помечено как текущая страница: меню, где заголовок раздела выглядит
+   как обычная ссылка, читается как чужая страница. */
+.top nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.top nav a,
+.top nav .cur {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.top nav a:hover { color: var(--ink); }
+
+.top nav .cur { color: var(--ink); }
+
+main {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+}
+
+.head {
+  padding: 2.8rem 0 1.6rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.head h1 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+
+/* ---- лента прогонов ------------------------------------------------------
+   Строка = прогон. Слева время, справа число, между ними полоса. Полоса
+   растёт от левого края, потому что прогоны читают сверху вниз как
+   временной ряд: свежий внизу, как в журнале событий.
+
+   Лучший прогон в ленте помечен штампом — это не «рекорд» ради рекорда, а
+   точка отсчёта для остальных полос. */
+
+.runs { display: grid; }
+
+.run {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr 3.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.34rem 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.run:last-child { border-bottom: 0; }
+
+.run .at {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rail {
+  display: block;
+  height: 0.8rem;
+  background: var(--paper-2);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.rail > i {
+  display: block;
+  height: 100%;
+  background: var(--gauge);
+  border-radius: 0;
+}
+
+.rail > i.live,
+.run[data-best="1"] .rail > i { background: var(--live-fill); }
+
+.run .n {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.run[data-best="1"] .n { color: var(--live); font-weight: 550; }
+
+/* ---- сводка «сейчас» -----------------------------------------------------
+   Три показания в строку, разделённые линейками. Не карточки: это одно
+   состояние, а не три независимых виджета. */
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.8rem;
+  padding: 0.2rem 0 0.1rem;
+}
+
+.tally .state { font-size: 0.8rem; }
+
+@media (max-width: 34rem) {
+  .run {
+    grid-template-columns: 5rem 1fr;
+    gap: 0.2rem 0.6rem;
+  }
+  .rail { grid-column: 1 / -1; grid-row: 2; }
+  .run .n { grid-column: 2; grid-row: 1; }
+  .head { padding-top: 2rem; }
+  /* Шапка со встроенным меню на телефоне ставится колонкой:
+     четыре ссылки рядом с айдентикой не влезают в 34rem. */
+  .top { padding: 1rem 1.1rem 0.8rem; flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+  .top nav { gap: 1rem; flex-wrap: wrap; }
+  main { padding: 0 1.1rem 3.5rem; }
+}

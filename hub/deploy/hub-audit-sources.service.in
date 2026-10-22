@@ -1,0 +1,43 @@
+[Unit]
+Description=Audit every configured source for dead URLs
+Documentation=https://example.com/abuse
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@HUB_USER@
+Group=@HUB_GROUP@
+WorkingDirectory=@HUB_DIR@
+Environment=HUB_ROOT=@HUB_DIR@
+# Same PYTHONPATH requirement as the worker: `hub` is a source-tree package and
+# `python -m hub.cli` only resolves from the project root with `src` on the path.
+Environment=PYTHONPATH=@HUB_DIR@/src
+Environment=HUB_LOCALE=ru
+EnvironmentFile=-/etc/hub/hub.env
+# Exit 1 when any source yields zero nodes, and 1 is deliberately NOT listed in
+# `SuccessExitStatus`: a oneshot that reports dead sources should show up in
+# `systemctl --failed`, where an operator is looking. Swallowing the status here
+# would make the audit exit 0 every day and tell nobody anything — the silent
+# failure this whole subcommand exists to prevent.
+# Read-only by construction — this command constructs no CoreDriver and dials no
+# node. It makes outbound-only HTTPS GETs to the source list, the same requests
+# `hub run` makes. It writes nothing under `data/` and is not given write access
+# to it: `ReadWritePaths` is deliberately absent, so `ProtectSystem=strict` keeps
+# the database unwritable and an edit to the audit script cannot corrupt the
+# live generation pointer.
+ExecStart=/usr/bin/python3 -m hub.cli audit-sources
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+NoNewPrivileges=yes
+# 13 sources, sequential, with a 45s timeout and 2 retries each: the audit is
+# slow by design (it fetches real bodies) and a worker `Nice` keeps it from
+# competing with the live API for the CPU during that.
+TimeoutStartSec=900
+Nice=10
+IOSchedulingClass=idle
+
+[Install]
+WantedBy=multi-user.target

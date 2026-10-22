@@ -1,0 +1,40 @@
+# секреты и окружение
+.env
+.env.*
+!.env.example
+*.session
+*.key
+*.pem
+credentials*
+
+# данные прогонов (не в гите)
+data/
+hub/data/
+pool/data/
+web/site/data/
+*.sqlite3
+*.db
+*.ndjson
+
+# тулчейн и тяжёлые артефакты
+hub/tools/
+*.tar.gz
+dist/
+build/
+node_modules/
+vendor/
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# ОС/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

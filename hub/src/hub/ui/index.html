@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="doc.title">PoolNet — бесплатная VPN-платформа</title>
+<meta data-i18n="doc.desc" name="description" content="Публичный реестр рабочих прокси-конфигураций, проверяемых перед публикацией. Бесплатно, без аккаунтов, без логов трафика.">
+<meta name="theme-color" content="#070b13">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23070b13'/%3E%3Cpath%20d='M12.3%203V29'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'/%3E%3Cpath%20d='M12.3%204.8A9%209%200%200%201%2012.3%2022.8'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'%20fill='none'/%3E%3Ccircle%20cx='21.3'%20cy='13.8'%20r='3.4'%20fill='%236be1ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/base.css">
+<link rel="stylesheet" href="/static/hub.css">
+</head>
+<body>
+<!--
+  Публичное лицо PoolNet — управляющего узла, который ничего не проксирует.
+
+  Тёмный лендинг направления «Созвездие» (docs/design/pages/d-1-free.html):
+  небо, стеклянные панели, сигнальный синий, зелёный штамп проверки. Это
+  всё ещё РЕЕСТР: предмет — перечень чужих узлов, каждый из которых прошёл
+  проверку. Лонгрид ведёт к подписке: герой-оффер → что это → живая
+  сводка → воронка отсева → страны → почему бесплатно → границы →
+  клиенты → FAQ → выход.
+
+  Знак в шапке и favicon — эмблема PoolNet: «Р», у которой стем и чаша
+  рисуются одной линией, а узлы стоят на изгибах, как станции сети
+  (docs/design/src/build_logo.py — лист выбора, избран «Знак-P»).
+
+  Числа в сводке подставляет `hub.js` из `funnel.raw` и `funnel.http` — те же
+  два поля, которые сервер отдаёт для воронки. Пока данных нет, стоит
+  прочерк, а не выдуманное число: страница обязана это показывать.
+
+  Языки: разметка отдаётся по-русски и несёт ключи `data-i18n`; английский
+  живёт в `hub.js` и подменяет текст. Так было и так осталось: без JS
+  страница русская, `lang` меняется вместе с текстом.
+  Строка `.sr-only` ниже НЕ переводится: она должна совпадать байт в байт с
+  позиционированием, которое пинуют тесты лендинга и текст `bot._intro`.
+-->
+<header class="masthead">
+  <div class="in">
+    <a class="wordmark" href="/">
+      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <circle cx="12.3" cy="4.8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="12.3" cy="27.2" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="21.3" cy="13.8" r="3.4" fill="currentColor"/>
+        <path d="M12.3 4.5V27.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+        <path d="M12.3 4.8A9 9 0 0 1 12.3 22.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span><i>p</i>oolnet</span>
+    </a>
+    <nav>
+      <a href="#cull" data-i18n="nav.how">Как это работает</a>
+      <a href="#pool" data-i18n="nav.pool">Пул</a>
+      <a href="#clients" data-optional data-i18n="nav.clients">Клиенты</a>
+      <a href="/status" data-i18n="nav.status">Состояние</a>
+      <a class="btn mini" data-cta href="https://t.me/" target="_blank" rel="noopener" data-i18n="nav.cta">Подписка</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Язык / Language">
+      <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <p class="sr-only">hub — decentralised FREE VPN platform</p>
+
+  <p class="kicker" data-i18n="hero.kicker">бесплатный VPN из общих узлов — без аккаунтов, без оплаты, без логов</p>
+
+  <h1 data-i18n="hero.h1">Из публичных списков до тебя доходят <b>единицы узлов</b></h1>
+
+  <p class="lede" data-i18n="hero.lede">
+    PoolNet ищет чужие прокси-конфиги, проверяет каждый и публикует только
+    выжившие. Бесплатно и навсегда: без аккаунтов, без оплаты, без
+    премиум-тарифа. Трафик идёт через узлы самих участников — сервер их
+    только находит и проверяет.
+  </p>
+
+  <div class="actions">
+    <a class="btn" data-cta href="https://t.me/" target="_blank" rel="noopener" data-i18n="hero.cta1">Получить подписку</a>
+    <a class="btn ghost" href="#pool" data-i18n="hero.cta2">Посмотреть пул</a>
+    <span class="aside" data-i18n="hero.aside">проверка занимает ~10 минут</span>
+  </div>
+
+  <p class="warn" data-i18n="hero.warn">
+    <strong>Ноды — чужие.</strong> Считай их враждебными: не передавай пароли
+    и сессии и не проводи денежные операции. Бесплатно означает «без гарантий».
+  </p>
+</section>
+
+<!--
+  Что такое PoolNet. Три ответа, каждый — карточка: суть сервиса, чем
+  держится качество, почему не берёт денег. Это тексты новой шапки
+  лендинга; числа в них не врут, потому что их нет — есть факты сервиса.
+-->
+<section class="block" id="about">
+  <div class="block-head">
+    <h2 data-i18n="about.title">Что такое PoolNet</h2>
+    <span class="aside">poolnet.online</span>
+  </div>
+  <div class="values">
+    <div class="card">
+      <b data-i18n="about.a.k">Общая сеть, а не сервис подписок</b>
+      <span data-i18n="about.a.v">Каждый участник публикует и потребляет: узлы одного
+      человека работают для всех. Российские сервисы берут за это абонплату —
+      здесь она сведена к нулю, потому что дорогих серверов нет.</span>
+    </div>
+    <div class="card">
+      <b data-i18n="about.b.k">Проверка, а не обещание</b>
+      <span data-i18n="about.b.v">Ни один узел не попадает в подписку, пока не проходит
+      шесть ступеней: от «порт отвечает» до «трафик реально идёт». Провалившие
+      — вне ротации; это видно в журнале отсева ниже.</span>
+    </div>
+    <div class="card">
+      <b data-i18n="about.c.k">Живые показания, а не склад</b>
+      <span data-i18n="about.c.v">Источник не собран в сводку последних данных.
+      Открой пул и страну: увидишь, что работает прямо сейчас, когда прошла
+      публикация и сколько дней это живёт. Всё публично и пересчитываемо.</span>
+    </div>
+  </div>
+</section>
+
+<!--
+  Карта-созвездие: точки стран из пула. Рисует hub.js по данным
+  /api/v1/stats — карта без точек показывает честную пустоту, а не декор.
+-->
+<section class="map-wrap" aria-hidden="true">
+  <div class="map-box" id="map"></div>
+</section>
+
+<!--
+  Сводная строка реестра: сколько вошло, сколько осталось, какая доля.
+-->
+<section class="summary" aria-label="Сводка пула">
+  <p class="lane label" data-i18n="summary.lane">последний прогон — сколько узлов прошло проверку именно в нём</p>
+  <div class="cell">
+    <div class="k label" data-i18n="summary.in">Строк из источников</div>
+    <div class="v" id="yield-in">—</div>
+  </div>
+  <div class="cell">
+    <div class="k label" data-i18n="summary.out">Прошли все проверки</div>
+    <div class="v out" id="yield-out">—</div>
+  </div>
+  <div class="cell">
+    <div class="k label" data-i18n="summary.share">Доля выживших</div>
+    <div class="v"><span id="yield-pct">—</span></div>
+  </div>
+</section>
+
+<!--
+  Отсев. Главный блок страницы: он объясняет, откуда взялось число сверху.
+  Ширину и подписи ставит `hub.js` из `funnel` в `/api/v1/stats`.
+-->
+<section class="block" id="cull">
+  <div class="block-head">
+    <h2 data-i18n="cull.title">Что происходит с узлом по дороге</h2>
+    <span class="aside" data-i18n="cull.aside">последний прогон</span>
+  </div>
+  <div id="cull-body">
+    <p class="caption" data-i18n="cull.loading">Читаю показания…</p>
+  </div>
+</section>
+
+<!--
+  Пул. `id="stats"` — контракт: адреса эндпоинтов в разметке (`data-endpoint`,
+  `data-bot-endpoint`), живой узел один — этот. JS рисует показания,
+  страны и протоколы.
+-->
+<section class="block" id="pool">
+  <div class="block-head">
+    <h2 data-i18n="pool.title">Пул сейчас</h2>
+    <span class="aside" id="pool-gen"></span>
+  </div>
+  <div id="stats" data-endpoint="/api/v1/stats" data-bot-endpoint="/api/v1/bot">
+    <p class="caption" data-i18n="pool.loading">Читаю состояние пула…</p>
+  </div>
+</section>
+
+<!--
+  Почему это бесплатно. Принципиальный ответ на главный скептический
+  вопрос: где ловушка. Ловушки нет, потому что структуры и для неё тоже нет.
+-->
+<section class="block" id="why">
+  <div class="block-head">
+    <h2 data-i18n="why.title">Почему это бесплатно</h2>
+  </div>
+  <div class="why">
+    <div class="card">
+      <b data-i18n="why.a.k">Нет аренды серверов</b>
+      <span data-i18n="why.a.v">Дорогая часть любого платного VPN — серверы. Здесь их
+      ноль: трафик идёт через узлы участников, а сервер хаба только
+      проверяет и публикует.</span>
+    </div>
+    <div class="card">
+      <b data-i18n="why.b.k">Нет биллинга</b>
+      <span data-i18n="why.b.v">Аккаунтов, личных кабинетов и тарифных ступеней не
+      существует. Ключ даёт бот за один шаг, и стирать его тоже никто не станет.</span>
+    </div>
+    <div class="card">
+      <b data-i18n="why.c.k">Нет витрины «купи ещё»</b>
+      <span data-i18n="why.c.v">Бесплатный уровень обычно идёт с урезанной скоростью,
+      рекламным краном и спешащим таймером. Здесь его нет — как и
+      платного.</span>
+    </div>
+  </div>
+</section>
+
+<!--
+  Можно / нельзя. Границы допустимого, а не дисклеймер мелким шрифтом.
+  Зеленый «✓» и «✕» отстирываются далеко друг от друга.
+-->
+<section class="block" id="limits">
+  <div class="block-head">
+    <h2 data-i18n="limits.title">Что можно и что нельзя</h2>
+  </div>
+  <div class="duo">
+    <div class="allow">
+      <h3 data-i18n="limits.allow">Можно</h3>
+      <ul>
+        <li data-i18n="limits.a1">Читать сайты, смотреть видео, обновлять приложения</li>
+        <li data-i18n="limits.a2">Пускать через узел обычный HTTP(S) трафик вручную</li>
+        <li data-i18n="limits.a3">Делиться ссылкой на пул — она публичная</li>
+        <li data-i18n="limits.a4">Размещать свои узлы в общих списках — это и есть пул</li>
+      </ul>
+    </div>
+    <div class="deny">
+      <h3 data-i18n="limits.deny">Нельзя</h3>
+      <ul>
+        <li data-i18n="limits.d1">Входить в аккаунты и банки — узлы чужие и неразборчивые</li>
+        <li data-i18n="limits.d2">Проводить платежи через узел: трафик враждебному окружению</li>
+        <li data-i18n="limits.d3">Торить события, обходить чужие сети — иначе узлы просто закроют хозяйствие</li>
+        <li data-i18n="limits.d4">Держать в подписке больше, чем нужно пулу в целом</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!--
+  Куда вставить подписку. Определения «клиент — формат — результат».
+-->
+<section class="block" id="clients">
+  <div class="block-head">
+    <h2 data-i18n="clients.title">Куда вставить подписку</h2>
+  </div>
+  <p class="caption" data-i18n="clients.lede">
+    Подписка — обычный URL. Его принимает любой клиент, умеющий импорт из
+    ссылки: один адрес отдаёт список, который обновляется сам.
+  </p>
+  <div class="clients">
+    <div>
+      <b>sing-box · Hiddify · Happ</b>
+      <span data-i18n="clients.a">JSON с группами по странам</span>
+    </div>
+    <div>
+      <b>v2rayNG · v2rayN</b>
+      <span data-i18n="clients.b">base64-список</span>
+    </div>
+    <div>
+      <b>Clash · Mihomo</b>
+      <span data-i18n="clients.c">YAML с группами по странам</span>
+    </div>
+    <div>
+      <b>Karing · Shadowrocket</b>
+      <span data-i18n="clients.d">базовый список</span>
+    </div>
+  </div>
+  <p class="caption" data-i18n="clients.note">
+    Страна измеряется, а не берётся из имени хоста: прошедший проверку узел
+    открывается через <code>cdn-cgi/trace</code>, и его настоящая страна выхода
+    попадает в конфиг. Подделанная страна снижает оценку.
+  </p>
+</section>
+
+<!--
+  FAQ. Основные вопросы: безопасность, логи, скорость. details/summary, без анимации.
+-->
+<section class="block" id="faq">
+  <div class="block-head">
+    <h2 data-i18n="faq.title">Частые вопросы</h2>
+  </div>
+  <div class="faq">
+    <details>
+      <summary data-i18n="faq.q1">Это правда бесплатно?</summary>
+      <div data-i18n="faq.a1">Да, целиком. Ни тарифов, ни пробного периода, ни «продвинутых»
+      функций за деньги. Ловушки нет: плата не служит здесь ничему.</div>
+    </details>
+    <details>
+      <summary data-i18n="faq.q2">Кто платит за сервера?</summary>
+      <div data-i18n="faq.a2">Никто и не платит: серверов нет. Узлы сети — машины других
+      участников, которые делились конфигами. Хостинг же реестра — проверка,
+      хранение и выдача подписок — стоит дешевле имеющегося доната.</div>
+    </details>
+    <details>
+      <summary data-i18n="faq.q3">Вы храните логи?</summary>
+      <div data-i18n="faq.a3">Трафик не проходит через хаб вовсе — логировать нечего и
+      не на чем. В базе проверки лежат только номера протоколов, исходы проверок
+      и счётчики — без адресов.</div>
+    </details>
+    <details>
+      <summary data-i18n="faq.q4">Насколько это безопасно?</summary>
+      <div data-i18n="faq.a4">Честный ответ: как чужой сервер. Он не принадлежит вам,
+      никто его не проверял на чистоту, и доверять ему личные сессии нельзя.
+      Для чтения сайтов — да; для всего чувствительного — свой,
+      проверенный узел.</div>
+    </details>
+    <details>
+      <summary data-i18n="faq.q5">Почему узлы иногда умирают?</summary>
+      <div data-i18n="faq.a5">Публичные списки истощаются: кто-то отключил машину, хостер
+      заблокировал, владелец сменил конфиг. Каждое поколение — перепроверенный
+      срез; смерть одного узла снижает пул, но список восстанавливается на
+      следующем прогоне.</div>
+    </details>
+    <details>
+      <summary data-i18n="faq.q6">Чем это отличается от обычного VPN?</summary>
+      <div data-i18n="faq.a6">Обычный VPN — арендованные серверы, к которым у фирмы
+      полный доступ. Здесь узлы публикуются и проверяются публично, а формула
+      отбора открыта и пересчитываема.</div>
+    </details>
+    <details>
+      <summary data-i18n="faq.q7">Как получить доступ в отдельное государство?</summary>
+      <div data-i18n="faq.a7">Бот выдаёт подписку, собранную из одной страны. В
+      перечне ниже — только те страны, где узлы прошли последнюю проверку;
+      ссылку на каждую выдаёт бот.</div>
+    </details>
+  </div>
+</section>
+
+<!--
+  Финальный CTA: панель с светом, повторяются офереры и кнопка.
+-->
+<section class="cta-final">
+  <h2 data-i18n="final.h2">Попробуй — это две минуты</h2>
+  <p class="lede" data-i18n="final.lede">Бот даёт ключ и ссылку одним сообщением. Без инфраструктуры и реквизитов: один шаг, и ты в пуле.</p>
+  <div class="actions">
+    <a class="btn" data-cta href="https://t.me/" target="_blank" rel="noopener" data-i18n="final.cta">Получить подписку в Telegram</a>
+    <a class="btn ghost" href="/status" data-i18n="final.ghost">Посмотреть, как пул живёт</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p class="f-line" data-i18n="footer.line">
+    PoolNet не проксирует твои данные и не хранит их. Исходники открыты, формула
+    оценки публичная и пересчитываемая.
+  </p>
+  <p data-i18n="footer.copy">© 2026 poolnet.online — публичный реестр рабочих узлов</p>
+</footer>
+<script src="/static/hub.js" defer></script>
+</body>
+</html>

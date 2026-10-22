@@ -1,0 +1,74 @@
+/* login — вход оператора. Только раскладка этой страницы.
+
+   Токены и примитивы (`.btn`, поле ввода, `.error`, `.warn`) — в `base.css`.
+
+   Замысел. Страница существует, чтобы держать одно поле. Привлекать внимание
+   здесь не к чему: красть нечего, кроме секрета, который в это поле вводят.
+   Поэтому — ни карточки, ни центрированного «героя» с тенью: одна колонка
+   текста на бумаге, как страница документа.
+
+   Левое выравнивание, а не центрирование по обеим осям: центрирование
+   превращает служебную форму в приглашение. */
+
+:root { --col: 24rem; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+main { width: 100%; max-width: var(--col); margin: 0 auto; }
+
+/* Шапка документа — та же толстая линия, что на остальных страницах. */
+.wordmark {
+  font-family: var(--disp);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark .mark {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--sig);
+  flex: none;
+}
+
+
+.wordmark span { color: var(--ink-2); font-weight: 400; }
+
+.lede {
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 1rem 0 1.7rem;
+  max-width: none;
+}
+
+form { display: grid; gap: 0.7rem; }
+
+label { font-size: 0.78rem; color: var(--ink-2); font-family: var(--mono); }
+
+input { width: 100%; }
+
+/* Кнопка во всю ширину поля: у формы одно действие, и растянуть его до
+   границ ввода — это сказать, что выбор здесь один. */
+form .btn { justify-content: center; }
+
+.note {
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  margin-top: 1.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}

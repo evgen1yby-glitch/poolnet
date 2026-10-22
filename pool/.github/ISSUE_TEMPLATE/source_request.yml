@@ -1,0 +1,44 @@
+name: Source request
+description: Propose a new proxy source for sources.yaml
+title: 'source: <name>'
+labels: [source-discovery]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: Direct URL of the published list (raw file, scraper API or directory page).
+      placeholder: https://example.com/proxies.txt
+    validations:
+      required: true
+  - type: dropdown
+    id: format
+    attributes:
+      label: Format
+      options:
+        - 'plain text lines (ip:port, scheme://ip:port, user:pass@host:port)'
+        - 'JSON API (geonode-style: {"data": [{"ip","port","protocols"}]})'
+        - HTML directory page
+    validations:
+      required: true
+  - type: input
+    id: protocol
+    attributes:
+      label: Default protocol when a line carries no scheme
+      placeholder: socks5 | http | socks4
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Update cadence, approximate entry count, anything unusual about the format.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: The list is published by someone else; this is not a scanner or mass-probe source.
+          required: true
+        - label: It yields at least ~50 parsable entries.
+          required: true

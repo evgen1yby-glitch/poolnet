@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>PoolNet — панель оператора</title>
+<meta name="theme-color" content="#070b13">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23070b13'/%3E%3Cpath%20d='M12.3%203V29'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'/%3E%3Cpath%20d='M12.3%204.8A9%209%200%200%201%2012.3%2022.8'%20stroke='%236be1ff'%20stroke-width='3'%20stroke-linecap='round'%20fill='none'/%3E%3Ccircle%20cx='21.3'%20cy='13.8'%20r='3.4'%20fill='%236be1ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/base.css">
+<link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+<!--
+  The operator panel. It reads one JSON document (`/admin/data`) and draws
+  tables; it makes no other request and loads nothing from anywhere else.
+
+  The secret is NOT in this page and is not fetched by it — it arrives as a
+  request header from the browser or a proxy in front. That is deliberate: a
+  panel that fetched its own token would have to store it somewhere the page
+  can read, which is a token in the DOM.
+-->
+<header>
+<div class="head">
+  <h1><a class="wordmark" href="/"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="12.3" cy="4.8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12.3" cy="27.2" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="21.3" cy="13.8" r="3.4" fill="currentColor"/><path d="M12.3 4.5V27.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M12.3 4.8A9 9 0 0 1 12.3 22.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>poolnet</a> <span>панель оператора</span></h1>
+  <div id="age">загрузка…</div>
+</div>
+</header>
+
+<main>
+<div id="app">
+  <p class="caption">Читаю состояние…</p>
+</div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var app = document.getElementById("app");
+  var age = document.getElementById("age");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /// Seconds as a compact duration. `3661` reads as "1.0 ч", which is what an
+  /// operator wants when judging whether a generation is stale; "3661 s" makes
+  /// them do the division themselves.
+  function dur(s) {
+    if (s == null) return "—";
+    if (s < 90) return Math.round(s) + " с";
+    if (s < 5400) return (s / 60).toFixed(1) + " мин";
+    if (s < 172800) return (s / 3600).toFixed(1) + " ч";
+    return (s / 86400).toFixed(1) + " дн";
+  }
+
+  /// A block: a rule across the top, a heading on it, content below.
+  function block(title, aside, content) {
+    return '<section class="block"><div class="block-head"><h2>' + esc(title) +
+      "</h2>" + (aside ? '<span class="aside">' + esc(aside) + "</span>" : "") +
+      '</div>' + content + "</section>";
+  }
+
+  function table(headers, rows) {
+    var head = headers
+      .map(function (h) { return '<th class="' + (h[1] || "") + '">' + esc(h[0]) + "</th>"; })
+      .join("");
+    var body = rows
+      .map(function (r) {
+        return "<tr>" + r.map(function (c, i) {
+          return '<td class="' + (headers[i][1] || "") + '">' + (c && c.html ? c.html : esc(c)) + "</td>";
+        }).join("") + "</tr>";
+      })
+      .join("");
+    return "<table><thead><tr>" + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+  }
+
+  //: Stage labels, matching `_last_funnel`'s keys.
+  var STAGES = [
+    ["raw", "Строк из источников"],
+    ["parsed", "Разобрано в конфиги"],
+    ["tcp", "Порт отвечает"],
+    ["tls", "Рукопожатие проходит"],
+    ["config", "Конфиг валиден"],
+    ["http", "Трафик реально идёт"]
+  ];
+
+  /// The funnel, drawn the same way the landing page draws it: each stage's
+  /// bar is its share of the PREVIOUS stage, not of the input.
+  ///
+  /// The two pages must agree. Scaled against the input, five of six bars are
+  /// 0.3–13% wide and the last is invisible, so the operator would see one bar
+  /// and the visitor would see a different picture of the same run.
+  function funnel(f) {
+    if (!f || !f.raw) return "";
+    var prev = 0;
+    var rows = STAGES.map(function (s, i) {
+      var n = f[s[0]] || 0;
+      var share = i === 0 ? 100 : prev > 0 ? (n / prev) * 100 : 0;
+      var w = n > 0 ? Math.max(1, share) : 0;
+      var lost = i === 0 ? 0 : Math.max(0, prev - n);
+      prev = n;
+      return (
+        '<div class="stage" data-stage="' + s[0] + '">' +
+        '<div class="stage-k">' + esc(s[1]) + "</div>" +
+        '<div class="stage-track"><div class="track"><i' +
+        (s[0] === "http" ? ' class="live"' : "") +
+        ' style="width:' + w.toFixed(2) + '%"></i></div></div>' +
+        '<div class="stage-n">' + n.toLocaleString("ru-RU") + "</div>" +
+        '<div class="stage-drop">' +
+        (lost ? "−" + lost.toLocaleString("ru-RU") : "") + "</div></div>"
+      );
+    }).join("");
+    return rows;
+  }
+
+  //: Статус в JSON — английский (`ok` / `stale` / `fail`), но оператору нужно
+  //: знать, ЧТО он означает, а не как поле называется в ответе. Английское
+  //: слово посреди русской строки читается как недоделанный перевод.
+  var HEALTH = {
+    ok: "всё свежее",
+    stale: "данные устарели",
+    fail: "требует внимания"
+  };
+
+  function render(d) {
+    var h = d.health || {};
+    var state = h.status === "ok" ? "ok" : h.status === "stale" ? "warn" : "fail";
+    age.innerHTML =
+      '<span class="state" data-s="' + state + '">' +
+      esc(HEALTH[h.status] || h.status || "?") + "</span> " +
+      esc(h.generation || "нет поколения") + " · " + esc(dur(h.age_s)) + " назад";
+
+    var html = "";
+
+    // Pool, first: it is what the operator opened the panel to see.
+    html += block("Пул", "",
+      '<div class="pool">' +
+      '<div><div class="v m">' + esc(d.pool.verified) + '</div>' +
+      '<div class="k label">проверено сейчас</div></div>' +
+      '<div><div class="v m">' + esc(d.pool.known) + '</div>' +
+      '<div class="k label">известно всего</div></div>' +
+      '<div><div class="v m">' + (d.pool.by_country || []).length + '</div>' +
+      '<div class="k label">стран</div></div>' +
+      '<div><div class="v m">' + (d.sources || []).length + '</div>' +
+      '<div class="k label">источников</div></div>' +
+      "</div>");
+
+    // The funnel explains the numbers above it, so it comes directly after.
+    if (d.funnel && d.funnel.raw) {
+      html += block("Воронка последнего прогона", "", '<div class="funnel">' + funnel(d.funnel) + "</div>" +
+        '<p class="caption">Каждая ступень отсеивает по своей причине. Источники дают десятки тысяч строк; через все проверки проходит доли процента.</p>');
+    }
+
+    if (d.pool.by_country && d.pool.by_country.length) {
+      var max = d.pool.by_country.reduce(function (m, r) { return Math.max(m, r.n); }, 0);
+      html += block("Страны", d.pool.by_country.length + " всего",
+        table(
+          [["Страна"], ["Узлов", "num"], ["Доля", "num"]],
+          d.pool.by_country.slice(0, 30).map(function (r) {
+            return [
+              r.name === "unknown" ? "не измерено" : r.name,
+              r.n,
+              max ? Math.round((r.n / max) * 100) + "%" : "—"
+            ];
+          })
+        ));
+    }
+
+    // Sources: which are healthy and which are about to be disabled. A source
+    // keeps its URL here — the operator wrote it, and a health table without a
+    // name is unusable.
+    if (d.sources && d.sources.length) {
+      html += block("Источники", "",
+        table(
+          [["Источник"], ["Состояние"], ["Раундов", "num"], ["Пустых подряд", "num"], ["Последний успех"]],
+          d.sources.map(function (s) {
+            var st = !s.enabled
+              ? '<span class="state" data-s="off">выключен</span>'
+              : s.disabled_soon
+                ? '<span class="state" data-s="warn">отключится</span>'
+                : '<span class="state" data-s="ok">работает</span>';
+            return [
+              { html: '<div class="url">' + esc(s.url) + "</div>" },
+              { html: st },
+              s.rounds,
+              s.empty_rounds,
+              s.last_ok ? esc(s.last_ok.slice(0, 16).replace("T", " ")) : "—"
+            ];
+          })
+        ) +
+        '<p class="caption">Источник отключается после 20 пустых раундов подряд — тот же порог, что применяет загрузчик.</p>');
+    }
+
+    if (d.generations && d.generations.length) {
+      html += block("Поколения", "",
+        table(
+          [["Поколение"], ["Опубликовано"], ["Payload-ов", "num"], ["Узлов", "num"]],
+          d.generations.map(function (g) {
+            var current = g.generation === (d.pool || {}).generation;
+            return [
+              { html: esc(g.generation) + (current ? ' <span class="state" data-s="ok">текущее</span>' : "") },
+              g.at ? esc(g.at.slice(0, 16).replace("T", " ")) : "—",
+              g.payloads,
+              g.nodes
+            ];
+          })
+        ));
+    }
+
+    // Keys last: issuing is an action, and actions come after state.
+    html += block("Ключи", "",
+      '<form id="issue" class="issue">' +
+      '<input name="label" placeholder="метка (необязательно)" maxlength="120" ' +
+      'aria-label="Метка ключа">' +
+      '<button type="submit" class="btn">Выдать ключ</button>' +
+      "</form>" +
+      '<p class="caption">Ключ показывается один раз: в базе хранится только его SHA-256, ' +
+      "восстановить потом нельзя. Придумайте метку, чтобы через месяц понимать, чей это ключ.</p>");
+
+    if (d.tokens && d.tokens.length) {
+      html += table(
+        [["ID"], ["Метка"], ["Источник"], ["Статус"], ["Выдан"], ["", "num"]],
+        d.tokens.map(function (t) {
+          var st = t.status === "active" ? "ok" : "off";
+          var action = t.status === "active"
+            ? '<button type="button" class="btn danger mini" data-revoke="' + esc(t.id) + '">отозвать</button>'
+            : "";
+          return [
+            { html: "<code>" + esc(t.id) + "</code>" },
+            esc(t.label || "—"),
+            esc(t.source === "bot" ? "телеграм" : "панель"),
+            { html: '<span class="state" data-s="' + st + '">' + esc(t.status) + "</span>" },
+            t.created_at ? esc(t.created_at.slice(0, 16).replace("T", " ")) : "—",
+            { html: action }
+          ];
+        })
+      );
+    } else {
+      html += '<p class="caption">Ни одного ключа не выдано.</p>';
+    }
+
+    app.innerHTML = html;
+  }
+
+  /// Mint a key and show it once.
+  ///
+  /// The value comes back exactly once — the server stores a digest — so it is
+  /// rendered into a block the operator cannot miss, with the full subscription
+  /// URL already assembled, rather than into a table cell they might scroll
+  /// past. There is no "show it again" action to add later, because the server
+  /// genuinely does not have it.
+  function mint(form) {
+    var label = form.querySelector('input[name="label"]').value || "";
+    form.querySelector("button").disabled = true;
+    fetch("/admin/keys/issue", {
+      method: "POST",
+      body: new URLSearchParams({ label: label }),
+      headers: { accept: "application/json" }
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        var url = location.origin + "/sub/" + encodeURIComponent(d.token);
+        var box = document.createElement("div");
+        box.className = "minted";
+        box.innerHTML =
+          '<div class="k">Ключ выдан. Скопируйте сейчас — второй раз показать нельзя.</div>' +
+          '<div class="v">' + esc(d.token) + "</div>" +
+          '<div class="k">Ссылка для клиента:</div>' +
+          '<div class="u">' + esc(url) + "</div>" +
+          (d.label ? '<div class="k">Метка: ' + esc(d.label) + "</div>" : "");
+        form.parentNode.insertBefore(box, form.nextSibling);
+        form.querySelector("button").disabled = false;
+        form.reset();
+        // Reload the tables so the new key appears in the list below.
+        load();
+      })
+      .catch(function (e) {
+        form.querySelector("button").disabled = false;
+        alert("Не удалось выдать ключ: " + e.message);
+      });
+  }
+
+  function revoke(id) {
+    if (!confirm("Отозвать ключ " + id + "? Он перестанет работать сразу.")) return;
+    fetch("/admin/keys/revoke", {
+      method: "POST",
+      body: new URLSearchParams({ id: id }),
+      headers: { accept: "application/json" }
+    })
+      .then(function (r) { return r.json(); })
+      .then(function () { load(); })
+      .catch(function () { alert("Не удалось отозвать"); });
+  }
+
+  // Delegated, because the buttons are created by `render` on every load and a
+  // direct listener would have to be re-attached each time.
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest && e.target.closest("[data-revoke]");
+    if (btn) revoke(btn.getAttribute("data-revoke"));
+  });
+  document.addEventListener("submit", function (e) {
+    if (e.target && e.target.id === "issue") {
+      e.preventDefault();
+      mint(e.target);
+    }
+  });
+
+  function load() {
+  fetch("/admin/data", { headers: { accept: "application/json" } })
+    .then(function (r) {
+      if (r.status === 403) throw new Error("forbidden");
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(render)
+    .catch(function (e) {
+      // An expired session and a forbidden panel look the same to a status-code
+      // check; the operator has to be told which one they are looking at, and
+      // the answer for 403 is now the login page rather than a hint about a
+      // header a browser cannot set.
+      age.textContent = "";
+      if (e.message === "HTTP 403" || e.message === "forbidden") {
+        location.href = "/admin/login";
+        return;
+      }
+      app.innerHTML =
+        '<p class="error">Не удалось прочитать состояние: ' + esc(e.message) + "</p>";
+    });
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

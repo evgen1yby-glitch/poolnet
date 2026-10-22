@@ -1,0 +1,45 @@
+[Unit]
+Description=LEGACY DEMO ONLY — do not enable the public hub API
+# Production must use hub-api.service bound to loopback behind nginx TLS.
+After=network-online.target
+# The landing page reads the store the pipeline writes, so a unit that starts
+# before the filesystem is mounted would serve 404s that look like an empty
+# pool. `network-online.target` is deliberately *not* wanted as a hard dependency
+# of the pipeline — this only orders the API after the network, so a box that
+# never reaches "online" still brings the API up.
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Runs as the owning user, not a dedicated `hub` account: this box has no `hub`
+# user and the project lives in that user's home directory.
+User=astrobot
+Group=astrobot
+WorkingDirectory=/home/dev/freevpn
+# Unsafe legacy/demo binding retained for reference only. Never install or enable.
+Environment=HUB_HOST=<HUB_HOST>
+Environment=HUB_PORT=8090
+Environment=HUB_ROOT=/home/dev/freevpn
+# `PYTHONPATH` is what makes `python -m hub.cli` find the package at all: without
+# it the process exits with "No module named 'hub'", which from outside is
+# indistinguishable from a broken application.
+Environment=PYTHONPATH=/home/dev/freevpn/src
+EnvironmentFile=-/etc/hub/hub.env
+ExecStart=/usr/bin/python3 -m hub.cli serve --host <HUB_HOST> --port 8090
+Restart=on-failure
+RestartSec=5
+
+# The demo store under /tmp is what keeps this variant useful before sing-box
+# exists: with the real store, a run publishes nothing and the page shows an
+# empty pool. Point HUB_ROOT at a scratch store to review the landing page.
+ReadWritePaths=/home/dev/freevpn/data /tmp
+ProtectSystem=strict
+# `read-only`, not `yes`: `yes` makes /home invisible to the service and the unit
+# dies on a WorkingDirectory under it.
+ProtectHome=read-only
+PrivateTmp=yes
+NoNewPrivileges=yes
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

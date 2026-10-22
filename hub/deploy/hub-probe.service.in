@@ -1,0 +1,307 @@
+# hub-probe — the network-touching half of the pipeline, sandboxed.
+#
+# `hub run` only fetches public source lists. This unit is what *probes* nodes:
+# it constructs the sing-box driver, dials third-party endpoints, and listens on
+# a loopback SOCKS port per node. That combination is the one part of the system
+# that could touch the host's live network, so it is isolated — and on this host
+# the isolation is a *named* network namespace, `hubns`, entered with
+# `ip netns exec`.
+#
+# ## What was tried first and why each of it was wrong
+#
+# Two isolation mechanisms were tried before this one, both verified to fail on
+# this host, and both recorded here because each looks correct in the abstract:
+#
+# 1. `PrivateNetwork=yes`. This fails *structurally*: systemd gives the unit a
+#    network namespace with no default route and no external interface. There is
+#    no way to dial a third-party node from it, so the unit runs to completion
+#    and verifies 0 nodes every time, forever, while reporting success. Verified:
+#    the worker's own log said "driver absent (network disabled) — 0 verified",
+#    which is the honest version of that failure but still no pool.
+#
+# 2. `sudo -n unshare -rnf --map-user=@HUB_USER@`. This fails in a subtler way.
+#    `unshare -rn` does create a network namespace, but a fresh one contains a
+#    loopback interface and *nothing else* — no external interface, no default
+#    route. Verified:
+#
+#        host netns:      [(1,'lo'),(2,'eth0'),(3,'docker0'),(6,'veth-hub-br')]
+#        unshare -rnf:    [(1,'lo')]
+#
+#    So the sandbox could never dial out. It also had a second, independent
+#    failure that masked the first: a single-uid user namespace maps only one
+#    id, so the project directory and everything below it appears owned by
+#    `65534:65534` from inside, the group-write bit never applies, and the run
+#    dies on `PermissionError: [Errno 13] data/events.ndjson`. `--map-user=`,
+#    `--map-group=`, `--map-auto` and `--map-users=auto` were each tried; the last
+#    two need `newuidmap`, which is not installed here. Fixing the uid mapping
+#    would only have exposed the unfixable half.
+#
+# The lesson that generalises: **isolation must sandbox, not disconnect.** A
+# prober's namespace needs its own uplink, which is exactly what a veth pair with
+# a host-side default gateway and a NAT rule gives.
+#
+# ## Why `hubns` is the right sandbox
+#
+# `hubns` already exists on this host and was built for precisely this purpose:
+# a *named* namespace (so it is reachable with `ip netns exec`, not only from a
+# child process) holding one end of a veth pair.
+#
+#     host:  veth-hub-br  10.99.0.1/24   (the "router" side)
+#           net.ipv4.ip_forward = 1
+#           iptables -t nat -A POSTROUTING -s 10.99.0.0/24 ! -o veth-hub-br -j MASQUERADE
+#     hubns: veth-hub     10.99.0.2/24
+#           default via 10.99.0.1 dev veth-hub
+#
+# Verified inside it: DNS resolves, the default route is present, and writes to
+# `data/` succeed as that account. "Uplink" here means `MASQUERADE`, not a route:
+# hubns cannot reach the host's eth0 address, cannot bind a host interface, and
+# cannot be reached from outside on any host port.
+#
+# What this buys over `unshare -rn`: loopback is *per network namespace*. The
+# driver's SOCKS inbound is bound to `127.0.0.1` (see `SingBoxDriver._config_for`),
+# so every per-node listener lives in hubns's own loopback and is unreachable
+# from the host by construction — not by a permission bit, but because the
+# address itself resolves to a different device. That is the strictest of the
+# three options, and it is the one that can actually probe.
+#
+# What this does and does not protect:
+#
+#   * The namespaced process has no route to the host's interfaces except its own
+#     loopback, so it cannot change a route, cannot sniff, and cannot bind a
+#     routable listener.
+#   * It *does* still make outbound connections to the nodes it tests. That is
+#     the job, and it is bounded: 35000 raw sources narrow to one probe per node
+#     per run, each a TCP dial plus a bounded transfer. `Nice=`/`IOSchedulingClass=`
+#     below keep it from starving the other projects on this box.
+#   * The operator's other VPN project (marzban on 8080/8443) is untouched: no
+#     route is modified, no shared port is bound, and NAT for 10.99.0.0/24 is
+#     already in place for the purpose of this namespace.
+#
+# ## Recreating `hubns` (it lives in /run, so it does not survive a reboot)
+#
+# `hubns` is a bind mount on /run/netns/hubns, i.e. tmpfs. A reboot removes it, so
+# restoring it cannot be an operator step nobody will perform: the timer below is
+# `Persistent=true`, which means a run missed during downtime fires on the *next
+# boot* — i.e. the dead-man's-switch is guaranteed to fire into the one window in
+# which the namespace provably does not exist.
+#
+# So it is a unit, not a note: `hub-ns.service` runs `deploy/hubns-ensure.sh` at
+# boot, ordered before `network-online.target` so the namespace exists before
+# anything that might want to enter it. The script is idempotent — it exits 0
+# having done nothing when the namespace is already there — so re-running it by
+# hand after an upgrade is safe and cannot destroy a sandbox in use.
+#
+# The exact commands it runs, which are the ones that built the working
+# configuration:
+#
+#     ip netns add hubns
+#     ip link add veth-hub type veth peer name veth-hub-br
+#     ip link set veth-hub netns hubns
+#     ip addr add 10.99.0.1/24 dev veth-hub-br
+#     ip link set veth-hub-br up
+#     ip netns exec hubns ip addr add 10.99.0.2/24 dev veth-hub
+#     ip netns exec hubns ip link set veth-hub up
+#     ip netns exec hubns ip link set lo up
+#     ip netns exec hubns ip route add default via 10.99.0.1
+#     iptables -t nat -A POSTROUTING -s 10.99.0.0/24 ! -o veth-hub-br -j MASQUERADE
+#
+# A probe that starts before any of this exists fails with "Cannot open network
+# namespace ... No such file or directory", which names the missing thing, is
+# therefore honest about why nothing was probed, and is fixed by the unit above
+# rather than worked around here.
+#
+# ## Why `setpriv` and that exact credential
+#
+# `ip netns exec` runs the command as **root**. Root writing into `data/` is
+# actively harmful here: the store appends to `data/events.ndjson` and rewrites
+# `data/hub.db`, so one run as root leaves those two files owned by `0:0`, after
+# which `hub-worker.service` and the API — both `User=@HUB_USER@` — can no longer
+# write them, and the *rest* of the pipeline silently degrades to read-only.
+# Verified: running root-inside-hubns wrote `.nstest` as `0:0`.
+#
+# `setpriv` drops to the service account after entering the namespace, so the
+# namespace, which is the identity that already owns `data/` and therefore the
+# identity that can append to it. `--clear-groups` is not decoration: without it
+# the process keeps root's supplementary groups, and `sudo` membership in
+# particular is precisely what a prober has no business holding.
+#
+# An earlier version of this unit tried `unshare -rnf --map-user=@HUB_USER@`, which
+# is the same idea and could not work on this host for the ownership reason given
+# in the header. `setpriv` is the shape that actually does.
+
+[Unit]
+Description=hub node prober (probes inside the `hubns` uplink namespace)
+Documentation=https://example.com/abuse
+# The namespace must exist before the probe tries to enter it. `hub-ns.service`
+# creates it, and is idempotent, so ordering against it is both necessary and
+# cheap.
+After=hub-ns.service network-online.target
+Wants=hub-ns.service
+# A probe run is a few minutes at most; if the API restart races it, that is
+# fine — the probe writes to data/ and the API reads it on the next request.
+# Nothing here is ordered against the API on purpose.
+#
+# Not ordered *after* network readiness in a way that blocks boot: the timer that
+# drives this unit is not wanted by any boot target either — see hub-probe.timer.
+# `Wants=hub-ns.service` and not `Requires=`: if the namespace is somehow already
+# present (an operator created it, or the box never rebooted), a Requires on a
+# unit that has nothing to do would still make this unit's start contingent on
+# that unit *succeeding*, and a no-op that exits 0 is indistinguishable from a
+# real one to systemd's ordering checks.
+
+[Service]
+Type=oneshot
+# the project's own account rather than a dedicated `hub` user: a unit naming a
+# dies immediately with a bare "Unknown user" that `systemctl start` reports
+# with no hint about the account.
+User=@HUB_USER@
+Group=@HUB_GROUP@
+WorkingDirectory=@HUB_DIR@
+Environment=HUB_ROOT=@HUB_DIR@
+# `hub` is a source-tree package, not an installed one: `python -m hub.cli`
+# resolves only from the project root with `src` on the path. Without this the
+# unit dies immediately with `ModuleNotFoundError: No module named 'hub'`,
+# which systemd reports as a bare start failure with no hint about the path.
+Environment=PYTHONPATH=@HUB_DIR@/src
+Environment=HUB_LOCALE=ru
+# Explicit, because `find_binary()` searches PATH and the unit's PATH need not
+# contain /usr/local/bin. Verified present on this host.
+#
+# Deliberately *not* set here: `HUB_MAX_LOAD` / `HUB_TOP_N`. They are set on the
+# ExecStart line below, with the reason, because sudo's `env_reset` discards
+# everything this block sets. See the note above the ExecStart.
+Environment=SINGBOX_BIN=/usr/local/bin/sing-box
+EnvironmentFile=-/etc/hub/hub.env
+# `/usr/bin/python3`, not a `.venv`: the interpreter that has this
+# project's dependencies installed is the system one. A unit pointing at a
+# virtualenv that was never created fails with "Command ... is not
+# executable", which `systemd-analyze verify` reports before you ever
+# install it.
+#
+# `sudo -n ip netns exec hubns` is the sandbox. Each part is load-bearing and
+# none of it is interchangeable:
+#
+#   `sudo -n`   entering hubns needs root, because /run/netns is root-owned, and
+#               a unit that blocks on a password prompt would hang until
+#               `TimeoutStartSec` instead of failing visibly. The account is a
+#               passwordless sudoer (e.g. `/etc/sudoers.d/<user>`: "ALL=(ALL)
+#               NOPASSWD:ALL"), which the operator has confirmed as the
+#               intended path for this host.
+#   `hubns`     the specific name matters: it is the namespace with the uplink.
+#               Using any other netns (a `unshare` one has none) reproduces the
+#               "0 verified" failure of mechanism 1 in a harder-to-see way.
+#
+# `/usr/bin/env PYTHONPATH=...` is not decoration, and this is the second thing
+# that had to be found by running the unit: systemd's `Environment=PYTHONPATH=`
+# above does **not** reach the program. `sudo` runs with `env_reset` and a
+# `secure_path` (both in /etc/sudoers, both defaults), so every variable systemd
+# set is discarded on the way through. The unit then died with:
+#
+#     python3: Error while finding module specification for 'hub.cli'
+#               (ModuleNotFoundError: No module named 'hub')
+#
+# ...and `systemctl start` reported only "exited with error code", which is how
+# this stayed broken through a `systemd-analyze verify` that passed. Setting the
+# variable *inside* the command line is what survives, because it is set by the
+# command sudo runs rather than inherited from its environment. Verified:
+# `sudo -n env PYTHONPATH=@HUB_DIR@/src python3 -c "import hub"` works.
+#
+# The alternative — a wrapper script that exports the path and `exec`s python —
+# is the same number of moving parts and one more file to drift out of sync with
+# this unit, so the variable is set where the failure was.
+#
+# `SINGBOX_BIN` is listed even though `find_binary()` would find the binary on
+# its own: `/usr/local/bin` happens to be in sudo's `secure_path` on this box, so
+# the fallback works *today*. "Happens to" is the reason to say it — a
+# `secure_path` change, or this project moving to a box that installs sing-box
+# elsewhere, turns the omission into a run that reports "no sing-box" while the
+# binary is sitting right there.
+# `HUB_MAX_LOAD` and `HUB_TOP_N` appear here rather than in `Environment=` above
+# for the same reason `PYTHONPATH` does: `sudo` resets the environment, so a
+# variable set the tidy way is discarded before the pipeline reads it.
+#
+# They are not optional tuning. This box runs an operator desktop, a browser and
+# a VM, and sits at 1.5-2.5 load per core permanently, against a default ceiling
+# of 0.85 per core. Every round therefore deferred the speed stage, forever:
+# `speed.measured` was 0 in every run ever recorded on this host, the ranking
+# rested on half-credit throughput with no measurement behind it, and the run
+# report honestly said "deferred" — a guard that can never be satisfied is a
+# feature that is off while claiming to be on. Lifting the ceiling makes the
+# stage reachable and the throughput numbers real (if noisier, since a saturated
+# box measures the co-tenant too); leaving it at the default would leave the
+# operator's "в приоритете с наибольшей скоростью VPN" ranked on nothing.
+#
+# `HUB_TOP_N=60`, up from 25. Nodes past the cap are not dropped — they are
+# measured as "deferred" and keep half credit for throughput — so the cap never
+# removed a node from the feed, but it did decide which nodes were ranked on a
+# real number and which on a placeholder. With a pool of ~75 verified nodes and
+# a cap of 25, two thirds of the pool competed on a fabricated value. At 60 the
+# ranking covers the pool that is actually published.
+#
+# The cost is measured, not assumed: one transfer is 256 KiB plus a window that
+# closes early at 1 MiB, so ~1.25 MiB per node, up to 4.25 MiB worst case. At
+# top_n=25 that is ~31 MiB per run; at 60 it is ~75 MiB. Four runs a day makes
+# the increase ~0.2 GiB per month, against a probe round that already costs
+# minutes of wall time. If the round's duration becomes a problem, this is the
+# number to lower, and the run report's `speed.defer:beyond top_n` count says
+# exactly how many nodes are affected.
+ExecStart=/usr/bin/sudo -n /usr/bin/ip netns exec hubns /usr/bin/setpriv --reuid=@HUB_USER@ --regid=@HUB_GROUP@ --clear-groups /usr/bin/env PYTHONPATH=@HUB_DIR@/src SINGBOX_BIN=/usr/local/bin/sing-box XRAY_BIN=/opt/hub-tools/xray HUB_MAX_LOAD=none HUB_TOP_N=60 /usr/bin/python3 -m hub.cli run --allow-network
+# The pipeline writes data/hub.db, data/events.ndjson and a generation directory.
+# `/tmp` is written too — see below for why that is not optional.
+ReadWritePaths=@HUB_DIR@/data /tmp
+ProtectSystem=strict
+ProtectHome=read-only
+# `/tmp` is on `ReadWritePaths` for one specific reason and it is not the driver's
+# configs. `ProtectSystem=strict` mounts the *entire* hierarchy read-only except
+# `/dev`, `/proc` and `/sys`, which includes `/tmp` — so `tempfile`'s candidate
+# list `['/tmp', '/var/tmp', '/usr/tmp', '/cwd']` is rejected entry by entry and
+# `SingBoxDriver.start()` dies with:
+#
+#     FileNotFoundError: [Errno 2] No usable temporary directory found
+#
+# Verified: this is what the first correctly-sandboxed run of this unit reported.
+# Every candidate is either covered by `strict`, covered by `ProtectHome`, or the
+# read-only working directory. `ReadWritePaths` is the one directive that punches
+# through `strict`, so `/tmp` has to be named explicitly or the driver cannot
+# create its per-node config at all.
+#
+# Deliberately `/tmp` and not a project-local scratch dir: `tempfile` chooses its
+# own directory, so pinning `TMPDIR` to something inside `data/` would put live
+# node credentials under the path the API serves. `/tmp` is where the OS already
+# puts them and is mode 1777 by default.
+#
+# Deliberately **not** `PrivateTmp=yes`, which is the tempting way to "give it its
+# own /tmp": a private tmp would mean sing-box reads a *different filesystem*
+# from the one the driver wrote the config into. The driver and the binary must
+# see the same `/tmp`, so the shared one is the correct choice here.
+# Deliberately not PrivateTmp=yes: the driver writes a per-node config under
+# /tmp, and a private tmp would make sing-box read a different filesystem from
+# the one the driver wrote. Hubns cannot see the host's abstract sockets, but a
+# private tmp would break the driver↔sing-box *file* handoff, which is the part
+# that must survive.
+# Deliberately neither `PrivateNetwork=yes` nor `NoNewPrivileges=yes`:
+#   * PrivateNetwork gives the unit no route at all, so it could never dial a
+#     node — mechanism 1 in the header. This unit already has its own namespace:
+#     hubns, with an uplink, chosen over PrivateNetwork precisely because
+#     PrivateNetwork is a disconnection and this needs to be a sandbox.
+#   * NoNewPrivileges would refuse the namespace outright: `ip netns exec` needs
+#     CAP_SYS_ADMIN, which setpriv keeps and this directive strips. It would fail
+#     with a bare "Operation not permitted" in the journal and no hint why.
+#
+#   Note the ordering consequence: `ip netns exec` needs root, but the unit's own
+#   `User=@HUB_USER@` is what `sudo -n` authenticates as and what `setpriv` resolves
+#   by *name* against. Changing `User=` to a non-existent or misnamed account
+#   breaks only the `setpriv --reuid` lookup, with "invalid user" in the journal.
+NoNewPrivileges=no
+# Probing is I/O-bound and must never starve this shared box. These three are
+# what let the timer run four times a day alongside other people's services.
+Nice=19
+IOSchedulingClass=idle
+CPUSchedulingPolicy=idle
+TimeoutStartSec=3600
+
+[Install]
+# Deliberately empty: this unit is never enabled by default. Run it explicitly
+# (`systemctl start hub-probe.service`) or enable `hub-probe.timer`.
+# Referencing a target here would make `systemctl enable` pull it into boot,
+# which is exactly what must not happen by default.

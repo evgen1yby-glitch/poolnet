@@ -1,0 +1,231 @@
+# Versioned source list. Raw GitHub content only — never the anonymous REST
+# API, which is 60/hr and was already exhausted on this host.
+#
+# Rules that keep us welcome:
+#   * every source is read with a conditional request (ETag), so an unchanged
+#     repo costs one cheap 304;
+#   * a source returning 20 consecutive empty rounds is disabled;
+#   * new sources are quarantined below (contribution cap until 10 rounds).
+#
+# Every URL here is a *payload* file, verified to carry share URIs at the time
+# it was added. A repo's README is an index page: it links the config files and
+# contains no configs itself, so pointing a source at `.../README.md` fetches
+# 10 KB of documentation and yields zero nodes — a round that looks successful
+# and produces nothing. `scripts/audit_sources.py` re-checks all of them.
+
+sources:
+  # --- Epodonios/v2ray-configs: one file per protocol ---------------------- #
+  # Split by protocol, so each source is homogeneous and a bad protocol cannot
+  # mask a good one's numbers in the run report.
+  - url: https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vless.txt
+    name: Epodonios/vless
+  - url: https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/vmess.txt
+    name: Epodonios/vmess
+  - url: https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/trojan.txt
+    name: Epodonios/trojan
+  - url: https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/Splitted-By-Protocol/ss.txt
+    name: Epodonios/ss
+
+  # jsDelivr fallbacks for the same repo: unmetered, CDN-cached, and an
+  # independent failure domain from raw.githubusercontent.com.
+  - url: https://cdn.jsdelivr.net/gh/Epodonios/v2ray-configs@main/Splitted-By-Protocol/vless.txt
+    name: Epodonios/vless/jsdelivr
+
+  # --- 0xRadikal/Free-v2ray-Configs ---------------------------------------- #
+  # `configs.txt` is plain URIs, `configs_base64.txt` the same list wrapped in
+  # base64; the parser handles both, so the base64 variant is a live test that
+  # the wrapped path still works. Also the only source here carrying hysteria2
+  # and tuic nodes.
+  - url: https://raw.githubusercontent.com/0xRadikal/Free-v2ray-Configs/main/all/configs.txt
+    name: 0xRadikal/configs
+  - url: https://raw.githubusercontent.com/0xRadikal/Free-v2ray-Configs/main/all/configs_base64.txt
+    name: 0xRadikal/configs_base64
+
+  # --- Alirewa/V2ray-Configs ----------------------------------------------- #
+  - url: https://raw.githubusercontent.com/Alirewa/V2ray-Configs/main/config.txt
+    name: Alirewa/configs
+  - url: https://raw.githubusercontent.com/Alirewa/V2ray-Configs/main/sub2.txt
+    name: Alirewa/sub2
+
+  # --- mahdibland/V2RayAggregator ----------------------------------------- #
+  # A merged subscription rather than a per-protocol split, which makes it a
+  # useful cross-check on the dedup key: the same node reached by two routes
+  # must collapse to one, or the pool double-counts.
+  - url: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/sub_merge.txt
+    name: mahdibland/merge
+
+  # ---------------------------------------------------------------------- #
+  # Operator-requested sources. Each declares `kind:` so its body is run
+  # through the matching adapter before `parse_many`.
+  #
+  # All three are *known refusals*, verified live on 2026-10-15, and that is
+  # recorded rather than hidden:
+  #
+  #   * proxyfreeonly.com's JSON is a list of OpenVPN/SoftEther servers
+  #     (obfuscated `__0`..`__5` keys, host names like `public-vpn-43`,
+  #     which is the VPN Gate convention). It carries an IP, a byte count, a
+  #     session count and a country code — no share URI of any protocol we
+  #     index, so `parse_many` has nothing to build a node from. It stays
+  #     enabled so the refusal is visible in the run report: turning it off
+  #     would make the pool look smaller than the sources we actually poll.
+  #   * VPN Gate's CSV carries a base64 OpenVPN config per row. The CSV's own
+  #     per-server facts (country, ping, throughput) are genuinely useful, so
+  #     `adapters.parse_vpngate_csv` exists for the ranking tool; it just
+  #     cannot feed the share-URI index.
+  #   * ipspeed.info serves real vless+reality URIs but answers every
+  #     non-browser request with a Cloudflare *managed* challenge (HTTP 403,
+  #     `cType: 'managed'`, `challenge-platform`). A plain HTTP client cannot
+  #     pass it and we do not try to. The source stays enabled so a
+  #     browser-grade fetch path (operator-supplied) starts working the moment
+  #     one exists, and until then the reason logged is "Cloudflare
+  #     challenge", not "source retired".
+  #
+  # Two further sources were removed for cause, and why is recorded here
+  # because the URLs look plausible and will otherwise be re-added:
+  #
+  #   * barry-far/V2ray-Config — the repo no longer has a `main` or `master`
+  #     branch on raw.githubusercontent.com (404), even though the repo page
+  #     still resolves. Retired.
+  #   * roosterkid/openproxylist — the README is a changelog for
+  #     openproxylist.com, which publishes HTTP/SOCKS *proxy* addresses, not
+  #     share URIs. A different protocol with no bridge into this index.
+  # ---------------------------------------------------------------------- #
+
+  - url: https://proxyfreeonly.com/api/free-vpn-list?limit=500&page=1&sortBy=lastChecked&sortType=desc
+    name: proxyfreeonly/api
+    kind: proxyfreeonly
+
+  - url: https://www.vpngate.net/api/iphone/
+    name: vpngate/api
+    kind: vpngate
+
+  - url: https://ipspeed.info/free-vless-reality.php
+    name: ipspeed/free-vless-reality
+    kind: ipspeed
+
+  # ---------------------------------------------------------------------- #
+  # Sources added 2026-10-16 after the operator asked for more country
+  # coverage. Both were verified live before being added: fetched, then
+  # parsed with `parse_many` to count real nodes rather than bytes.
+  #
+  # They are the answer to *why* the pool was thin. The two sources the
+  # operator supplied (proxyfreeonly, vpngate) are the same SoftEther pool
+  # under two names — `public-vpn-43 / 219.100.37.7` appears in both — and
+  # neither carries a share URI this index can publish, so the pool depended
+  # on the remaining eight. These two add ~1500 parseable nodes on top.
+  # ---------------------------------------------------------------------- #
+
+  # `server.txt` is the large file: ~1013 nodes, mixed vmess (522) and vless
+  # (480). A single-protocol source would be cleaner, but this repo publishes
+  # one combined file, and the mixed protocols are a useful check that the
+  # per-protocol handling does not leak between branches.
+  - url: https://raw.githubusercontent.com/ALIILAPRO/v2rayNG-Config/main/server.txt
+    name: ALIILAPRO/v2rayNG-Config
+
+  # ~565 nodes and the widest protocol spread of any source here: vless,
+  # trojan, hysteria2, ss plus plain http/socks. The http/socks entries are
+  # measured but never become share URIs, which is expected and recorded by
+  # the parser rather than silently dropped.
+  - url: https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt
+    name: ermaozi/get_subscribe
+
+  # --- Added 2026-10-16, third pass --------------------------------------- #
+  # Each fetched and parsed with `parse_many` before being listed; the node
+  # count is measured, not the repo's claim. The operator asked for more
+  # reserves per country and the honest bottleneck is input volume: the pool
+  # keeps ~1 node per 800 offered, so coverage follows source count.
+
+  # The whole Epodonios repo in one file — ~7124 nodes, where the four
+  # per-protocol sources above carry ~6000 between them. Not redundant: the
+  # combined file includes protocols the splits do not (`hysteria2`, and a
+  # larger `ss` set), and its overlap with them is free — the dedup key
+  # collapses a node reached by two routes into one.
+  - url: https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/All_Configs_Sub.txt
+    name: Epodonios/All
+
+  # ~1002 nodes, the same repo family as the `server.txt` source but a
+  # different file with a different mix (vmess 525 / vless 467, where
+  # `server.txt` is vless-heavy).
+  - url: https://raw.githubusercontent.com/ALIILAPRO/v2rayNG-Config/main/sub.txt
+    name: ALIILAPRO/sub
+
+  # ~3054 nodes and the most `ss`-heavy source here by far (1862). Every other
+  # source in this list is vless-dominant, and a Shadowsocks node exercises a
+  # different code path in the parser, the renderer and the client, so this is
+  # coverage rather than just volume.
+  - url: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/sub_merge_base64.txt
+    name: mahdibland/base64
+
+  # ~387 nodes. Small, but an independent publisher rather than another mirror
+  # of the same aggregators, which is what the diversity of the pool rests on.
+  - url: https://raw.githubusercontent.com/ndsphonemy/proxy-sub/main/speed.txt
+    name: ndsphonemy/proxy-sub
+
+  # ~452 nodes, protocol-mixed (ss 203 / vless 122 / vmess 84).
+  - url: https://raw.githubusercontent.com/w1770946466/Auto_proxy/main/Long_term_subscription_num
+    name: w1770/Auto_proxy
+
+  # ~263 nodes, base64-wrapped. This repo was previously skipped as "published
+  # HTTP/SOCKS proxy addresses, not share URIs" — that was about its README;
+  # `V2RAY_BASE64.txt` is a real share-URI list. Recorded so the old note is not
+  # read as covering this file.
+  - url: https://raw.githubusercontent.com/roosterkid/openproxylist/main/V2RAY_BASE64.txt
+    name: roosterkid/V2RAY
+
+  # ~20 nodes only. Kept because it is a small independent list, not a mirror,
+  # and the cost of polling it is one conditional request per round.
+  - url: https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub
+    name: Pawdroid/Free-servers
+
+  # --- Added 2026-10-16, second pass (operator: "проверяй гитхаб") --------- #
+  # Each was fetched and parsed before being listed; the node count is the
+  # measured one, not the repo's claim about itself.
+
+  # The largest source by an order of magnitude: ~7015 nodes, and the widest
+  # protocol spread (vless 5452, ss 726, trojan 588, vmess 196, hysteria2 52).
+  # Note the path: this repo was retired in the note above as `V2ray-Configs`
+  # (plural), which truly 404s. It now lives at `V2ray-Config` (singular) and
+  # is back — recorded here so the old "retired" note is not read as current.
+  - url: https://raw.githubusercontent.com/barry-far/V2ray-Config/main/All_Configs_Sub.txt
+    name: barry-far/All
+
+  # ~961 nodes (vless 666, ss 159, trojan 91, vmess 45).
+  - url: https://raw.githubusercontent.com/MhdiTaheri/V2rayCollector/main/sub/mix
+    name: MhdiTaheri/mix
+
+  # ~531 nodes. Also carries the http/socks entries the parser measures but
+  # cannot publish, same as ermaozi.
+  - url: https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt
+    name: peasoft/NoMoreWalls
+
+  # ~173 nodes (ss 136, trojan 31, vmess 5). Small, but a `ss`-heavy source
+  # balances the vless-dominant ones.
+  - url: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/Eternity.txt
+    name: mahdibland/Eternity
+
+# Operational knobs. Everything here is a policy, not a secret.
+canary_token: ""
+source_pass_rate: 1.0
+protocol_reliability: 0.5
+# The public subscription origin for the current IP-only test endpoint. This is
+# transport configuration, not proof that HTTPS is trusted; the deployment
+# runbook gates link distribution on certificate and reachability checks.
+# Empty by design, and the deployment sets it out of band. A checked-in value
+# is one operator's origin, which is wrong for every other install: it
+# advertises links to a server they do not run. `HUB_BASE_URL` in the
+# environment overrides this, and an empty value means the URL-bearing headers
+# are dropped rather than rendered blank.
+base_url: ""
+# The bot's username, without the leading `@`. Read by `/api/v1/bot`, which is
+# what the landing page's country cards call to learn where a click should go.
+#
+# Empty means "no bot": the page renders the cards as plain unlinked divs and
+# nothing points at a bot that does not exist. That is the correct state for a
+# fresh install, so this ships empty rather than carrying a placeholder that
+# would build links to someone else's bot.
+#
+# To enable per-country links, set this to the bot's real username and restart
+# the service. The value is not a secret -- any Telegram user can see it -- and
+# it is published deliberately, because the alternative is a bot that exists
+# and cannot be reached from the one page built to send visitors to it.
+bot_username: ""

@@ -1,0 +1,52 @@
+# Local secrets and credentials
+.hub-token
+.env
+.env.*
+!.env.example
+*.token
+*.secret
+*.key
+*.pem
+*.crt
+
+# Runtime state and generated feeds
+/data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.ndjson
+*.log
+
+# Local virtual environments, caches, and generated output
+.venv/
+venv/
+v/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Locally downloaded binaries and archives
+/tools/
+/tools/**
+sing-box
+sing-box-*/
+*.tar.gz
+*.zip
+
+# Claude Code local state
+.claude/settings.local.json
+
+# Local rollback baselines captured before live runtime changes. These are
+# copies of files from /etc (nginx vhosts, systemd units, `ufw status` output)
+# and are kept on the box for rollback, not versioned: they describe one host's
+# live state, not the project.
+/.rollback/

@@ -1,0 +1,7 @@
+name = "open-proxy-pool-api"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# ORIGIN is set as a secret, not baked in at build time:
+#   wrangler secret put ORIGIN
+# e.g. https://cdn.jsdelivr.net/gh/OWNER/REPO@main/data

@@ -1,0 +1,52 @@
+name: discover
+
+# Weekly sweep for new proxy sources through the GitHub API. The script only
+# probes URL shapes of already-published lists (no port scanning) and files a
+# review issue with the measured yield of each candidate.
+
+on:
+  schedule:
+    - cron: '41 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: probe candidate sources
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx tsx src/index.ts discover
+      - name: file review issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create source-discovery --description "automated source discovery" 2>/dev/null || true
+          if [ ! -f data/discover-report.md ]; then
+            echo "no discover report produced, skipping issue"
+            exit 0
+          fi
+          if gh issue list --label source-discovery --state open --limit 1 | grep -q .; then
+            echo "an open source-discovery issue exists, skipping"
+          else
+            gh issue create \
+              --title "Source discovery sweep $(date -u +%Y-%m-%d)" \
+              --label source-discovery \
+              --body-file data/discover-report.md
+          fi

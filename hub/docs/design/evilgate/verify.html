@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>Проверка узлов — evilgate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="system.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="evilgate — на главную">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
+      <span class="bn">evilgate</span>
+    </a>
+    <nav class="main" aria-label="Разделы">
+      <a href="index.html">Главная</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="verify.html" class="on">Проверка</a>
+      <a href="premium.html">Премиум</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>6 этапов · реальные соединения</span>
+      <h1>Проверка <span class="grad-txt">реальными соединениями</span></h1>
+      <p class="sub">Каждый этап — сетевое соединение, а не пинг. Узел, не прошедший любой из этапов, исключается из выдачи. Журнал отсева публикуется вместе с результатами.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Шесть этапов <span class="grad-txt">проверки узла</span></h2>
+        <p>Значения соответствуют воронке последнего прогона.</p>
+      </div>
+      <div class="big-funnel">
+        <div class="fcard"><div class="fk">01 · ИСТОЧНИКИ</div><div class="fv">55 149</div><div class="fd">адресов из 189 публичных источников</div></div>
+        <div class="fcard"><div class="fk">02 · РАЗБОР</div><div class="fv">11 076</div><div class="fd">записей распознаны по протоколу и адресу</div></div>
+        <div class="fcard"><div class="fk">03 · TCP</div><div class="fv">6 208</div><div class="fd">соединений установлено успешно</div></div>
+        <div class="fcard"><div class="fk">04 · TLS</div><div class="fv">3 571</div><div class="fd">рукопожатий TLS завершено</div></div>
+        <div class="fcard"><div class="fk">05 · КОНФИГ</div><div class="fv">904</div><div class="fd">рабочих конфигураций VPN создано</div></div>
+        <div class="fcard fr-final"><div class="fk">06 · СКВОЗНОЙ ЗАПРОС</div><div class="fv">98</div><div class="fd">HTTP-запросов выполнены через цепочку полностью</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="bento">
+        <div class="b-mod b6">
+          <div class="pk">ИСКЛЮЧЕНИЕ</div>
+          <h3>Отсев без статуса резерва</h3>
+          <p>Узел, не прошедший этап, не переводится в резервные состояния: пул формируется заново в каждом прогоне.</p>
+        </div>
+        <div class="b-mod b6">
+          <div class="pk">ТОЧНОСТЬ ДАННЫХ</div>
+          <h3>Выдача соответствует состоянию пула</h3>
+          <p>Страна определяется по данным узла. Статус-страница отражает фактическое состояние пула на момент запроса.</p>
+        </div>
+      </div>
+      <div class="cta-row" style="margin-top:2rem;justify-content:flex-start">
+        <a class="btn btn-1" href="status.html">Статус последнего прогона</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Прокси-база: <span class="grad-txt">цикл прогона</span></h2>
+        <p>Тот же принцип — реальные соединения, другая очередь: очередь в 40 раз больше, поэтому выборка циклическая.</p>
+      </div>
+      <div class="big-funnel big-funnel-4"><div class="fcard"><div class="fk">01 · ОЧЕРЕДЬ</div><div class="fv">3 811 493</div><div class="fd">строк в очереди из 189 источников</div></div><div class="fcard"><div class="fk">02 · УНИКАЛЬНЫЕ</div><div class="fv">754 973</div><div class="fd">после дедупликации адреса</div></div><div class="fcard"><div class="fk">03 · ВЫБОРКА</div><div class="fv">3 000</div><div class="fd">адресов берётся на проверку за цикл</div></div><div class="fcard"><div class="fk">04 · ЖИВЫЕ</div><div class="fv">3 507</div><div class="fd">прокси подтвердили соединения</div></div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
+        <span>evilgate</span>
+      </div>
+      <p>Каталог проверенных публичных узлов. Пул агрегирует только опубликованные списки; соединение устанавливается напрямую между клиентом и узлом, трафик не проходит через наши серверы. Мы не являемся оператором узлов.</p>
+      <p class="cop">© 2026 evilgate</p>
+    </div>
+    <nav aria-label="Ссылки">
+      <a href="index.html">Главная</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="premium.html">Премиум</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

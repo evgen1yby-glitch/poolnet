@@ -1,0 +1,43 @@
+name: roast
+
+# Weekly: turn one cycle of benchmark measurements into a digest file and a
+# discussion-ready page. The content writes itself from what the pipeline
+# already measured, so there is nothing to maintain by hand.
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: roast
+  cancel-in-progress: false
+
+jobs:
+  roast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: render the digest
+        run: npx tsx src/index.ts roast
+      - name: commit data/roast.md
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/roast.md data/roast.json
+          git diff --cached --quiet || git commit -m "roast: $(date -u +%Y-%m-%d)"
+          # another workflow may have pushed while this ran: rebase and retry
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash && git push && break
+            echo "push rejected (attempt $i), retrying after a backoff"
+            sleep $((i * 10))
+          done

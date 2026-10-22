@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>VPN — evilgate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="system.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="evilgate — на главную">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
+      <span class="bn">evilgate</span>
+    </a>
+    <nav class="main" aria-label="Разделы">
+      <a href="index.html">Главная</a>
+      <a href="vpn.html" class="on">VPN</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="verify.html">Проверка</a>
+      <a href="premium.html">Премиум</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>бесплатно · без регистрации · 29 стран</span>
+      <h1>VPN, собранный из <span class="grad-txt">проверенных узлов</span></h1>
+      <p class="sub">Конфигурация для VPN-клиента на базе узла, прошедшего полную проверку. Проверка общая с базой прокси-пула платформы: один стандарт качества.</p>
+      <div class="cta-row">
+        <a class="btn btn-1" href="#" aria-disabled="true" style="opacity:.55;cursor:not-allowed">Telegram-бот — скоро</a>
+        <a class="btn btn-2" href="verify.html">Методика проверки узлов</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Три шага <span class="grad-txt">до конфигурации</span></h2>
+        <p>Регистрация и анкета не требуются.</p>
+      </div>
+      <div class="steps-v">
+        <div class="stepc">
+          <div class="sn grad-txt">01</div>
+          <div>
+            <h3>Запрос в бота</h3>
+            <p>Telegram-бот возвращает список стран с активными узлами и принимает выбор. Аккаунт на сайте не требуется.</p>
+          </div>
+        </div>
+        <div class="stepc">
+          <div class="sn grad-txt">02</div>
+          <div>
+            <h3>Выбор страны</h3>
+            <p>Бот формирует шарду — конфигурацию выбранной страны из активных узлов этой страны.</p>
+          </div>
+        </div>
+        <div class="stepc">
+          <div class="sn grad-txt">03</div>
+          <div>
+            <h3>Подключение</h3>
+            <p>Файл конфигурации импортируется в ваш VPN-клиент. Соединение устанавливается напрямую между клиентом и узлом; наши серверы в передаче трафика не участвуют.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="bento">
+        <div class="b-mod b7">
+          <div class="pk">СТРАНЫ</div>
+          <h3>29 стран прямо сейчас</h3>
+          <div class="chips" style="margin-top:.9rem">
+            <span>US <b>25</b></span><span>DE <b>20</b></span><span>FR <b>19</b></span><span>NL <b>13</b></span><span>PL <b>12</b></span><span>FI <b>10</b></span><span>SG <b>6</b></span><span>GB <b>4</b></span><span>JP <b>4</b></span><span>TR <b>4</b></span><span>CA <b>3</b></span><span>IN <b>3</b></span><span>LT <b>3</b></span><span>LV <b>3</b></span><span>TH <b>3</b></span><span>CL <b>2</b></span><span>+13 · в боте</span>
+          </div>
+          <p style="margin-top:1rem">Страны без подтверждённых узлов не попадают в выдачу.</p>
+          <a class="golink" href="proxy.html">пул прокси — отдельная база платформы</a>
+        </div>
+        <div class="b-mod b5">
+          <div class="pk">ПРИНЦИПЫ</div>
+          <h3>Условия тарифа</h3>
+          <ul style="list-style:none;margin-top:.7rem;display:flex;flex-direction:column;gap:.55rem">
+            <li style="color:var(--mut);font-size:.94rem">— Доступ бесплатный целиком: не пробный период</li>
+            <li style="color:var(--mut);font-size:.94rem">— Все узлы проверены в последнем прогоне</li>
+            <li style="color:var(--mut);font-size:.94rem">— Трафик не проходит и не хранится на наших серверах</li>
+          </ul>
+          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t">Германия · подключено</div><div class="cm-s">шард из 20 узлов · 10:29 UTC</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Как <span class="grad-txt">подключать</span></h2>
+        <p>Файл конфигурации импортируется как есть. На мобильных устройствах импорт в клиент — двумя касаниями.</p>
+      </div>
+      <div class="clt">
+        <div><b>Sing-box</b><span>полный набор протоколов</span><code>официальный билд</code></div>
+        <div><b>Hiddify · Happ</b><span>импорт одним файлом</span><code>iOS · Android</code></div>
+        <div><b>v2rayNG</b><span>Android-клиент</span><code>Play · APK</code></div>
+        <div><b>Clash · Karing</b><span>профиль целиком</span><code>desktop · mobile</code></div>
+      </div>
+      <div class="duo" style="margin-top:1.4rem">
+        <div class="b-mod"><div class="pk">МОЖНО</div>
+          <ul class="yes">
+            <li>Подключаться к проверенным узлам и проверять качество самому</li>
+            <li>Импортировать несколько стран и переключаться в клиенте</li>
+            <li>Публиковать выдачу с указанием платформы-каталога</li>
+          </ul>
+        </div>
+        <div class="b-mod"><div class="pk">НЕЛЬЗЯ</div>
+          <ul class="no">
+            <li>Отправлять через публичные узлы логины, пароли, токены</li>
+            <li>Считать публичные прокси trusted-каналом для чувствительных данных</li>
+            <li>Перепродавать узлы как «собственный сервис» без указания источника</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
+        <span>evilgate</span>
+      </div>
+      <p>Каталог проверенных публичных узлов. Пул агрегирует только опубликованные списки; соединение устанавливается напрямую между клиентом и узлом, трафик не проходит через наши серверы. Мы не являемся оператором узлов.</p>
+      <p class="cop">© 2026 evilgate</p>
+    </div>
+    <nav aria-label="Ссылки">
+      <a href="index.html">Главная</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="verify.html">Проверка</a>
+      <a href="premium.html">Премиум</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

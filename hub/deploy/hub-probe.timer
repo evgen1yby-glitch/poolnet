@@ -1,0 +1,72 @@
+# hub-probe.timer — the periodic re-check of the node pool.
+#
+# This is the timer the operator asked for: re-extract and re-check the VPN
+# lists *periodically*, rather than once by hand. It drives `hub-probe.service`,
+# which is the only unit that probes nodes, and it inherits that unit's
+# sandbox rather than undoing it — see `hub-probe.service` for what that sandbox
+# is (`hubns`, a named namespace with a veth uplink) and for the two isolation
+# mechanisms that were tried and do not work on this host.
+#
+# The timer sets no network or filesystem policy of its own. A timer's job is
+# *when*; a service's job is *how*. Duplicating a sandbox setting into the timer
+# would create a second place for the two to disagree, and the disagreement
+# would be invisible — the service would keep working while the timer quietly
+# relaxed it, or the timer would refuse a run the service could have made.
+#
+# `Persistent=true` below is the one exception, and it is a scheduling decision
+# rather than a sandbox one.
+#
+# ## Why this is a separate timer from `hub-worker.timer`
+#
+# `hub-worker.timer` runs `hub-worker.service` every 15 minutes. That unit has
+# no `--allow-network`, so it never constructs the sing-box driver and never
+# opens a probe socket; it refetches source lists and republishes what it has.
+#
+# Probing is a different thing and runs on a different cadence:
+#
+#   * it is the half that can touch the host's live network, so it stays
+#     explicitly opt-in per unit rather than being the default path;
+#   * it is far more expensive — one TCP/TLS/HTTP round per node per run, then
+#     a bounded throughput transfer for the top `top_n` of the ranking;
+#   * running it as often as the refetch would spend most of the budget on
+#     nodes the refetch has not had time to change.
+#
+# Keeping them apart is also what makes the cadence decidable: the refetch is
+# cheap enough to want fresh, the probe is expensive enough to want rare, and
+# coupling them would force one number to serve both.
+
+[Unit]
+Description=Re-check the VPN node pool every 6 hours (probes inside `hubns`)
+Documentation=https://example.com/abuse
+
+[Timer]
+# 06:17, 12:17, 18:17, 00:17 — four times a day, never on the hour.
+#
+# Deliberately off the round numbers. Nothing in the pipeline needs to align
+# with a clock boundary, and the *:0/15 worker timer plus a handful of other
+# usual suspects all land on :00, which is when the box is most likely to be
+# busy doing something else. 17 minutes past is cheap insurance against
+# colliding with a cron job nobody remembered to mention.
+#
+# `Persistent=true` is the dead-man's-switch: a round missed while the machine
+# was down or rebooting runs on the next boot instead of being silently
+# dropped. A re-checker that quietly skips six-hour windows is worse than no
+# re-checker, because the published pool then claims freshness it does not have.
+OnCalendar=00/6:17
+Persistent=true
+
+# Loose accuracy on purpose. systemd will coalesce this wake-up into whatever
+# else the machine is doing rather than waking a CPU for it; the pool does not
+# go stale in a minute, and waking the box has a real cost for every other
+# service on it.
+AccuracySec=5min
+
+# Space the runs out if a run is missed several times over, so a box that was
+# off for two days does not fire four backlog rounds back to back and stampede
+# the same nodes.
+RandomizedDelaySec=2min
+
+Unit=hub-probe.service
+
+[Install]
+WantedBy=timers.target

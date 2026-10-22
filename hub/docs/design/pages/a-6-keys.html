@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hub — ключи</title>
+<link rel="stylesheet" href="a.css">
+</head>
+<body class="admin-doc">
+<div class="admin-bar"><div class="id"><b>hub<i>.</i></b><span>панель оператора</span></div><div class="live"><span class="state" data-s="ok">данные свежие</span><span>gen-7df9f6367e06 · 5,9 ч назад</span></div></div><div class="admin"><nav aria-label="Панель"><div class="grp">Смотреть</div><a href="#">Обзор</a><a href="#">Страны</a><a href="#">Источники</a><div class="grp">Управлять</div><a href="#" aria-current>Ключи</a><a href="#">Поколения</a></nav><main>
+<div class="sec" style="margin-top:0">
+  <div class="sec-h"><h2>Ключи</h2><span class="aside">ключ показывается один раз</span></div>
+  <form class="issue">
+    <input placeholder="метка — чтобы через месяц понять, чей это ключ" aria-label="Метка ключа">
+    <button class="btn primary" type="submit">Выдать ключ</button>
+  </form>
+  <p class="note">В базе хранится только SHA-256 ключа. Восстановить выданный
+     ключ нельзя — ни вами, ни нами; это не ограничение интерфейса, а свойство
+     хранилища.</p>
+  <div class="receipt">
+    <div class="rk">Ключ выдан. Скопируйте сейчас — второй раз показать нельзя.</div>
+    <div class="rv">hb_7Kq2v9LmXa4TfR8sNc3PeW6yBd1GjHsU</div>
+    <div class="rk">Ссылка для клиента</div>
+    <div class="ru">https://193.34.212.154:8444/sub/hb_7Kq2v9LmXa4TfR8sNc3PeW6yBd1GjHsU</div>
+    <div class="rk2">метка: happ-verify · источник: панель · срок: бессрочно</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-h"><h2>Выданные ключи</h2><span class="aside">2 всего</span></div>
+  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Метка</th>
+    <th>Источник</th><th>Статус</th><th>Выдан</th><th></th></tr></thead>
+    <tbody><tr><td><code>4b8cf45a6c79</code></td><td>happ-verify</td><td>панель</td><td><span class="state" data-s="off">отозван</span></td><td class="m">17.10 09:14</td><td></td></tr><tr><td><code>2e2fac80cb09</code></td><td>—</td><td>телеграм</td><td><span class="state" data-s="ok">активен</span></td><td class="m">16.10 22:51</td><td><button class="btn danger mini">отозвать</button></td></tr></tbody></table></div>
+  <p class="note">Показаны первые двенадцать символов дайджеста: этого хватает,
+     чтобы отличить два ключа при отзыве, и недостаточно, чтобы ключ
+     восстановить.</p>
+</div>
+
+<div class="sec">
+  <div class="sec-h"><h2>Если ключ потерян</h2><span class="aside">отзыв и выдача</span></div>
+  <div class="empty-note">
+    <h3>Выпустите новый</h3>
+    <p>Отзовите старый ключ — он перестанет работать сразу — и выдайте новый.
+       Подписка у клиента — это URL с ключом внутри, поэтому после отзыва её
+       нужно заменить на новую.</p>
+  </div>
+</div>
+</main></div>
+</body>
+</html>

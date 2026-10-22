@@ -1,0 +1,790 @@
+/* hub — лендинг PoolNet. Только раскладка этой страницы.
+
+   Токены, типографика и примитивы (`.block`, `.track`, `.state`, таблица,
+   `.warn`, `.btn`) — в `base.css`, подключён до этого файла.
+
+   Замысел: направление «Созвездие» из docs/design/pages/d-1-free.html,
+   одобренное владельцем. Тёмный премиум-интерфейс: небо, стеклянные
+   панели, один сигнальный синий и зелёный штамп качества. Лонгрид: это
+   всё же РЕЕСТР чужих проверенных узлов — герой-оффер, то, что такое
+   PoolNet, живая сводка и воронка отсева, перечень стран, «почему
+   бесплатно», границы допустимого, справка по клиентам, FAQ и выход
+   на подписку. Шапка — карта-созвездие: она держит бренд и ZIP-оффер.
+
+   Единственное решение, заимствованное из прежнего реестра, — перечень
+   стран, и оно было правильным: индекс читается сканированием, сетка
+   одинаковых плиток заставляет читать каждую страну по отдельности.
+   Раскладка та же, отделка — стеклом и синим сигналом. */
+
+:root { --col: 77.5rem; --gut: clamp(1.1rem, 3.6vw, 2.75rem); }
+
+/* ---- шапка --------------------------------------------------------------
+   Панель на стекле: wordmark со знаком, навигация, переключатель языка
+   и кнопка подписки. Липкая поверх неба, потому что лонгрид длиной
+   в шесть экранов и кнопка нужна в любой его точке. */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  max-width: none;
+  padding: 0 var(--gut);
+  background: rgba(7, 11, 19, .82);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead .in {
+  max-width: var(--col);
+  margin: 0 auto;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--disp);
+  font-size: 1.02rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wordmark svg { width: 1.5rem; height: 1.5rem; flex: none; }
+
+.wordmark i { font-style: normal; color: var(--sig); }
+
+.wordmark .tld { color: var(--ink-3); font-weight: 400; }
+
+.masthead nav {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+
+.masthead nav a:not(.btn) {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.masthead nav a:not(.btn):hover { color: var(--sig); }
+
+/* Переключатель языка — сегментный, с `aria-pressed`. */
+.lang {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  overflow: hidden;
+  flex: none;
+}
+
+.lang button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.28rem 0.55rem;
+  cursor: pointer;
+}
+
+.lang button + button { border-left: 1px solid var(--rule); }
+
+.lang button[aria-pressed="true"] {
+  background: var(--sig);
+  color: var(--paper);
+}
+
+main { max-width: var(--col); margin: 0 auto; padding: 0 var(--gut) 4rem; }
+
+section.block { scroll-margin-top: 4.5rem; }
+
+/* ---- герой-оффер ---------------------------------------------------------
+   Крупный Unbounded-заголовок с подсвеченным словом, вводка и три
+   действия: подписка (залитая), обзор (контур), пометка времени. */
+.hero {
+  padding: clamp(3.4rem, 8vw, 6.4rem) 0 3.2rem;
+  display: grid;
+  gap: 1.4rem;
+  max-width: 62rem;
+}
+
+.hero h1 {
+  font-family: var(--disp);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 4.6vw, 3.3rem);
+  line-height: 1.14;
+  letter-spacing: .002em;
+  max-width: 21ch;
+}
+
+/* Подсвеченное слово — оффер «бесплатная», а не украшение: это ответ
+   на главный вопрос аудитории. */
+.hero h1 b {
+  font-weight: 400;
+  color: var(--sig);
+}
+
+
+/* Кикер над H1: моно-строка смысла, отделяющая оффер от навигации. */
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--sig);
+  letter-spacing: 0.04em;
+}
+
+.hero h1 { margin-top: 0.2rem; }
+
+.hero .lede {
+  font-size: clamp(1rem, 1.6vw, 1.08rem);
+  color: var(--ink-2);
+  max-width: 56ch;
+  line-height: 1.66;
+}
+
+.actions { display: flex; gap: 0.65rem; flex-wrap: wrap; align-items: center; }
+
+.actions .aside {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  margin-left: 0.2rem;
+}
+
+/* ---- карточки-ценности ---------------------------------------------------
+   Одна строка из трёх стеклянных панелей: что такое PoolNet, чем держит
+   качество, почему не берёт денег — три ответя, по одному card. */
+.values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+}
+
+.values .card {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem 1.25rem;
+}
+
+.values .card b {
+  display: block;
+  font-size: 0.94rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.values .card span { font-size: 0.86rem; line-height: 1.6; color: var(--ink-2); display: block; }
+
+/* ---- карта-созвездие -----------------------------------------------------
+   Главное изображение: небо с узлами. Живые точки расставляет hub.js по
+   странам пула; числа подставляются из /api/v1/stats, и поэтому карта —
+   данные, а не декор. */
+.map-wrap {
+  position: relative;
+  background:
+    radial-gradient(120% 100% at 18% 0%, rgba(47, 185, 255, .07), transparent 60%),
+    var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: clamp(1rem, 3vw, 2.4rem);
+  margin-top: 2.6rem;
+}
+
+.map-box {
+  position: relative;
+  aspect-ratio: 200 / 75;
+  /* Только aspect-ratio. Минимум по высоте здесь нельзя: при свободной
+     высоте минимальная высота и отношение сторон вычисляют друг друга,
+     и на мобильной ширине '.map-box' получает ширину 469px вместо 292px
+     — вся страница горизонтально прокручивается. */
+  max-width: 100%;
+}
+
+.map-box svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Ореол, точка, кольцо, подпись — всё SVG, и у всего в SVG-по-умолчанию
+   чёрная заливка: без явного fill карта превращается в чёрные пятна на
+   чёрном небе. */
+
+/* Контуры суши под всем. Тон земли — на полшага светлее панели, чтобы
+   читалась форма Евразии и Америк, но осыпалась на тёмном: карта —
+   подложка для точек, а не плакат. Сетка меридианов и звёзды ложатся
+   поверх, точки — поверх всего. */
+
+.map-land {
+  fill: var(--paper-3);
+  stroke: var(--rule);
+  stroke-width: 0.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-line {
+  stroke: var(--rule);
+  stroke-width: 0.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-star {
+  fill: var(--ink-3);
+}
+
+.map-halo {
+  fill: var(--sig-deep);
+  opacity: .16;
+}
+
+.map-dot {
+  fill: var(--sig);
+  opacity: .95;
+}
+
+.map-ring {
+  fill: none;
+  stroke: var(--sig);
+  stroke-opacity: .45;
+}
+
+.map-code {
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 5px;
+  text-anchor: middle;
+  letter-spacing: .4px;
+  /* Подпись почти всегда стоит поверх чужих точек — в плотной Европе
+     кластер и текст ложатся друг на друга. Обводка бумажного цвета
+     вырезает текст из скопления точек, не перекрывая их самих. */
+  paint-order: stroke;
+  stroke: var(--paper-2);
+  stroke-width: 1.4px;
+  stroke-linejoin: round;
+}
+
+.map-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  font-size: 0.85rem;
+}
+
+/* ---- сводка реестра -------------------------------------------------------
+   Три числа одного отношения: вход → выход → доля. Строка с линейками,
+   как и было: это ОДНО показание, а не три виджета. Третье число —
+   зелёный штамп: это и есть результат проверки. */
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin: 2.6rem 0 2rem;
+}
+
+.summary .lane {
+  grid-column: 1 / -1;
+  margin: 0.55rem 0 0;
+  padding-bottom: 0.15rem;
+  font-size: 0.7rem;
+  color: var(--ink-3);
+}
+
+.summary .cell {
+  padding: 1.1rem 1.4rem 1.1rem 0;
+  border-right: 1px solid var(--rule-2);
+}
+
+.summary .cell:last-child { border-right: 0; padding-right: 0; }
+
+.summary .cell + .cell { padding-left: 1.4rem; }
+
+.summary .v {
+  font-family: var(--mono);
+  font-size: clamp(1.5rem, 3.6vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.3rem;
+}
+
+.summary .v.out { color: var(--live); }
+
+/* ---- отсев ----------------------------------------------------------------
+   Журнал ступеней: как hub.js рисовал, так и рисует. Доля ОТ ПРЕДЫДУЩЕЙ
+   ступени — не от входа: иначе пять полос из шести были бы 0.3–13% шириной,
+   а последняя — 0.003%, т.е. невидимой. */
+.cull { display: grid; }
+
+.step {
+  display: grid;
+  grid-template-columns: 1.7rem 13rem 1fr 4.2rem 4.6rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.step:last-child { border-bottom: 0; }
+
+.step .idx {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.step .what { font-size: 0.9rem; }
+.step .what small { display: block; color: var(--ink-2); font-size: 0.78rem; }
+
+.step .bar { height: 1.1rem; }
+
+/* Не пройденные ступени — тихой --gauge, штамп последней — приглушённая
+   зелёная плашка --live-fill: на тёмном «тише» значит темнее. */
+.step .track > i { background: var(--gauge); }
+.step[data-p="1"] .track > i { background: var(--live-fill); }
+
+.step .drop {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.step .kept {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.step[data-p="1"] .kept { color: var(--live); font-weight: 600; }
+
+/* ---- пул -------------------------------------------------------------------
+   Четыре показания-читалки, затем перечень стран. */
+.pool {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 1.7rem;
+}
+
+.pool > div {
+  padding: 1rem 1.1rem 1rem 0;
+  border-right: 1px solid var(--rule-2);
+}
+
+.pool > div:last-child { border-right: 0; }
+
+.pool .v {
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pool .k { margin-top: 0.3rem; }
+
+/* ---- перечень стран -------------------------------------------------------
+   Тот же индекс с ведущими точками, что был в бумажном реестре, но строки
+   держат тёмные панели: стеклянная карточка страны, стеклянная навигация,
+   зелёный штамп только у самой глубокой страны. */
+.countries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2.4rem;
+}
+
+.country {
+  display: grid;
+  grid-template-columns: 1.35rem min-content 1fr auto;
+  grid-template-areas:
+    "flag name lead count"
+    "bar  bar  bar  bar";
+  align-items: baseline;
+  column-gap: 0.55rem;
+  padding: 0.32rem 0 0.44rem;
+  text-decoration: none;
+  color: var(--ink);
+  min-width: 0;
+}
+
+a.country:hover .name { color: var(--sig); }
+a.country:hover .lead::after { border-bottom-color: var(--sig-deep); }
+
+.country .flag {
+  grid-area: flag;
+  font-size: 0.82rem;
+  line-height: 1;
+  width: 1.15rem;
+  text-align: center;
+}
+
+.country .name {
+  grid-area: name;
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.country .lead {
+  grid-area: lead;
+  align-self: end;
+  overflow: hidden;
+  min-width: 0.8rem;
+}
+
+.country .lead::after {
+  content: "";
+  display: block;
+  border-bottom: 1px dotted var(--rule);
+  margin-bottom: 0.24rem;
+}
+
+.country .count {
+  grid-area: count;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.country .count .unit {
+  color: var(--ink-3);
+  font-size: 0.74rem;
+  margin-left: 0.28rem;
+}
+
+.country .track {
+  grid-area: bar;
+  display: block;
+  height: 2px;
+  margin-top: 0.34rem;
+  background: transparent;
+  overflow: hidden;
+}
+
+.country .track > i {
+  display: block;
+  height: 100%;
+  background: var(--gauge);
+  border-radius: 0;
+}
+
+.country[data-top="1"] .track > i { background: var(--live); }
+
+.country[data-thin="1"] .track { background: transparent; }
+.country[data-thin="1"] .track > i { background: transparent; }
+
+/* Заголовки рубрик внутри пула. */
+#stats h3 {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0.01em;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.25rem;
+}
+
+.mix-head { margin-top: 1.9rem; }
+
+.hint {
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  margin-top: 0.6rem;
+}
+
+/* ---- протоколы ------------------------------------------------------------ */
+
+.mix { display: grid; }
+
+.mix-row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr 3.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.mix-row .name {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.mix-row .visual {
+  display: block;
+  height: 2px;
+  overflow: hidden;
+}
+
+.mix-row .visual > i {
+  display: block;
+  height: 100%;
+  background: var(--gauge);
+}
+
+.mix-row .n {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+/* ---- почему бесплатно -------------------------------------------------------
+ Вторая триада карточек: ответ на «в чём подвох». */
+.why {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+}
+
+.why .card {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem 1.25rem;
+}
+
+.why .card b {
+  display: block;
+  font-size: 0.94rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.why .card span { font-size: 0.86rem; line-height: 1.6; color: var(--ink-2); display: block; }
+
+/* ---- можно / нельзя ----------------------------------------------------
+ Разметка ➕/➕: две колонки списков; запрещённая отмечает --fail. */
+.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.duo h3 {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.55rem;
+}
+
+.duo ul { margin: 0; padding: 0; list-style: none; }
+
+.duo li {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  column-gap: 0.5rem;
+  padding: 0.34rem 0;
+  border-bottom: 1px solid var(--rule-2);
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+.duo li:last-child { border-bottom: 0; }
+
+.duo li::before {
+  content: "✓";
+  color: var(--live);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.duo .deny li::before { content: "✕"; color: var(--fail); }
+
+/* ---- куда вставить подписку ------------------------------------------------ */
+
+.clients {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.clients > div {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 0.8rem 0.95rem;
+}
+
+.clients b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.clients span { font-size: 0.82rem; color: var(--ink-2); }
+
+/* ---- FAQ ---------------------------------------------------------------------
+ Служебный на тёмном фоне: details/summary без анимации, сбоку знак [+] на
+ hover; содержимое — прозой. */
+.faq {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.faq details {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 600;
+  list-style: none;
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+}
+
+.faq summary::-webkit-details-marker { display: none; }
+
+.faq summary::before {
+  content: "+";
+  font-family: var(--mono);
+  color: var(--sig);
+  flex: none;
+  font-size: 1rem;
+}
+
+.faq details[open] summary::before { content: "–"; }
+
+.faq details[open] summary { color: var(--sig); }
+
+.faq details > div {
+  margin-top: 0.55rem;
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: var(--prose);
+}
+
+/* ---- финальный CTA ----------------------------------------------------------
+ Панель со свечением: единственная точка исхода, повтор оферры. */
+.cta-final {
+  margin-top: 3rem;
+  background:
+    radial-gradient(90% 130% at 85% 10%, rgba(47, 185, 255, .12), transparent 55%),
+    var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  display: grid;
+  gap: 1.1rem;
+}
+
+.cta-final h2 {
+  font-family: var(--disp);
+  font-weight: 500;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: .002em;
+}
+
+.cta-final p.lede { font-size: 0.95rem; color: var(--ink-2); max-width: 52ch; line-height: 1.62; }
+
+.cta-final .actions { margin-top: 0.2rem; }
+
+/* ---- подвал -------------------------------------------------------------------- */
+
+footer {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 1.4rem var(--gut) 3rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-3);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+footer a { color: var(--ink-2); }
+footer a:hover { color: var(--sig); }
+
+footer .f-line { max-width: var(--prose); }
+
+/* ---- узкий экран ------------------------------------------------------------ */
+
+@media (max-width: 46rem) {
+  .step {
+    grid-template-columns: 1.4rem 1fr auto;
+    gap: 0.3rem 0.6rem;
+    padding: 0.65rem 0;
+  }
+  .step .idx { grid-row: 1; }
+  .step .what { grid-column: 2 / -1; }
+  .step .kept { grid-column: 3; grid-row: 1; }
+  .step .bar { grid-column: 1 / -1; }
+  .step .drop { grid-column: 1 / -1; text-align: left; }
+  .step .drop::before { content: "потери: "; color: var(--ink-3); }
+
+  .countries { grid-template-columns: 1fr; column-gap: 0; }
+
+  .duo { grid-template-columns: 1fr; }
+
+  .hero { padding-top: 2.6rem; }
+
+  .masthead .in { height: 3.4rem; }
+
+  .masthead nav { gap: 0.85rem; }
+  .masthead nav a[data-optional] { display: none; }
+}
+
+@media (max-width: 30rem) {
+  /* Флекс-строка на очень узком экране выталкивала "Язык" и "Подписку"
+     в хаотичный перенос. Шапка ставится сеткой в два ряда: айдентика
+     слева, переключатель языка справа, навигация — полным рядом ниже. */
+  .masthead .in {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "brand lang"
+      "nav nav";
+    align-items: center;
+    height: auto;
+    min-height: 3.4rem;
+    padding: 0.55rem 0 0.65rem;
+    row-gap: 0.6rem;
+  }
+  .masthead .in > .wordmark { grid-area: brand; }
+  .masthead .in > .lang { grid-area: lang; justify-self: end; }
+  .masthead .in > nav { grid-area: nav; gap: 0.4rem 1rem; }
+  .summary { grid-template-columns: 1fr; }
+  .summary .cell {
+    padding: 0.75rem 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule-2);
+  }
+  .summary .cell + .cell { padding-left: 0; }
+  .summary .cell:last-child { border-bottom: 0; }
+}

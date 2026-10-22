@@ -1,0 +1,15 @@
+[Unit]
+Description=Audit every source in the config for dead URLs
+Documentation=https://example.com/abuse
+
+[Timer]
+# Daily, at a deliberately off-the-hour minute. Every source audit on this box
+# hitting :00 of :00 is the pattern that gets a crawler rate-limited by the
+# hosts it reads, and the minute offset costs nothing.
+OnCalendar=*-*-* 04:17:00
+Persistent=true
+AccuracySec=5min
+Unit=hub-audit-sources.service
+
+[Install]
+WantedBy=timers.target

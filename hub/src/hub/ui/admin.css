@@ -1,0 +1,217 @@
+/* admin — панель оператора. Только раскладка этой страницы.
+
+   Токены и примитивы (`.block`, `.track`, `.state`, таблица, `.btn`, поле
+   ввода) — в `base.css`, подключён до этого файла.
+
+   Замысел. Панель — рабочий стол, а не витрина: оператор открывает её, чтобы
+   ответить на три вопроса в этом порядке — «пул жив?», «что сломалось?»,
+   «выдать ключ». Поэтому сверху состояние одной строкой, затем показания,
+   затем воронка как объяснение показаний, затем таблицы, и в конце — выдача.
+
+   Панель шире лендинга: в ней таблицы источников и поколений, и колонка в
+   58rem заставила бы URL источника переноситься на три строки. */
+
+:root { --col: 74rem; }
+
+header {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 1.4rem 1.5rem 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.head h1 {
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--disp);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wordmark span { color: var(--ink-2); font-weight: 400; }
+
+.wordmark .mark {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--sig);
+  flex: none;
+}
+
+
+/* Состояние — моноширинно и в одну строку: это показание, и оно должно
+   читаться одним движением глаза, а не разбираться по словам. */
+#age {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+main {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+}
+
+/* ---- показания ---------------------------------------------------------
+   Четыре числа в строку, разделённые линейками, — сводка пула. Не карточки:
+   карточка с фоном и скруглением на каждой цифре превращает четыре связанных
+   показания в четыре независимых виджета. */
+
+.pool {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.pool > div {
+  padding: 0.95rem 1.1rem 0.95rem 0;
+  border-right: 1px solid var(--rule-2);
+}
+
+.pool > div:last-child { border-right: 0; }
+
+.pool .v {
+  font-family: var(--mono);
+  font-size: 1.55rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pool .k { margin-top: 0.25rem; }
+
+/* ---- воронка -----------------------------------------------------------
+   То же построение, что на лендинге, и та же шкала: доля от ПРЕДЫДУЩЕЙ
+   ступени. Панель обязана показывать те же числа, что и публичная страница
+   — иначе оператор и посетитель видят разные пулы. */
+
+.funnel { display: grid; }
+
+.stage {
+  display: grid;
+  grid-template-columns: 12rem 1fr 4.5rem 4.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.stage:last-child { border-bottom: 0; }
+
+.stage-k { font-size: 0.86rem; }
+
+.stage-track { height: 1rem; }
+
+/* Прошедшее — чернила; последняя ступень — штамп. Ровно то же решение, что
+   в `hub.css`: ступень «трафик реально идёт» залита приглушённой плашкой
+   `--live-fill`, потому что это крупная площадь, и обе страницы обязаны
+   показывать один прогон одинаково. */
+.stage .track > i { background: var(--gauge); }
+
+.stage-n {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-drop {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Последняя ступень — та, на которой трафик реально идёт. */
+.stage[data-stage="http"] .stage-track > i { background: var(--live-fill); }
+.stage[data-stage="http"] .stage-n { color: var(--live); font-weight: 550; }
+
+/* ---- ключи -------------------------------------------------------------
+   Выдача — последний блок, потому что это действие, а не состояние. */
+
+.issue {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.issue input { min-width: 15rem; }
+
+/* Выданный ключ показывается один раз и больше никогда: на сервере лежит
+   только его хеш. Оформлен так, чтобы его нельзя было пропустить — это
+   единственный момент, когда значение существует вне клиента оператора.
+
+   Приподнятая бумага и линия штампа слева, а не тонированная плашка: плашка
+   с цветным фоном читается как украшение, а тут нужен сигнал. */
+.minted {
+  margin: 0 0 1.2rem;
+  padding: 0.75rem 1rem;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--live);
+  border-radius: var(--r);
+}
+
+.minted .k { font-size: 0.78rem; color: var(--ink-2); }
+
+.minted .v {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 550;
+  word-break: break-all;
+  margin: 0.4rem 0;
+  color: var(--live);
+}
+
+.minted .u {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  word-break: break-all;
+  color: var(--ink);
+}
+
+/* URL источника — моноширинно и с переносом: он длинный и его сравнивают
+   построчно, а пропорциональный шрифт с переносом по словам делает это
+   невозможным. */
+.url {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  word-break: break-all;
+  max-width: 30rem;
+}
+
+td code { font-size: 0.82rem; }
+
+@media (max-width: 44rem) {
+  .stage { grid-template-columns: 1fr auto; gap: 0.15rem 0.6rem; }
+  .stage-track { grid-column: 1 / -1; }
+  .stage-drop { grid-column: 1 / -1; text-align: left; }
+  .stage-drop::before { content: "потери: "; color: var(--ink-3); }
+  .url { max-width: 100%; }
+  header, main { padding-left: 1.1rem; padding-right: 1.1rem; }
+}

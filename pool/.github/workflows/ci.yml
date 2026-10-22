@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: typecheck
+        run: npm run typecheck
+      - name: unit tests
+        run: npm test
+      - name: every yaml file parses
+        run: npx tsx -e "import fs from 'node:fs'; import YAML from 'yaml'; const files=['sources.yaml','.github/workflows/ci.yml','.github/workflows/refresh.yml','.github/workflows/discover.yml','.github/dependabot.yml','.github/ISSUE_TEMPLATE/source_request.yml','.github/ISSUE_TEMPLATE/bug_report.yml']; for (const f of files) YAML.parse(fs.readFileSync(f,'utf8')); console.log(files.length + ' yaml files ok');"
+      - name: site structure (balanced tags, contained table)
+        run: node scripts/check-site-structure.mjs
+
+      - name: site assets referenced by the page exist
+        run: |
+          for f in $(grep -oE '(href|src|content)="(assets/[^"]+)"' site/index.html | grep -oE 'assets/[^"]+' | sort -u); do
+            test -f "site/$f" || { echo "missing site/$f"; exit 1; }
+          done
+          echo "site assets ok"
+      - name: source registry loads and every entry is well-formed
+        run: npx tsx -e "import('./src/sources/load.js').then(m => { const s = m.loadSources('sources.yaml'); if (!s.length) throw new Error('no sources'); console.log(s.length + ' sources ok'); })"
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: one in-process cycle against live sources
+        env:
+          OPP_PER_SOURCE_MIN: 15
+          OPP_MAX_NEW_PER_CYCLE: 240
+          OPP_CONCURRENCY: 80
+        run: npx tsx src/index.ts cycle
+      - name: artifacts of the cycle are present and parseable
+        run: |
+          test -s data/all.txt
+          node -e "JSON.parse(require('node:fs').readFileSync('data/proxies.json','utf8'))"
+          echo "cycle OK"

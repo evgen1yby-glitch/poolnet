@@ -1,0 +1,62 @@
+# Lines that must NOT parse. `tests/test_fixtures.py::test_every_malformed_line_
+# is_rejected` asserts each one yields an error and no node; `hub.parsers` has no
+# "tolerant" mode to accidentally accept any of these.
+#
+# Every line here was verified rejected by `parse_one` when this file was added.
+# A line that starts parsing is a parser regression, and this file is what turns
+# it into a red test rather than a silent looseness. Comments (`#`) are skipped,
+# so the annotation below each line is documentation, not input.
+#
+# The shapes are deliberately the *neighbouring* ones — valid except for one
+# field. A line that is wrong everywhere ("!!!") tests less than one that is
+# right except for the field whose guard is being pinned.
+
+# No scheme at all.
+not-a-uri
+
+# Scheme present, credential missing.
+vless://
+
+# A UUID-shaped token that is not a UUID: dashes in the wrong places.
+vless://uuid-without-dashes@host:443#ok?encryption=none
+
+# A UUID that is not hex. Same guard, different failure.
+VLESS://UPPER@host:443#case
+
+# base64 that is not base64. The vmess variant is the one clients actually send,
+# so this is the shape a broken subscription produces.
+vmess://!!!not-base64!!!
+
+# Same for shadowsocks: the whole payload is one base64 blob.
+ss://*
+
+# Scheme but no host and no port.
+http://
+
+# A port that is not a number.
+vless://host:notaport#x
+
+# A port beyond the legal range.
+vless://u@h:99999#port-too-big
+
+# Credentials but nothing to connect to.
+trojan://user:pass@#no-host
+
+# Scheme and nothing else.
+hysteria2://
+
+# A truncated hysteria2-style URI.
+tuic://x
+
+# An IPv6 literal that never closes, which is what reaches the parser when a
+# hostname containing `[` is pasted into a config field.
+vless://u@[broken:443#x
+
+# Trailing `?` with no query, which a hand-edited link produces.
+vless://u@host:443?type=
+
+# A fragment marker with nothing before it and no authority.
+#nonsense
+
+# Whitespace only. `parse_one` reports EMPTY rather than raising.
+#

@@ -1,0 +1,36 @@
+# Valid share URIs for `hub check-parser`.
+# Every line here must parse without error; a parser regression turns a line
+# into a dropped node silently, which is why this file is checked in CI.
+#
+# Note: these are illustrative values, not working endpoints. `check-parser`
+# verifies the *parser*, not the nodes — probing is `hub run`'s job.
+
+# VLESS with REALITY (the primary protocol for a RU/CIS audience).
+vless://11111111-2222-3333-4444-555555555555@example.com:443?encryption=none&security=reality&sni=example.com&fp=chrome&pbk=abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUV&sid=6a&spx=%2F&type=tcp&flow=xtls-rprx-vision#REALITY-NL
+# VLESS over WebSocket behind TLS.
+vless://11111111-2222-3333-4444-555555555555@cdn.example.com:443?encryption=none&security=tls&sni=cdn.example.com&type=ws&host=cdn.example.com&path=%2Fws#WS-TLS
+# VLESS over gRPC.
+vless://11111111-2222-3333-4444-555555555555@grpc.example.com:443?encryption=none&security=tls&sni=grpc.example.com&type=grpc&serviceName=svc#GRPC
+# Trojan over TLS.
+trojan://password123@example.com:443?security=tls&sni=example.com&type=tcp&allowInsecure=0#TROJAN
+# Trojan over WebSocket.
+trojan://password123@example.com:443?security=tls&sni=example.com&type=ws&path=%2Ftrojan#TROJAN-WS
+# Shadowsocks, SIP002 form (method:password is base64 in the userinfo).
+ss://YWVzLTI1Ni1nY206c2VjcmV0QGV4YW1wbGUuY29tOjgwODA#SIP002-b
+# Shadowsocks, legacy form (the whole authority+userinfo is base64).
+ss://YWVzLTI1Ni1nY206c2VjcmV0QGV4YW1wbGUuY29tOjgwODA
+# Hysteria2 with the QUIC protocol and an obfs password.
+hysteria2://secret@example.com:443?sni=example.com&obfs=salamander&obfs-password=hunter2#HY2
+# TUIC v5.
+tuic://11111111-2222-3333-4444-555555555555:secret@example.com:443?congestion_control=bbr&alpn=h3&sni=example.com#TUIC
+# SOCKS5, no credentials.
+socks5://example.com:1080
+# SOCKS5 with credentials.
+socks5://user:pass@example.com:1080#SOCKS
+# HTTP proxy over TLS.
+https://user:pass@example.com:443#HTTP-TLS
+
+# A routable IPv6 literal must survive address/port splitting. (2001:db8::/32 is
+# deliberately absent: it is a documentation prefix and the prober's SSRF guard
+# rejects it, so it is not a "valid" node.)
+vless://11111111-2222-3333-4444-555555555555@[2606:4700:4700::1111]:443?encryption=none&security=tls&sni=example.com&type=tcp#V6

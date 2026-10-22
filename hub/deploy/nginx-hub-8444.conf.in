@@ -1,0 +1,187 @@
+# hub — TLS endpoint for this host's IP, on 8444.
+#
+# Why 8444 and not 443: this box is a shared server. nginx already serves ~18
+# sites on 443, one of them the marzban panel on 8443 that must not be touched;
+# 443 has no `default_server` the hub can claim without changing what an IP
+# request currently returns for somebody else's project. 8444 was free.
+#
+# Why `listen ... ssl http2` and not `http2 on;`: that is the nginx >=1.25.1
+# spelling and this host runs 1.24, which rejects it with
+# `unknown directive "http2"` — so the config did not even parse until it used
+# the spelling the other vhosts on this box already use.
+#
+# TLS: a Let's Encrypt certificate for the bare IP, from the `shortlived`
+# profile (IP-address certificates are only offered short-lived, ~160 h). It
+# lives in its own lineage, `hub-ip-<HUB_HOST-DASHED>`, and shares nothing with
+# any domain lineage on this box. Verify it with ordinary chain validation —
+# `curl https://<HUB_HOST>:8444/healthz`, not `curl -k`. See
+# docs/OPERATIONS.md for the issue/renew workflow and the rollback paths.
+#
+# Renewal is the existing `certbot-le.timer` (03:00 and 15:00, plus the
+# `certbot-le-nginx-reload` deploy hook that runs `nginx -t` before reloading).
+# This lineage is picked up automatically because it lives in the default
+# `/etc/letsencrypt` config directory that timer already renews.
+
+# Do not log query strings or bearer-token subscription paths. The safe format
+# preserves operational metadata while redacting any token-bearing URI.
+map $uri $request_uri_redacted {
+    default $uri;
+    ~^/sub/ "/sub/[redacted]";
+    ~^/api/v1/sub/ "/api/v1/sub/[redacted]";
+}
+log_format hub_safe '$remote_addr - [$time_local] "$request_method $request_uri_redacted" '
+                    '$status $body_bytes_sent "$http_user_agent"';
+
+upstream hub_api {
+    server 127.0.0.1:8090;
+    keepalive 16;
+}
+
+limit_req_zone $binary_remote_addr zone=hub_sub:10m rate=10r/s;
+
+server {
+    listen 8444 ssl http2;
+    listen [::]:8444 ssl http2;
+
+    # The dedicated IP-address lineage. Never point this at a domain lineage:
+    # client verification is against the IP SAN, and a domain cert would not
+    # satisfy it.
+    ssl_certificate     /etc/letsencrypt/live/hub-ip-<HUB_HOST-DASHED>/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/hub-ip-<HUB_HOST-DASHED>/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:hub:10m;
+    ssl_session_timeout 1d;
+
+    server_tokens off;
+
+    access_log /var/log/nginx/hub.access.log hub_safe;
+    error_log  /var/log/nginx/hub.error.log warn;
+
+    client_max_body_size 1m;
+
+    # Security headers, repeated per location below rather than set once at
+    # server level: nginx's `add_header` is inherited only by locations that
+    # declare none of their own, and every location here declares `add_header`
+    # for Cache-Control, which would silently drop these from the response.
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header Referrer-Policy no-referrer always;
+
+    location /data/gen- {
+        proxy_pass http://hub_api;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        # Never trust a client-supplied X-Forwarded-For value on this direct
+        # public vhost; the API reads the socket peer, not this header.
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Content-addressed generation: a stale cached generation is still a
+        # valid generation, so it is safe to cache hard.
+        add_header Cache-Control "public, max-age=900";
+    }
+
+    location = /metrics {
+        deny all;
+        access_log off;
+        return 404;
+    }
+
+    # The operator panel, denied at the edge.
+    #
+    # The API also checks that the request came from loopback, and through this
+    # vhost that check is *always* satisfied — nginx is the peer, so the app sees
+    # 127.0.0.1 for every visitor. So the app's loopback test protects the panel
+    # from the network but not from this vhost, and the only thing standing
+    # between a visitor and the token list would be the shared secret.
+    #
+    # `allow 127.0.0.1; deny all;` makes the vhost itself refuse, which is the
+    # layer that can actually tell a local request from a remote one. An
+    # operator reaches the panel through an SSH tunnel or directly on the box,
+    # both of which arrive from loopback at *nginx* as well as at the app.
+    #
+    # `^~` so this prefix beats the `location /` catch-all below.
+    location ^~ /admin {
+        allow 127.0.0.1;
+        deny all;
+        access_log off;
+        proxy_pass http://hub_api;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /sub/ {
+        proxy_pass http://hub_api;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        # Never trust a client-supplied X-Forwarded-For value on this direct
+        # public vhost; the API reads the socket peer, not this header.
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        limit_req zone=hub_sub burst=20 nodelay;
+        limit_req_status 429;
+        proxy_read_timeout 15s;
+        proxy_send_timeout 15s;
+        access_log off;
+    }
+
+    location = /healthz {
+        proxy_pass http://hub_api;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        access_log off;
+    }
+
+    # The design directions, for review on any screen.
+    #
+    # `sameorigin` is the one place in this vhost where `X-Frame-Options: DENY`
+    # is relaxed, and the reason is structural rather than cosmetic: the
+    # specimen sheet pins a phone frame (390 px) next to a desktop one, and
+    # both are `<iframe>`s into the real pages. `DENY` breaks the sheet while
+    # leaving the pages themselves reachable — the review surface would look
+    # broken and the cause would be a header two files away.
+    #
+    # `sameorigin`, not `ALLOW-FROM`: the pages are only ever framed by the
+    # sheet on this same origin, and tying framing to the origin is what stops
+    # another site from framing them. The path is a design directory served by
+    # the API, not a product surface; it stays `noindex` and is not linked.
+    #
+    # Every header is relisted rather than inherited: nginx drops server-level
+    # `add_header` directives in any location that declares its own, and this
+    # one must declare `X-Frame-Options: SAMEORIGIN`. Omitting the rest would
+    # silently strip `nosniff` and `Referrer-Policy` from these pages.
+    #
+    # `Cache-Control` is *not* set here. The API already does it, and setting
+    # both produced two `Cache-Control` headers on every design response —
+    # exactly the ambiguity `_CachePolicy` in `api.py` exists to avoid.
+    location ^~ /design/ {
+        proxy_pass http://hub_api;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        add_header X-Content-Type-Options nosniff always;
+        add_header X-Frame-Options SAMEORIGIN always;
+        add_header Referrer-Policy no-referrer always;
+    }
+
+    location / {
+        proxy_pass http://hub_api;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        # Never trust a client-supplied X-Forwarded-For value on this direct
+        # public vhost; the API reads the socket peer, not this header.
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

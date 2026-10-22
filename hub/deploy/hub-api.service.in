@@ -1,0 +1,49 @@
+[Unit]
+Description=hub subscription API (read-only)
+After=network-online.target
+
+[Service]
+Type=simple
+# `@HUB_USER@` and `@HUB_DIR@` are substituted by `install.sh` before this file
+# reaches `/etc/systemd/system`. They are placeholders rather than values
+# because systemd does not expand variables in `User=`, `Group=` or
+# `WorkingDirectory=` — `Environment=HUB_USER=x` plus `User=$HUB_USER` makes
+# systemd look for a user literally named `$HUB_USER`, which is why a unit
+# cannot carry one operator's username and path and work anywhere else.
+User=@HUB_USER@
+Group=@HUB_GROUP@
+WorkingDirectory=@HUB_DIR@
+Environment=HUB_ROOT=@HUB_DIR@
+# `hub` is a source-tree package, not an installed one: `python -m hub.cli`
+# resolves only from the project root with `src` on the path. Without this the
+# unit dies immediately with `ModuleNotFoundError: No module named 'hub'`,
+# which systemd reports as a bare start failure with no hint about the path.
+Environment=PYTHONPATH=@HUB_DIR@/src
+Environment=HUB_HOST=127.0.0.1
+Environment=HUB_PORT=8090
+EnvironmentFile=-/etc/hub/hub.env
+# `/usr/bin/python3`, not a `.venv`: the interpreter that has this
+# project's dependencies installed is the system one. A unit pointing at a
+# virtualenv that was never created fails with "Command ... is not
+# executable", which `systemd-analyze verify` reports before you ever
+# install it. `install.sh` therefore installs the requirements into the system
+# interpreter rather than creating a venv the unit would not use.
+ExecStart=/usr/bin/python3 -m hub.cli serve
+Restart=on-failure
+RestartSec=5
+# Binds loopback only. nginx terminates TLS and forwards; the port is never
+# exposed directly. The app trusts X-Forwarded-For only from this loopback peer.
+# Uvicorn access logs are disabled because the subscription token is in the path.
+#
+# `ProtectHome=read-only`, not `yes`: the project commonly lives under `/home`,
+# and `yes` would make it invisible to this service. Writes are confined to
+# `data/` by ReadWritePaths instead — and if `@HUB_DIR@` is under `/home`,
+# `ProtectHome=read-only` is what keeps it readable at all.
+ReadWritePaths=@HUB_DIR@/data
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

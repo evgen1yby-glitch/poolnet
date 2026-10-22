@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hub — вход</title>
+<link rel="stylesheet" href="a.css">
+</head>
+<body class="">
+
+<div class="login-shell">
+  <main class="login">
+    <a class="wordmark" href="#">hub<b>.</b></a>
+    <h1>Вход в панель</h1>
+    <p>Секрет оператора лежит в <code>/etc/hub/hub.env</code> как
+       <code>HUB_BOT_SECRET</code>. Пользователя нет: это одна вахта, а не
+       таблица аккаунтов.</p>
+    <form>
+      <label for="secret">Секрет оператора</label>
+      <input id="secret" type="password" value="························" autocomplete="current-password">
+      <button class="btn primary" type="submit">Войти</button>
+    </form>
+    <p class="foot">Панель доступна только с этой машины. Снаружи её закрывает
+       nginx, внутри проверяется, что запрос пришёл с localhost.</p>
+  </main>
+</div>
+</body>
+</html>

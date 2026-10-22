@@ -1,0 +1,25 @@
+name: Bug report
+description: Something in the pipeline or published data misbehaves
+title: 'bug: <what>'
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Command, env vars and the relevant log lines or artifacts.
+    validations:
+      required: false
+  - type: input
+    id: run
+    attributes:
+      label: Pipeline run
+      description: data/meta.json runId or the Actions run URL.
+    validations:
+      required: false

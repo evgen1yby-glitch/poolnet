@@ -1,0 +1,14 @@
+# dependencies
+node_modules/
+
+# pipeline state (never committed: pool snapshots are large and ephemeral)
+.state/
+.work/
+
+# scratch
+*.log
+.tmp/
+.tmp-*
+tmp/
+coverage/
+.env.local

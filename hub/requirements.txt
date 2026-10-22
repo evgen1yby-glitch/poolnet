@@ -1,0 +1,17 @@
+# Runtime dependencies. Pinned to the floors `pyproject.toml` declares; the
+# versions beside them are what the server currently runs, recorded because
+# "works on my machine" is not a deploy plan.
+fastapi>=0.115          # 0.143.1
+# FastAPI parses `request.form()` through starlette, which imports this at call
+# time and raises if it is missing. Without it `POST /admin/login` — the only
+# form in the project — answers 500 on a fresh install, and nothing in the
+# FastAPI dependency chain installs it.
+python-multipart>=0.0.9
+uvicorn>=0.30           # 0.54.0
+pydantic-settings>=2.4  # 2.16.0
+aiogram>=3.15           # optional: the bot runs in mock mode without a token
+
+# Dev / CI only: `python -m pytest tests`
+pytest>=8.3             # 9.1.1
+pytest-asyncio>=0.24    # 1.4.0
+httpx                   # required by starlette.testclient, not by FastAPI itself
