@@ -28,7 +28,6 @@ import re
 import secrets
 import time
 from pathlib import Path
-from typing import Optional
 
 from .gate import RateLimiter
 from .models import Format, Tier
@@ -359,8 +358,17 @@ class _CachePolicy:
         ("/sub/", b"no-store"),
     )
 
-    def __init__(self, app):
+    def __init__(self, app, site_index: bool = False, site_slugs: tuple = ()):
         self.app = app
+        #: Whether `/` is a site page at all, and which extensionless page
+        #: slugs (`/vpn`, `/proxy`, …) the site owns. Fixed once at app
+        #: creation: re-checking the directory per request would make the
+        #: cache policy change on a file rename, which is the bug the tests
+        #: pin.
+        #: The site's extensionless page paths (`/vpn`, `/proxy`, …): same
+        #: policy as their `.html` twins, computed once with them.
+        self.site_index = site_index
+        self.site_slugs = {f"/{slug}" for slug in site_slugs}
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -368,6 +376,19 @@ class _CachePolicy:
             return
         path = scope.get("path", "")
         policy = next((p for prefix, p in self.POLICY if path.startswith(prefix)), None)
+        if policy is None and (
+            path.endswith((".html", ".css", ".woff", ".woff2"))
+            or (path == "/" and self.site_index)
+            or path in self.site_slugs
+        ):
+            # The evilgate site pages: rebuilt often and reviewed immediately,
+            # the same bug class `/design/` guards against — a cached
+            # stylesheet beside fresh markup. `/static/` and `/design/` above
+            # take precedence; a suffix this far down is a site path, and the
+            # hub's own landing (no site deployed) keeps its old behaviour —
+            # no `Cache-Control` at all — so a hub install alone tests and
+            # behaves exactly as before.
+            policy = b"no-cache"
         if policy is None:
             await self.app(scope, receive, send)
             return
@@ -498,6 +519,18 @@ def create_app(store: Store | None, sources: dict | None = None):
         or store.root / "docs" / "design"
     )
 
+    #: The public site of the merged project (`evilgate`): multipage static
+    #: grown from the design mockup, served under `/` when present. It lives
+    #: beside the hub checkout (`../web/site`) so `git pull` deploys pages on
+    #: the next request without a restart, for the same reason `/design/` is
+    #: served from disk. `HUB_SITE` moves it; a hub installed without a site
+    #: keeps serving its own landing (`_UI_DIR/index.html`) unchanged, so a
+    #: standalone install and the older tests are unaffected.
+    site_dir = Path(
+        os.environ.get("HUB_SITE", "")
+        or store.root.parent / "web" / "site"
+    )
+
     app = FastAPI(title="hub", docs_url=None, redoc_url=None)
     app.state.store = store
     app.state.subscriptions = subscriptions
@@ -506,10 +539,19 @@ def create_app(store: Store | None, sources: dict | None = None):
     app.state.limiter = limiter
     app.state.ip_limiter = ip_limiter
     app.state.mockup_path = mockup_path
+    app.state.site_dir = site_dir
 
     # Registered whether or not the UI directory exists: `/sub/` needs its
     # policy on an install that only serves the feed.
-    app.add_middleware(_CachePolicy)
+    app.add_middleware(
+        _CachePolicy,
+        site_index=(site_dir / "index.html").is_file(),
+        site_slugs=tuple(
+            name
+            for name in ("vpn", "proxy", "verify", "premium", "status")
+            if (site_dir / f"{name}.html").is_file()
+        ),
+    )
 
     if _UI_DIR.is_dir():
         # Served from the app, not from nginx, so a bare `python -m hub.cli
@@ -544,15 +586,20 @@ def create_app(store: Store | None, sources: dict | None = None):
         return hashlib.sha256(str(network).encode()).hexdigest()[:16]
 
     @app.get("/", response_class=HTMLResponse)
-    async def index() -> str:
+    async def index() -> Response:
         """The landing page.
 
-        The copy carries the two words the product is defined by — "FREE VPN"
-        and "decentralised" — and `bot._intro` carries the same ones. The
-        landing test asserts all of them on both surfaces because a doc that
-        rewrites this back to "public node index" quietly changes what the
-        product claims to be.
+        With the merged public site present, `/` is `web/site/index.html` —
+        the evilgate page, read from disk so a page edit goes live on the next
+        request. Without a site (`HUB_SITE` unset, no sibling `web/site`), the
+        hub keeps its own landing: the copy there carries the two words the
+        product is defined by — "FREE VPN" and "decentralised" — and the
+        landing tests still pin them, because `bot._intro` carries the same
+        ones on the subscription surface.
         """
+        site_index = site_dir / "index.html"
+        if site_index.is_file():
+            return FileResponse(str(site_index), media_type="text/html")
         return _UI_DIR.joinpath("index.html").read_text(encoding="utf-8")
 
     @app.get("/help")
@@ -1089,6 +1136,29 @@ def create_app(store: Store | None, sources: dict | None = None):
             },
         )
 
+    def _site_file(rel: str) -> Path | None:
+        """Resolve a request path inside the site directory, or `None`.
+
+        Same rules as `_design_file` — `resolve()` first, containment after,
+        allow-list of suffixes on the resolved name — for the same traversal
+        reason: a link pointing out of the tree is refused rather than
+        followed. No `X-Robots-Tag` here: the site is the public surface and
+        is meant to be indexed.
+        """
+        if not site_dir.is_dir():
+            return None
+        candidate = (site_dir / rel).resolve()
+        try:
+            candidate.relative_to(site_dir.resolve())
+        except ValueError:
+            return None
+        if candidate.suffix not in _DESIGN_TYPES or not candidate.is_file():
+            return None
+        return candidate
+
+    def _site_response(path: Path) -> Response:
+        return FileResponse(str(path), media_type=_DESIGN_TYPES[path.suffix])
+
     @app.get("/design", include_in_schema=False)
     async def design_index_bare() -> Response:
         return RedirectResponse("/design/", status_code=307)
@@ -1265,6 +1335,26 @@ def create_app(store: Store | None, sources: dict | None = None):
                 "funnel": funnel,
             }
         )
+
+    @app.get("/{path:path}", include_in_schema=False)
+    async def site_page(path: str) -> Response:
+        """Every public page and asset of the merged evilgate site.
+
+        Registered after every other route, so nothing is shadowed: `/sub/`,
+        `/admin`, the API and the status page keep their handlers even if a
+        site file ever shares their name. An extensionless page path
+        (`/vpn`) resolves to its `.html` file; anything the site does not
+        have is a plain-text 404, never a directory listing.
+        """
+        rel = (
+            f"{path}.html"
+            if (site_dir / f"{path}.html").is_file() and not (site_dir / path).is_file()
+            else path
+        )
+        found = _site_file(rel)
+        if found is None:
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        return _site_response(found)
 
     # Outermost of the app's own wrappers so a HEAD is rewritten before routing
     # decides whether the method is allowed. Added last, and therefore runs
