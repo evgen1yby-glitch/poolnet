@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>Node verification — evilgate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../system.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="evilgate — home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
+      <span class="bn">evilgate</span>
+    </a>
+    <nav class="main" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html" class="on">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="premium.html">Premium</a>
+      <a href="status.html">Status</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <a class="lang-b" href="../verify.html" hreflang="ru">RU</a>
+      <a class="lang-b on" href="verify.html" hreflang="en" aria-current="true">EN</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>6 stages · real connections</span>
+      <h1>Verification <span class="grad-txt">by real connections</span></h1>
+      <p class="sub">Each stage is a network connection, not a ping. A node that fails any stage is excluded from the output. The rejection log is published together with the results.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Six stages of <span class="grad-txt">node verification</span></h2>
+        <p>The values correspond to the funnel of the latest run.</p>
+      </div>
+      <div class="big-funnel">
+        <!--begin:rows:funnel-->
+        <div class="fcard"><div class="fk">01 · SOURCES</div><div class="fv">55 149</div><div class="fd">addresses from 189 public sources</div></div>
+        <div class="fcard"><div class="fk">02 · PARSING</div><div class="fv">11 076</div><div class="fd">entries recognized by protocol and address</div></div>
+        <div class="fcard"><div class="fk">03 · TCP</div><div class="fv">6 208</div><div class="fd">connections established successfully</div></div>
+        <div class="fcard"><div class="fk">04 · TLS</div><div class="fv">3 571</div><div class="fd">TLS handshakes completed</div></div>
+        <div class="fcard"><div class="fk">05 · CONFIG</div><div class="fv">904</div><div class="fd">working VPN configurations created</div></div>
+        <div class="fcard fr-final"><div class="fk">06 · END-TO-END REQUEST</div><div class="fv">98</div><div class="fd">HTTP requests completed through the chain end to end</div></div>
+        <!--end:rows:funnel-->
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="bento">
+        <div class="b-mod b6">
+          <div class="pk">EXCLUSION</div>
+          <h3>Rejection without a reserve status</h3>
+          <p>A node that fails a stage is not moved to reserve states: the pool is rebuilt from scratch on every run.</p>
+        </div>
+        <div class="b-mod b6">
+          <div class="pk">DATA ACCURACY</div>
+          <h3>The output matches the pool state</h3>
+          <p>The country is determined from the node data. The status page reflects the actual pool state at the time of the request.</p>
+        </div>
+      </div>
+      <div class="cta-row" style="margin-top:2rem;justify-content:flex-start">
+        <a class="btn btn-1" href="status.html">Last run status</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Proxy database: <span class="grad-txt">the run cycle</span></h2>
+        <p>The same principle — real connections, a different queue: the queue is 40 times larger, so sampling is cyclic.</p>
+      </div>
+      <div class="big-funnel big-funnel-4"><div class="fcard"><div class="fk">01 · QUEUE</div><div class="fv">{{pool.cycle.parsed|3 330 205}}</div><div class="fd">lines in the queue from {{pool.sources_ok|187}} sources</div></div><div class="fcard"><div class="fk">02 · UNIQUE</div><div class="fv">{{pool.cycle.unique|753 682}}</div><div class="fd">after address deduplication</div></div><div class="fcard"><div class="fk">03 · SAMPLE</div><div class="fv">{{pool.cycle.sampled|3 000}}</div><div class="fd">addresses taken for verification per cycle</div></div><div class="fcard"><div class="fk">04 · ALIVE</div><div class="fv">{{pool.cycle.alive|3 519}}</div><div class="fd">proxies confirmed connections</div></div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
+        <span>evilgate</span>
+      </div>
+      <p>Catalog of verified public nodes. The pool aggregates only published lists; the connection is established directly between the client and the node, and traffic does not pass through our servers. We do not operate the nodes.</p>
+      <p class="cop">© 2026 evilgate</p>
+    </div>
+    <nav aria-label="Links">
+      <a href="index.html">Home</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="check.html">Check node</a>
+      <a href="premium.html">Premium</a>
+      <a href="status.html">Status</a>
+    </nav>
+  </div>
+</footer>
+<script src="../flags.js" defer></script>
+</body>
+</html>

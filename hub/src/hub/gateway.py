@@ -50,6 +50,7 @@ from .store import Store
 SITE_TYPES = {
     ".html": "text/html; charset=utf-8",
     ".css": "text/css; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
     ".woff2": "font/woff2",
 }
 
@@ -208,6 +209,21 @@ def register_gateway(
             return _page("index.html")
         return HTMLResponse(legacy_index())
 
+    @app.get("/en", response_class=HTMLResponse, include_in_schema=False)
+    @app.get("/en/", response_class=HTMLResponse, include_in_schema=False)
+    async def english_index() -> Response:
+        """The English landing page.
+
+        English lives in its own tree (`web/site/en/`) rather than behind a
+        client-side dictionary: the pages carry server-rendered numbers inside
+        sentences, and a DOM swap would either drop the numbers or need a
+        template layer. Two trees keep the copy honest and let the renderer
+        inject data into both.
+        """
+        if (site_dir / "en" / "index.html").is_file():
+            return _page("en/index.html")
+        return _page("index.html")
+
     @app.get("/status", response_class=HTMLResponse)
     async def status_page() -> Response:
         """`/status` belongs to the merged page when a site is deployed.
@@ -321,9 +337,13 @@ def register_gateway(
         )
         found = _site_file(rel)
         if found is None:
-            if (site_dir / "404.html").is_file():
-                return _page("404.html", status_code=404)
+            not_found = "en/404.html" if path == "en" or path.startswith("en/") else "404.html"
+            if (site_dir / not_found).is_file():
+                return _page(not_found, status_code=404)
             return PlainTextResponse("нет такой страницы", status_code=404)
         if found.suffix == ".html":
-            return _page(found.name)
+            # The path relative to the site root, not the bare filename: the
+            # renderer derives the language from the `en/` prefix, and losing
+            # it rendered English pages with Russian generated labels.
+            return _page(found.relative_to(site_dir).as_posix())
         return FileResponse(str(found), media_type=SITE_TYPES[found.suffix])

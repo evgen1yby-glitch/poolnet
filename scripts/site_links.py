@@ -22,23 +22,19 @@ POOL_NAMES = {
     "stats.json",
 }
 COUNTRY = re.compile(r"^country/[A-Z]{2}\.txt$")
-HREF = re.compile(r'href="([^"]+)"')
+LINK = re.compile(r'(?:href|src)="([^"]+)"')
 
 
 def main() -> int:
     problems: list[str] = []
-    pages = sorted(SITE.glob("*.html"))
+    pages = sorted(SITE.glob("*.html")) + sorted((SITE / "en").glob("*.html"))
     required = {
-        "index.html",
-        "vpn.html",
-        "proxy.html",
-        "verify.html",
-        "check.html",
-        "premium.html",
-        "status.html",
-        "404.html",
+        f"{tree}{name}.html"
+        for tree in ("", "en/")
+        for name in ("index", "vpn", "proxy", "verify", "check", "premium", "status", "404")
     }
-    missing = required - {p.name for p in pages}
+    seen = {p.relative_to(SITE).as_posix() for p in pages}
+    missing = required - seen
     if missing:
         problems.append(f"missing pages: {sorted(missing)}")
 
@@ -47,8 +43,10 @@ def main() -> int:
         if "8931" in html:
             problems.append(f"{page.name}: retired demo port 8931 is back")
         if 'href="#"' in html:
-            problems.append(f"{page.name}: dead link href=\"#\"")
-        for href in HREF.findall(html):
+            problems.append(f"{page.relative_to(SITE)}: dead link href=\"#\"")
+        if html.count('class="lang"') != 1:
+            problems.append(f"{page.relative_to(SITE)}: expected one language switch")
+        for href in LINK.findall(html):
             if href.startswith(("http://", "https://", "data:", "mailto:", "#")):
                 continue
             path = href.split("#")[0]
@@ -59,9 +57,12 @@ def main() -> int:
                 if name not in POOL_NAMES and not COUNTRY.match(name):
                     problems.append(f"{page.name}: unknown pool path {path}")
                 continue
-            target = SITE / (path[1:] if path.startswith("/") else path)
+            if path.startswith("/"):
+                target = SITE / path[1:]
+            else:
+                target = (page.parent / path).resolve()
             if not target.exists():
-                problems.append(f"{page.name}: broken link {path}")
+                problems.append(f"{page.relative_to(SITE)}: broken link {path}")
 
     if problems:
         print("\n".join(problems))

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>Status — evilgate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../system.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="evilgate — home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
+      <span class="bn">evilgate</span>
+    </a>
+    <nav class="main" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="premium.html">Premium</a>
+      <a href="status.html" class="on">Status</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <a class="lang-b" href="../status.html" hreflang="ru">RU</a>
+      <a class="lang-b on" href="status.html" hreflang="en" aria-current="true">EN</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>latest run metrics</span>
+      <h1>Status of <span class="grad-txt">the pool and run</span></h1>
+      <p class="sub">Below are the funnel of the latest run and the pool state after publication. In the live version, the values are loaded from the API automatically.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="journal" id="jvpn" style="font-size:.92rem">
+        <div><span class="dim">run</span> <b>{{vpn.generation|gen-8207ce0d9106}}</b> · 2026-10-22 · {{vpn.updated_utc|10:29}} UTC</div>
+        <div><span class="dim">sources, lines</span> <b>{{vpn.funnel.raw|55 149}}</b> → <span class="dim">parsed</span> <b>{{vpn.funnel.parsed|11 076}}</b> → <span class="dim">TCP</span> <b>{{vpn.funnel.tcp|6 208}}</b> → <span class="dim">TLS</span> <b>{{vpn.funnel.tls|3 571}}</b></div>
+        <div><span class="dim">configuration brought up</span> <b>{{vpn.funnel.config|904}}</b> → <span class="g">end-to-end request completed</span> <b>{{vpn.funnel.http|98}}</b></div>
+        <div><span class="dim">pool after publication</span> <b>{{vpn.verified|150}}</b> nodes · <span class="dim">countries</span> <b>{{vpn.countries|29}}</b> · <span class="dim">total nodes in the database</span> <b>{{vpn.known|997}}</b></div>
+        <div><span class="dim">database quality</span> 60+ : <b>0</b> · 30–59 : <b>734</b> · 0–29 : <b>263</b></div>
+      </div>
+      <div class="journal" id="jpool" style="font-size:.92rem;margin-top:1.2rem">
+        <div><b>Proxy database</b> · updated 2026-10-22 · {{pool.generated_utc|13:54}} UTC</div>
+        <div><span class="dim">pool</span> <b>{{pool.total|30 576}}</b> · <span class="dim">protocols</span> http <b>{{pool.by_protocol.http|28 999}}</b> · socks5 <b>{{pool.by_protocol.socks5|1 179}}</b> · socks4 <b>{{pool.by_protocol.socks4|398}}</b></div>
+        <div><span class="dim">grades</span> elite <b>{{pool.grades.elite|24 997}}</b> · anonymous <b>{{pool.grades.anonymous|449}}</b> · transparent <b>{{pool.grades.transparent|658}}</b> · unknown <b>{{pool.grades.unknown|4 472}}</b></div>
+        <div><span class="dim">latency</span> median <b>{{pool.median_ms|127}} ms</b> · p95 <b>{{pool.p95_ms|5671}} ms</b> · <span class="dim">countries</span> <b>{{pool.countries|115}}</b></div>
+        <div><span class="dim">cycle</span> queue <b>{{pool.cycle.parsed|3 330 205}}</b> → <span class="dim">unique</span> <b>{{pool.cycle.unique|753 682}}</b> → <span class="dim">sample</span> <b>{{pool.cycle.sampled|3 000}}</b> → <span class="dim">alive</span> <b>{{pool.cycle.alive|3 519}}</b></div>
+        <div><span class="dim">sources</span> <b>{{pool.sources_ok|187}}/{{pool.sources_total|194}}</b> responded in the latest cycle</div>
+      </div>
+      
+      <div class="cta-row" style="justify-content:flex-start;margin-top:1.6rem">
+        <a class="btn btn-2" href="verify.html">Verification stages overview</a>
+        <a class="btn btn-1" href="proxy.html">Open pool output</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>How to read <span class="grad-txt">these numbers</span></h2>
+      </div>
+      <div class="bento">
+        <div class="b-mod b4"><div class="pk">FUNNEL</div><h3>How many passed verification</h3><p>The values show how many addresses passed each verification stage in the current run.</p></div>
+        <div class="b-mod b4"><div class="pk">POOL</div><h3>Available nodes</h3><p>"Pool after publication" means the nodes available right now: VPN configurations and list output are built from them.</p></div>
+        <div class="b-mod b4"><div class="pk">DATABASE</div><h3>Re-checked on every run</h3><p>"Total nodes in the database" means nodes verified at least once. Every run re-checks them from scratch.</p></div>
+      </div>
+    </div>
+  </section>
+  <script>
+    // Static numbers above are the fallback: without a working API the page
+    // keeps the values frozen on publish, and never lies with emptiness.
+    (async () => {
+      try {
+        const r = await fetch("/api/status.json", { cache: "no-store" });
+        if (!r.ok) throw 0;
+        const s = await r.json();
+        const v = s.vpn;
+        if (!v) throw 0;
+        const f = (n) => (n == null ? "—" : Number(n).toLocaleString("ru-RU").replace(/\u00A0/g, " "));
+        const e = (t) => String(t).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+        const at = (v.published && v.published[0] && v.published[0].at) || "";
+        const fun = v.funnel || {};
+        document.getElementById("jvpn").innerHTML =
+          `<div><span class="dim">run</span> <b>${e(v.generation)}</b> · ${e(at.slice(0, 10))} · ${e(at.slice(11, 16))} UTC</div>` +
+          `<div><span class="dim">sources, lines</span> <b>${f(fun.raw)}</b> → <span class="dim">parsed</span> <b>${f(fun.parsed)}</b> → <span class="dim">TCP</span> <b>${f(fun.tcp)}</b> → <span class="dim">TLS</span> <b>${f(fun.tls)}</b></div>` +
+          `<div><span class="dim">configuration brought up</span> <b>${f(fun.config)}</b> → <span class="g">end-to-end request completed</span> <b>${f(fun.http)}</b></div>` +
+          `<div><span class="dim">pool after publication</span> <b>${f(v.verified)}</b> nodes · <span class="dim">countries</span> <b>${v.by_country.length}</b> · <span class="dim">total nodes in the database</span> <b>${f(v.known)}</b></div>` +
+          `<div><span class="dim">database quality</span> 60+ : <b>${f(v.by_score["60+"])}</b> · 30–59 : <b>${f(v.by_score["30-59"])}</b> · 0–29 : <b>${f(v.by_score["0-29"])}</b></div>`;
+        const p = s.pool;
+        if (p && p.available) {
+          const prot = Object.entries(p.by_protocol || {}).map(([k, n]) => `${e(k)} <b>${f(n)}</b>`).join(" · ");
+          const grade = Object.entries(p.grades || {}).map(([k, n]) => `${e(k)} <b>${f(n)}</b>`).join(" · ");
+          const c = p.cycle || {};
+          const when = (p.generated_iso || "").slice(0, 16).replace("T", " · ");
+          document.getElementById("jpool").innerHTML =
+            `<div><b>Proxy database</b> · updated ${e(when)} UTC${p.run_id ? ` · run <b>${e(p.run_id)}</b>` : ""}</div>` +
+            `<div><span class="dim">pool</span> <b>${f(p.total)}</b> · <span class="dim">protocols</span> ${prot}</div>` +
+            `<div><span class="dim">grades</span> ${grade}</div>` +
+            `<div><span class="dim">latency</span> median <b>${f(p.median_ms)} ms</b> · p95 <b>${f(p.p95_ms)} ms</b> · <span class="dim">countries</span> <b>${f(p.countries_count)}</b></div>` +
+            `<div><span class="dim">cycle</span> queue <b>${f(c.parsed)}</b> → <span class="dim">unique</span> <b>${f(c.unique)}</b> → <span class="dim">sample</span> <b>${f(c.sampled)}</b> → <span class="dim">alive</span> <b>${f(c.alive)}</b></div>` +
+            `<div><span class="dim">sources</span> <b>${f(p.sources)}</b> — source benchmark of the latest cycle</div>`;
+        }
+      } catch (err) {
+        /* the status page stays on the static values */
+      }
+    })();
+  </script>
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
+        <span>evilgate</span>
+      </div>
+      <p>Catalog of verified public nodes. The pool aggregates only published lists; the connection is established directly between the client and the node, and traffic does not pass through our servers. We do not operate the nodes.</p>
+      <p class="cop">© 2026 evilgate</p>
+    </div>
+    <nav aria-label="Links">
+      <a href="index.html">Home</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="premium.html">Premium</a>
+    </nav>
+  </div>
+</footer>
+<script src="../flags.js" defer></script>
+</body>
+</html>

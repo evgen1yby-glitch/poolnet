@@ -379,9 +379,11 @@ class _CachePolicy:
         path = scope.get("path", "")
         policy = next((p for prefix, p in self.POLICY if path.startswith(prefix)), None)
         if policy is None and (
-            path.endswith((".html", ".css", ".woff", ".woff2"))
+            path.endswith((".html", ".css", ".js", ".woff", ".woff2"))
             or (path == "/" and self.site_index)
             or path in self.site_slugs
+            or path == "/en"
+            or path.startswith("/en/")
         ):
             # The evilgate site pages: rebuilt often and reviewed immediately,
             # the same bug class `/design/` guards against — a cached

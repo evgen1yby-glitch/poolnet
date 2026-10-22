@@ -25,6 +25,10 @@
       <a href="premium.html">Премиум</a>
       <a href="status.html">Статус</a>
     </nav>
+    <div class="lang" role="group" aria-label="Язык">
+      <a class="lang-b on" href="vpn.html" hreflang="ru" aria-current="true">RU</a>
+      <a class="lang-b" href="en/vpn.html" hreflang="en">EN</a>
+    </div>
   </div>
 </header>
 
@@ -94,7 +98,7 @@
             <li style="color:var(--mut);font-size:.94rem">— Все узлы проверены в последнем прогоне</li>
             <li style="color:var(--mut);font-size:.94rem">— Трафик не проходит и не хранится на наших серверах</li>
           </ul>
-          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t">Германия · подключено</div><div class="cm-s">шард из 20 узлов · {{vpn.updated_utc|10:29}} UTC</div></div></div>
+          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t"><span data-cc="DE">Германия</span> · подключено</div><div class="cm-s">шард из 20 узлов · {{vpn.updated_utc|10:29}} UTC</div></div></div>
         </div>
       </div>
     </div>
@@ -152,5 +156,6 @@
     </nav>
   </div>
 </footer>
+<script src="flags.js" defer></script>
 </body>
 </html>

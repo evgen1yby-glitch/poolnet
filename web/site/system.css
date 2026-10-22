@@ -285,3 +285,35 @@ table.pt{width:100%;border-collapse:collapse;font-size:.86rem;min-width:680px}
 .chk-rows>div:last-child{border-bottom:0;padding-bottom:0}
 .chk-rows span{color:var(--dim)}
 .chk-note{margin-top:1rem;color:var(--dim);font-size:.84rem}
+
+/* ==== v6: centered instrument-panel header, language switch, flags ==== */
+.top-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.2rem;height:auto;min-height:4.2rem;padding-block:.55rem}
+.brand{justify-self:start;grid-column:1}
+nav.main{justify-self:center;display:flex;flex-wrap:nowrap;gap:.1rem;margin-left:0;padding:.26rem;border:1px solid var(--line);border-radius:999px;background:rgba(14,14,20,.62);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);row-gap:0}
+nav.main a{padding:.42rem .8rem;border-radius:999px;font-size:.9rem;font-weight:500;line-height:1.2;color:var(--mut);transition:color .2s,background .2s}
+nav.main a:hover{color:var(--txt);background:rgba(255,255,255,.045)}
+nav.main a.on{color:var(--txt);background:linear-gradient(180deg,rgba(139,92,255,.2),rgba(56,189,248,.1));box-shadow:inset 0 0 0 1px rgba(139,92,255,.3)}
+nav.main a.on::after{display:none}
+.lang{grid-column:3;justify-self:end;display:flex;gap:.1rem;padding:.2rem;border:1px solid var(--line);border-radius:999px;background:rgba(14,14,20,.62)}
+.lang a{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.06em;padding:.32rem .52rem;border-radius:999px;color:var(--dim);transition:color .2s,background .2s}
+.lang a:hover{color:var(--txt)}
+.lang a.on{color:var(--txt);background:var(--s3)}
+@media (max-width:72rem){nav.main a{padding:.4rem .62rem;font-size:.84rem}.top-in{gap:.8rem}}
+@media (max-width:56rem){
+  .top-in{grid-template-columns:1fr auto;row-gap:.5rem;padding-block:.5rem}
+  .brand{grid-column:1;grid-row:1}
+  nav.main{grid-column:1/-1;grid-row:2;justify-self:stretch;justify-content:center;flex-wrap:wrap;gap:.16rem;padding:0;border:0;background:none;box-shadow:none}
+  nav.main a{padding:.36rem .6rem;background:rgba(255,255,255,.025);border:1px solid transparent}
+  nav.main a.on{border-color:rgba(139,92,255,.3)}
+  .lang{grid-column:2;grid-row:1;justify-self:end}
+}
+
+/* Flags: an inline SVG plate in front of the code or name. */
+.with-flag{display:inline-flex;align-items:center;gap:.4rem}
+svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+.ccx{display:inline-flex;align-items:center;gap:.4rem;font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--mut)}
+.cc.with-flag{display:inline-flex;align-items:center;gap:.35rem}
+.mflags{display:flex;flex-wrap:wrap;gap:.42rem;margin-top:.85rem}
+.cflag{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .55rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02);font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--mut)}
+.cflag b{color:var(--txt);font-weight:600}
+.cflag svg.flag{width:18px;height:12.6px}

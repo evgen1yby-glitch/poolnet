@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>VPN — evilgate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../system.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="evilgate — home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
+      <span class="bn">evilgate</span>
+    </a>
+    <nav class="main" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="vpn.html" class="on">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="premium.html">Premium</a>
+      <a href="status.html">Status</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <a class="lang-b" href="../vpn.html" hreflang="ru">RU</a>
+      <a class="lang-b on" href="vpn.html" hreflang="en" aria-current="true">EN</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>free · no registration · {{vpn.countries|29}} countries</span>
+      <h1>VPN built from <span class="grad-txt">verified nodes</span></h1>
+      <p class="sub">A configuration for your VPN client based on a node that passed full verification. Verification is shared with the platform's proxy pool: one quality standard.</p>
+      <div class="cta-row">
+        <span class="btn btn-1" role="link" aria-disabled="true" tabindex="-1" style="opacity:.55;cursor:not-allowed">Telegram bot — coming soon</span>
+        <a class="btn btn-2" href="verify.html">Node verification methodology</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Three steps <span class="grad-txt">to a configuration</span></h2>
+        <p>No registration or form required.</p>
+      </div>
+      <div class="steps-v">
+        <div class="stepc">
+          <div class="sn grad-txt">01</div>
+          <div>
+            <h3>Request via the bot</h3>
+            <p>The Telegram bot returns a list of countries with active nodes and accepts your choice. No account on the site is required.</p>
+          </div>
+        </div>
+        <div class="stepc">
+          <div class="sn grad-txt">02</div>
+          <div>
+            <h3>Choosing a country</h3>
+            <p>The bot builds a shard — a configuration for the selected country from that country's active nodes.</p>
+          </div>
+        </div>
+        <div class="stepc">
+          <div class="sn grad-txt">03</div>
+          <div>
+            <h3>Connecting</h3>
+            <p>The configuration file is imported into your VPN client. The connection is established directly between the client and the node; our servers are not involved in traffic transmission.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="bento">
+        <div class="b-mod b7">
+          <div class="pk">COUNTRIES</div>
+          <h3>{{vpn.countries|29}} countries right now</h3>
+          <div class="chips" style="margin-top:.9rem">
+            <span>US <b>25</b></span><span>DE <b>20</b></span><span>FR <b>19</b></span><span>NL <b>13</b></span><span>PL <b>12</b></span><span>FI <b>10</b></span><span>SG <b>6</b></span><span>GB <b>4</b></span><span>JP <b>4</b></span><span>TR <b>4</b></span><span>CA <b>3</b></span><span>IN <b>3</b></span><span>LT <b>3</b></span><span>LV <b>3</b></span><span>TH <b>3</b></span><span>CL <b>2</b></span><span>+13 · in the bot</span>
+          </div>
+          <p style="margin-top:1rem">Countries without confirmed nodes are not included in the output.</p>
+          <a class="golink" href="proxy.html">proxy pool — a separate platform database</a>
+        </div>
+        <div class="b-mod b5">
+          <div class="pk">PRINCIPLES</div>
+          <h3>Plan terms</h3>
+          <ul style="list-style:none;margin-top:.7rem;display:flex;flex-direction:column;gap:.55rem">
+            <li style="color:var(--mut);font-size:.94rem">— Access is entirely free: not a trial period</li>
+            <li style="color:var(--mut);font-size:.94rem">— All nodes were verified in the latest run</li>
+            <li style="color:var(--mut);font-size:.94rem">— Traffic does not pass through or get stored on our servers</li>
+          </ul>
+          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t"><span data-cc="DE">Germany</span> · connected</div><div class="cm-s">shard of 20 nodes · {{vpn.updated_utc|10:29}} UTC</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>How to <span class="grad-txt">connect</span></h2>
+        <p>The configuration file is imported as is. On mobile devices, importing into the client takes two taps.</p>
+      </div>
+      <div class="clt">
+        <div><b>Sing-box</b><span>full protocol set</span><code>official build</code></div>
+        <div><b>Hiddify · Happ</b><span>single-file import</span><code>iOS · Android</code></div>
+        <div><b>v2rayNG</b><span>Android client</span><code>Play · APK</code></div>
+        <div><b>Clash · Karing</b><span>full profile</span><code>desktop · mobile</code></div>
+      </div>
+      <div class="duo" style="margin-top:1.4rem">
+        <div class="b-mod"><div class="pk">ALLOWED</div>
+          <ul class="yes">
+            <li>Connect to verified nodes and assess quality yourself</li>
+            <li>Import several countries and switch between them in the client</li>
+            <li>Publish the output with attribution to the catalog platform</li>
+          </ul>
+        </div>
+        <div class="b-mod"><div class="pk">NOT ALLOWED</div>
+          <ul class="no">
+            <li>Send logins, passwords or tokens through public nodes</li>
+            <li>Treat public proxies as a trusted channel for sensitive data</li>
+            <li>Resell nodes as "your own service" without stating the source</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
+        <span>evilgate</span>
+      </div>
+      <p>Catalog of verified public nodes. The pool aggregates only published lists; the connection is established directly between the client and the node, and traffic does not pass through our servers. We do not operate the nodes.</p>
+      <p class="cop">© 2026 evilgate</p>
+    </div>
+    <nav aria-label="Links">
+      <a href="index.html">Home</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="premium.html">Premium</a>
+      <a href="status.html">Status</a>
+    </nav>
+  </div>
+</footer>
+<script src="../flags.js" defer></script>
+</body>
+</html>

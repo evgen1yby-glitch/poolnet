@@ -344,7 +344,14 @@ def _source_rows(benchmark: dict, limit: int = 8) -> list[dict]:
 
 
 def _map_dots(by_country: list[dict]) -> list[dict]:
-    """Country dots with a radius proportional to sqrt(n), like the old map."""
+    """Country dots for the 200×75 map, radius ∝ sqrt(n).
+
+    `MAP_POS` is stored on the 100×100 grid the hub's dashboard used; the site
+    draws the world at 200×75 (360°×135°, the map's natural proportion), so the
+    same transform the dashboard applied is required here: x×2, y×0.75. Without
+    it every dot sat in the left third of the map and above its latitude, which
+    read as a broken projection rather than as data.
+    """
     points = [
         (str(row.get("name") or "").upper(), _int(row.get("n")))
         for row in by_country
@@ -354,15 +361,37 @@ def _map_dots(by_country: list[dict]) -> list[dict]:
     if not points:
         return []
     peak = max(n for _cc, n in points)
+    dots = []
+    for cc, n in sorted(points):
+        share = math.sqrt(n / peak)
+        dots.append(
+            {
+                "cc": cc,
+                "n": n,
+                "x": round(MAP_POS[cc][0] * 2, 2),
+                "y": round(MAP_POS[cc][1] * 0.75, 2),
+                "r": round(max(0.9, _MAP_MAX_R * share), 2),
+                "halo": round(5.8 * share, 2) if n == peak else 0,
+            }
+        )
+    return dots
+
+
+def country_rows(by_country: list[dict], limit: int = 8) -> list[dict]:
+    """Top countries for the map strip and the console: flag, count, bar width."""
+    points = sorted(
+        (
+            (str(row.get("name") or "").upper(), _int(row.get("n")))
+            for row in by_country
+            if isinstance(row, dict) and row.get("name") and _int(row.get("n")) > 0
+        ),
+        key=lambda pair: (-pair[1], pair[0]),
+    )[:limit]
+    if not points:
+        return []
+    peak = points[0][1]
     return [
-        {
-            "cc": cc,
-            "n": n,
-            "x": MAP_POS[cc][0],
-            "y": MAP_POS[cc][1],
-            "r": round(_MAP_MAX_R * math.sqrt(n / peak), 2),
-        }
-        for cc, n in sorted(points)
+        {"cc": cc, "n": n, "width": round(100.0 * n / peak, 1)} for cc, n in points
     ]
 
 
@@ -487,6 +516,7 @@ def site_payload(store: Store, directory: Path | None = None) -> tuple[dict, str
         "proxy_rows": _proxy_rows(directory),
         "source_rows": _source_rows(benchmark),
         "map_dots": _map_dots(countries),
+        "country_rows": country_rows(countries),
     }
     return data, version
 

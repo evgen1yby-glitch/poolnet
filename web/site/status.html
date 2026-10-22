@@ -25,6 +25,10 @@
       <a href="premium.html">Премиум</a>
       <a href="status.html" class="on">Статус</a>
     </nav>
+    <div class="lang" role="group" aria-label="Язык">
+      <a class="lang-b on" href="status.html" hreflang="ru" aria-current="true">RU</a>
+      <a class="lang-b" href="en/status.html" hreflang="en">EN</a>
+    </div>
   </div>
 </header>
 
@@ -80,7 +84,7 @@
     // keeps the values frozen on publish, and never lies with emptiness.
     (async () => {
       try {
-        const r = await fetch("api/status.json", { cache: "no-store" });
+        const r = await fetch("/api/status.json", { cache: "no-store" });
         if (!r.ok) throw 0;
         const s = await r.json();
         const v = s.vpn;
@@ -136,5 +140,6 @@
     </nav>
   </div>
 </footer>
+<script src="flags.js" defer></script>
 </body>
 </html>

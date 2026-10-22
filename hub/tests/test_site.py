@@ -70,6 +70,28 @@ def test_none_of_the_site_pages_index_as_operator_panels(site_client):
         assert response.headers.get("x-robots-tag") is None
 
 
+def test_english_tree_serves_and_matches_the_russian_contract():
+    """`/en/*` is a second language of the same site, not a separate product.
+
+    Pinned here: every page exists, the language switch resolves both ways,
+    and the renderer contract (tokens and blocks) is identical — a number
+    added in one tree and forgotten in the other is the drift this test is
+    for.
+    """
+    import re
+
+    for name in ("index", "vpn", "proxy", "verify", "check", "premium", "status", "404"):
+        ru = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
+        en = (SITE_DIR / "en" / f"{name}.html").read_text(encoding="utf-8")
+        key = lambda page: sorted(  # noqa: E731 - local, one use
+            match.split("|")[0].strip() for match in re.findall(r"\{\{(.*?)\}\}", page)
+        )
+        assert key(ru) == key(en), name
+        blocks = lambda page: sorted(re.findall(r"<!--begin:([\w:.-]+)-->", page))  # noqa: E731
+        assert blocks(ru) == blocks(en), name
+        assert 'hreflang="en"' in ru and 'hreflang="ru"' in en
+
+
 def test_site_pages_are_not_cached(site_client):
     """Fresh markup beside a cached stylesheet is the bug class `/design/` had.
 
@@ -136,3 +158,17 @@ def test_api_routes_do_not_conflict_with_the_site(site_client):
     response = site_client.get("/api/v1/stats")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("application/json")
+
+
+def test_every_english_page_serves(site_client):
+    """The EN tree is reachable through the gateway, with English labels."""
+    for page in ("", "vpn", "proxy", "verify", "check", "premium", "status"):
+        response = site_client.get(f"/en/{page}" if page else "/en/")
+        assert response.status_code == 200, page
+        assert response.headers["cache-control"] == "no-cache"
+    verify = site_client.get("/en/verify").text
+    assert "SOURCES" in verify or "Sources" in verify
+    assert "{{" not in verify
+    missing = site_client.get("/en/does-not-exist")
+    assert missing.status_code == 404
+    assert "not found" in missing.text.lower()

@@ -34,9 +34,18 @@ _FUNNEL_STAGES = {
     "http": ("HTTP", "HTTP-запросов выполнены через цепочку полностью"),
 }
 _FUNNEL_KEYS = tuple(_FUNNEL_STAGES)
+_FUNNEL_STAGES_EN = {
+    "raw": ("SOURCES", "addresses from public sources"),
+    "parsed": ("PARSED", "entries recognised by protocol and address"),
+    "tcp": ("TCP", "connections established"),
+    "tls": ("TLS", "TLS handshakes completed"),
+    "config": ("CONFIG", "working VPN configurations built"),
+    "http": ("HTTP", "requests completed through the whole chain"),
+}
 _BLOCK_KEYS = {
     "rows:proxy": "proxy_rows", "rows:sources": "source_rows",
     "rows:protocols": "vpn.protocols", "map:dots": "map_dots",
+    "rows:console": "country_rows", "rows:countries": "country_rows",
 }
 
 
@@ -133,7 +142,7 @@ def _rows_proxy(rows: list, _inner: str) -> str:
             f'<td class="num">{latency} ms</td>'
             f'<td class="up"><span class="upb"><i style="width:{uptime_width}%"></i></span>'
             f"{uptime}%</td>"
-            f'<td class="num">{country}</td></tr>'
+            f'<td class="num"><span class="ccx" data-cc="{country}">{country}</span></td></tr>'
         )
     return "".join(out)
 
@@ -182,12 +191,13 @@ def _rows_protocols(rows: list, _inner: str) -> str:
     return "".join(out)
 
 
-def _rows_funnel(items: list, inner: str) -> str:
+def _rows_funnel(items: list, inner: str, lang: str = "ru") -> str:
     raw = _as_number(next((value for key, value in items if key == "raw"), None))
     cards = 'class="fcard' in inner
+    stages = _FUNNEL_STAGES_EN if lang == "en" else _FUNNEL_STAGES
     out: list[str] = []
     for index, (key, value) in enumerate(items, start=1):
-        label, description = _FUNNEL_STAGES.get(key, (key.upper(), ""))
+        label, description = stages.get(key, (key.upper(), ""))
         number = _as_number(value)
         if number is None or raw is None or raw <= 0:
             percent = 0.0
@@ -195,7 +205,7 @@ def _rows_funnel(items: list, inner: str) -> str:
             percent = max(0.0, min(100.0, 100.0 * number / raw))
         if cards:
             final = " fr-final" if index == len(items) else ""
-            title = "СКВОЗНОЙ ЗАПРОС" if key == "http" else label
+            title = ("END-TO-END REQUEST" if lang == "en" else "СКВОЗНОЙ ЗАПРОС") if key == "http" else label
             out.append(
                 f'<div class="fcard{final}"><div class="fk">{index:02d} · {_esc(title)}</div>'
                 f'<div class="fv">{_text(value)}</div>'
@@ -212,29 +222,70 @@ def _rows_funnel(items: list, inner: str) -> str:
     return "".join(out)
 
 
+def _flag_emoji(cc: str) -> str:
+    """Regional-indicator pair for a country code; empty for anything else."""
+    if not re.fullmatch(r"[A-Z]{2}", cc):
+        return ""
+    return "".join(chr(0x1F1E6 + ord(ch) - ord("A")) for ch in cc)
+
+
+def _rows_console(rows: list, _inner: str) -> str:
+    out: list[str] = []
+    for row in rows[:6]:
+        if not isinstance(row, dict):
+            continue
+        cc = _plain(row.get("cc"))
+        width = _esc(_coord(row.get("width")))
+        out.append(
+            f'<div class="crow"><span class="cc" data-cc="{cc}">{cc}</span>'
+            f'<span class="cb"><i style="width:{width}%"></i></span>'
+            f'<span class="cn">{_text(row.get("n"))}</span></div>'
+        )
+    return "".join(out)
+
+
+def _rows_countries(rows: list, _inner: str) -> str:
+    out: list[str] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        cc = _plain(row.get("cc"))
+        out.append(
+            f'<span class="cflag" data-cc="{cc}"><b>{_text(row.get("n"))}</b></span>'
+        )
+    return "".join(out)
+
+
 def _rows_map(rows: list, _inner: str) -> str:
     dots = [row for row in rows if isinstance(row, dict)]
-    numbers = [_as_number(row.get("n")) for row in dots]
-    peak = max(range(len(dots)), key=lambda index: numbers[index] or 0.0, default=-1)
     out: list[str] = []
-    for index, row in enumerate(dots):
+    for row in dots:
         x = _esc(_coord(row.get("x")))
         y = _esc(_coord(row.get("y")))
         r = _esc(_coord(row.get("r")))
         cc = _text(row.get("cc"))
         n = _text(row.get("n"))
-        if index == peak:
-            out.append(f'<circle class="ms-halo" cx="{x}" cy="{y}" r="5.00"/>')
+        halo = _as_number(row.get("halo")) or 0.0
+        if halo > 0:
+            out.append(
+                f'<circle class="ms-halo" cx="{x}" cy="{y}" r="{_esc(_coord(halo))}"/>'
+            )
+        flag = _flag_emoji(cc)
         out.append(
             f'<circle class="ms-dot" style="fill:#38bdf8" cx="{x}" cy="{y}" r="{r}">'
-            f"<title>{cc}: {n}</title></circle>"
+            f"<title>{_esc(flag + ' ' if flag else '')}{cc}: {n}</title></circle>"
         )
     return "".join(out)
 
 
-_BLOCK_RENDERERS: dict[str, Callable[[list, str], str]] = {
-    "rows:proxy": _rows_proxy, "rows:sources": _rows_sources, "rows:protocols": _rows_protocols,
-    "rows:funnel": _rows_funnel, "map:dots": _rows_map,
+_BLOCK_RENDERERS: dict[str, Callable[[list, str, str], str]] = {
+    "rows:proxy": lambda rows, inner, _lang: _rows_proxy(rows, inner),
+    "rows:sources": lambda rows, inner, _lang: _rows_sources(rows, inner),
+    "rows:protocols": lambda rows, inner, _lang: _rows_protocols(rows, inner),
+    "rows:funnel": _rows_funnel,
+    "map:dots": lambda rows, inner, _lang: _rows_map(rows, inner),
+    "rows:console": lambda rows, inner, _lang: _rows_console(rows, inner),
+    "rows:countries": lambda rows, inner, _lang: _rows_countries(rows, inner),
 }
 
 
@@ -255,7 +306,7 @@ def _block_items(name: str, data: dict) -> list[Any] | None:
     return current if isinstance(current, list) else []
 
 
-def _render_blocks(text: str, data: dict) -> str:
+def _render_blocks(text: str, data: dict, lang: str = "ru") -> str:
     def replace(match: re.Match[str]) -> str:
         name = match.group(1)
         renderer = _BLOCK_RENDERERS.get(name)
@@ -264,7 +315,7 @@ def _render_blocks(text: str, data: dict) -> str:
         items = _block_items(name, data)
         if not items:
             return match.group(2)
-        return renderer(items, match.group(2))
+        return renderer(items, match.group(2), lang)
 
     return _BLOCK.sub(replace, text)
 
@@ -296,6 +347,7 @@ class SiteRenderer:
             text = path.read_text(encoding="utf-8")
         except OSError:
             return None
-        rendered = _render_tokens(_render_blocks(text, _dict(data)), _dict(data))
+        lang = "en" if name.startswith("en/") else "ru"
+        rendered = _render_tokens(_render_blocks(text, _dict(data), lang), _dict(data))
         self._cache[name] = (key, rendered)
         return rendered

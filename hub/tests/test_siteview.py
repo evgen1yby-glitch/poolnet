@@ -92,8 +92,12 @@ def payload() -> dict:
             }
         ],
         "map_dots": [
-            {"cc": "US", "n": 25, "x": 45.6, "y": 19.58, "r": 2.6},
-            {"cc": "DE", "n": 20, "x": 105.8, "y": 13.2, "r": 2.26},
+            {"cc": "US", "n": 25, "x": 45.6, "y": 19.58, "r": 2.6, "halo": 5.8},
+            {"cc": "DE", "n": 20, "x": 105.8, "y": 13.2, "r": 2.26, "halo": 0},
+        ],
+        "country_rows": [
+            {"cc": "US", "n": 25, "width": 100.0},
+            {"cc": "DE", "n": 20, "width": 80.0},
         ],
     }
 
@@ -184,7 +188,7 @@ def test_proxy_rows_replace_the_block(tmp_path):
         '<td><span class="pb g-elite">elite</span></td>'
         '<td class="num">7 ms</td>'
         '<td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td>'
-        '<td class="num">GB</td></tr>'
+        '<td class="num"><span class="ccx" data-cc="GB">GB</span></td></tr>'
     )
 
 
@@ -225,10 +229,10 @@ def test_map_dots_get_a_halo_on_the_largest_dot(tmp_path):
     out = render_text(tmp_path, block("map:dots", "<circle/>"), payload())
     assert out.count('class="ms-dot"') == 2
     assert out.count('class="ms-halo"') == 1
-    assert '<circle class="ms-halo" cx="45.60" cy="19.58" r="5.00"/>' in out
+    assert '<circle class="ms-halo" cx="45.60" cy="19.58" r="5.80"/>' in out
     assert '<circle class="ms-dot" style="fill:#38bdf8" cx="45.60" cy="19.58" r="2.60">' in out
-    assert "<title>US: 25</title>" in out
-    assert "<title>DE: 20</title>" in out
+    assert "<title>🇺🇸 US: 25</title>" in out
+    assert "<title>🇩🇪 DE: 20</title>" in out
 
 
 def test_empty_data_keeps_static_fallback_and_strips_markers(tmp_path):
@@ -301,5 +305,5 @@ def test_real_pages_render_without_tokens_or_block_markers(page):
 def test_index_map_block_replaces_every_static_dot():
     rendered = SiteRenderer(SITE_DIR).render("index.html", payload(), "fixture-v1")
     assert rendered is not None
-    assert "<title>DE: 20</title>" in rendered
-    assert "<title>SG: 6</title>" not in rendered
+    assert "<title>🇩🇪 DE: 20</title>" in rendered
+    assert "<title>🇸🇬 SG: 6</title>" not in rendered
