@@ -31,11 +31,9 @@ from __future__ import annotations
 
 import base64
 import csv
-import io
 import json
 import re
 from dataclasses import dataclass
-from typing import Optional, Sequence
 
 # --------------------------------------------------------------------------- #
 # result type

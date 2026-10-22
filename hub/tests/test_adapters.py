@@ -16,7 +16,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from hub.adapters import (  # noqa: E402
-    Adapted,
     adapt,
     adapt_ipspeed,
     adapt_proxyfreeonly,

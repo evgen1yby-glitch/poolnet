@@ -8,9 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-import pytest  # noqa: E402
 
-from hub.models import Node, ProbeResult, Protocol, Security, Stage, Transport, TransportSettings, TLS  # noqa: E402
+from hub.models import Node, Protocol, Security, Stage, Transport, TransportSettings, TLS  # noqa: E402
 from hub.prober import Concurrency, Prober, is_blocked_address  # noqa: E402
 
 

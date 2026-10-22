@@ -76,7 +76,6 @@ def _render(stats: dict, bot_payload, *, search: str = "") -> str:
     fuller stub would be more code to trust and less to read, and the parts it
     omitted (forms, events) are parts the bundle does not use during render.
     """
-    script = UI.joinpath("hub.js").read_text(encoding="utf-8")
     harness = _HARNESS.replace("__STATS_JSON__", json.dumps(stats)).replace(
         "__BOT_JSON__", json.dumps(bot_payload)
     ).replace("__SEARCH__", json.dumps(search))

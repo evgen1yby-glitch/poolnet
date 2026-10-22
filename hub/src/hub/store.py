@@ -14,23 +14,14 @@ it is swapped with `os.replace`, so a reader sees the old value or the new one.
 
 from __future__ import annotations
 
-import asyncio
 import hashlib
 import json
 import os
 import shutil
-import time
-from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Iterable, Optional, Sequence
+from typing import Optional
 
-from . import fetcher, parser as uri_parser, tiers as tierlib
-from .gate import RateLimiter
-from .models import Format, Node, ProbeResult, Score
-from .prober import CoreDriver, Prober
-from .renderer import RenderParams, render_validated
-from .scorer import History, Weights, score as score_node
 
 
 def _generation_mtime(path: Path) -> tuple[float, str]:

@@ -9,7 +9,7 @@ always produces a usable list.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, Optional, Sequence
+from typing import Iterable, Sequence
 
 from .models import MAX_NODES_PER_PAYLOAD, Format, Node, Score, Tier
 

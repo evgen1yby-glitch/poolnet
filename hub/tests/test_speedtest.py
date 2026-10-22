@@ -397,7 +397,6 @@ async def test_the_stage_measures_through_the_tag_the_driver_actually_holds():
     guard, which was deferring rounds for an unrelated, legitimate reason. Two
     causes, one observable, and only the visible one was being believed.
     """
-    from hub.prober import node_tag
 
     nodes = _nodes(4)
     driver = _TagKeyedDriver()

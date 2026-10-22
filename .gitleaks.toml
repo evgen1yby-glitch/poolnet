@@ -1,0 +1,13 @@
+# Scan history and staged files for credentials. Data dirs and toolchains are
+# not part of the repository; excluding them keeps the scan fast and honest.
+title = "evilgate"
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)hub/tools/''',
+  '''(^|/)data/''',
+  '''package-lock\.json$''',
+]

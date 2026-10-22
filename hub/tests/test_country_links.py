@@ -42,7 +42,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from hub import bot
+from hub import bot  # noqa: E402
 from hub import countries  # noqa: E402
 from hub.bot import (  # noqa: E402
     _country_arg,
@@ -50,7 +50,6 @@ from hub.bot import (  # noqa: E402
     _country_names,
     _deep_links,
     _links_for,
-    _sub_url,
     country_link,
 )
 from hub.models import Format  # noqa: E402
@@ -378,7 +377,7 @@ def country_store(tmp_path):
     from fastapi.testclient import TestClient
 
     from hub.api import create_app
-    from hub.renderer import RenderParams, render_singbox
+    from hub.renderer import RenderParams
 
     store = Store(tmp_path)
     generation = store.generation_path("gen-cc")

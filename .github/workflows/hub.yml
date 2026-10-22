@@ -1,0 +1,29 @@
+name: hub
+on:
+  push:
+    paths: ["hub/**", ".github/workflows/hub.yml"]
+  pull_request:
+    paths: ["hub/**", ".github/workflows/hub.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: hub/pyproject.toml
+      # Some hub tests drive the UI bundle through node.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: install
+        run: pip install -e "./hub[dev]"
+      - name: ruff
+        working-directory: hub
+        run: ruff check src tests
+      - name: pytest
+        working-directory: hub
+        run: pytest

@@ -30,7 +30,7 @@ import contextlib
 import os
 import time
 from dataclasses import dataclass, field
-from typing import AsyncIterator, Awaitable, Callable, Iterable, Optional, Protocol, Sequence
+from typing import AsyncIterator, Awaitable, Callable, Optional, Protocol, Sequence
 
 from .models import Node, ProbeResult, Stage, is_blocked_address
 

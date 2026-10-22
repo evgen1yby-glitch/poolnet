@@ -13,10 +13,10 @@ to the weights that produced it.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Mapping, Optional
 
-from .models import Node, ProbeResult, Protocol, Score, Security
+from .models import Node, ProbeResult, Score, Security
 
 #: Bumped when a factor's behaviour changes, because `Score` carries it and a
 #: score from before the change must not be compared against one from after as

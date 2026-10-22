@@ -818,7 +818,7 @@ def test_one_node_per_country_removes_the_duplicates():
     lines = b64.b64decode(render_base64(nodes, params)).decode("utf-8").splitlines()
     assert len(lines) == 3, lines  # FI, DE, BR — not 7
 
-    names = [up.unquote(up.urlparse(l).fragment) for l in lines]
+    names = [up.unquote(up.urlparse(line).fragment) for line in lines]
     assert names == ["🇧🇷 Бразилия", "🇩🇪 Германия", "🇫🇮 Финляндия"], names
 
 
@@ -867,7 +867,7 @@ def test_rotation_slices_a_different_node_each_round():
         )
         lines = b64.b64decode(render_base64(nodes, params)).decode("utf-8").splitlines()
         assert len(lines) == 2, lines  # one FI + one DE
-        hosts = [up.urlparse(l).hostname for l in lines]
+        hosts = [up.urlparse(line).hostname for line in lines]
         seen_first.append(tuple(hosts))
     # Three rounds must not all pick the same node.
     assert len(set(seen_first)) > 1, seen_first
@@ -1033,7 +1033,7 @@ def test_legacy_shadowsocks_ciphers_are_dropped_for_xray():
 
     The drop is per node, so the rest of that country survives.
     """
-    from hub.models import PROTOCOL_CORES, Protocol
+    from hub.models import Protocol
     from hub.renderer import RenderParams, render_xray
     import json
 
@@ -1069,7 +1069,7 @@ def test_plaintext_vless_to_a_public_ip_is_dropped_for_xray():
     hostname with no TLS is legitimate and dropping it would lose working
     nodes.
     """
-    from hub.models import Node, Protocol, Security
+    from hub.models import Security
     from hub.renderer import RenderParams, render_xray
     import json
 

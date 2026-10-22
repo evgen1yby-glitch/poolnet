@@ -17,14 +17,13 @@ import asyncio
 import os
 import re
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional
 
 from .countries import country_name
 from .countries import country_names
 from .countries import _parse_country_names as _parse_country_names_impl
 from .countries import is_ru as _is_ru_impl
-from .gate import Gate, MemberStatus, RateLimiter, TransportError
+from .gate import Gate, TransportError
 
 #: One broadcast per this many seconds, plus Telegram's own ~25 msg/s global cap
 #: and ~1/s per chat. Broadcasts are a background job with their own budget.
@@ -224,13 +223,12 @@ def build_bot(config: BotConfig, gate: Gate, *, status_sink=None):
         return None
 
     try:
-        from aiogram import Bot, Dispatcher, F
+        from aiogram import Dispatcher
         from aiogram.filters import Command, CommandStart
         from aiogram.types import Message
     except ImportError:  # pragma: no cover
         return None
 
-    bot = Bot(token=config.token, default=None)
     dispatcher = Dispatcher()
 
     async def _deny(message: Message, reason: str) -> None:

@@ -37,7 +37,6 @@ import base64
 import contextlib
 import json
 import os
-import shutil
 import signal
 import socket
 import ssl
@@ -320,7 +319,8 @@ async def test_two_drivers_get_different_ports(workdir, tmp_path):
     """
     a = SingBoxDriver(binary=_fake_binary(tmp_path), workdir=workdir / "a")
     b = SingBoxDriver(binary=_fake_binary(tmp_path), workdir=workdir / "b")
-    await a.start(); await b.start()
+    await a.start()
+    await b.start()
     try:
         await a.add_node(_trojan(), "t")
         await b.add_node(_trojan(), "t")
@@ -328,7 +328,8 @@ async def test_two_drivers_get_different_ports(workdir, tmp_path):
         pb = json.loads((workdir / "b" / "t.json").read_text())["inbounds"][0]["listen_port"]
         assert pa != pb, (pa, pb)
     finally:
-        await a.stop(); await b.stop()
+        await a.stop()
+        await b.stop()
 
 
 # --------------------------------------------------------------------------- #
@@ -1078,7 +1079,8 @@ async def test_the_reply_address_of_each_type_is_consumed():
         await reader.readexactly(head[4] + 2)
         # 5-byte header + host + 2-byte port: the same length the client sends.
         # REP 0, ATYP 3, len 4, "node", port 1080
-        writer.write(b"\x05\x00\x00\x03\x04node\x04\x38"); await writer.drain()
+        writer.write(b"\x05\x00\x00\x03\x04node\x04\x38")
+        await writer.drain()
 
     port, server = await _scripted_server(domain_reply)
     async with server:

@@ -39,7 +39,6 @@ from .models import (
     Security,
     Transport,
     TransportSettings,
-    ParseErrorKind as _PEK,
 )
 
 _UUID_RE = re.compile(
@@ -608,7 +607,6 @@ def parse_json_config(text: str) -> list[Node]:
             public_key=str(tls_obj.get("reality", {}).get("public_key", "") or ""),
             short_id=str(tls_obj.get("reality", {}).get("short_id", "") or ""),
         )
-        transport_raw = str(obj.get("transport", {}) or {})
         if isinstance(obj.get("transport"), dict):
             t_kind = _TRANSPORTS.get(str(obj["transport"].get("type", "tcp")).lower(), Transport.TCP)
         else:

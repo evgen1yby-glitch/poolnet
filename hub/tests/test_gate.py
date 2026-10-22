@@ -11,11 +11,9 @@ import pytest  # noqa: E402
 
 from hub.bot import MockTransport  # noqa: E402
 from hub.gate import (  # noqa: E402
-    CACHE_TTL_SECONDS,
     Gate,
     MemberStatus,
     RateLimiter,
-    TransportError,
 )
 
 CHANNEL = -1001234567890

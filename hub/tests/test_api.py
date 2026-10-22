@@ -21,7 +21,7 @@ import pytest  # noqa: E402
 fastapi = pytest.importorskip("fastapi")
 from fastapi.testclient import TestClient  # noqa: E402
 
-from hub.api import (
+from hub.api import (  # noqa: E402
     NO_EXPIRY,
     _CLIENT_EXT,
     _CONTENT_TYPE,
@@ -356,7 +356,7 @@ def test_stale_threshold_is_longer_than_the_probe_cycle():
     `HUB_STALE_AFTER_HOURS` is honoured, and an unparseable override falls back
     rather than raising: this is a monitoring knob, not a startup requirement.
     """
-    from hub.api import _DEFAULT_STALE_AFTER_HOURS, _stale_after_hours
+    from hub.api import _DEFAULT_STALE_AFTER_HOURS
 
     timer = Path(__file__).resolve().parents[1] / "deploy" / "hub-probe.timer"
     body = timer.read_text(encoding="utf-8")
@@ -658,7 +658,7 @@ def test_every_js_rendered_label_exists_in_both_languages(client):
     # snapshot that rest them come from the HTML, not from the table.
     html_keys = set(re.findall(r'data-i18n="([\w.]+)"', body))
     ru_table = script.split("ru: {")[1].split("},")[0]
-    duplicated = html_keys & set(re.findall(rf'"([\w.]+)":', ru_table))
+    duplicated = html_keys & set(re.findall(r'"([\w.]+)":', ru_table))
     assert not duplicated, f"these Russian strings live in both places: {duplicated}"
 
     # The lookup itself, not just the tables. Reading the two dictionaries
@@ -1039,7 +1039,6 @@ def test_the_country_segment_validates_before_it_names_a_file(
     # does receive `ｎｌ` unnormalised (verified: `cc.isascii()` is False on
     # arrival), so this is the observable the guard's whole expression produces.
     api, _store = country_client
-    from urllib.parse import quote
 
     # The token is the other condition on this route: without it every answer
     # is a 404, which would make the assertions below unable to distinguish

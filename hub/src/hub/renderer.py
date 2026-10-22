@@ -134,7 +134,7 @@ _FLAG = {
     "UA": "🇺🇦", "JP": "🇯🇵", "SG": "🇸🇬", "HK": "🇭🇰", "KR": "🇰🇷", "AU": "🇦🇺",
     "IN": "🇮🇳", "BR": "🇧🇷", "AR": "🇦🇷", "MX": "🇲🇽", "ZA": "🇿🇦", "AE": "🇦🇪",
     "IL": "🇮🇱", "IS": "🇮🇸", "LU": "🇱🇺", "MT": "🇲🇹", "CY": "🇨🇾", "AL": "🇦🇱",
-    "TH": "🇹🇭", "TW": "🇹🇼", "ID": "🇮🇩", "BY": "🇧🇾", "RS": "🇷🇸",
+    "TH": "🇹🇭", "TW": "🇹🇼", "ID": "🇮🇩", "BY": "🇧🇾",
     "BA": "🇧🇦", "MK": "🇲🇰", "ME": "🇲🇪", "AZ": "🇦🇿", "UZ": "🇺🇿", "VN": "🇻🇳", "MY": "🇲🇾", "PH": "🇵🇭", "NZ": "🇳🇿",
 }
 
@@ -983,7 +983,7 @@ def render_clash(nodes: Sequence[Node], params: RenderParams) -> str:
     lines.append("  enable: true")
     lines.append(f"  listen: 0.0.0.0:{DNS_PORT}")
     lines.append("  enhanced-mode: fake-ip")
-    lines.append(f"  fake-ip-range: 198.18.0.1/16")
+    lines.append("  fake-ip-range: 198.18.0.1/16")
     lines.append("  nameserver:")
     lines.append(f"    - {DNS_ADDRESS}")
     lines.append("")

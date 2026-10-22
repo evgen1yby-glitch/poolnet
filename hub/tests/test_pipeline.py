@@ -353,7 +353,7 @@ async def test_ssrf_rejected_at_pipeline_boundary(tmp_path):
     """
     body = "\n".join(
         [
-            f"vless://11111111-2222-3333-4444-555555555555@10.0.0.1:443#bad",
+            "vless://11111111-2222-3333-4444-555555555555@10.0.0.1:443#bad",
             *_uri_body(12).splitlines(),
         ]
     )

@@ -18,7 +18,6 @@ always returns False takes the whole service down and looks like a bug.
 
 from __future__ import annotations
 
-import asyncio
 import time
 from collections import OrderedDict
 from dataclasses import dataclass, field

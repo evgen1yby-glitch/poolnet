@@ -23,10 +23,14 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 #: The kernel-owned, per-network-namespace interface table. This is the one the
 #: isolation gate reads, and it is a module-level name so a test can point it at a
 #: fixture — see `_interface_names` for why an inlined literal was not enough.
+if TYPE_CHECKING:
+    from hub.fetcher import Source
+
 _PROC_NET_DEV = Path("/proc/net/dev")
 
 #: The stale sysfs directory, kept only so a test can *disagree* with the above
@@ -112,7 +116,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
 
     root = _resolve(args.root, _root())
 
@@ -152,7 +157,6 @@ def _audit_sources(root: Path, args) -> int:
     and nothing under `data/` is touched, so it is safe to run on the live host.
     """
     import importlib.util
-    from pathlib import Path as _Path
 
     script = _root() / "scripts" / "audit_sources.py"
     if not script.exists():
@@ -212,7 +216,6 @@ def _serve(root: Path, args) -> int:
 
 async def _run(root: Path, args) -> int:
     from hub.pipeline import Pipeline, _default_geo_lookup
-    from hub.speedtest import SpeedPolicy
 
     sources, _ = _parse_source_texts(_resolve(args.sources, root / "config" / "sources.yaml"))
     driver_factory, why = _driver_factory(args)
@@ -668,7 +671,7 @@ async def _speedtest(root: Path, args) -> int:
     ranking ends up certifying nodes nobody ever connected to.
     """
     from hub.adapters import parse_vpngate_csv
-    from hub.fetcher import Source, load_sources
+    from hub.fetcher import load_sources
 
     sources_path = _resolve(args.sources, root / "config" / "sources.yaml")
     entries, _settings = load_sources(sources_path)

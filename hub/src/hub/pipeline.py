@@ -20,7 +20,6 @@ Invariants enforced here, because callers cannot enforce them:
 
 from __future__ import annotations
 
-import asyncio
 import contextlib
 import fcntl
 import hashlib
@@ -39,8 +38,7 @@ from pathlib import Path
 from typing import Callable, Optional, Sequence
 
 from . import adapters, fetcher, parser as uri_parser, tiers as tierlib
-from .gate import RateLimiter
-from .models import Format, Node, ProbeResult, Stage, Tier, is_blocked_address
+from .models import Format, Node, ProbeResult, Stage, is_blocked_address
 from .prober import Concurrency, CoreDriver, Prober
 from .renderer import RenderParams, country_shards, render_validated
 from .scorer import History, Weights, score as score_node

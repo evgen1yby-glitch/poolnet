@@ -17,7 +17,6 @@ Two properties are non-negotiable and each has a test that fails loudly:
 
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 

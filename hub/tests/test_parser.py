@@ -261,7 +261,7 @@ def test_bare_base64_body_is_unwrapped():
     import base64
 
     good = f"vless://{UUID}@a.example.com:443?security=reality#a"
-    good2 = f"trojan://pw@b.example.com:443#b"
+    good2 = "trojan://pw@b.example.com:443#b"
     body = base64.urlsafe_b64encode(f"{good}\n{good2}\n".encode()).decode()
     nodes, errors = parse_many(body)
     assert len(nodes) == 2 and not errors

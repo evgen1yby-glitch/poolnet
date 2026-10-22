@@ -1,0 +1,16 @@
+name: site
+on:
+  push:
+    paths: ["web/site/**", "scripts/site_links.py", ".github/workflows/site.yml"]
+  pull_request:
+    paths: ["web/site/**", "scripts/site_links.py", ".github/workflows/site.yml"]
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/site_links.py
