@@ -33,8 +33,32 @@ HUB_TOKEN=<токен подписок>
 HUB_CHANNEL_ID=<id канала>
 EOF
 chmod 600 /etc/evilgate/evilgate.env
-# pool.env — по необходимости (OPP_* из `npm run cycle --help`)
+# pool.env: бюджеты цикла и ключи источников. Без них цикл берёт дефолты
+# движка и может уйти на сотни тысяч кандидатов вместо выборки.
+cat >/etc/evilgate/pool.env <<'ENVFILE'
+OPP_MAX_NEW_PER_CYCLE=3000
+OPP_PER_SOURCE_MIN=150
+OPP_CONCURRENCY=350
+GFP_API_KEY=<ключ источника gfp, если используется>
+ENVFILE
+chmod 640 /etc/evilgate/pool.env
+chown root:evilgate /etc/evilgate/pool.env
 ```
+
+### Перенос данных со старой установки
+
+Если пул уже публиковался из другого чекаута, скопировать его состояние до
+первого запуска таймера — иначе очередь и история начнутся с нуля:
+
+```sh
+rsync -a /old/checkout/data/  /opt/evilgate/pool/data/
+rsync -a /old/checkout/.state/ /opt/evilgate/pool/.state/
+rsync -a /old/checkout/.work/  /opt/evilgate/pool/.work/
+cp -p /old/checkout/.env.local /opt/evilgate/pool/.env.local
+```
+
+Старый планировщик (cron/systemd) после этого отключается, демо-порты
+(:8931 и т. п.) останавливаются: файлы раздаёт `/pool/*` нового hub.
 
 ## 3. systemd
 

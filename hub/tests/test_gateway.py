@@ -77,6 +77,27 @@ def test_rendered_index_carries_the_map_and_protocol_rows(tmp_path, monkeypatch)
     assert "ms-dot" in body or "ms-land" in body
 
 
+def test_status_api_is_not_cacheable(tmp_path, monkeypatch):
+    client = _client(tmp_path, monkeypatch, _pool_dir(tmp_path))
+    response = client.get("/api/status.json")
+    assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-store"
+
+
+def test_render_failure_falls_back_to_static_page(tmp_path, monkeypatch):
+    """A broken store must not turn the marketing pages into 500s."""
+    client = _client(tmp_path, monkeypatch, _pool_dir(tmp_path))
+
+    def boom(self):
+        raise RuntimeError("store unavailable")
+
+    monkeypatch.setattr(gateway.SiteDataSource, "get", boom)
+    response = client.get("/proxy")
+    assert response.status_code == 200
+    assert "30 576" in response.text  # the page's own dated snapshot
+    assert "{{" in response.text or "<!--begin:" in response.text  # unrendered fallback
+
+
 def test_unknown_page_serves_the_site_404(tmp_path, monkeypatch):
     client = _client(tmp_path, monkeypatch, _pool_dir(tmp_path))
     response = client.get("/definitely-not-a-page")
@@ -92,6 +113,16 @@ def test_check_guard_rate_limits_a_burst():
     allowed, reason = guard.acquire("203.0.113.7")
     assert allowed is False
     assert "rate" in reason
+
+
+def test_concurrency_rejection_does_not_burn_a_token():
+    guard = gateway.CheckGuard(per_minute=1, burst=1, concurrent=1)
+    assert guard.acquire("203.0.113.7")[0] is True
+    allowed, _reason = guard.acquire("198.51.100.9")
+    assert allowed is False  # slot busy
+    guard.release()
+    # The second caller's token was not spent, so it still fits after release.
+    assert guard.acquire("198.51.100.9")[0] is True
 
 
 def test_check_guard_caps_concurrent_probes():

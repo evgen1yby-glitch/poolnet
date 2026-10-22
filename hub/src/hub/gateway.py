@@ -20,8 +20,8 @@ from __future__ import annotations
 import hashlib
 import ipaddress
 import re
+import logging
 import threading
-import time
 from pathlib import Path
 from typing import Callable
 
@@ -112,13 +112,16 @@ class CheckGuard:
             rate=per_minute / 60.0, burst=burst, max_buckets=4096
         )
         self.slots = threading.BoundedSemaphore(concurrent)
-        self._last_used = time.monotonic()
 
     def acquire(self, address: str) -> tuple[bool, str]:
-        if not self.limiter.allow(hash_ip(address)):
-            return False, "rate limited: try again in a minute"
+        # Take the slot first: a request refused for capacity must not also
+        # burn the caller's rate token, or a burst would leave them throttled
+        # after the burst cleared.
         if not self.slots.acquire(blocking=False):
             return False, "too many checks in flight: try again shortly"
+        if not self.limiter.allow(hash_ip(address)):
+            self.release()
+            return False, "rate limited: try again in a minute"
         return True, ""
 
     def release(self) -> None:
@@ -155,11 +158,23 @@ def register_gateway(
     guard = guard or CheckGuard()
 
     def _render(name: str) -> str | None:
-        """Render one page against the current data snapshot, with fallback."""
+        """Render one page against the current data snapshot, with fallback.
+
+        A broken store or an unreadable publication is an API problem, not a
+        reason for the marketing pages to answer 500: the static copy is a
+        real, dated snapshot, so serving it is the honest degradation. The
+        exception is logged rather than swallowed silently.
+        """
         if not (site_dir / name).is_file():
             return None
-        data, version = source.get()
-        return renderer.render(name, data, version)
+        try:
+            data, version = source.get()
+            return renderer.render(name, data, version)
+        except Exception as exc:  # noqa: BLE001 - degradation boundary by design
+            logging.getLogger(__name__).warning(
+                "site render fell back to static %s: %s", name, exc
+            )
+            return None
 
     def _page(name: str, status_code: int = 200) -> Response:
         rendered = _render(name)
@@ -214,7 +229,10 @@ def register_gateway(
         no proxy base, `pool.available` is `false` and the page keeps its
         static copy instead of lying with an empty section.
         """
-        return JSONResponse(combined(store, _pool_dir()))
+        return JSONResponse(
+            combined(store, _pool_dir()),
+            headers={"Cache-Control": "no-store"},
+        )
 
     @app.get("/pool/{name:path}", include_in_schema=False)
     async def pool_file(name: str) -> Response:
