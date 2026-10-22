@@ -38,11 +38,14 @@ chmod 600 /etc/evilgate/evilgate.env
 
 ## 3. systemd
 
-Шаблоны содержат плейсхолдеры `@DIR@`, `@USER@`, `@GROUP@`, `@NODE@`.
+Шаблоны содержат плейсхолдеры `@DIR@`, `@USER@`, `@GROUP@`, `@NODE@`,
+а юнит хуба ещё `@HUB_ROOT@` (каталог данных VPN-пула) и `@POOL_DIR@`
+(каталог публикации прокси-пула).
 
 ```sh
 sed -e 's|@DIR@|/opt/evilgate|g' -e 's|@USER@|evilgate|g' \
-    -e 's|@GROUP@|evilgate|g' deploy/evilgate.service.in \
+    -e 's|@GROUP@|evilgate|g' -e 's|@HUB_ROOT@|/opt/evilgate/hub|g' \
+    -e 's|@POOL_DIR@|/opt/evilgate/pool/data|g' deploy/evilgate.service.in \
     >/etc/systemd/system/evilgate.service
 
 sed -e 's|@DIR@|/opt/evilgate|g' -e 's|@USER@|evilgate|g' \
@@ -63,6 +66,8 @@ sudo -u evilgate env OPP_DATA_DIR=/opt/evilgate/pool/data \
 ```
 
 Проверка хуба: `curl -s http://127.0.0.1:8090/api/status.json | head -c 200`.
+Каталоги `@HUB_ROOT@` и `@POOL_DIR@` можно указать существующие (например,
+данные прежнего `hub` и живую публикацию пула), тогда переносить их не нужно.
 `pool.available: false` означает, что первый цикл ещё не опубликовал файлы.
 
 ## 4. nginx и TLS

@@ -15,9 +15,9 @@ WorkingDirectory=@DIR@/hub
 # published files under pool/data. The app serves the site at `/` and reads the
 # pool's published dir through EVILGATE_POOL_DIR — no copying, one source.
 Environment=PYTHONPATH=@DIR@/hub/src
-Environment=HUB_ROOT=@DIR@/hub
+Environment=HUB_ROOT=@HUB_ROOT@
 Environment=HUB_SITE=@DIR@/web/site
-Environment=EVILGATE_POOL_DIR=@DIR@/pool/data
+Environment=EVILGATE_POOL_DIR=@POOL_DIR@
 Environment=HUB_HOST=127.0.0.1
 Environment=HUB_PORT=8090
 EnvironmentFile=-/etc/evilgate/evilgate.env
@@ -25,7 +25,7 @@ ExecStart=/usr/bin/python3 -m hub.cli serve
 Restart=on-failure
 RestartSec=5
 # Writes stay in the hub's data dir; the pool dir is read-only for this unit.
-ReadWritePaths=@DIR@/hub/data
+ReadWritePaths=@HUB_ROOT@/data
 ProtectSystem=strict
 ProtectHome=read-only
 PrivateTmp=yes
