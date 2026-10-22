@@ -93,6 +93,16 @@ def test_allow_list_is_closed(make_client, tmp_path):
         assert c.get(probe).status_code == 404, probe
 
 
+def test_a_symlink_out_of_the_publication_is_refused(make_client, tmp_path):
+    pool = _pool_dir(tmp_path)
+    target = tmp_path / "outside.txt"
+    target.write_text("secret\n", encoding="utf-8")
+    (pool / "http.txt").unlink()
+    (pool / "http.txt").symlink_to(target)
+    c = make_client(pool)
+    assert c.get("/pool/http.txt").status_code == 404
+
+
 def test_no_proxy_base_is_all_404(make_client):
     c = make_client(None)
     assert c.get("/pool/http.txt").status_code == 404

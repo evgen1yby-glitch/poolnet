@@ -158,7 +158,7 @@ evilgate/
   `docs/ARCHITECTURE.md`; README ссылается на слои и живые данные.
 - [x] CI: site-workflow через `make site`, path-фильтры смотрят `web/site/**`;
   hub/pool workflows ставят свои зависимости напрямую (дешевле в CI).
-- [x] Гейты: hub 619 passed / 1 skipped, ruff 0.6.9 чисто; pool typecheck/lint
+- [x] Гейты: hub 623 passed / 1 skipped, ruff 0.6.9 чисто; pool typecheck/lint
   + 117 тестов; linkcheck 8 страниц; Playwright 1440/390 — 7 страниц + 404,
   0 overflow, 0 console errors; рендер проверен на живых данных (30 898
   записей, 112 стран, 25 405 elite).

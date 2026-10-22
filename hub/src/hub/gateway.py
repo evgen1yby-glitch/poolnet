@@ -250,8 +250,15 @@ def register_gateway(
                 ctype = "text/plain; charset=utf-8"
         else:
             ctype = POOL_FILES.get(name)
-        candidate = _pool_dir() / name
+        directory = _pool_dir()
+        candidate = directory / name
         if ctype is None or not candidate.is_file():
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        # The allow-list constrains the name; resolve-then-contain also refuses
+        # a symlink planted inside the publication dir that points elsewhere.
+        try:
+            candidate.resolve().relative_to(directory.resolve())
+        except (OSError, ValueError):
             return PlainTextResponse("нет такой страницы", status_code=404)
         return FileResponse(
             candidate,
