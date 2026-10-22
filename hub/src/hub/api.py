@@ -29,6 +29,7 @@ import secrets
 import time
 from pathlib import Path
 
+from .checkproxy import check_proxy, parse_proxy
 from .gate import RateLimiter
 from .models import Format, Tier
 from .store import Store
@@ -1064,6 +1065,16 @@ def create_app(store: Store | None, sources: dict | None = None):
 
     @app.get("/status", response_class=HTMLResponse)
     async def status_page():
+        """The merged site's status page, or the hub's own on a standalone install.
+
+        `/status` is the one path both projects published. The merged site's
+        page carries both pools, so when `web/site` is present it wins;
+        without a site the hub keeps its own page, exactly as before the
+        merge — a hub checkout with no site still has working status.
+        """
+        site_status = site_dir / "status.html"
+        if site_status.is_file():
+            return FileResponse(str(site_status), media_type="text/html")
         return HTMLResponse(_status_html())
 
     @app.get("/mockup", response_class=HTMLResponse)
@@ -1156,8 +1167,10 @@ def create_app(store: Store | None, sources: dict | None = None):
             return None
         return candidate
 
-    def _site_response(path: Path) -> Response:
-        return FileResponse(str(path), media_type=_DESIGN_TYPES[path.suffix])
+    def _site_response(path: Path, status_code: int = 200) -> Response:
+        return FileResponse(
+            str(path), media_type=_DESIGN_TYPES[path.suffix], status_code=status_code
+        )
 
     @app.get("/design", include_in_schema=False)
     async def design_index_bare() -> Response:
@@ -1430,6 +1443,84 @@ def create_app(store: Store | None, sources: dict | None = None):
         """
         return JSONResponse({"vpn": _vpn_pool_payload(), "pool": _pool_payload()})
 
+    #: The published proxy-pool files a visitor downloads. A fixed allow-list:
+    #: these are the only names the pool's data dir contains that a reader is
+    #: pointed at, and a request for anything else is a probe. `country/XX.txt`
+    #: is the one wildcard — two uppercase letters, exactly the shard naming
+    #: the generator writes.
+    _POOL_FILES = {
+        "http.txt": "text/plain; charset=utf-8",
+        "socks4.txt": "text/plain; charset=utf-8",
+        "socks5.txt": "text/plain; charset=utf-8",
+        "all.txt": "text/plain; charset=utf-8",
+        "proxies.json": "application/json",
+        "meta.json": "application/json",
+        "stats.json": "application/json",
+    }
+
+    @app.get("/pool/{name:path}", include_in_schema=False)
+    async def pool_file(name: str) -> Response:
+        """The proxy base's published files, straight from the shared data dir.
+
+        The pool engine writes its output to one dir (`EVILGATE_POOL_DIR`);
+        `/api/status.json` reads its aggregates, and this route hands out the
+        files themselves — the line lists, the country shards, the full JSON
+        distribution. Served by the hub because the site's copy points the
+        reader at these paths and :8931 is the demo port this merge retires.
+        Streaming (`FileResponse`) matters for `proxies.json` at this size —
+        a full read would hold pages of the file in memory per request.
+        """
+        rel = Path(name)
+        ctype = None
+        if rel.parent == Path("country"):
+            if re.fullmatch(r"^[A-Z]{2}\.txt", rel.name):
+                ctype = "text/plain; charset=utf-8"
+        else:
+            ctype = _POOL_FILES.get(name)
+        candidate = (
+            Path(os.environ.get("EVILGATE_POOL_DIR", "") or store.root.parent / "pool" / "data")
+            / name
+        )
+        if ctype is None or not candidate.is_file():
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        return FileResponse(
+            candidate,
+            media_type=ctype,
+            headers={"Cache-Control": "max-age=60", "Content-Disposition": "inline"},
+        )
+
+    @app.get("/api/check", include_in_schema=False)
+    def check_one(proxy: str = "", proto: str = "socks5") -> JSONResponse:
+        """Live check of one address the visitor pasted into the check page.
+
+        A blocking probe (socket handshake, one HTTP GET through the tunnel),
+        hence a sync handler: FastAPI runs it in its threadpool instead of
+        stalling the event loop. `no-store` because a verdict describes this
+        moment and caching it would make a dead proxy look alive later.
+        """
+        parsed = parse_proxy(proxy, proto)
+        if isinstance(parsed, str):
+            return JSONResponse(
+                {"error": parsed}, status_code=400, headers={"Cache-Control": "no-store"}
+            )
+        protocol, host, port = parsed
+        outcome = check_proxy(protocol, host, port)
+        return JSONResponse(
+            {"proxy": f"{protocol}://{host}:{port}", **outcome},
+            headers={"Cache-Control": "no-store"},
+        )
+
+    @app.get("/data/{name:path}", include_in_schema=False)
+    async def old_data_path(name: str) -> RedirectResponse:
+        """The demo pool's data URLs, kept as redirects to the merged paths.
+
+        `…:8931/data/http.txt` was the address the old copy handed out; on
+        the merged host the same suffix lives under `/pool/`. A permanent
+        redirect keeps a bookmark or a script pointed at the old shape
+        working while the old service is retired.
+        """
+        return RedirectResponse(f"/pool/{name}", status_code=307)
+
     @app.get("/{path:path}", include_in_schema=False)
     async def site_page(path: str) -> Response:
         """Every public page and asset of the merged evilgate site.
@@ -1447,6 +1538,9 @@ def create_app(store: Store | None, sources: dict | None = None):
         )
         found = _site_file(rel)
         if found is None:
+            not_found = _site_file("404.html")
+            if not_found is not None:
+                return _site_response(not_found, status_code=404)
             return PlainTextResponse("нет такой страницы", status_code=404)
         return _site_response(found)
 

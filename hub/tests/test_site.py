@@ -51,7 +51,7 @@ def test_the_root_serves_the_site_index(site_client):
 
 def test_every_site_page_serves(site_client):
     """All six pages answer 200 — a 404 between pages breaks navigation."""
-    for page in ("vpn", "proxy", "verify", "premium", "status"):
+    for page in ("vpn", "proxy", "verify", "check", "premium", "status"):
         assert site_client.get(f"/{page}").status_code == 200, page
         assert site_client.get(f"/{page}.html").status_code == 200, page
 
@@ -94,11 +94,30 @@ def test_site_assets_serve_with_their_types(site_client):
     assert len(font.content) > 1000
 
 
-def test_a_page_miss_is_a_plain_404(site_client):
+def test_a_page_miss_is_the_site_404(site_client):
     """Unknown paths stay 404s, never a directory listing."""
     response = site_client.get("/not-one")
     assert response.status_code == 404
-    assert "нет такой страницы" in response.text
+    assert "не найдена" in response.text
+
+
+def test_status_is_the_site_page(site_client):
+    """`/status` belongs to the merged page, not the hub's old stand-alone one.
+
+    Both projects published a status page; the site's carries both pools and
+    is the one the navigation points at, so it must win when a site exists.
+    """
+    response = site_client.get("/status")
+    assert response.status_code == 200
+    assert "jpool" in response.text
+    assert "Прокси-база" in response.text
+
+
+def test_old_data_paths_redirect_to_the_pool_paths(site_client):
+    """`…/data/http.txt` from the retired demo becomes `/pool/http.txt`."""
+    response = site_client.get("/data/http.txt", follow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers["location"] == "/pool/http.txt"
 
 
 def test_a_traversal_attempt_is_not_a_file(site_client):
