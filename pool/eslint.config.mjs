@@ -1,8 +1,8 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
-// The pipeline (src, test, scripts) runs on Node; the site under site/assets
-// runs in the browser with no build step. Vendor files are not ours to lint.
+// The pipeline (src, test, scripts) runs on Node. The public site lives in
+// `web/site` and is linted by the platform, not here.
 const nodeGlobals = {
   process: 'readonly',
   console: 'readonly',
@@ -16,35 +16,8 @@ const nodeGlobals = {
   performance: 'readonly',
 };
 
-const browserGlobals = {
-  console: 'readonly',
-  window: 'readonly',
-  document: 'readonly',
-  navigator: 'readonly',
-  fetch: 'readonly',
-  URL: 'readonly',
-  performance: 'readonly',
-  requestAnimationFrame: 'readonly',
-  cancelAnimationFrame: 'readonly',
-  setTimeout: 'readonly',
-  clearTimeout: 'readonly',
-  setInterval: 'readonly',
-  clearInterval: 'readonly',
-  HTMLElement: 'readonly',
-  HTMLInputElement: 'readonly',
-  HTMLSelectElement: 'readonly',
-  Touch: 'readonly',
-  TouchEvent: 'readonly',
-  URLSearchParams: 'readonly',
-  CustomEvent: 'readonly',
-  AbortController: 'readonly',
-  Blob: 'readonly',
-  location: 'readonly',
-  history: 'readonly',
-};
-
 export default tseslint.config(
-  { ignores: ['node_modules', 'data', '.state', '.work', '.tmp', 'coverage', 'site/assets/vendor'] },
+  { ignores: ['node_modules', 'data', '.state', '.work', '.tmp', 'coverage'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -57,19 +30,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': 'off',
-      eqeqeq: 'error',
-      'prefer-const': 'error',
-    },
-  },
-  {
-    files: ['site/assets/js/**/*.js'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-      globals: { ...browserGlobals, AbortSignal: 'readonly' },
-    },
-    rules: {
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       eqeqeq: 'error',
       'prefer-const': 'error',
     },

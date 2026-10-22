@@ -11,7 +11,6 @@ credentials*
 data/
 hub/data/
 pool/data/
-web/site/data/
 *.sqlite3
 *.db
 *.ndjson

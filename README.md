@@ -34,6 +34,14 @@
 Сайт не проксирует трафик: соединение клиента идёт напрямую к узлу. evilgate —
 каталог опубликованных списков и проверяющая сторона, не оператор узлов.
 
+## Архитектура
+
+Слои, поток данных, контракты `/api/status.json`, `/api/check` и `/pool/*`,
+отказы и раскладка репозитория — в [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Числа на страницах `web/site` рендерятся из живых опубликованных данных
+(`pool/data` и хранилища `hub`); если данных нет, страницы сохраняют
+статический снимок и не показывают пустые блоки.
+
 ## Запуск
 
 ```sh
@@ -57,17 +65,11 @@ npm run cycle
 ## Проверки (как в CI)
 
 ```sh
-# hub
-cd hub && ruff check src tests && pytest
-
-# pool
-cd pool && npm run typecheck && npm run lint && npm test
-
-# сайт
-python scripts/site_links.py
+make check        # lint + test + site
 ```
 
-Те же хуки доступны локально через `pre-commit install`
+Или по отдельности: `make lint`, `make test`, `make site`. Те же хуки
+доступны локально через `pre-commit install`
 (`.pre-commit-config.yaml`), а секреты дополнительно проверяются gitleaks в CI.
 
 ## План

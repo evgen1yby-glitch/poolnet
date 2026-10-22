@@ -233,7 +233,7 @@ export async function cmdMerge(): Promise<MergeReport> {
     sourceHistory = appendHistory(sourceHistory, benchmark);
     atomicWriteJson(historyFile, sourceHistory);
 
-    // ---- history: the pool's recent life, for the site's sparkline ----
+    // ---- history: the pool's recent life, published for status consumers ----
     const HISTORY_MAX = 96;
     const poolHistoryFile = path.join(cfg.dataDir, 'history.json');
     let history: CycleStats[] = [];

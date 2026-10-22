@@ -27,7 +27,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 async function loadJson(name) {
   const url = process.env.OP_POOL_URL
     ? `${process.env.OP_POOL_URL.replace(/\/$/, '')}/${name}`
-    : path.join(ROOT, 'site', 'data', name);
+    : path.join(ROOT, 'data', name);
   if (url.startsWith('http')) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`${name}: HTTP ${res.status}`);

@@ -99,7 +99,7 @@ const PROTOCOLS = ['http', 'socks4', 'socks5'];
 /** a check result describes this moment, nothing may cache it */
 const NO_STORE = { 'cache-control': 'no-store', 'access-control-allow-origin': '*' };
 
-/** On-demand single-proxy check: the site's "Check a proxy" box. */
+/** On-demand single-proxy check: the same contract as the platform's page. */
 async function handleCheck(url) {
   const target = parseProxyParam(url.searchParams.get('proxy') ?? '', url.searchParams.get('proto') ?? 'socks5');
   if ('error' in target) {

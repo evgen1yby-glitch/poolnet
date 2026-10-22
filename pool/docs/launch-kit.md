@@ -27,11 +27,12 @@ Three hooks, in order of strength:
 ## T-7 … T-1: assets
 
 - [ ] Repo public, `scripts/init-repo.sh <owner>/<repo>` run (badges, links)
-- [ ] GitHub Pages on `main` `/site`; the live URL in the About field
+- [ ] Platform site (`web/site`) deployed with `hub`; the live URL in the
+      About field
 - [ ] Topics: `proxy-list`, `proxy`, `proxies`, `socks5`, `socks4`,
       `http-proxy`, `web-scraping`, `github-actions`, `typescript`,
       `data-pipeline`, `privacy`, `networking`, `automation`, `self-hosted`
-- [ ] Social preview: convert `site/assets/og.svg` to PNG 1280×640 and upload
+- [ ] Social preview image 1280×640 uploaded
       (Settings → Social preview). The one image that ships in every DM.
 - [ ] `data/meta.json` alive count in the About line: `1,215 verified public
 proxies, republished every 15 minutes` — update it after each refresh
@@ -43,7 +44,7 @@ proxies, republished every 15 minutes` — update it after each refresh
 
 | Time (ET) | Channel         | Action                                                  |
 | --------- | --------------- | ------------------------------------------------------- |
-| 09:00     | GitHub          | Public, Pages live, About + topics set                  |
+| 09:00     | GitHub          | Public, platform site live, About + topics set          |
 | 09:15     | Hacker News     | Show HN (title below)                                   |
 | 09:30     | Twitter/X       | Thread: hook 1 + screenshot of the funnel               |
 | 12:00     | Reddit          | r/webscraping, then r/programming (13:00), r/selfhosted |

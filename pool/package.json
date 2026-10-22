@@ -20,8 +20,7 @@
     "validate": "tsx src/index.ts validate",
     "merge": "tsx src/index.ts merge",
     "publish": "tsx src/index.ts publish",
-    "discover": "tsx src/index.ts discover",
-    "og": "node scripts/make-og.mjs"
+    "discover": "tsx src/index.ts discover"
   },
   "dependencies": {
     "maxmind": "^4.2.0",

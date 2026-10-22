@@ -41,8 +41,9 @@ curl https://<worker>.workers.dev/v1/country/US
 curl "https://<worker>.workers.dev/v1/check?proxy=45.84.13.153:1080&proto=socks5"
 ```
 
-The site's "Check a proxy" box calls `/v1/check`; point it at this Worker by
-setting `data-api="https://<worker>.workers.dev"` on the page's `<body>`.
+`/v1/check` mirrors the platform's `/api/check` contract for an edge
+deployment. The merged site uses `hub`; point another client at this Worker
+by setting `data-api="https://<worker>.workers.dev"` on the page's `<body>`.
 
 ## Local development
 

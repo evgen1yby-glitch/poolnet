@@ -6,20 +6,16 @@
 ![socks5](https://img.shields.io/endpoint?url=https://cdn.jsdelivr.net/gh/OWNER/REPO@main/data/badges/socks5.json)
 ![http](https://img.shields.io/endpoint?url=https://cdn.jsdelivr.net/gh/OWNER/REPO@main/data/badges/http.json)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen)](LICENSE)
-[![live demo](https://img.shields.io/badge/live-demo%20%E2%86%97-4338ca)](http://193.34.212.154:8931)
 
 **A public proxy pool that is actually verified.** 194 published lists are
 consumed as-is — nothing is scanned — and every candidate has to carry a full
 request through a real connection before it earns a place in the pool. The
-result is republished every fifteen minutes as plain text, JSON and a website.
+result is republished every fifteen minutes as plain text and JSON; the
+platform site renders it live.
 
 Live pool size, latency spread and country distribution are on the badges
-above; the [live demo](http://193.34.212.154:8931) runs the real site.
-
-<br />
-<p align="center">
-  <img src="docs/screenshots/website-light.png" alt="The pool website" width="85%" />
-</p>
+above. The public site lives in the merged repository at `web/site` and is
+served by `hub` — this package publishes the data it renders.
 
 ## The 30-second version
 
@@ -47,7 +43,7 @@ More languages, a working rotator and realistic expectations:
 | **Freshness**            | daily cron             | every 15 minutes, with a re-check queue for living entries                |
 | **What checks the pool** | your laptop            | disposable CI runners, never the operator's address                       |
 | **Metadata**             | ip:port                | exit IP, latency percentiles, uptime windows, ASN, country, TLS-MITM flag |
-| **Interface**            | a folder of .txt files | the same files, plus a website, API-style JSON and country shards         |
+| **Interface**            | a folder of .txt files | the same files, plus API-style JSON and country shards                    |
 
 The honest numbers from the last cycle: **3.58M lines read → 732k unique
 candidates → ~1.2k alive**. A public proxy population is mostly dead — this
@@ -67,37 +63,17 @@ pool exists so you never have to find that out yourself.
 
 ## Website
 
-A static, dependency-free page that renders the pool: search, protocol and
-grade filters, sorting, pagination, a per-proxy detail drawer with uptime
-gauges, a latency histogram, the pool-size sparkline, a **proxy playground**
-that checks any address on the spot, dark mode and full EN/RU localization.
-
-<p align="center">
-  <img src="docs/screenshots/website-drawer.png" alt="Proxy detail" width="32%" />
-  <img src="docs/screenshots/website-dark.png" alt="Dark mode" width="32%" />
-  <img src="docs/screenshots/website-mobile.png" alt="Mobile" width="32%" />
-  <img src="docs/screenshots/website-ru.png" alt="Russian interface" width="32%" />
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/website-checker.png" alt="The proxy playground" width="49%" />
-  <img src="docs/screenshots/website-tablet.png" alt="Tablet layout" width="24%" />
-</p>
-
-```bash
-node scripts/build-web-data.mjs   # refresh site/data/ from data/
-python3 -m http.server -d site 8000
-```
-
-Open <http://localhost:8000>. The refresh workflow rebuilds the bundle on
-every merge, and the site deploys anywhere static — GitHub Pages over this
-repository works unchanged.
+The pool no longer ships its own demo site. The merged platform site lives in
+`web/site` and is served by `hub`: `/pool/*` hands out the files below and
+`/api/status.json` carries the pool aggregates next to the VPN pool's. The
+page is rendered from live published data, with the static markup as fallback
+when a data dir is absent.
 
 ## How it works
 
 ```
 sources.yaml ─► fetch ─► parse & dedupe ─► verify (matrix, disposable runners)
-             ─► enrich ─► store ─► render ─► data/ + site/ ─► commit
+             ─► enrich ─► store ─► render ─► data/ ─► commit
 ```
 
 1. **Collect** — 194 published lists, fetched as-is, once per cycle, with a
@@ -108,7 +84,7 @@ sources.yaml ─► fetch ─► parse & dedupe ─► verify (matrix, disposabl
    Connect-then-stall does not pass; bodies are capped at 256 KB.
 4. **Enrich** — anonymity grade from the target's own view, exit IP, latency
    percentiles, rolling uptime windows, offline geo (DB-IP), TLS-MITM flag.
-5. **Publish** — text lists, JSON with metadata, country shards, website data.
+5. **Publish** — text lists, JSON with metadata and country shards, consumed by the platform site.
 
 Full pipeline documentation: [docs/architecture.md](docs/architecture.md),
 [docs/sources.md](docs/sources.md), [docs/operations.md](docs/operations.md).
@@ -144,7 +120,7 @@ are skipped and the pool is built from the rest.
 
 `bot/` is a dependency-free, single-file bot that serves the pool in a chat:
 `/get socks5 US`, `/top`, `/stats`. It reads the same published JSON the
-website uses, so it never touches a proxy itself.
+platform site uses, so it never touches a proxy itself.
 
 ```bash
 BOT_TOKEN=… OP_POOL_URL=https://cdn.jsdelivr.net/gh/OWNER/REPO@main/data node bot/index.mjs
@@ -196,7 +172,7 @@ COORDINATOR_URL=https://… npx tsx src/index.ts node    # on a volunteer box
 - [x] Two-phase verification: liveness + anonymity grading
 - [x] Enrichment: latency, uptime windows, geo, TLS-MITM flag
 - [x] Text lists, JSON, country shards, shields badges
-- [x] Website: search, filters, drawer, sparkline, playground, i18n
+- [x] Published data rendered by the platform site (`web/site`)
 - [ ] Distributed verification via community validator nodes
 - [ ] Historical per-proxy uptime pages (90-day retention)
 - [ ] Optional Cloudflare Worker API with CORS and edge caching

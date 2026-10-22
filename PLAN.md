@@ -18,14 +18,13 @@ evilgate/
 ├── web/site/          ← единый сайт (морф из макета docs/design/evilgate v4:
 │                        index / vpn / proxy / verify / premium / status + system.css)
 ├── hub/               ← контрольная плоскость VPN-пула (Python 3.11, FastAPI, aiogram)
-│   ├── src/hub        (api, bot, checker/pipeline 6 этапов, singbox-рендер, store)
+│   ├── src/hub        (api/gateway, siteview/poolstatus, bot, pipeline 6 этапов, store)
 │   ├── tests          (pytest-набор ~557 тестов)
 │   ├── deploy         (systemd-юниты), scripts, tools (sing-box/xray — только локально)
 │   └── LICENSE        AGPL-3.0
 └── pool/              ← движок прокси-базы (Node 20, TS, бин: opp)
     ├── src            (sources/parse/check/benchmark/publish/distributed)
-    ├── site           (старый сайт-справочник — закрывается, живёт до M3)
-    ├── workers/api    (т_unused)
+    ├── workers/api    (edge-API, справочная реализация)
     └── LICENSE        MIT
 ```
 
@@ -133,6 +132,30 @@ evilgate/
 - [ ] Домен: `evilgate.online` не резолвится (не зарегистрирован/не указывает
   сюда) — TLS-vhost по домену и редиректы старых адресов ждут DNS.
 
+### M6 — production-grade упаковка
+- [x] Платформенные маршруты вынесены в `gateway.py`; ядро `api.py`
+  сократилось с ~2080 до ~1690 строк и больше не знает о сайте и пулах.
+- [x] Чистая агрегация в `poolstatus.py`: секции `vpn`/`pool`, render-модель
+  (строки таблиц, топ источников, точки карты, размеры файлов), кэш по mtime
+  и текущей генерации.
+- [x] SSR данных через `siteview.py`: токены `{{path|fallback}}` и блоки
+  `<!--begin:rows:…-->` на 6 страницах; таблицы и карта генерируются из
+  данных, статические фолбэки остаются. Страница никогда не 500 из-за данных.
+- [x] `/api/check` ограничен: rate limit 5/мин (burst 3) по /24 и /64,
+  потолок 8 одновременных проб, 429/503 JSON, `no-store`; non-routable
+  адреса отсекаются до сокета (было раньше, сохранено).
+- [x] Гигиена: демо-сайт `pool/site` и его скрипты удалены, ссылки в
+  pool-docs/CI обновлены (`grep pool/site` чист); `pool/workers/api` оставлен
+  как edge/reference и покрыт тестами.
+- [x] Корневой `Makefile` (`test`, `lint`, `site`, `check`, `help`) и
+  `docs/ARCHITECTURE.md`; README ссылается на слои и живые данные.
+- [x] CI: site-workflow через `make site`, path-фильтры смотрят `web/site/**`;
+  hub/pool workflows ставят свои зависимости напрямую (дешевле в CI).
+- [x] Гейты: hub 619 passed / 1 skipped, ruff 0.6.9 чисто; pool typecheck/lint
+  + 117 тестов; linkcheck 8 страниц; Playwright 1440/390 — 7 страниц + 404,
+  0 overflow, 0 console errors; рендер проверен на живых данных (30 898
+  записей, 112 стран, 25 405 elite).
+
 ## Правила проекта (обязательные)
 
 1. Реализации строго по макету и ТЗ: не добавлять блоки/функции без явной просьбы.
@@ -149,4 +172,3 @@ evilgate/
 
 - Имя GitHub-репозитория и организация (fallback: evilgate).
 - Использовать ли workers/api TS-движка (сейчас не задействован).
-- Судьба файлов `pool/site` после M3 (этап запланирован на удаление).

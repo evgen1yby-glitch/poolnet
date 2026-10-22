@@ -1,6 +1,7 @@
 /**
- * On-demand proxy check for the Worker (used by the site's "Check a proxy"
- * box). Everything here is pure and stream-based so the same code runs in
+ * On-demand proxy check for the Worker (the edge counterpart of the
+ * platform's check page). Everything here is pure and stream-based so the
+ * same code runs in
  * workerd (real sockets) and in Node tests (a stub socket).
  *
  * The check answers one question a visitor actually has: "does this thing

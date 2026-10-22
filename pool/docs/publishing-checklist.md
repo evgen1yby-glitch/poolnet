@@ -6,14 +6,13 @@ One-time setup after the first push, in order of impact on discoverability.
 
 - [ ] **Description** (one line, shows in search):
       `Verified public proxy pool, republished every 15 minutes — 173 sources, anonymity grades, latency, geo, and a live website`
-- [ ] **Website URL** — the GitHub Pages URL (`https://OWNER.github.io/REPO/`)
-      or the demo host; it appears next to the repo name everywhere
+- [ ] **Website URL** — the platform site served by `hub`; it appears next to
+      the repo name everywhere
 - [ ] **Topics** — the strongest discovery channel on GitHub:
       `proxy-list`, `proxy`, `proxies`, `socks5`, `socks4`, `http-proxy`,
       `web-scraping`, `scraping`, `github-actions`, `typescript`,
       `data-pipeline`, `privacy`, `networking`, `automation`
-- [ ] **Social preview** — Settings → Social preview → Upload `site/assets/og.svg`
-      (convert to PNG 1280×640 first: `rsvg-convert` or any online converter).
+- [ ] **Social preview** — Settings → Social preview → upload a 1280×640 PNG.
       This is the image that shows up in Slack, Twitter, Telegram.
 - [ ] **Features** → enable **Issues**, **Discussions** (a Q&A category replaces
       half the issues) and **Projects** (public roadmap board)
@@ -25,14 +24,15 @@ One-time setup after the first push, in order of impact on discoverability.
       in the "Releases" tab that visitors check for maintenance signals
 - [ ] Pin the release so the newest pool snapshot is one click away
 
-## Pages
+## Platform site
 
-- [ ] Settings → Pages → Deploy from branch `main`, folder `/site`
-- [ ] Keep `scripts/init-repo.sh <owner>/<repo>` run **before** enabling Pages:
-      it replaces the `OWNER/REPO` placeholders in badges, links and the site
-- [ ] The refresh workflow commits fresh `data/` + `site/data/` every cycle,
-      so Pages updates itself — mention "updates every 15 minutes" in the
-      Pages description
+- [ ] Deploy the merged site (`web/site`) with `hub`; no separate Pages
+      deployment is needed
+- [ ] Keep `scripts/init-repo.sh <owner>/<repo>` run **before** going live: it
+      replaces the `OWNER/REPO` placeholders in badges and links
+- [ ] The refresh workflow commits fresh `data/` every cycle, and `hub` serves
+      it under `/pool/*` — mention "updates every 15 minutes" in the repo
+      description
 
 ## Launch, in order
 

@@ -52,18 +52,19 @@ from the next cycle's candidates — slower, self-healing — and re-downloads
 the mmdb. With `OPP_STORE=postgres` the proxy state lives in `proxies`
 (schema in `src/store/schema.sql`) and survives cache misses entirely.
 
-## Website data
+## Published data
 
-`node scripts/build-web-data.mjs` writes the page's bundle into `site/data/`
-(pool capped at 20 000 entries, countries, sources with per-source alive
-rates). The refresh workflow runs it after every merge, so the site always
-mirrors the current pool.
+`merge` writes the pool's files into `data/` and the refresh workflow commits
+them directly. The merged platform reads that directory: `hub` serves the
+line lists and JSON under `/pool/*` and builds `/api/status.json` from
+`stats.json`, `meta.json` and `benchmark.json`. There is no separate site
+bundle to rebuild.
 
 ## History
 
 `merge` appends one point per run to `data/history.json` (last 96 runs:
-timestamp, total, per-protocol counts). The website renders it as the
-pool-size sparkline, so a shrinking pool is visible immediately rather than
+timestamp, total, per-protocol counts). It is kept as published history for
+status consumers, so a shrinking pool is visible immediately rather than
 after someone notices.
 
 ## Localisation of data

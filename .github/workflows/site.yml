@@ -1,9 +1,9 @@
 name: site
 on:
   push:
-    paths: ["web/site/**", "scripts/site_links.py", ".github/workflows/site.yml"]
+    paths: ["web/site/**", "scripts/site_links.py", "Makefile", ".github/workflows/site.yml"]
   pull_request:
-    paths: ["web/site/**", "scripts/site_links.py", ".github/workflows/site.yml"]
+    paths: ["web/site/**", "scripts/site_links.py", "Makefile", ".github/workflows/site.yml"]
 
 jobs:
   linkcheck:
@@ -13,4 +13,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python scripts/site_links.py
+      - run: make site
