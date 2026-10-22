@@ -97,12 +97,19 @@ evilgate/
   живой чек SOCKS5: живой · 82 ms · адрес выхода показан.
 
 ### M4 — CI/GitHub
-- GitHub Actions: `hub` — pytest + ruff; `pool` — typecheck + eslint + unit;
-  сайт — сборка/ссылки-проверка (linkcheck по 6 страницам).
-- Секреты: gitleaks в прекоммит + workflow; все ключи только в GitHub Secrets /
-  переменных окружения прод-сервера.
-- README (публичный): сх.shtml платформы, две базы, методика проверки,
-  лицензии (hub — AGPL-3.0, pool — MIT; см. License header docs).
+- [x] GitHub Actions: `hub` — pytest + ruff (ruff 0.6.9 пинован в dev-deps,
+  иначе новые релизы включают новые правила и краснеет унаследованная база);
+  `pool` — `npm ci` + typecheck + lint + 117 unit-тестов; сайт —
+  `scripts/site_links.py` (8 страниц, битые ссылки, retired :8931, `href="#"`).
+- [x] Секреты: `.gitleaks.toml` + workflow `secrets` (gitleaks-action) +
+  pre-commit (gitleaks, ruff, базовые проверки); ключи — только GitHub
+  Secrets / окружение прод-сервера.
+- [x] README (публичный): состав репозитория, две базы, методика проверки,
+  запуск, общие точки API/`/pool/*`, лицензии (hub — AGPL-3.0, pool — MIT).
+- [x] Lint-долг замороженной базы вычищен: `ruff check src tests` — 0 ошибок
+  (63 автофикса + ручные: битые ссылки `parser`/`Source` в `cli.py`, дубль
+  ключа `RS` в флагах, мёртвые импорты, стиль тестов). pytest 584 / 1 skipped.
+- [ ] Публикация: `gh repo create` — имя/орг/видимость решает владелец.
 - Локальный git: вкладка к возможности `gh repo create` — решит владелец
   (название/орг/видимость).
 
