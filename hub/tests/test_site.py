@@ -13,13 +13,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-import pytest
+import pytest  # noqa: E402
 
 fastapi = pytest.importorskip("fastapi")
-from fastapi.testclient import TestClient
+from fastapi.testclient import TestClient  # noqa: E402
 
-from hub.api import create_app
-from hub.store import Store
+from hub.api import create_app  # noqa: E402
+from hub.store import Store  # noqa: E402
 
 #: `tests/test_site.py` → `hub/` → the merged repo root, then the site.
 SITE_DIR = Path(__file__).resolve().parents[2] / "web" / "site"

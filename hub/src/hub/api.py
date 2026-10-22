@@ -1242,38 +1242,13 @@ def create_app(store: Store | None, sources: dict | None = None):
         """Return the configured bot username for the landing page."""
         return JSONResponse({"username": app.state.bot_username})
 
-    @app.get("/api/v1/stats")
-    async def stats() -> JSONResponse:
-        """Return aggregate pool statistics for the landing page.
+    def _vpn_pool_payload() -> dict:
+        """The published VPN-pool aggregates, shared by both status callers.
 
-        Every number here answers one question — *what will I get if I import
-        this subscription?* — so the counts come from the published generation,
-        not from the `nodes` table. Those are different sets, and the page
-        described the wrong one:
-
-        * `nodes` accumulates every probe result ever recorded (832 rows on
-          this install), including rows whose `state` column is NULL because
-          they predate the column. A row without `state` cannot be rebuilt into
-          a node and is never published — `pipeline._carry_forward` skips it by
-          design — yet it was counted in `verified`, `by_protocol` and
-          `by_country`.
-        * The generation holds what actually shipped (150 nodes), because the
-          `verified` tier is capped at `target=150` and the per-source cap
-          trims further.
-
-        Live, this produced a landing page claiming **NL has 235 nodes** while
-        the NL shard a visitor downloads contains 24 — the page was off by an
-        order of magnitude on the one comparison a visitor makes first. Worse
-        for the country links: the page drew **43 country cards**, the
-        generation held **29 shards**, so 14 cards led to a 404. The country
-        picker is the feature; a quarter of its entries were dead.
-
-        `verified` therefore counts the whole-tier `verified` payload's nodes,
-        and `by_country` counts the shards — both read from `publishes`, which
-        is written from the same `payloads` list that writes the generation
-        directory. `known` stays the size of the index, because "how big is
-        the pool we check" is a different and still useful number; the labels
-        on the page say which is which.
+        `GET /api/v1/stats` and `GET /api/status.json` answer the same store,
+        so the SQL lives here once: `/api/v1/stats` predates the merge and
+        keeps its exact shape (clients depend on the key set), while the
+        unified status page wraps it in a `vpn` section.
         """
         conn = store.connect()
         try:
@@ -1321,20 +1296,139 @@ def create_app(store: Store | None, sources: dict | None = None):
             funnel = _last_funnel(store)
         finally:
             conn.close()
-        return JSONResponse(
-            {
-                "generation": generation,
-                "verified": verified,
-                "known": total,
-                "by_protocol": by_protocol,
-                "by_country": by_country,
-                "by_score": by_score,
-                "published": [
-                    {"tier": row[0], "nodes": row[1], "at": row[2]} for row in tier_rows
-                ],
-                "funnel": funnel,
-            }
+        return {
+            "generation": generation,
+            "verified": verified,
+            "known": total,
+            "by_protocol": by_protocol,
+            "by_country": by_country,
+            "by_score": by_score,
+            "published": [{"tier": row[0], "nodes": row[1], "at": row[2]} for row in tier_rows],
+            "funnel": funnel,
+        }
+
+    @app.get("/api/v1/stats")
+    async def stats() -> JSONResponse:
+        """Return aggregate pool statistics for the landing page.
+
+        Every number here answers one question — *what will I get if I import
+        this subscription?* — so the counts come from the published generation,
+        not from the `nodes` table. Those are different sets, and the page
+        described the wrong one:
+
+        * `nodes` accumulates every probe result ever recorded (832 rows on
+          this install), including rows whose `state` column is NULL because
+          they predate the column. A row without `state` cannot be rebuilt into
+          a node and is never published — `pipeline._carry_forward` skips it by
+          design — yet it was counted in `verified`, `by_protocol` and
+          `by_country`.
+        * The generation holds what actually shipped (150 nodes), because the
+          `verified` tier is capped at `target=150` and the per-source cap
+          trims further.
+
+        Live, this produced a landing page claiming **NL has 235 nodes** while
+        the NL shard a visitor downloads contains 24 — the page was off by an
+        order of magnitude on the one comparison a visitor makes first. Worse
+        for the country links: the page drew **43 country cards**, the
+        generation held **29 shards**, so 14 cards led to a 404. The country
+        picker is the feature; a quarter of its entries were dead.
+
+        `verified` therefore counts the whole-tier `verified` payload's nodes,
+        and `by_country` counts the shards — both read from `publishes`, which
+        is written from the same `payloads` list that writes the generation
+        directory. `known` stays the size of the index, because "how big is
+        the pool we check" is a different and still useful number; the labels
+        on the page say which is which.
+        """
+        return JSONResponse(_vpn_pool_payload())
+
+    def _pool_payload() -> dict:
+        """The published proxy-pool aggregates, read from the TS engine's data dir.
+
+        The proxy base is built by the TypeScript engine in `../pool`; the only
+        thing this app reads is its published files — `stats.json` (the pool's
+        own aggregates), `meta.json` (the run's counts, the way the run was
+        made) and `benchmark.json` (what each public list is worth). Line
+        files (`http.txt`, `proxies.json`) are deliberately not read: a reader
+        that needs the entries fetches them straight from the published dir,
+        parsing 30 MB of JSON on every status request serves one number.
+
+        `EVILGATE_POOL_DIR` moves the dir for tests and for layouts where hub
+        and pool do not share a parent; a hub installed without a proxy base
+        answers `"pool": {"available": false}` — the page keeps its static
+        numbers and nothing errors.
+        """
+        pool_dir = Path(
+            os.environ.get("EVILGATE_POOL_DIR", "") or store.root.parent / "pool" / "data"
         )
+
+        def load(name: str) -> dict | list | None:
+            path = pool_dir / name
+            if not path.is_file():
+                return None
+            try:
+                return json.loads(path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                return None
+
+        stats = load("stats.json") or {}
+        meta = load("meta.json") or {}
+        bench = load("benchmark.json") or {}
+        if not (stats or meta or bench):
+            return {"available": False}
+        countries = stats.get("countries") or []
+
+        def bench_rows(rows: list) -> list:
+            return [
+                {
+                    "id": row.get("id"),
+                    "candidates": row.get("candidates"),
+                    "alive": row.get("alive"),
+                    "live_rate": row.get("liveRate"),
+                    "published": row.get("published"),
+                    "median_ms": row.get("medianLatency"),
+                    "elite_rate": row.get("eliteRate"),
+                }
+                for row in (rows or [])[:8]
+            ]
+
+        return {
+            "available": True,
+            "generated_iso": meta.get("generatedIso") or stats.get("generatedIso"),
+            "run_id": meta.get("runId"),
+            "pipeline": meta.get("pipeline"),
+            "total": stats.get("total") or (meta.get("counts") or {}).get("published"),
+            "by_protocol": stats.get("byProtocol") or meta.get("byProtocol") or {},
+            "grades": stats.get("anonymity") or {},
+            "median_ms": stats.get("medianLatencyMs"),
+            "p95_ms": stats.get("p95LatencyMs"),
+            "mitm": stats.get("mitm"),
+            "tls_capable": stats.get("tlsCapable"),
+            "countries_count": len(countries),
+            "countries_top": [
+                {"cc": row.get("country"), "n": row.get("count")}
+                for row in countries[:12]
+                if row.get("country")
+            ],
+            "cycle": bench.get("cycle"),
+            "sources": len(bench.get("sources") or []),
+            "benchmark_top": bench_rows(bench.get("sources")),
+        }
+
+    @app.get("/api/status.json", include_in_schema=False)
+    async def unified_status() -> JSONResponse:
+        """The whole platform's status in one request: both pools.
+
+        The site's status page is static markup whose numbers were frozen on
+        write; two separately published pools answering in two places was the
+        drift this merge is meant to kill. One endpoint carries both, so the
+        page reads it once: `vpn` — exactly what `/api/v1/stats` returns
+        (same store, same key set, one shared payload builder), `pool` — the
+        proxies the TypeScript engine published into `pool/data`. With no proxy base on
+        the install, `pool.available` is `false` and the page keeps its
+        static copy instead of lying with an empty section.
+        """
+        return JSONResponse({"vpn": _vpn_pool_payload(), "pool": _pool_payload()})
 
     @app.get("/{path:path}", include_in_schema=False)
     async def site_page(path: str) -> Response:

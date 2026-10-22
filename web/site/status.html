@@ -39,14 +39,14 @@
 
   <section>
     <div class="wrap">
-      <div class="journal" style="font-size:.92rem">
+      <div class="journal" id="jvpn" style="font-size:.92rem">
         <div><span class="dim">прогон</span> <b>gen-8207ce0d9106</b> · 2026-10-22 · 10:29 UTC</div>
         <div><span class="dim">источники, строк</span> <b>55 149</b> → <span class="dim">распознано</span> <b>11 076</b> → <span class="dim">TCP</span> <b>6 208</b> → <span class="dim">TLS</span> <b>3 571</b></div>
         <div><span class="dim">конфигурация поднята</span> <b>904</b> → <span class="g">сквозной запрос выполнен</span> <b>98</b></div>
         <div><span class="dim">пул после публикации</span> <b>150</b> узлов · <span class="dim">стран</span> <b>29</b> · <span class="dim">всего узлов в базе</span> <b>997</b></div>
         <div><span class="dim">качество базы</span> 60+ : <b>0</b> · 30–59 : <b>734</b> · 0–29 : <b>263</b></div>
       </div>
-      <div class="journal" style="font-size:.92rem;margin-top:1.2rem">
+      <div class="journal" id="jpool" style="font-size:.92rem;margin-top:1.2rem">
         <div><b>Прокси-база</b> · обновлено 2026-10-22 · 11:39 UTC</div>
         <div><span class="dim">пул</span> <b>30 301</b> · <span class="dim">протоколы</span> http <b>28 766</b> · socks5 <b>1 172</b> · socks4 <b>363</b></div>
         <div><span class="dim">грейды</span> elite <b>24 832</b> · anonymous <b>455</b> · transparent <b>624</b> · unknown <b>4 390</b></div>
@@ -74,6 +74,45 @@
       </div>
     </div>
   </section>
+  <script>
+    // Static numbers above are the fallback: without a working API the page
+    // keeps the values frozen on publish, and never lies with emptiness.
+    (async () => {
+      try {
+        const r = await fetch("api/status.json", { cache: "no-store" });
+        if (!r.ok) throw 0;
+        const s = await r.json();
+        const v = s.vpn;
+        if (!v) throw 0;
+        const f = (n) => (n == null ? "—" : Number(n).toLocaleString("ru-RU").replace(/\u00A0/g, " "));
+        const e = (t) => String(t).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+        const at = (v.published && v.published[0] && v.published[0].at) || "";
+        const fun = v.funnel || {};
+        document.getElementById("jvpn").innerHTML =
+          `<div><span class="dim">прогон</span> <b>${e(v.generation)}</b> · ${e(at.slice(0, 10))} · ${e(at.slice(11, 16))} UTC</div>` +
+          `<div><span class="dim">источники, строк</span> <b>${f(fun.raw)}</b> → <span class="dim">распознано</span> <b>${f(fun.parsed)}</b> → <span class="dim">TCP</span> <b>${f(fun.tcp)}</b> → <span class="dim">TLS</span> <b>${f(fun.tls)}</b></div>` +
+          `<div><span class="dim">конфигурация поднята</span> <b>${f(fun.config)}</b> → <span class="g">сквозной запрос выполнен</span> <b>${f(fun.http)}</b></div>` +
+          `<div><span class="dim">пул после публикации</span> <b>${f(v.verified)}</b> узлов · <span class="dim">стран</span> <b>${v.by_country.length}</b> · <span class="dim">всего узлов в базе</span> <b>${f(v.known)}</b></div>` +
+          `<div><span class="dim">качество базы</span> 60+ : <b>${f(v.by_score["60+"])}</b> · 30–59 : <b>${f(v.by_score["30-59"])}</b> · 0–29 : <b>${f(v.by_score["0-29"])}</b></div>`;
+        const p = s.pool;
+        if (p && p.available) {
+          const prot = Object.entries(p.by_protocol || {}).map(([k, n]) => `${e(k)} <b>${f(n)}</b>`).join(" · ");
+          const grade = Object.entries(p.grades || {}).map(([k, n]) => `${e(k)} <b>${f(n)}</b>`).join(" · ");
+          const c = p.cycle || {};
+          const when = (p.generated_iso || "").slice(0, 16).replace("T", " · ");
+          document.getElementById("jpool").innerHTML =
+            `<div><b>Прокси-база</b> · обновлено ${e(when)} UTC${p.run_id ? ` · прогон <b>${e(p.run_id)}</b>` : ""}</div>` +
+            `<div><span class="dim">пул</span> <b>${f(p.total)}</b> · <span class="dim">протоколы</span> ${prot}</div>` +
+            `<div><span class="dim">грейды</span> ${grade}</div>` +
+            `<div><span class="dim">задержка</span> медиана <b>${f(p.median_ms)} ms</b> · p95 <b>${f(p.p95_ms)} ms</b> · <span class="dim">стран</span> <b>${f(p.countries_count)}</b></div>` +
+            `<div><span class="dim">цикл</span> очередь <b>${f(c.parsed)}</b> → <span class="dim">уникальных</span> <b>${f(c.unique)}</b> → <span class="dim">выборка</span> <b>${f(c.sampled)}</b> → <span class="dim">живых</span> <b>${f(c.alive)}</b></div>` +
+            `<div><span class="dim">источники</span> <b>${f(p.sources)}</b> — бенчмарк источников последнего цикла</div>`;
+        }
+      } catch (err) {
+        /* статус-страница остаётся на статических значениях */
+      }
+    })();
+  </script>
 </main>
 
 <footer class="site">
