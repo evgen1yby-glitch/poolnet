@@ -71,13 +71,13 @@ def _publication(tmp_path: Path) -> Path:
                 "count": 3,
                 "proxies": [
                     {"protocol": "http", "host": "9.9.9.9", "port": 80,
-                     "latency_ms": 300, "anonymity": "elite", "uptime_7d": 90,
+                     "latency_ms": 300, "anonymity": "elite", "uptime_7d": 90, "uptime_30d": 90,
                      "country": "US"},
                     {"protocol": "http", "host": "8.8.8.8", "port": 80,
-                     "latency_ms": 10, "anonymity": "anonymous", "uptime_7d": 50,
+                     "latency_ms": 10, "anonymity": "anonymous", "uptime_7d": 50, "uptime_30d": 50,
                      "country": "DE"},
                     {"protocol": "socks5", "host": "7.7.7.7", "port": 1080,
-                     "latency_ms": 50, "anonymity": "elite", "uptime_7d": 100,
+                     "latency_ms": 50, "anonymity": "elite", "uptime_7d": 100, "uptime_30d": 100,
                      "country": "CA"},
                 ],
             }
@@ -119,7 +119,7 @@ def test_site_payload_maps_both_pools_into_renderer_fields(tmp_path):
     assert data["pool"]["files"]["ca"] == 1
     assert data["pool"]["sources_ok"] == 1
     assert data["pool"]["sources_total"] == 2
-    assert data["proxy_rows"][0]["address"] == "7.7.7.7:1080"  # elite, fastest
+    assert data["proxy_rows"][0]["address"] == "7.7.7.7:1080"  # 30-day uptime
     assert [row["id"] for row in data["source_rows"]] == ["b", "a"]  # rank order
     assert data["vpn"]["countries"] == 0  # empty store: honest zeros
     assert data["map_dots"] == []

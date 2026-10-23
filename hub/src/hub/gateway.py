@@ -40,7 +40,7 @@ except ImportError:  # pragma: no cover - only reached without FastAPI installed
 
 from .checkproxy import check_proxy, parse_proxy
 from .gate import RateLimiter
-from .poolstatus import SiteDataSource, combined, pool_dir
+from .poolstatus import SiteDataSource, combined, pool_dir, query_proxies
 from .siteview import SiteRenderer
 from .store import Store
 
@@ -249,6 +249,47 @@ def register_gateway(
             combined(store, _pool_dir()),
             headers={"Cache-Control": "no-store"},
         )
+
+    @app.get("/api/proxies", include_in_schema=False)
+    def proxy_list(
+        page: int = 1,
+        per: int = 50,
+        proto: str = "",
+        grade: str = "",
+        country: str = "",
+        q: str = "",
+    ) -> JSONResponse:
+        """One filtered, paginated page of the published pool.
+
+        The browser never downloads the full 32k-row publication: it asks for
+        a slice and the controls' counts come from the same scan. Parameters
+        are validated here so a typo becomes a 400 with a reason instead of an
+        empty list that reads like "no proxies".
+        """
+        protocols = tuple(part.strip() for part in proto.split(",") if part.strip())
+        grades = tuple(part.strip() for part in grade.split(",") if part.strip())
+        if any(value not in ("http", "socks4", "socks5") for value in protocols):
+            return JSONResponse(
+                {"error": "proto must be http, socks4 or socks5"}, status_code=400
+            )
+        if any(
+            value not in ("elite", "anonymous", "transparent", "unknown")
+            for value in grades
+        ):
+            return JSONResponse({"error": "unknown grade"}, status_code=400)
+        cc = country.strip().upper()
+        if cc and not re.fullmatch(r"[A-Z]{2}", cc):
+            return JSONResponse({"error": "country must be a two-letter code"}, status_code=400)
+        payload = query_proxies(
+            _pool_dir(),
+            page=page,
+            per=per,
+            protocols=protocols,
+            grades=grades,
+            country=cc,
+            query=q[:100],
+        )
+        return JSONResponse(payload, headers={"Cache-Control": "no-store"})
 
     @app.get("/pool/{name:path}", include_in_schema=False)
     async def pool_file(name: str) -> Response:

@@ -289,34 +289,130 @@ def _line_count(path: Path) -> int:
         return 0
 
 
-def _proxy_rows(directory: Path, limit: int = 10) -> list[dict]:
-    """A deterministic sample for the pool page: elite first, then fastest."""
-    published = _read_json(directory / "proxies.json")
-    entries = published.get("proxies")
-    if not isinstance(entries, list):
+#: Parsed `proxies.json` per publication, keyed by path and file version. The
+#: file is several megabytes and the pool page asks for it on every filter
+#: change; re-parsing per keystroke would make the search feel broken.
+_PROXY_CACHE: dict[str, tuple[tuple[int, int], list[dict]]] = {}
+_PROXY_LOCK = threading.Lock()
+
+#: The order the page promises: "sorted by 30-day uptime". Ties go to the
+#: faster node, then the address, so equal rows never reshuffle between reads.
+_PROXY_SORT = lambda row: (  # noqa: E731 - one expression, used once
+    -_number(row.get("uptime_30d")),
+    row.get("latency_ms") if isinstance(row.get("latency_ms"), int) else 10**9,
+    str(row.get("host")),
+)
+
+
+def proxy_index(directory: Path) -> list[dict]:
+    """Every published proxy, sorted for display, cached per file version."""
+    path = directory / "proxies.json"
+    try:
+        stat = path.stat()
+    except OSError:
         return []
-    clean = [row for row in entries if isinstance(row, dict) and row.get("host")]
-    clean.sort(
-        key=lambda row: (
-            row.get("anonymity") != "elite",
-            row.get("latency_ms") if isinstance(row.get("latency_ms"), int) else 10**9,
-            str(row.get("host")),
-        )
+    version = (stat.st_mtime_ns, stat.st_size)
+    key = str(path)
+    with _PROXY_LOCK:
+        cached = _PROXY_CACHE.get(key)
+        if cached is not None and cached[0] == version:
+            return cached[1]
+    published = _read_json(path)
+    entries = published.get("proxies")
+    clean = (
+        [row for row in entries if isinstance(row, dict) and row.get("host")]
+        if isinstance(entries, list)
+        else []
     )
-    rows: list[dict] = []
-    for index, row in enumerate(clean[:limit], start=1):
-        rows.append(
-            {
-                "rank": index,
-                "address": f"{row.get('host')}:{row.get('port')}",
-                "protocol": str(row.get("protocol") or ""),
-                "grade": str(row.get("anonymity") or "unknown"),
-                "latency_ms": _int(row.get("latency_ms")),
-                "uptime_7d": _number(row.get("uptime_7d")),
-                "country": str(row.get("country") or ""),
-            }
+    clean.sort(key=_PROXY_SORT)
+    with _PROXY_LOCK:
+        _PROXY_CACHE[key] = (version, clean)
+    return clean
+
+
+def _proxy_view(row: dict, rank: int) -> dict:
+    return {
+        "rank": rank,
+        "address": f"{row.get('host')}:{row.get('port')}",
+        "protocol": str(row.get("protocol") or ""),
+        "grade": str(row.get("anonymity") or "unknown"),
+        "latency_ms": _int(row.get("latency_ms")),
+        "uptime_7d": _number(row.get("uptime_7d")),
+        "country": str(row.get("country") or ""),
+    }
+
+
+def _proxy_rows(directory: Path, limit: int = 10) -> list[dict]:
+    """A deterministic sample for the static render and the console."""
+    return [
+        _proxy_view(row, index)
+        for index, row in enumerate(proxy_index(directory)[:limit], start=1)
+    ]
+
+
+def query_proxies(
+    directory: Path,
+    *,
+    page: int = 1,
+    per: int = 50,
+    protocols: tuple[str, ...] = (),
+    grades: tuple[str, ...] = (),
+    country: str = "",
+    query: str = "",
+) -> dict:
+    """One page of the published pool, filtered by the page's controls.
+
+    Filtering happens here rather than in the browser because the full list is
+    32k rows / several megabytes: the page needs a page of rows and a total,
+    not the whole pool. The index is sorted once per publication and cached, so
+    a keystroke costs a linear scan of dicts, not a JSON parse.
+
+    Ranks are positions in the *filtered* result, which is what the number
+    column means to a reader paging through.
+    """
+    index = proxy_index(directory)
+    proto_set = {value.lower() for value in protocols if value}
+    grade_set = {value.lower() for value in grades if value}
+    cc = country.upper().strip()
+    needle = query.strip().lower()
+    matched = [
+        row
+        for row in index
+        if (not proto_set or str(row.get("protocol") or "").lower() in proto_set)
+        and (not grade_set or str(row.get("anonymity") or "").lower() in grade_set)
+        and (not cc or str(row.get("country") or "").upper() == cc)
+        and (
+            not needle
+            or needle in str(row.get("host") or "").lower()
+            or needle in str(row.get("country") or "").lower()
         )
-    return rows
+    ]
+    per = max(1, min(int(per or 50), 100))
+    pages = max(1, math.ceil(len(matched) / per))
+    page = max(1, min(int(page or 1), pages))
+    start = (page - 1) * per
+    country_counts: dict[str, int] = {}
+    for row in index:
+        code = str(row.get("country") or "").upper()
+        if code:
+            country_counts[code] = country_counts.get(code, 0) + 1
+    return {
+        "available": bool(index),
+        "generated_utc": _utc_hm(_read_json(directory / "meta.json").get("generatedIso")),
+        "total": len(matched),
+        "pool_total": len(index),
+        "page": page,
+        "per": per,
+        "pages": pages,
+        "rows": [
+            _proxy_view(row, start + offset + 1)
+            for offset, row in enumerate(matched[start : start + per])
+        ],
+        "countries": [
+            {"cc": code, "n": count}
+            for code, count in sorted(country_counts.items(), key=lambda kv: (-kv[1], kv[0]))
+        ],
+    }
 
 
 def _source_rows(benchmark: dict, limit: int = 8) -> list[dict]:

@@ -317,3 +317,20 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
 .cflag{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .55rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02);font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--mut)}
 .cflag b{color:var(--txt);font-weight:600}
 .cflag svg.flag{width:18px;height:12.6px}
+
+/* ==== v7: working pool controls ==== */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.fchip{cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.fchip:hover{border-color:var(--line2);color:var(--txt)}
+.tool-x.sel{padding:.32rem .55rem .32rem .95rem}
+.tool-x.sel select{appearance:none;background:transparent;border:0;color:var(--txt);font:inherit;font-size:.74rem;padding:.34rem 1.15rem .34rem 0;cursor:pointer;outline:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+  background-position:calc(100% - 9px) 55%,calc(100% - 5px) 55%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+.tool-x.sel select:focus-visible{outline:2px solid var(--vio);outline-offset:2px;border-radius:6px}
+.tool-x.sel option{background:var(--s2);color:var(--txt)}
+.pg-nav{display:inline-flex;align-items:center;gap:.6rem}
+.pg-btn{display:inline-flex;align-items:center;justify-content:center;width:1.9rem;height:1.9rem;border-radius:8px;border:1px solid var(--line);background:var(--s2);color:var(--txt);cursor:pointer;font-size:1.05rem;line-height:1;transition:border-color .2s,opacity .2s}
+.pg-btn:hover:not(:disabled){border-color:var(--vio)}
+.pg-btn:disabled{opacity:.35;cursor:not-allowed}
+.pb.g-anonymous{color:#a78bfa;border-color:rgba(167,139,250,.45)}
+.pb.g-transparent{color:#f59e0b;border-color:rgba(245,158,11,.4)}

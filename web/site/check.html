@@ -48,9 +48,9 @@
       <div class="checker">
         <form class="chk-form" id="chk-form" autocomplete="off">
           <div class="fchips" role="group" aria-label="Протокол">
-            <button type="button" class="fchip on" data-proto="http">HTTP</button>
-            <button type="button" class="fchip" data-proto="socks5">SOCKS5</button>
-            <button type="button" class="fchip" data-proto="socks4">SOCKS4</button>
+            <button type="button" class="fchip on" data-proto="http" aria-pressed="true">HTTP</button>
+            <button type="button" class="fchip" data-proto="socks5" aria-pressed="false">SOCKS5</button>
+            <button type="button" class="fchip" data-proto="socks4" aria-pressed="false">SOCKS4</button>
           </div>
           <div class="chk-row">
             <input type="text" id="chk-input" class="chk-input" spellcheck="false" autocomplete="off" placeholder="1.2.3.4:8080" aria-label="Адрес прокси">
@@ -124,6 +124,7 @@
       proto = b.dataset.proto;
       document.querySelectorAll("[data-proto]").forEach(function (x) {
         x.classList.toggle("on", x === b);
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
       });
     });
   });
