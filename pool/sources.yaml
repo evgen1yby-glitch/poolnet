@@ -42,6 +42,14 @@ sources:
     url: https://raw.githubusercontent.com/proxy-free/free-proxy-list/HEAD/socks5.txt
     format: plain
     protocol: socks5
+  - id: proxyscrape-socks5-repo # full socks5 file, 36.2% of a 1200 sample
+    url: https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/protocols/socks5/data.txt
+    format: plain
+    protocol: socks5
+  - id: proxyscrape-v4-socks5 # socks5-only API, 38.2% of a 1200 sample
+    url: https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&protocol=socks5&proxy_format=protocolipport&format=text
+    format: plain
+    protocol: socks5
   - id: gitrecon1455-fresh
     url: https://raw.githubusercontent.com/gitrecon1455/fresh-proxy-list/refs/heads/main/proxylist.txt
     format: plain

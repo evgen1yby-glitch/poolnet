@@ -230,6 +230,29 @@ sources:
   - url: https://raw.githubusercontent.com/MohammadBahemmat/V2ray-Collector/main/all_servers.txt
     name: MohammadBahemmat/all
 
+  # --- Large aggregators added 2026-10-23, second pass --------------------- #
+  # Counts are from `parse_many` on the whole file, not repository claims.
+  # 7632 nodes (vless 5709, ss 986, trojan 630, vmess 203, hysteria2 104).
+  - url: https://raw.githubusercontent.com/aviamastersgh/vpn-free-russia/main/all_configs.txt
+    name: aviamasters/all
+
+  # 20378 nodes (vless 12688, ss 4176, trojan 1928, vmess 1586): the largest
+  # source on this host, and the `ss`-heavy one after the pool was vless-thin.
+  # The repository refreshes daily rather than hourly; the pipeline's own
+  # freshness filter is what keeps it honest.
+  - url: https://raw.githubusercontent.com/shabane/kamaji/master/hub/merged.txt
+    name: kamaji/merged
+
+  # Telegram-channel collector split by protocol: vless 4884, ss 672,
+  # trojan 466. The vmess split is only 185 nodes, so it is not polled
+  # separately. Updated hourly.
+  - url: https://raw.githubusercontent.com/Surfboardv2ray/TGParse/main/splitted/vless
+    name: TGParse/vless
+  - url: https://raw.githubusercontent.com/Surfboardv2ray/TGParse/main/splitted/ss
+    name: TGParse/ss
+  - url: https://raw.githubusercontent.com/Surfboardv2ray/TGParse/main/splitted/trojan
+    name: TGParse/trojan
+
 # Operational knobs. Everything here is a policy, not a secret.
 canary_token: ""
 source_pass_rate: 1.0
