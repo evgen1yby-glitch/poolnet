@@ -38,6 +38,10 @@ sources:
     url: https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/HEAD/proxies/socks5.txt
     format: plain
     protocol: socks5
+  - id: proxy-free-socks5 # 19.9% of 2231 sampled, refreshed hourly, 1936 new
+    url: https://raw.githubusercontent.com/proxy-free/free-proxy-list/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
   - id: gitrecon1455-fresh
     url: https://raw.githubusercontent.com/gitrecon1455/fresh-proxy-list/refs/heads/main/proxylist.txt
     format: plain

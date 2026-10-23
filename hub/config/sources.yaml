@@ -203,6 +203,33 @@ sources:
   - url: https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/Eternity.txt
     name: mahdibland/Eternity
 
+  # --- Added 2026-10-23 after a source audit ------------------------------ #
+  # Each URL was fetched and parsed with `parse_many` before being listed;
+  # the node counts below are measured, not the repositories' claims.
+  # MatinGhanbari publishes per-protocol filtered files every 15 minutes:
+  # vless 181, vmess 592, trojan 252, ss 937 (errors are non-URI lines).
+  - url: https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/filtered/subs/vless.txt
+    name: MatinGhanbari/vless
+  - url: https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/filtered/subs/vmess.txt
+    name: MatinGhanbari/vmess
+  - url: https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/filtered/subs/trojan.txt
+    name: MatinGhanbari/trojan
+  - url: https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/filtered/subs/ss.txt
+    name: MatinGhanbari/ss
+
+  # 5107 nodes (vmess 2989, vless 1520, trojan 352, hysteria2 184, ss 46,
+  # tuic 16): the largest vmess-heavy source, where the pool is thinnest.
+  - url: https://raw.githubusercontent.com/MustafaBaqer/VestraNet-Nodes/main/subscriptions/mix-base64.txt
+    name: VestraNet/mix
+
+  # 1399 nodes (vless 860, vmess 183, hysteria2 137, ss 129, trojan 90).
+  - url: https://raw.githubusercontent.com/Au1rxx/free-vpn-subscriptions/main/output/v2ray-base64.txt
+    name: Au1rxx/v2ray
+
+  # 670 nodes (vless 505, trojan 83, ss 60, the rest small).
+  - url: https://raw.githubusercontent.com/MohammadBahemmat/V2ray-Collector/main/all_servers.txt
+    name: MohammadBahemmat/all
+
 # Operational knobs. Everything here is a policy, not a secret.
 canary_token: ""
 source_pass_rate: 1.0
