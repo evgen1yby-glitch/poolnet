@@ -50,6 +50,10 @@ test('renderAll writes all artifacts with sane content', () => {
       latencyMs: 400 + i,
     }),
   );
+  // A stale shard from an earlier generation must not survive this render.
+  fs.mkdirSync(path.join(dir, 'country'), { recursive: true });
+  fs.writeFileSync(path.join(dir, 'country', 'DE.txt'), 'http://1.1.1.1:80\n');
+  fs.writeFileSync(path.join(dir, 'country', 'ZZ.txt'), 'http://2.2.2.2:80\n');
   const report = renderAll(
     [
       rec({
@@ -89,6 +93,7 @@ test('renderAll writes all artifacts with sane content', () => {
     assert.equal(fs.readFileSync(path.join(dir, 'country/US.txt'), 'utf8').trim().split('\n').length, 6);
     assert.equal(fs.existsSync(path.join(dir, 'country/DE.txt')), false);
     assert.equal(fs.existsSync(path.join(dir, 'country/XX.txt')), false);
+    assert.equal(fs.existsSync(path.join(dir, 'country/ZZ.txt')), false, 'stale shard removed');
     const top = fs.readFileSync(path.join(dir, 'top2.txt'), 'utf8').trim().split('\n');
     assert.equal(top.length, 2);
     const stats = JSON.parse(fs.readFileSync(path.join(dir, 'stats.json'), 'utf8'));

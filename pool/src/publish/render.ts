@@ -150,9 +150,19 @@ export function renderAll(records: ProxyRecord[], opts: RenderOptions): RenderRe
     arr.push(p);
     byCountry.set(p.country, arr);
   }
+  const writtenCountries = new Set<string>();
   for (const [cc, list] of [...byCountry.entries()].sort((a, b) => b[1].length - a[1].length)) {
     if (list.length < 5) continue;
     write(`country/${cc}.txt`, list.map(lineFor).join('\n') + '\n');
+    writtenCountries.add(`${cc}.txt`);
+  }
+  // A country that drops below the shard threshold stops being rewritten, and
+  // its previous file would otherwise stay downloadable forever with proxies
+  // that are no longer published. The export must describe one generation.
+  for (const name of fs.readdirSync(path.join(dir, 'country'))) {
+    if (name.endsWith('.txt') && !writtenCountries.has(name)) {
+      fs.rmSync(path.join(dir, 'country', name));
+    }
   }
 
   const stats = {
