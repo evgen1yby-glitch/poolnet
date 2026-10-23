@@ -29,10 +29,10 @@ def test_real_config_loads_without_raising():
     sources, _settings = load_sources(CONFIG)
     assert sources, "the real config lists six sources; an empty list is a silent failure"
     assert all(s.url.startswith(("https://", "http://")) for s in sources)
-    # 38 sources: 26 built up across three passes on 2026-10-16, plus twelve
+    # 41 sources: 26 built up across three passes on 2026-10-16, plus fifteen
     # verified in the 2026-10-23 audit. Pinned because a source silently
     # dropped from the file is invisible otherwise — the pool just gets smaller.
-    assert len(sources) == 38
+    assert len(sources) == 41
     assert {s.kind for s in sources if s.kind} == {"proxyfreeonly", "vpngate", "ipspeed"}
 
 

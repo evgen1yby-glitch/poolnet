@@ -253,6 +253,17 @@ sources:
   - url: https://raw.githubusercontent.com/Surfboardv2ray/TGParse/main/splitted/trojan
     name: TGParse/trojan
 
+  # 4809 vless and 829 ss nodes, refreshed hourly; independent publisher with
+  # per-protocol files (not a mirror of Epodonios/barry-far).
+  - url: https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Protocols/vless.txt
+    name: SoliSpirit/vless
+  - url: https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/Protocols/ss.txt
+    name: SoliSpirit/ss
+
+  # 905 nodes, trojan-heavy (458) where the pool is thinnest (trojan 58).
+  - url: https://raw.githubusercontent.com/DukeMehdi/FreeList-V2ray-Configs/main/Configs/All-DukeMehdi-Configs.txt
+    name: DukeMehdi/all
+
 # Operational knobs. Everything here is a policy, not a secret.
 canary_token: ""
 source_pass_rate: 1.0
