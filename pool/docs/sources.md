@@ -23,6 +23,7 @@ http://1.2.3.4:3128
 socks5://user:pass@5.6.7.8:1080
 https://1.2.3.4:443          # counted as http, probed with CONNECT
 socks4a://1.2.3.4:1080       # counted as socks4
+208.102.51.6:58208:United States  # trailing colon label (hideip.me style)
 ```
 
 The scheme in the line always wins over the entry's `protocol`.

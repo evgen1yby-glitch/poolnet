@@ -10,6 +10,7 @@ import { isUsableIPv4, isValidPort, normalizeIPv4, type Candidate, type ProxyPro
  *   socks4a://1.2.3.4:1080   (mapped to socks4)
  *   https://1.2.3.4:443      (mapped to http, we probe CONNECT)
  *   user:pass@1.2.3.4:8080
+ *   1.2.3.4:8080:United States   (annotation after the port, e.g. hideip.me)
  * Lines may also carry inline comments (# ...) or surrounding whitespace.
  *
  * This is the regression surface for the historic bug where lines with a
@@ -36,6 +37,13 @@ export function parseProxyLine(line: string, defaultProtocol: ProxyProtocol): Ca
     }
     return candidate(protocol, m[3]!, Number(m[4]), user, pass);
   }
+
+  // A few maintained lists put a label after the port with a colon
+  // (`ip:port:Country`). The label starts with a letter, so a numeric tail
+  // (`ip:port:1234`) is still rejected rather than mistaken for a credential.
+  const withLabel = /^\s*(\d{1,3}(?:\.\d{1,3}){3})\s*:\s*(\d{1,5})\s*:\s*[A-Za-z][^\r\n]*$/;
+  const mLabel = withLabel.exec(t);
+  if (mLabel) return candidate(defaultProtocol, mLabel[1]!, Number(mLabel[2]));
 
   // Lines may carry annotations after the token (`ip:port CC-A-S +`), which
   // several maintained lists ship next to the entry itself. The tail is any

@@ -16,6 +16,28 @@
 
 sources:
   # ---------------- SOCKS5 ----------------
+  # Checked aggregates and maintained lists, measured 2026-10-23 with the
+  # project's own checker before being added (live rates in parentheses).
+  - id: minoa-socks5 # 49.5% of 1071, hourly checked upstream
+    url: https://proxies.minoa.cat/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: zloi-user-socks5 # 49.5% of 412, updated every 10 minutes
+    url: https://raw.githubusercontent.com/zloi-user/hideip.me/HEAD/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: argh94-socks5 # 15.0% of 1000, refreshed hourly
+    url: https://raw.githubusercontent.com/Argh94/Proxy-List/HEAD/SOCKS5.txt
+    format: plain
+    protocol: socks5
+  - id: proxygenerator-stable-socks5 # 15.5% of 935, stable tier
+    url: https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/HEAD/Stable/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: thordata-socks5 # 44.2% of 52, small but verified hourly
+    url: https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/HEAD/proxies/socks5.txt
+    format: plain
+    protocol: socks5
   - id: gitrecon1455-fresh
     url: https://raw.githubusercontent.com/gitrecon1455/fresh-proxy-list/refs/heads/main/proxylist.txt
     format: plain

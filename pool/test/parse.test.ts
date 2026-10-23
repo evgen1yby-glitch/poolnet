@@ -104,3 +104,15 @@ test('parseJsonSource: geonode-shaped payload', () => {
 test('parseJsonSource: invalid json yields empty', () => {
   assert.equal(parseJsonSource('not json', 'http').length, 0);
 });
+
+test('parseProxyLine accepts a country label after the port', () => {
+  const a = parseProxyLine('208.102.51.6:58208:United States', 'socks5');
+  assert.deepEqual(a && { protocol: a.protocol, host: a.host, port: a.port }, {
+    protocol: 'socks5',
+    host: '208.102.51.6',
+    port: 58208,
+  });
+  assert.equal(parseProxyLine('1.2.3.4:1080:US', 'socks5')?.port, 1080);
+  // A numeric tail is not a label; it must not turn into a proxy line.
+  assert.equal(parseProxyLine('1.2.3.4:1080:9999', 'socks5'), null);
+});
