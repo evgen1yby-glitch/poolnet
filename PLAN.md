@@ -217,6 +217,11 @@ evilgate/
   зеркало без независимой ценности), `pie-with-jam/PulseProxy` и
   `learnLi/free-nodes` (нет прямого файла подписок), `wlunlocker`/`FLAT447`
   (списки маршрутов, не share-URI).
+- [x] Второй проход по крупным поставщикам (2026-10-23): прокси-реестр 202
+  (`proxyscrape-socks5-repo` 2 795 строк, 36% живых; `proxyscrape-v4-socks5`
+  2 000, 38%); VPN-реестр 38, добавлены `aviamasters/all` (7 632 узла),
+  `kamaji/merged` (20 378), `TGParse/vless|ss|trojan` (6 022) — worker увидел
+  **98 483 raw** вместо 64 637, цикл пула принял 202 источника.
 - [x] VPN-пайплайн переведён на объединённый репозиторий: `hub-worker` и
   `hub-probe` теперь запускают `/home/dev/evilgate/hub` (данные перенесены
   в `hub/data`, 163 МБ, старый каталог сохранён). После переноса worker
