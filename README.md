@@ -1,6 +1,17 @@
-# PoolNet
+<p align="center"><img src="web/site/assets/logo-96.png" width="96" alt="PoolNet"></p>
 
-[**Сайт**](https://poolnet.online) · [**Автосписки**](https://github.com/evgen1yby-glitch/poolnet/tree/lists) · [CI](https://github.com/evgen1yby-glitch/poolnet/actions) · [Аудит](docs/AUDIT-2026-10-24.md)
+<h1 align="center">PoolNet</h1>
+
+<p align="center">Открытый каталог проверенных VPN-узлов и прокси.<br>
+Соединение идёт напрямую клиент → узел; мы не оператор узлов и не гарантируем их.</p>
+
+<p align="center">
+  <a href="https://poolnet.online"><img src="https://img.shields.io/badge/site-poolnet.online-7c5cff" alt="site"></a>
+  <a href="https://github.com/evgen1yby-glitch/poolnet/tree/lists"><img src="https://img.shields.io/badge/lists-auto--updated-38bdf8" alt="lists"></a>
+  <a href="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/lists.yml"><img src="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/lists.yml/badge.svg" alt="lists workflow"></a>
+  <a href="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/hub.yml"><img src="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/hub.yml/badge.svg" alt="hub CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0%20%2B%20MIT-blue" alt="license"></a>
+</p>
 
 Единая платформа **PoolNet** (poolnet.online): открытая прокси-база
 (HTTP / SOCKS4 / SOCKS5) и VPN-конфигурации (vless / ss / vmess / trojan) —
