@@ -173,6 +173,12 @@ def vpn_payload(store: Store) -> dict:
             (generation,),
         ).fetchall()
         funnel = _last_funnel(store)
+        http = funnel.get("http")
+        if isinstance(http, int):
+            # Published nodes can come from the recent-success carry-over, so
+            # the whole-tier count is not the current run's HTTP survivors.
+            funnel["carried"] = max(0, int(verified) - http)
+            funnel["verified"] = int(verified)
     finally:
         conn.close()
     return {

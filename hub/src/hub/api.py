@@ -1650,22 +1650,37 @@ def _status_sources(conn) -> dict:
     where to fetch the same pool without passing through the hub.
     """
     rows = conn.execute(
-        "SELECT enabled, empty_rounds FROM sources"
+        "SELECT enabled, empty_rounds, last_ok FROM sources"
     ).fetchall()
     total = len(rows)
-    disabled = sum(1 for enabled, _ in rows if not enabled)
+    disabled = sum(1 for enabled, _, _ in rows if not enabled)
     # The same threshold the fetcher disables on, so the page and the logic
     # cannot disagree about what "failing" means.
     failing = sum(
         1
-        for enabled, empty in rows
+        for enabled, empty, _ in rows
         if enabled and int(empty or 0) >= 20
     )
+    cutoff = datetime.now(timezone.utc) - timedelta(days=7)
+    stale = 0
+    for enabled, _, last_ok in rows:
+        if not enabled:
+            continue
+        try:
+            when = datetime.fromisoformat(str(last_ok).replace("Z", "+00:00"))
+            if when.tzinfo is None:
+                when = when.replace(tzinfo=timezone.utc)
+        except (TypeError, ValueError):
+            stale += 1
+            continue
+        if when < cutoff:
+            stale += 1
     return {
         "total": total,
         "working": total - disabled - failing,
         "failing": failing,
         "disabled": disabled,
+        "stale": stale,
     }
 
 

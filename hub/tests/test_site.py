@@ -192,3 +192,14 @@ def test_every_english_page_serves(site_client):
     missing = site_client.get("/en/does-not-exist")
     assert missing.status_code == 404
     assert "not found" in missing.text.lower()
+
+def test_the_logo_is_served_at_the_size_it_is_rendered():
+    """A 512px raster in a 30px slot is 40% of the homepage for no pixels."""
+    assets = SITE_DIR / "assets"
+    small = assets / "logo-64.png"
+    medium = assets / "logo-96.png"
+    assert small.is_file() and medium.is_file()
+    assert small.stat().st_size < medium.stat().st_size < (assets / "logo.png").stat().st_size
+    assert not (assets / "logo-192.png").exists()
+    index = (SITE_DIR / "index.html").read_text(encoding="utf-8")
+    assert "logo-64.png 64w" in index and "logo-96.png 96w" in index

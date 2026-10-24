@@ -907,12 +907,15 @@ def test_stats_publishes_aggregates_only(client):
     }
     assert "address" not in payload
 
-    # The funnel is six integers from the last probing run, and nothing else.
+    # The funnel is six run counters plus the carried/verified totals; nothing
+    # else, and no hostnames.
     # It is easy to add "just the failing hostnames" here while wiring the
     # chart, and that would turn this endpoint into the scrape it exists not to
     # be.
     funnel = payload["funnel"]
-    assert set(funnel) == {"raw", "parsed", "tcp", "tls", "config", "http"}
+    assert set(funnel) == {
+        "raw", "parsed", "tcp", "tls", "config", "http", "carried", "verified"
+    }
     for key, value in funnel.items():
         assert isinstance(value, int), (key, value)
     for key in ("by_protocol", "by_country"):
