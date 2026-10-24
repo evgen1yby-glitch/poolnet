@@ -1,9 +1,9 @@
 name: site
 on:
   push:
-    paths: ["web/site/**", "scripts/site_links.py", "Makefile", ".github/workflows/site.yml"]
+    paths: ["web/site/**", "scripts/site_links.py", "scripts/site_smoke.py", "Makefile", ".github/workflows/site.yml"]
   pull_request:
-    paths: ["web/site/**", "scripts/site_links.py", "Makefile", ".github/workflows/site.yml"]
+    paths: ["web/site/**", "scripts/site_links.py", "scripts/site_smoke.py", "Makefile", ".github/workflows/site.yml"]
 
 jobs:
   linkcheck:
