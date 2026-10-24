@@ -1,9 +1,9 @@
 name: hub
 on:
   push:
-    paths: ["hub/**", ".github/workflows/hub.yml"]
+    paths: ["hub/**", "web/site/**", "scripts/site_links.py", ".github/workflows/hub.yml"]
   pull_request:
-    paths: ["hub/**", ".github/workflows/hub.yml"]
+    paths: ["hub/**", "web/site/**", "scripts/site_links.py", ".github/workflows/hub.yml"]
 
 jobs:
   test:

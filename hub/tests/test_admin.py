@@ -262,6 +262,15 @@ def test_a_cookie_signed_with_another_key_is_refused(admin, monkeypatch):
     assert api.get("/admin/data", cookies={"hub_admin": cookie}).status_code == 403
 
 
+def test_repeated_wrong_logins_are_rate_limited(admin):
+    api, _ = admin
+    codes = [
+        api.post("/admin/login", data={"secret": "wrong"}, follow_redirects=False).status_code
+        for _ in range(7)
+    ]
+    assert 429 in codes
+
+
 def test_the_header_works_for_scripts_and_respects_the_allowlist(tmp_path, monkeypatch):
     """The header stays for `curl` and cron, under the same peer policy."""
     monkeypatch.setenv("HUB_BOT_SECRET", SECRET)
