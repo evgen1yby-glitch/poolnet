@@ -295,7 +295,7 @@ PoolNet/
 - [x] Этап 3 (2026-10-24): root LICENSE/NOTICE/THIRD-PARTY, чистка мёртвых
   ассетов и дублей, truth-pass документации, бренд `hub` → PoolNet,
   вложенный `pool/.github` помечен как исторический.
-- [ ] Остаток этапа 3: Playwright-пробы в CI (локальные пробы выполнены).
+- [x] Playwright-пробы в CI: `scripts/site_smoke.py` (18 страниц × 2 экрана).
 
 ## Правила проекта (обязательные)
 
