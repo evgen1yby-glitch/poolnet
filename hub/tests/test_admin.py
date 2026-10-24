@@ -46,7 +46,7 @@ def admin(tmp_path, monkeypatch):
     import hub.api as api_module
 
     monkeypatch.setenv("HUB_BOT_SECRET", SECRET)
-    monkeypatch.setattr(api_module, "_is_loopback_request", lambda request: True)
+    monkeypatch.setattr(api_module, "_admin_peer_allowed", lambda request: True)
     store = Store(tmp_path)
     store.connect().close()
     return TestClient(create_app(store=store, sources={})), store
@@ -139,35 +139,28 @@ def test_the_data_endpoint_reports_pool_sources_and_generations(admin):
     assert isinstance(payload["sources"], list)
 
 
-def test_loopback_only_even_with_the_right_secret(tmp_path, monkeypatch):
-    """The secret is the second layer; the socket peer is the first.
+def test_admin_is_public_by_default_but_allowlist_can_restrict(tmp_path, monkeypatch):
+    """The domain link works; an operator can still narrow it to known IPs.
 
-    A panel that trusts the secret alone hands the token list to anyone who
-    finds it — through a proxy, a misconfigured vhost, or a copied secret. The
-    peer check means exposure requires the secret *and* a request that arrived
-    over loopback, which is a vhost the operator configured on purpose.
-
-    Asserted *without* the fixture's patch, so the real predicate runs: the test
-    transport's peer is `testclient`, which is not an address at all, and the
-    refusal below is therefore the honest case — a request the panel cannot
-    prove came from the machine is refused even when it carries the right
-    secret.
+    The secret and the rate limit are the access control. `HUB_ADMIN_IPS` is an
+    optional restriction for an operator who wants the panel reachable only from
+    their addresses; when it is set, a peer outside it sees the same 404 as a
+    missing page.
     """
+    import hub.api as api_module
+
     monkeypatch.setenv("HUB_BOT_SECRET", SECRET)
+    monkeypatch.delenv("HUB_ADMIN_IPS", raising=False)
     store = Store(tmp_path)
     store.connect().close()
     api = TestClient(create_app(store=store, sources={}))
 
-    refused = api.get("/admin/data", headers={"x-hub-secret": SECRET})
-    assert refused.status_code == 404, (
-        "a peer that is not loopback must be refused even with the correct secret"
-    )
+    assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 200
 
-    # And a loopback peer is accepted, so the check discriminates rather than
-    # refusing everything. The pair is the point.
-    import hub.api as api_module
+    monkeypatch.setenv("HUB_ADMIN_IPS", "203.0.113.1")
+    assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 404
 
-    monkeypatch.setattr(api_module, "_is_loopback_request", lambda request: True)
+    monkeypatch.setattr(api_module, "_admin_peer_allowed", lambda request: True)
     assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 200
 
 
@@ -258,26 +251,18 @@ def test_a_cookie_signed_with_another_key_is_refused(admin, monkeypatch):
     assert api.get("/admin/data", cookies={"hub_admin": cookie}).status_code == 403
 
 
-def test_the_header_still_works_for_scripts(tmp_path, monkeypatch):
-    """The cookie is for browsers; the header stays for `curl` and cron.
-
-    Dropping it would break every scripted call that already exists, and the
-    header path was never the problem — the absence of a browser-friendly one
-    was. Asserted against the real loopback predicate, so this also proves the
-    header check runs *after* the peer check rather than instead of it.
-    """
-    import hub.api as api_module
-
+def test_the_header_works_for_scripts_and_respects_the_allowlist(tmp_path, monkeypatch):
+    """The header stays for `curl` and cron, under the same peer policy."""
     monkeypatch.setenv("HUB_BOT_SECRET", SECRET)
+    monkeypatch.delenv("HUB_ADMIN_IPS", raising=False)
     store = Store(tmp_path)
     store.connect().close()
     api = TestClient(create_app(store=store, sources={}))
 
-    # Not loopback: hidden like a missing page, even with the right header.
-    assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 404
-
-    monkeypatch.setattr(api_module, "_is_loopback_request", lambda request: True)
     assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 200
+
+    monkeypatch.setenv("HUB_ADMIN_IPS", "203.0.113.1")
+    assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 404
 
 
 def test_logout_clears_the_cookie(admin):

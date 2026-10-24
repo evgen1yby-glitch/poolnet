@@ -903,8 +903,6 @@ def create_app(store: Store | None, sources: dict | None = None):
         for a script and useless for a person, who has no way to tell "wrong
         secret" from "not allowed at all" and nothing to act on.
         """
-        if not _is_loopback_request(request):
-            return PlainTextResponse("not found", status_code=404)
         if _admin_session(request) is None:
             return RedirectResponse("/admin/login", status_code=303)
         return HTMLResponse(_admin_html())
@@ -912,7 +910,7 @@ def create_app(store: Store | None, sources: dict | None = None):
     @app.get("/admin/login", response_class=HTMLResponse)
     async def admin_login_page(request: Request):
         """The form. Local/allowlisted peers only; carries no data."""
-        if not _is_loopback_request(request):
+        if not _admin_peer_allowed(request):
             return PlainTextResponse("not found", status_code=404)
         return HTMLResponse(_admin_login_html())
 
@@ -926,7 +924,7 @@ def create_app(store: Store | None, sources: dict | None = None):
         this page does not have — there is nothing to protect but the act of
         logging in, and that already needs the secret.
         """
-        if not _is_loopback_request(request):
+        if not _admin_peer_allowed(request):
             return PlainTextResponse("not found", status_code=404)
         if not admin_login_limiter.allow(hash_ip(client_address(request))):
             return HTMLResponse(
@@ -1465,33 +1463,32 @@ def _admin_session(request: Request) -> str | None:
     return None
 
 
-def _is_loopback_request(request: Request) -> bool:
-    """True for local requests, or for peers explicitly allowlisted by the operator.
+def _admin_peer_allowed(request: Request) -> bool:
+    """Whether the panel may answer this peer at all.
 
-    The panel is local by default: reached through an SSH tunnel, or from the
-    same host. `HUB_ADMIN_IPS` (comma-separated) is the opt-in for remote
-    access; it matches the resolved peer address and never a client-supplied
-    header. `X-Forwarded-For` is deliberately not consulted — a header is
-    attacker-controlled, and this is the layer that has to hold if a secret
-    leaks.
+    The panel is served on the public domain and protected by the operator
+    secret plus a login rate limit. `HUB_ADMIN_IPS` is an optional *restriction*
+    for an operator who wants the panel reachable only from known addresses:
+    when it is set, every peer (including loopback) must match it. The check uses
+    the resolved socket address, never a client-supplied header.
     """
     import ipaddress
 
-    peer = request.client.host if request.client else ""
-    try:
-        address = ipaddress.ip_address(peer)
-    except ValueError:
-        # Not an address at all: a unix socket, or the test transport, which
-        # uses the literal string "testclient". Not provably local, so refused.
-        return False
-    if address.is_loopback:
-        return True
-    allowed = {
+    allowlist = {
         item.strip()
         for item in os.environ.get("HUB_ADMIN_IPS", "").split(",")
         if item.strip()
     }
-    return str(address) in allowed
+    if not allowlist:
+        return True
+    peer = request.client.host if request.client else ""
+    try:
+        address = ipaddress.ip_address(peer)
+    except ValueError:
+        # A unix socket, or the test transport (`testclient`): not an address,
+        # so it cannot prove membership of an allowlist.
+        return False
+    return address.is_loopback or str(address) in allowlist
 
 
 def _admin_refusal(request: Request):
@@ -1514,7 +1511,7 @@ def _admin_refusal(request: Request):
       the panel unreachable from a browser at all: an operator told to "open
       /admin" got 403 with no way to find out why.
     """
-    if not _is_loopback_request(request):
+    if not _admin_peer_allowed(request):
         return PlainTextResponse("not found", status_code=404)
     if _admin_session(request) is None:
         return JSONResponse({"error": "forbidden"}, status_code=403)
