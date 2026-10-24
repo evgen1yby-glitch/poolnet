@@ -359,6 +359,10 @@ class _CachePolicy:
         # not in nginx, so the response carries exactly one `Cache-Control`.
         ("/design/", b"no-cache"),
         ("/sub/", b"no-store"),
+        ("/admin", b"no-store"),
+        ("/admin/", b"no-store"),
+        ("/api/v1/sub/", b"no-store"),
+        ("/api/v1/bot/", b"no-store"),
     )
 
     def __init__(self, app, site_index: bool = False, site_slugs: tuple = ()):
@@ -441,7 +445,10 @@ def _profile_title(tier: Tier, core: str) -> str:
     return title
 
 
-def _client_headers(user_agent: str, tier: Tier, core: str, fmt: Format, base_url: str) -> dict:
+def _client_headers(
+    user_agent: str, tier: Tier, core: str, fmt: Format, base_url: str,
+    expires_at: str | None = None,
+) -> dict:
     """Headers a subscription client parses to render the import UI.
 
     Three details are load-bearing:
@@ -450,19 +457,28 @@ def _client_headers(user_agent: str, tier: Tier, core: str, fmt: Format, base_ur
       silently discards the whole block (and then `support-url` /
       `profile-web-page-url`) otherwise.
     * `expire` is a **real timestamp**, not a flag. `expire=0` means
-      1970-01-01, and clients render that as "expired". This service has no
-      subscription term, so it sends a far-future timestamp instead — which is
-      why `NO_EXPIRY` is not zero.
+      1970-01-01, and clients render that as "expired". A term-limited key uses
+      its own `expires_at`; an operator/permanent key keeps the far-future
+      `NO_EXPIRY`, which is why `NO_EXPIRY` is not zero.
     * every URL sent here must resolve. `profile-title` and `support-url` are
       rendered as a name and a tappable tile, so a header pointing at a 404 is
       worse than the header being absent: the client advertises a link that
       fails. `/help` is a real route for exactly this reason.
     """
     announce = "Unverified third-party nodes. Assume hostile; never send credentials."
+    expire = NO_EXPIRY
+    if expires_at:
+        try:
+            moment = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+            if moment.tzinfo is None:
+                moment = moment.replace(tzinfo=timezone.utc)
+            expire = int(moment.timestamp())
+        except ValueError:
+            expire = NO_EXPIRY
     headers = {
         "profile-title": _profile_title(tier, core),
         "profile-update-interval": "6",
-        "subscription-userinfo": f"upload=0; download=0; total=0; expire={NO_EXPIRY}",
+        "subscription-userinfo": f"upload=0; download=0; total=0; expire={expire}",
         "profile-web-page-url": base_url or "",
         "support-url": (base_url.rstrip("/") + "/help") if base_url else "",
         "announce": announce,
@@ -716,7 +732,11 @@ def create_app(store: Store | None, sources: dict | None = None):
         # Without this the only JSON the API can serve is the sing-box dialect,
         # which Happ would hand to Xray unchanged and Xray would refuse — the
         # client would show a config that cannot start.
-        if (request.query_params.get("core") or "").strip().lower() == "xray" and not country:
+        if (
+            fmt is Format.SINGBOX
+            and (request.query_params.get("core") or "").strip().lower() == "xray"
+            and not country
+        ):
             xray = _payload_path(store, generation, f"{tier.value}-xray", "json")
             if xray is not None:
                 prefix, ext = f"{tier.value}-xray", "json"
@@ -767,7 +787,8 @@ def create_app(store: Store | None, sources: dict | None = None):
         # core is whatever follows the tier in the file name, if anything does.
         core = path.stem[len(tier.value) + 1 :] or "auto"
         headers = _client_headers(
-            request.headers.get("user-agent", ""), tier, core, fmt, base_url
+            request.headers.get("user-agent", ""), tier, core, fmt, base_url,
+            store.subscription_expiry(token),
         )
         return Response(
             content=path.read_bytes(),
@@ -1089,7 +1110,9 @@ def create_app(store: Store | None, sources: dict | None = None):
                 "pool": {
                     "generation": generation,
                     "verified": conn.execute(
-                        "SELECT COUNT(*) FROM nodes WHERE last_ok IS NOT NULL"
+                        "SELECT COALESCE(MAX(node_count), 0) FROM publishes"
+                        " WHERE generation = ? AND tier = ? AND core NOT LIKE 'cc:%'",
+                        (generation, Tier.VERIFIED.value),
                     ).fetchone()[0],
                     "known": conn.execute("SELECT COUNT(*) FROM nodes").fetchone()[0],
                     "by_country": _counts(
@@ -1333,6 +1356,8 @@ def create_app(store: Store | None, sources: dict | None = None):
 
 def _token_status(token: str, subscriptions: dict, store: Store) -> str | None:
     """Resolve a bearer token to active/revoked without retaining its value."""
+    if not token or not token.isascii():
+        return None
     operator = os.environ.get("HUB_TOKEN", "")
     if operator and hmac.compare_digest(token, operator):
         return "active"
@@ -1437,9 +1462,15 @@ def _admin_cookie_valid(value: str, secret: str) -> bool:
     import hashlib
     import hmac as _hmac
 
-    if not value or "." not in value:
+    if not value or "." not in value or not value.isascii():
         return False
     issued, _, mac = value.partition(".")
+    try:
+        age = time.time() - int(issued)
+    except ValueError:
+        return False
+    if age < -300 or age > 12 * 3600:
+        return False
     expected = _hmac.new(secret.encode(), issued.encode(), hashlib.sha256).hexdigest()
     return _hmac.compare_digest(mac, expected)
 
@@ -1657,7 +1688,7 @@ def _admin_generations(conn, limit: int = 20) -> list[dict]:
     """
     rows = conn.execute(
         "SELECT generation, MIN(created_at) AS at,"
-        " COUNT(*) AS payloads, SUM(node_count) AS nodes"
+        " COUNT(*) AS payloads, MAX(node_count) AS nodes"
         " FROM publishes GROUP BY generation ORDER BY at DESC LIMIT ?",
         (limit,),
     ).fetchall()
@@ -1678,8 +1709,10 @@ def _admin_token_state(status: str, expires_at: str | None) -> str:
         return status
     try:
         expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+        if expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
     except ValueError:
-        return status
+        return "expired"
     return "expired" if expiry <= datetime.now(timezone.utc) else "active"
 
 

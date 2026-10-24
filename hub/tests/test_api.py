@@ -45,6 +45,13 @@ def test_expire_is_a_real_far_future_timestamp():
     assert "upload=0" in headers["subscription-userinfo"]
 
 
+def test_expire_uses_the_subscription_term_when_present():
+    headers = _client_headers(
+        "test", Tier.CURATED, "sing-box", Format.SINGBOX, "", "2030-01-01T00:00:00+00:00"
+    )
+    assert "expire=1893456000" in headers["subscription-userinfo"]
+
+
 def test_empty_base_url_drops_url_headers():
     headers = _client_headers("test", Tier.VERIFIED, "xray", Format.BASE64, "")
     assert "profile-web-page-url" not in headers

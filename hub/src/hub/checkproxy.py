@@ -15,6 +15,7 @@ the endpoint cannot be turned into a probe of the host's own network.
 
 from __future__ import annotations
 
+import ipaddress
 import re
 import socket
 import time
@@ -53,20 +54,26 @@ def parse_proxy(raw: str, proto: str) -> tuple[str, str, int] | str:
     protocol = (proto or "").lower()
     if protocol not in PROTOCOLS:
         return f"proto must be one of {', '.join(PROTOCOLS)}"
-    a, b = (int(part) for part in match.group(1).split(".")[:2])
-    reserved = (
-        a == 0
-        or a == 10
-        or a == 127
-        or (a == 100 and 64 <= b <= 127)
-        or (a == 169 and b == 254)
-        or (a == 172 and 16 <= b <= 31)
-        or (a == 192 and b == 168)
-        or a >= 224
-    )
-    if reserved:
+    host = match.group(1)
+    # Reject octal/leading-zero spellings before parsing: `012.0.0.1` is
+    # `10.0.0.1` to many resolvers but not to a strict dotted quad, and the
+    # difference is exactly the SSRF bypass this guard exists to stop.
+    if any(len(part) > 1 and part.startswith("0") for part in host.split(".")):
         return "address is not routable"
-    return protocol, match.group(1), port
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        return "expected proxy=host:port"
+    if (
+        not address.is_global
+        or address.is_multicast
+        or address.is_reserved
+        or address.is_loopback
+        or address.is_private
+        or address.is_link_local
+    ):
+        return "address is not routable"
+    return protocol, str(address), port
 
 
 class _Reader:
@@ -95,9 +102,13 @@ class _Reader:
         out, self._buf = self._buf[:n], self._buf[n:]
         return out
 
-    def read_until(self, marker: bytes, deadline: float) -> bytes:
+    def read_until(self, marker: bytes, deadline: float, limit: int = 64 * 1024) -> bytes:
         while marker not in self._buf:
+            if len(self._buf) >= limit:
+                raise CheckError("header too large")
             self._buf += self._read(deadline)
+            if len(self._buf) > limit:
+                raise CheckError("header too large")
         cut = self._buf.index(marker) + len(marker)
         out, self._buf = self._buf[:cut], self._buf[cut:]
         return out

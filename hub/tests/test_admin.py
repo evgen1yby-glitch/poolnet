@@ -10,9 +10,9 @@ Two properties are non-negotiable and each has a test that fails loudly:
 * **No secret, no data.** An unauthenticated request gets 403 and an empty body.
   Not a page with the data already inline, not a redirect to a login form with
   the data in a hidden field — nothing.
-* **Loopback only.** The panel is reachable from the machine and nowhere else,
-  so a misconfigured nginx vhost exposing `/admin` still does not hand out the
-  token list. The secret is the second layer, not the first.
+* **Explicit access.** The panel is public by default only because the operator
+  chose a domain; a secret, a login-attempt limit and an optional IP allowlist
+  are the layers that keep the token list out of a visitor's hands.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ import pytest  # noqa: E402
 fastapi = pytest.importorskip("fastapi")
 from fastapi.testclient import TestClient  # noqa: E402
 
-from hub.api import create_app  # noqa: E402
+from hub.api import _admin_cookie_valid, create_app  # noqa: E402
 from hub.store import Store  # noqa: E402
 
 SECRET = "operator-secret-for-tests"
@@ -234,6 +234,17 @@ def test_a_forged_cookie_is_refused(admin):
     api, _ = admin
     for forged in ("admin", "1", "true", SECRET, "a.b.c", "x" * 64):
         assert api.get("/admin/data", cookies={"hub_admin": forged}).status_code == 403, forged
+
+
+def test_a_cookie_older_than_twelve_hours_is_refused():
+    """The signature alone must not make a session eternal."""
+    import hashlib
+    import hmac
+    import time
+
+    issued = str(int(time.time()) - 13 * 3600)
+    mac = hmac.new(SECRET.encode(), issued.encode(), hashlib.sha256).hexdigest()
+    assert _admin_cookie_valid(f"{issued}.{mac}", SECRET) is False
 
 
 def test_a_cookie_signed_with_another_key_is_refused(admin, monkeypatch):

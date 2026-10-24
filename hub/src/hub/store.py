@@ -365,11 +365,26 @@ class Store:
         if status == "active" and expires_at:
             try:
                 expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+                if expiry.tzinfo is None:
+                    expiry = expiry.replace(tzinfo=timezone.utc)
             except ValueError:
-                expiry = None
-            if expiry is not None and expiry <= datetime.now(timezone.utc):
+                # A malformed term cannot be trusted: fail closed, not "forever".
+                return "expired"
+            if expiry <= datetime.now(timezone.utc):
                 return "expired"
         return status
+
+    def subscription_expiry(self, token: str) -> str | None:
+        """The stored term for a token, or None for a permanent one."""
+        conn = self.connect()
+        try:
+            row = conn.execute(
+                "SELECT expires_at FROM subscription_tokens WHERE token_hash = ?",
+                (self._subscription_key(token),),
+            ).fetchone()
+        finally:
+            conn.close()
+        return str(row[0]) if row and row[0] else None
 
     def touch_subscription(self, token: str) -> None:
         """Record the last successful fetch, best-effort; never raises."""
@@ -397,7 +412,13 @@ class Store:
             now = datetime.now(timezone.utc)
             for digest, expires_at in rows:
                 try:
-                    base = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00")) if expires_at else now
+                    base = (
+                        datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+                        if expires_at
+                        else now
+                    )
+                    if base.tzinfo is None:
+                        base = base.replace(tzinfo=timezone.utc)
                 except ValueError:
                     base = now
                 if base < now:
@@ -429,7 +450,9 @@ class Store:
         conn = self.connect()
         try:
             row = conn.execute(
-                "SELECT COUNT(*) FROM subscription_tokens WHERE status = ?", (status,)
+                "SELECT COUNT(*) FROM subscription_tokens WHERE status = ?"
+                " AND (expires_at IS NULL OR datetime(expires_at) > datetime('now'))",
+                (status,),
             ).fetchone()
             return int(row[0])
         finally:
