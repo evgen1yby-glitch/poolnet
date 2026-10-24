@@ -22,7 +22,7 @@
 -->
 <header>
 <div class="head">
-  <h1><a class="wordmark" href="/"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="12.3" cy="4.8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12.3" cy="27.2" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="21.3" cy="13.8" r="3.4" fill="currentColor"/><path d="M12.3 4.5V27.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M12.3 4.8A9 9 0 0 1 12.3 22.8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>poolnet</a> <span>панель оператора</span></h1>
+  <h1><a class="wordmark" href="/"><img class="mark" src="/static/logo.png" alt="" width="32" height="32">PoolNet</a> <span>панель оператора</span></h1>
   <div id="age">загрузка…</div>
 </div>
 </header>
@@ -71,11 +71,11 @@
     var body = rows
       .map(function (r) {
         return "<tr>" + r.map(function (c, i) {
-          return '<td class="' + (headers[i][1] || "") + '">' + (c && c.html ? c.html : esc(c)) + "</td>";
+          return '<td class="' + (headers[i][1] || "") + '">' + (c && typeof c === 'object' && 'html' in c ? c.html : esc(c)) + "</td>";
         }).join("") + "</tr>";
       })
       .join("");
-    return "<table><thead><tr>" + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+    return '<div class="tscroll"><table><thead><tr>' + head + "</tr></thead><tbody>" + body + "</tbody></table></div>";
   }
 
   //: Stage labels, matching `_last_funnel`'s keys.
@@ -135,6 +135,75 @@
       esc(h.generation || "нет поколения") + " · " + esc(dur(h.age_s)) + " назад";
 
     var html = "";
+    var s = d.subscriptions || {};
+    function stat(label, value, hint) {
+      return '<div class="stat"><div class="stat-k">' + esc(label) + '</div>' +
+        '<div class="stat-v">' + esc(value == null ? 0 : value) + '</div>' +
+        (hint ? '<div class="stat-h">' + esc(hint) + '</div>' : "") + "</div>";
+    }
+    html += '<div class="stats">' +
+      stat("Всего подписок", s.total, "за всё время") +
+      stat("Активных", s.active, "сейчас работают") +
+      stat("Истекают за 7 дней", s.expiring_7d, "стоит продлить") +
+      stat("Истекли", s.expired, "нужен новый ключ") +
+      stat("Отозваны", s.revoked, "заблокированы") +
+      stat("Выдано за 24 ч", s.issued_24h, "новые") +
+      "</div>";
+
+    // Subscriptions, last: issuing is an action and actions come after state.
+    html += block("Подписки", "срок и источник", 
+      '<form id="issue" class="issue">' +
+      '<input name="label" placeholder="метка (необязательно)" maxlength="120" aria-label="Метка">' +
+      '<input name="username" placeholder="Telegram username" maxlength="64" aria-label="Получатель">' +
+      '<input name="days" type="number" min="1" max="3650" value="7" aria-label="Срок, дней" style="max-width:7rem">' +
+      '<select name="source" aria-label="Источник"><option value="panel">панель</option><option value="telegram">телеграм</option><option value="partner">партнёр</option></select>' +
+      '<button type="submit" class="btn">Выдать на срок</button>' +
+      "</form>" +
+      '<p class="caption">Ключ показывается один раз: в базе только SHA-256. Срок — по умолчанию 7 дней. ' +
+      'Веб-ключи получают source=web, бот — source из start-payload.</p>');
+
+    function dt(v) { return v ? esc(v.slice(0, 16).replace("T", " ")) : "—"; }
+    function tokenState(tok) {
+      var map = { active: ["ok", "активна"], expired: ["warn", "истекла"], revoked: ["off", "отозвана"] };
+      var x = map[tok.status] || ["off", tok.status || "?"];
+      return '<span class="state" data-s="' + x[0] + '">' + esc(x[1]) + "</span>";
+    }
+    function holder(tok) {
+      var bits = [];
+      if (tok.username) bits.push("@" + tok.username);
+      if (tok.telegram_id) bits.push(String(tok.telegram_id));
+      return esc(bits.join(" · ") || "сайт / без аккаунта");
+    }
+    function sourceLabel(v) {
+      return esc(v === "telegram" || v === "bot" ? "телеграм" : v === "web" ? "сайт" : v === "partner" ? "партнёр" : "панель");
+    }
+
+    if (d.tokens && d.tokens.length) {
+      html += table(
+        [["ID"], ["Получатель"], ["Источник"], ["Статус"], ["Выдан"], ["Истекает"], ["Был"], ["", "num"]],
+        d.tokens.map(function (tok) {
+          var actions = "";
+          if (tok.status === "active" || tok.status === "expired") {
+            actions += '<button type="button" class="btn mini" data-extend="' + esc(tok.id) + '">продлить</button> ';
+          }
+          if (tok.status === "active") {
+            actions += '<button type="button" class="btn danger mini" data-revoke="' + esc(tok.id) + '">отозвать</button>';
+          }
+          return [
+            { html: "<code>" + esc(tok.id) + "</code>" },
+            { html: holder(tok) },
+            sourceLabel(tok.source),
+            { html: tokenState(tok) },
+            dt(tok.created_at),
+            tok.expires_at ? dt(tok.expires_at) : "бессрочно",
+            dt(tok.last_seen),
+            { html: actions }
+          ];
+        })
+      );
+    } else {
+      html += '<p class="caption">Ни одной подписки не выдано.</p>';
+    }
 
     // Pool, first: it is what the operator opened the panel to see.
     html += block("Пул", "",
@@ -211,38 +280,6 @@
         ));
     }
 
-    // Keys last: issuing is an action, and actions come after state.
-    html += block("Ключи", "",
-      '<form id="issue" class="issue">' +
-      '<input name="label" placeholder="метка (необязательно)" maxlength="120" ' +
-      'aria-label="Метка ключа">' +
-      '<button type="submit" class="btn">Выдать ключ</button>' +
-      "</form>" +
-      '<p class="caption">Ключ показывается один раз: в базе хранится только его SHA-256, ' +
-      "восстановить потом нельзя. Придумайте метку, чтобы через месяц понимать, чей это ключ.</p>");
-
-    if (d.tokens && d.tokens.length) {
-      html += table(
-        [["ID"], ["Метка"], ["Источник"], ["Статус"], ["Выдан"], ["", "num"]],
-        d.tokens.map(function (t) {
-          var st = t.status === "active" ? "ok" : "off";
-          var action = t.status === "active"
-            ? '<button type="button" class="btn danger mini" data-revoke="' + esc(t.id) + '">отозвать</button>'
-            : "";
-          return [
-            { html: "<code>" + esc(t.id) + "</code>" },
-            esc(t.label || "—"),
-            esc(t.source === "bot" ? "телеграм" : "панель"),
-            { html: '<span class="state" data-s="' + st + '">' + esc(t.status) + "</span>" },
-            t.created_at ? esc(t.created_at.slice(0, 16).replace("T", " ")) : "—",
-            { html: action }
-          ];
-        })
-      );
-    } else {
-      html += '<p class="caption">Ни одного ключа не выдано.</p>';
-    }
-
     app.innerHTML = html;
   }
 
@@ -254,11 +291,15 @@
   /// past. There is no "show it again" action to add later, because the server
   /// genuinely does not have it.
   function mint(form) {
-    var label = form.querySelector('input[name="label"]').value || "";
+    var data = new URLSearchParams();
+    ["label", "username", "days", "source"].forEach(function (k) {
+      var el = form.querySelector('[name="' + k + '"]');
+      if (el) data.set(k, el.value || "");
+    });
     form.querySelector("button").disabled = true;
     fetch("/admin/keys/issue", {
       method: "POST",
-      body: new URLSearchParams({ label: label }),
+      body: data,
       headers: { accept: "application/json" }
     })
       .then(function (r) {
@@ -272,9 +313,13 @@
         box.innerHTML =
           '<div class="k">Ключ выдан. Скопируйте сейчас — второй раз показать нельзя.</div>' +
           '<div class="v">' + esc(d.token) + "</div>" +
-          '<div class="k">Ссылка для клиента:</div>' +
-          '<div class="u">' + esc(url) + "</div>" +
-          (d.label ? '<div class="k">Метка: ' + esc(d.label) + "</div>" : "");
+          '<div class="k">Happ / Xray (одна страна = один профиль с ротацией):</div>' +
+          '<div class="u">' + esc(url) + "?core=xray</div>" +
+          '<div class="k">Base64 (полный список):</div>' +
+          '<div class="u">' + esc(url) + "?format=base64</div>" +
+          '<div class="k">Base64, по одному узлу на страну:</div>' +
+          '<div class="u">' + esc(url) + "?format=base64&unique=1</div>" +
+          (d.expires_at ? '<div class="k">Истекает: ' + esc(d.expires_at.slice(0, 16).replace("T", " ")) + "</div>" : "");
         form.parentNode.insertBefore(box, form.nextSibling);
         form.querySelector("button").disabled = false;
         form.reset();
@@ -285,6 +330,19 @@
         form.querySelector("button").disabled = false;
         alert("Не удалось выдать ключ: " + e.message);
       });
+  }
+
+  function extend(id) {
+    var days = prompt("Продлить на сколько дней?", "7");
+    if (!days) return;
+    fetch("/admin/keys/extend", {
+      method: "POST",
+      body: new URLSearchParams({ id: id, days: days }),
+      headers: { accept: "application/json" }
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d.status !== "extended") alert("Ключ не найден"); load(); })
+      .catch(function () { alert("Не удалось продлить"); });
   }
 
   function revoke(id) {
@@ -304,6 +362,8 @@
   document.addEventListener("click", function (e) {
     var btn = e.target.closest && e.target.closest("[data-revoke]");
     if (btn) revoke(btn.getAttribute("data-revoke"));
+    var ext = e.target.closest && e.target.closest("[data-extend]");
+    if (ext) extend(ext.getAttribute("data-extend"));
   });
   document.addEventListener("submit", function (e) {
     if (e.target && e.target.id === "issue") {

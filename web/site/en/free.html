@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>Free 7-day VPN subscription — PoolNet</title>
+<meta name="description" content="A free 7-day VPN subscription from public nodes; no signup or payment.">
+<link rel="icon" href="../assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="../system.css">
+</head>
+<body>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get free VPN</a></div></div>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="PoolNet — home">
+      <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+      <span class="bn">PoolNet</span>
+    </a>
+    <nav class="main" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="status.html">Status</a>
+      <a href="legal.html">Terms</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <a class="lang-b" href="../free.html" hreflang="ru">RU</a>
+      <a class="lang-b on" href="free.html" hreflang="en" aria-current="true">EN</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>7 days · no signup · no payment</span>
+      <h1>Free <span class="grad-txt">VPN subscription</span></h1>
+      <p class="sub">One link for Happ/Xray: one country — one profile with built-in server rotation. Nodes are collected from public sources; we do not operate them and give no warranty.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap freebox">
+      <div class="freecard">
+        <div class="pk">FREE · 7 DAYS</div>
+        <h2>Get the subscription</h2>
+        <p>Press the button and the server issues a seven-day key. No email, account or payment. Add the link to Happ, Hiddify, v2rayNG or Clash.</p>
+        <button type="button" class="btn btn-1" id="get">Get a 7-day subscription</button>
+        <div id="result" class="freeresult" hidden></div>
+        <p class="freenote">Public nodes can log or modify traffic. Do not use them for sensitive data without your own encryption. <a href="../legal.html">Terms of use</a>.</p>
+        <div id="tgbox" hidden>
+          <p class="freenote">Want fresh subscriptions in Telegram?</p>
+          <a class="btn btn-2" id="tg" href="https://t.me/" rel="noopener">Get it in Telegram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  var btn = document.getElementById("get");
+  var out = document.getElementById("result");
+  if (!btn || !out) return;
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function link(label, url) {
+    return '<div class="freelink"><span>' + esc(label) + '</span><code>' + esc(url) + '</code>' +
+      '<button type="button" class="btn mini" data-copy="' + esc(url) + '">copy</button></div>';
+  }
+  btn.addEventListener("click", function () {
+    btn.disabled = true; out.hidden = false; out.innerHTML = '<p class="freenote">Issuing…</p>';
+    fetch("/api/free-subscription", { method: "POST", cache: "no-store" })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (x) {
+        if (!x.ok) { out.innerHTML = '<p class="freenote">Failed: ' + esc(x.body.error || "error") + '</p>'; return; }
+        var base = x.body.subscription;
+        var until = x.body.expires_at ? x.body.expires_at.slice(0, 16).replace("T", " ") + " UTC" : "";
+        out.innerHTML = '<h3>Done — valid until ' + esc(until) + '</h3>' +
+          link("Happ / Xray (rotation by country)", base + "?core=xray") +
+          link("Base64 — full list", base + "?format=base64") +
+          link("Base64 — one node per country", base + "?format=base64&unique=1") +
+          '<p class="freenote">Only the key hash is stored: save the link now. Once it expires, issue a new one.</p>';
+      })
+      .catch(function () { out.innerHTML = '<p class="freenote">Server unavailable, try later.</p>'; })
+      .then(function () { btn.disabled = false; });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-copy]");
+    if (b) navigator.clipboard && navigator.clipboard.writeText(b.getAttribute("data-copy"));
+  });
+  fetch("/api/v1/bot").then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.username) { var a = document.getElementById("tg"); a.href = "https://t.me/" + d.username + "?start=site_free"; document.getElementById("tgbox").hidden = false; }
+  }).catch(function () {});
+})();
+</script>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+        <span>PoolNet</span>
+      </div>
+      <p>Public node catalog. Connections go directly from the client to the node; traffic does not pass through us. We do not operate the nodes and give no warranty of availability, security or legality; use at your own risk. <a href="legal.html">Terms of use</a>.</p>
+      <p class="cop">© 2026 PoolNet</p>
+    </div>
+    <nav aria-label="Links">
+      <a href="index.html">Home</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Proxy pool</a>
+      <a href="verify.html">Verification</a>
+      <a href="check.html">Check node</a>
+      <a href="status.html">Status</a>
+      <a href="legal.html">Terms</a>
+    </nav>
+  </div>
+</footer>
+<script src="../flags.js" defer></script>
+</body>
+</html>

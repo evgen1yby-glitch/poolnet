@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+from datetime import datetime, timedelta, timezone
 import itertools
 import json
 import os
@@ -379,13 +380,13 @@ class _CachePolicy:
         path = scope.get("path", "")
         policy = next((p for prefix, p in self.POLICY if path.startswith(prefix)), None)
         if policy is None and (
-            path.endswith((".html", ".css", ".js", ".woff", ".woff2"))
+            path.endswith((".html", ".css", ".js", ".png", ".jpg", ".svg", ".ico", ".woff", ".woff2"))
             or (path == "/" and self.site_index)
             or path in self.site_slugs
             or path == "/en"
             or path.startswith("/en/")
         ):
-            # The poolnet site pages: rebuilt often and reviewed immediately,
+            # The PoolNet site pages: rebuilt often and reviewed immediately,
             # the same bug class `/design/` guards against — a cached
             # stylesheet beside fresh markup. `/static/` and `/design/` above
             # take precedence; a suffix this far down is a site path, and the
@@ -504,6 +505,9 @@ def create_app(store: Store | None, sources: dict | None = None):
     subscriptions: dict[str, dict] = {}
     limiter = RateLimiter(rate=240 / 3600.0, burst=240, max_buckets=10_000)
     ip_limiter = RateLimiter(rate=600 / 3600.0, burst=600, max_buckets=10_000)
+    # Public free keys: three per hour per subnet is enough for a household and
+    # not enough to mint a pool of throwaway subscriptions.
+    free_limiter = RateLimiter(rate=5 / 3600.0, burst=3, max_buckets=4096)
 
     #: The interface mockup is a design artifact, not a product surface, and it
     #: lives in the repository rather than in the package. It is served from
@@ -523,7 +527,7 @@ def create_app(store: Store | None, sources: dict | None = None):
         or store.root / "docs" / "design"
     )
 
-    #: The public site of the merged project (`poolnet`): multipage static
+    #: The public site of the merged project (`PoolNet`): multipage static
     #: grown from the design mockup, served under `/` when present. It lives
     #: beside the hub checkout (`../web/site`) so `git pull` deploys pages on
     #: the next request without a restart, for the same reason `/design/` is
@@ -667,6 +671,7 @@ def create_app(store: Store | None, sources: dict | None = None):
             return Response(status_code=404)
         if not _token_exists(token, subscriptions, store):
             return Response(status_code=404)
+        store.touch_subscription(token)
         if not limiter.allow(hashlib.sha256(token.encode()).hexdigest()):
             return Response(status_code=429, headers={"Retry-After": "3600"})
 
@@ -768,6 +773,42 @@ def create_app(store: Store | None, sources: dict | None = None):
         )
 
 
+    @app.post("/api/free-subscription")
+    async def free_subscription(request: Request) -> JSONResponse:
+        """A seven-day key for anyone, without Telegram or an account.
+
+        The site's free CTA is the top of the funnel; requiring the bot first
+        would make the funnel depend on a channel that may not exist yet. The
+        key is public and rate-limited per /24, and the panel can see it as
+        source=web next to bot- and panel-issued keys.
+        """
+        if not free_limiter.allow(hash_ip(client_address(request))):
+            return JSONResponse(
+                {"error": "too many keys from this network; try again later"},
+                status_code=429,
+                headers={"Cache-Control": "no-store"},
+            )
+        expires = datetime.now(timezone.utc) + timedelta(days=7)
+        for _ in range(3):
+            token = _mint_token(0)
+            if store.issue_subscription(
+                token,
+                0,
+                label="free-web",
+                expires_at=expires.isoformat(),
+                source="web",
+            ):
+                base = base_url.rstrip("/")
+                return JSONResponse(
+                    {
+                        "token": token,
+                        "expires_at": expires.isoformat(),
+                        "subscription": f"{base}/sub/{token}" if base else f"/sub/{token}",
+                    },
+                    headers={"Cache-Control": "no-store"},
+                )
+        return JSONResponse({"error": "could not issue token"}, status_code=503)
+
     @app.post("/api/v1/bot/issue")
     async def issue_token(request: Request) -> JSONResponse:
         """Called by the bot after a successful membership check.
@@ -791,13 +832,20 @@ def create_app(store: Store | None, sources: dict | None = None):
             telegram_id = 0
         if telegram_id <= 0:
             return JSONResponse({"error": "telegram_id required"}, status_code=400)
+        username = str(payload.get("username") or "").strip()[:64]
+        source = str(payload.get("source") or "bot").strip()[:40] or "bot"
+        expires_at = (datetime.now(timezone.utc) + timedelta(days=7)).isoformat()
         token = _mint_token(telegram_id)
-        if not store.issue_subscription(token, telegram_id):
+        if not store.issue_subscription(
+            token, telegram_id, expires_at=expires_at, username=username, source=source
+        ):
             # A collision is cryptographically negligible, but retrying is cheap
             # and avoids returning an already-issued bearer credential.
             for _ in range(3):
                 token = _mint_token(telegram_id)
-                if store.issue_subscription(token, telegram_id):
+                if store.issue_subscription(
+                    token, telegram_id, expires_at=expires_at, username=username, source=source
+                ):
                     break
             else:
                 return JSONResponse({"error": "could not issue token"}, status_code=503)
@@ -918,14 +966,51 @@ def create_app(store: Store | None, sources: dict | None = None):
             return refusal
         form = await request.form()
         label = str(form.get("label") or "").strip()[:120]
+        username = str(form.get("username") or "").strip()[:64]
+        source = str(form.get("source") or "panel").strip()[:40] or "panel"
+        try:
+            days = int(str(form.get("days") or "7"))
+        except ValueError:
+            days = 7
+        days = max(1, min(days, 3650))
+        expires = datetime.now(timezone.utc) + timedelta(days=days)
         # The store rejects a duplicate digest; a collision is a 1-in-2^256 event
         # and retrying is the honest response rather than reporting it as an
         # error the operator could act on.
         for _ in range(3):
             token = _mint_token(0)
-            if store.issue_subscription(token, 0, label=label):
-                return JSONResponse({"token": token, "label": label})
+            if store.issue_subscription(
+                token,
+                0,
+                label=label,
+                expires_at=expires.isoformat(),
+                username=username,
+                source=source,
+            ):
+                return JSONResponse(
+                    {"token": token, "label": label, "expires_at": expires.isoformat()}
+                )
         return JSONResponse({"error": "could not mint"}, status_code=500)
+
+    @app.post("/admin/keys/extend")
+    async def admin_extend_key(request: Request):
+        """Add days to an active key by digest prefix."""
+        refusal = _admin_refusal(request)
+        if refusal is not None:
+            return refusal
+        form = await request.form()
+        prefix = str(form.get("id") or "").strip()
+        if not 8 <= len(prefix) <= 12 or not all(c in "0123456789abcdef" for c in prefix):
+            return JSONResponse({"error": "bad id"}, status_code=400)
+        try:
+            days = int(str(form.get("days") or "7"))
+        except ValueError:
+            days = 7
+        days = max(1, min(days, 3650))
+        count = store.extend_subscription(prefix, days)
+        if not count:
+            return JSONResponse({"status": "unknown"}, status_code=404)
+        return JSONResponse({"status": "extended", "count": count, "days": days})
 
     @app.post("/admin/keys/revoke")
     async def admin_revoke_key(request: Request):
@@ -1007,6 +1092,7 @@ def create_app(store: Store | None, sources: dict | None = None):
                 "sources": _admin_sources(conn),
                 "generations": _admin_generations(conn),
                 "tokens": _admin_tokens(conn),
+                "subscriptions": _admin_subscription_stats(conn),
                 "funnel": _last_funnel(store),
             }
         finally:
@@ -1565,31 +1651,87 @@ def _admin_generations(conn, limit: int = 20) -> list[dict]:
     ]
 
 
-def _admin_tokens(conn) -> list[dict]:
-    """Issued subscriptions: the digest's first 12 chars, never the digest.
+def _admin_token_state(status: str, expires_at: str | None) -> str:
+    """active / expired / revoked, with expiry evaluated at read time."""
+    if status != "active" or not expires_at:
+        return status
+    try:
+        expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+    except ValueError:
+        return status
+    return "expired" if expiry <= datetime.now(timezone.utc) else "active"
 
-    Enough to tell two tokens apart when revoking one, and not enough to be
-    useful to anyone who reads it — which matters because this response crosses
-    a boundary the subscription API's own responses never do.
+
+def _admin_tokens(conn) -> list[dict]:
+    """Issued subscriptions: digest prefixes, holder, source and term.
+
+    Only the first 12 hex characters of the digest — enough to tell two keys
+    apart and useless as a credential. The full token never exists here: the
+    store keeps hashes, and a panel that could show it would be a leak.
     """
     rows = conn.execute(
-        "SELECT substr(token_hash, 1, 12), telegram_id, status, created_at, label"
-        " FROM subscription_tokens ORDER BY created_at DESC LIMIT 200"
+        "SELECT substr(token_hash, 1, 12), telegram_id, status, created_at, label,"
+        " expires_at, username, source, last_seen"
+        " FROM subscription_tokens ORDER BY created_at DESC LIMIT 500"
     ).fetchall()
     return [
         {
             "id": prefix,
-            "telegram_id": int(tid),
-            "status": status,
+            "telegram_id": int(tid or 0),
+            "status": _admin_token_state(str(status), expires),
             "created_at": created,
+            "expires_at": expires or "",
+            "username": username or "",
             "label": label or "",
-            # 0 means the panel minted it rather than the bot. Not a missing
-            # value: the column is the bot's identity for the holder, and a
-            # panel-issued key has none.
-            "source": "bot" if int(tid) else "panel",
+            "source": source or ("bot" if int(tid or 0) else "panel"),
+            "last_seen": last_seen or "",
         }
-        for prefix, tid, status, created, label in rows
+        for prefix, tid, status, created, label, expires, username, source, last_seen in rows
     ]
+
+
+def _admin_subscription_stats(conn) -> dict:
+    """Aggregates for the subscriptions dashboard, evaluated now."""
+    now = datetime.now(timezone.utc)
+    week = now + timedelta(days=7)
+    day = now - timedelta(days=1)
+    rows = conn.execute(
+        "SELECT status, expires_at, created_at FROM subscription_tokens"
+    ).fetchall()
+    out = {
+        "total": len(rows),
+        "active": 0,
+        "expired": 0,
+        "revoked": 0,
+        "expiring_7d": 0,
+        "issued_24h": 0,
+        "by_source": {},
+    }
+    for status, expires_at, created_at in rows:
+        state = _admin_token_state(str(status), expires_at)
+        out[state if state in ("active", "expired", "revoked") else "revoked"] += 1
+        try:
+            expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00")) if expires_at else None
+        except ValueError:
+            expiry = None
+        if state == "active" and expiry is not None and now < expiry <= week:
+            out["expiring_7d"] += 1
+        try:
+            created = datetime.fromisoformat(str(created_at).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            created = None
+        if created is not None and created >= day:
+            out["issued_24h"] += 1
+    # Source counts are cheap here; the panel groups them without another query.
+    for _prefix, _tid, status, _created, _label, expires, _user, source, _seen in conn.execute(
+        "SELECT substr(token_hash,1,12), telegram_id, status, created_at, label,"
+        " expires_at, username, source, last_seen FROM subscription_tokens"
+    ):
+        if _admin_token_state(str(status), expires) != "active":
+            continue
+        key = source or ("bot" if int(_tid or 0) else "panel")
+        out["by_source"][key] = out["by_source"].get(key, 0) + 1
+    return out
 
 
 def _rotated_payload(store: Store, generation: str, tier: str) -> str | None:

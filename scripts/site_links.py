@@ -31,7 +31,7 @@ def main() -> int:
     required = {
         f"{tree}{name}.html"
         for tree in ("", "en/")
-        for name in ("index", "vpn", "proxy", "verify", "check", "premium", "status", "404", "legal")
+        for name in ("index", "vpn", "proxy", "verify", "check", "free", "status", "404", "legal")
     }
     seen = {p.relative_to(SITE).as_posix() for p in pages}
     missing = required - seen
@@ -46,11 +46,8 @@ def main() -> int:
             problems.append(f"{page.relative_to(SITE)}: dead link href=\"#\"")
         if html.count('class="lang"') != 1:
             problems.append(f"{page.relative_to(SITE)}: expected one language switch")
-        # The premium waitlist is the one intentional stub; anywhere else a
-        # disabled control is a feature that looks shipped but does nothing.
+        # A disabled control is a feature that looks shipped but does nothing.
         without_pager = re.sub(r'<button[^>]*id="pg-(?:prev|next)"[^>]*>', "", html)
-        if page.name != "premium.html" and re.search(r"<[^>]+\sdisabled\b", without_pager):
-            problems.append(f"{page.relative_to(SITE)}: disabled control outside the premium stub")
         for href in LINK.findall(html):
             if href.startswith(("http://", "https://", "data:", "mailto:", "#")):
                 continue

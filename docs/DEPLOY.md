@@ -1,4 +1,4 @@
-# Переключение продакшена на poolnet
+# Переключение продакшена на PoolNet
 
 Документ — для сервера, на котором уже работают прежние `hub` (:8444) и
 демо-пул (:8931). Домен, DNS и выпуск сертификата выполняются вне
@@ -42,7 +42,7 @@ OPP_CONCURRENCY=350
 GFP_API_KEY=<ключ источника gfp, если используется>
 ENVFILE
 chmod 640 /etc/poolnet/pool.env
-chown root:poolnet /etc/poolnet/pool.env
+chown root:PoolNet /etc/poolnet/pool.env
 ```
 
 ### Перенос данных со старой установки
@@ -67,13 +67,13 @@ cp -p /old/checkout/.env.local /opt/poolnet/pool/.env.local
 (каталог публикации прокси-пула).
 
 ```sh
-sed -e 's|@DIR@|/opt/poolnet|g' -e 's|@USER@|poolnet|g' \
-    -e 's|@GROUP@|poolnet|g' -e 's|@HUB_ROOT@|/opt/poolnet/hub|g' \
+sed -e 's|@DIR@|/opt/poolnet|g' -e 's|@USER@|PoolNet|g' \
+    -e 's|@GROUP@|PoolNet|g' -e 's|@HUB_ROOT@|/opt/poolnet/hub|g' \
     -e 's|@POOL_DIR@|/opt/poolnet/pool/data|g' deploy/poolnet.service.in \
     >/etc/systemd/system/poolnet.service
 
-sed -e 's|@DIR@|/opt/poolnet|g' -e 's|@USER@|poolnet|g' \
-    -e 's|@GROUP@|poolnet|g' -e 's|@NODE@|/usr/bin/node|g' \
+sed -e 's|@DIR@|/opt/poolnet|g' -e 's|@USER@|PoolNet|g' \
+    -e 's|@GROUP@|PoolNet|g' -e 's|@NODE@|/usr/bin/node|g' \
     deploy/poolnet-pool.service.in >/etc/systemd/system/poolnet-pool.service
 
 install -m 0644 deploy/poolnet-pool.timer /etc/systemd/system/
@@ -85,7 +85,7 @@ systemctl enable --now poolnet.service poolnet-pool.timer
 Первый цикл пула можно прогнать вручную до включения таймера:
 
 ```sh
-sudo -u poolnet env OPP_DATA_DIR=/opt/poolnet/pool/data \
+sudo -u PoolNet env OPP_DATA_DIR=/opt/poolnet/pool/data \
   /usr/bin/node /opt/poolnet/pool/node_modules/.bin/tsx src/index.ts cycle
 ```
 
@@ -121,11 +121,11 @@ nginx -t && systemctl reload nginx
 `:8444` отдаёт `301` на домен (подписки продолжают работать), `:8931/data/*`
 — на `/pool/*`, остальное — на `/proxy`. Старые юниты останавливаются, когда
 в логах редиректов не остаётся запросов; тогда же удаляются старые vhost и
-`poolnet-legacy.conf`.
+`PoolNet-legacy.conf`.
 
 ## 6. Откат
 
 Остановить `poolnet.service`, вернуть старые юниты (`systemctl enable --now
-hub-api …`), убрать `poolnet-legacy.conf` и перезагрузить nginx. Каталоги
+hub-api …`), убрать `PoolNet-legacy.conf` и перезагрузить nginx. Каталоги
 данных не пересекаются (`hub/data`, `pool/data`), поэтому откат не теряет
 опубликованное.

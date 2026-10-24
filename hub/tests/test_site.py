@@ -1,4 +1,4 @@
-"""The poolnet site (`web/site`) served by hub-api as the site root.
+"""The PoolNet site (`web/site`) served by hub-api as the site root.
 
 Every test here points `HUB_SITE` (or relies on the default sibling path) at
 the merged project's site directory. They run only when the site exists — a
@@ -37,7 +37,7 @@ def site_client(tmp_path, monkeypatch):
 
 
 def test_the_root_serves_the_site_index(site_client):
-    """`/` is the poolnet page, not the hub's old landing.
+    """`/` is the PoolNet page, not the hub's old landing.
 
     The merge puts the unified site at the root. Pinned by brand and by copy
     so a regression to the old surface is a failing test, not a surprise.
@@ -45,13 +45,13 @@ def test_the_root_serves_the_site_index(site_client):
     response = site_client.get("/")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
-    assert "poolnet" in response.text
+    assert "PoolNet" in response.text
     assert "Прокси" in response.text
 
 
 def test_every_site_page_serves(site_client):
     """All six pages answer 200 — a 404 between pages breaks navigation."""
-    for page in ("vpn", "proxy", "verify", "check", "premium", "status", "legal"):
+    for page in ("vpn", "proxy", "verify", "check", "free", "status", "legal"):
         assert site_client.get(f"/{page}").status_code == 200, page
         assert site_client.get(f"/{page}.html").status_code == 200, page
 
@@ -80,7 +80,7 @@ def test_english_tree_serves_and_matches_the_russian_contract():
     """
     import re
 
-    for name in ("index", "vpn", "proxy", "verify", "check", "premium", "status", "404", "legal"):
+    for name in ("index", "vpn", "proxy", "verify", "check", "free", "status", "404", "legal"):
         ru = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
         en = (SITE_DIR / "en" / f"{name}.html").read_text(encoding="utf-8")
         key = lambda page: sorted(  # noqa: E731 - local, one use
@@ -162,7 +162,7 @@ def test_api_routes_do_not_conflict_with_the_site(site_client):
 
 def test_every_english_page_serves(site_client):
     """The EN tree is reachable through the gateway, with English labels."""
-    for page in ("", "vpn", "proxy", "verify", "check", "premium", "status", "legal"):
+    for page in ("", "vpn", "proxy", "verify", "check", "free", "status", "legal"):
         response = site_client.get(f"/en/{page}" if page else "/en/")
         assert response.status_code == 200, page
         assert response.headers["cache-control"] == "no-cache"

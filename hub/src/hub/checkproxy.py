@@ -187,7 +187,7 @@ def check_proxy(
         _open_tunnel(sock, reader, proto, target_host, target_port, deadline)
         sock.sendall(
             f"GET /get HTTP/1.1\r\nHost: {target_host}\r\n"
-            f"User-Agent: poolnet\r\nConnection: close\r\n\r\n".encode("ascii")
+            f"User-Agent: PoolNet\r\nConnection: close\r\n\r\n".encode("ascii")
         )
         head = reader.read_until(b"\r\n\r\n", deadline)
         match = re.match(rb"^HTTP/1\.[01] (\d{3})", head)

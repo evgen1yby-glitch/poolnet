@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<title>Бесплатная VPN-подписка на 7 дней — PoolNet</title>
+<meta name="description" content="Бесплатная VPN-подписка на 7 дней из публичных узлов, без регистрации и оплаты.">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="system.css">
+</head>
+<body>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="index.html" aria-label="PoolNet — на главную">
+      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <span class="bn">PoolNet</span>
+    </a>
+    <nav class="main" aria-label="Разделы">
+      <a href="index.html">Главная</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="verify.html">Проверка</a>
+      <a href="check.html">Проверить узел</a>
+      <a href="status.html">Статус</a>
+      <a href="legal.html">Условия</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Язык">
+      <a class="lang-b on" href="free.html" hreflang="ru" aria-current="true">RU</a>
+      <a class="lang-b" href="en/free.html" hreflang="en">EN</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <span class="chip"><i></i>7 дней · без регистрации · без оплаты</span>
+      <h1>Бесплатная <span class="grad-txt">VPN-подписка</span></h1>
+      <p class="sub">Одна ссылка для Happ/Xray: одна страна — один профиль с внутренней ротацией серверов. Узлы собраны из публичных источников; мы не оператор узлов и не даём гарантий.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap freebox">
+      <div class="freecard">
+        <div class="pk">БЕСПЛАТНО · 7 ДНЕЙ</div>
+        <h2>Получить подписку</h2>
+        <p>Нажмите кнопку — сервер выдаст ключ на 7 дней. Никакой почты, аккаунта и оплаты. Ссылку можно добавить в Happ, Hiddify, v2rayNG или Clash.</p>
+        <button type="button" class="btn btn-1" id="get">Получить подписку на 7 дней</button>
+        <div id="result" class="freeresult" hidden></div>
+        <p class="freenote">Публичные узлы могут логировать или менять трафик. Не используйте их для чувствительных данных без собственного шифрования. <a href="legal.html">Условия использования</a>.</p>
+        <div id="tgbox" hidden>
+          <p class="freenote">Хотите получать свежие подписки в Telegram?</p>
+          <a class="btn btn-2" id="tg" href="https://t.me/" rel="noopener">Получить в Telegram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  var btn = document.getElementById("get");
+  var out = document.getElementById("result");
+  if (!btn || !out) return;
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function link(label, url) {
+    return '<div class="freelink"><span>' + esc(label) + '</span><code>' + esc(url) + '</code>' +
+      '<button type="button" class="btn mini" data-copy="' + esc(url) + '">копировать</button></div>';
+  }
+  btn.addEventListener("click", function () {
+    btn.disabled = true;
+    out.hidden = false;
+    out.innerHTML = '<p class="freenote">Выдаю ключ…</p>';
+    fetch("/api/free-subscription", { method: "POST", cache: "no-store" })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (x) {
+        if (!x.ok) { out.innerHTML = '<p class="freenote">Не удалось: ' + esc(x.body.error || "ошибка") + '</p>'; return; }
+        var base = x.body.subscription;
+        var until = x.body.expires_at ? x.body.expires_at.slice(0, 16).replace("T", " ") + " UTC" : "";
+        out.innerHTML = '<h3>Готово — ключ действует до ' + esc(until) + '</h3>' +
+          link("Happ / Xray (ротация по стране)", base + "?core=xray") +
+          link("Base64 — полный список", base + "?format=base64") +
+          link("Base64 — по одному узлу на страну", base + "?format=base64&unique=1") +
+          '<p class="freenote">В базе хранится только хеш ключа: сохраните ссылку сейчас. По истечении срока выпустите новую.</p>';
+      })
+      .catch(function () { out.innerHTML = '<p class="freenote">Сервер недоступен, попробуйте позже.</p>'; })
+      .then(function () { btn.disabled = false; });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-copy]");
+    if (b) navigator.clipboard && navigator.clipboard.writeText(b.getAttribute("data-copy"));
+  });
+  fetch("/api/v1/bot").then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.username) { var a = document.getElementById("tg"); a.href = "https://t.me/" + d.username + "?start=site_free"; document.getElementById("tgbox").hidden = false; }
+  }).catch(function () {});
+})();
+</script>
+
+<footer class="site">
+  <div class="wrap foot">
+    <div>
+      <div class="fbrand">
+        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <span>PoolNet</span>
+      </div>
+      <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>
+      <p class="cop">© 2026 PoolNet</p>
+    </div>
+    <nav aria-label="Ссылки">
+      <a href="index.html">Главная</a>
+      <a href="vpn.html">VPN</a>
+      <a href="proxy.html">Прокси-пул</a>
+      <a href="check.html">Проверить узел</a>
+      <a href="status.html">Статус</a>
+    </nav>
+  </div>
+</footer>
+<script src="flags.js" defer></script>
+</body>
+</html>

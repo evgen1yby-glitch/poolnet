@@ -1,4 +1,4 @@
-# poolnet — repo-wide development entry points.
+# PoolNet — repo-wide development entry points.
 .PHONY: test lint site check help
 
 # Hub pytest, then pool unit tests.

@@ -16,15 +16,15 @@ map $uri $request_uri_redacted {
     ~^/sub/ "/sub/[redacted]";
     ~^/api/v1/sub/ "/api/v1/sub/[redacted]";
 }
-log_format poolnet_safe '$remote_addr - [$time_local] "$request_method $request_uri_redacted" '
+log_format PoolNet_safe '$remote_addr - [$time_local] "$request_method $request_uri_redacted" '
                          '$status $body_bytes_sent "$http_user_agent"';
 
-upstream poolnet_app {
+upstream PoolNet_app {
     server 127.0.0.1:8090;
     keepalive 16;
 }
 
-limit_req_zone $binary_remote_addr zone=poolnet_sub:10m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=PoolNet_sub:10m rate=10r/s;
 
 server {
     listen 443 ssl http2;
@@ -46,18 +46,18 @@ server {
         return 301 https://poolnet.online$request_uri;
     }
 
-    access_log /var/log/nginx/poolnet.access.log poolnet_safe;
+    access_log /var/log/nginx/poolnet.access.log PoolNet_safe;
     error_log  /var/log/nginx/poolnet.error.log warn;
 
     # Subscription fetches are the hottest path; the app also rate-limits, and
     # nginx caps a scanner before it reaches Python.
     location ^~ /sub/ {
-        limit_req zone=poolnet_sub burst=20 nodelay;
+        limit_req zone=PoolNet_sub burst=20 nodelay;
         proxy_pass http://poolnet_app;
         include /etc/nginx/proxy_params;
     }
     location ^~ /api/v1/sub/ {
-        limit_req zone=poolnet_sub burst=20 nodelay;
+        limit_req zone=PoolNet_sub burst=20 nodelay;
         proxy_pass http://poolnet_app;
         include /etc/nginx/proxy_params;
     }

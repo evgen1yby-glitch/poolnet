@@ -5,16 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
-<title>poolnet — VPN и открытый прокси-пул</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
+<title>PoolNet — VPN и открытый прокси-пул</title>
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="index.html" aria-label="poolnet — на главную">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
-      <span class="bn">poolnet</span>
+    <a class="brand" href="index.html" aria-label="PoolNet — на главную">
+      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Разделы">
       <a href="index.html" class="on">Главная</a>
@@ -22,7 +24,6 @@
       <a href="proxy.html">Прокси-пул</a>
       <a href="verify.html">Проверка</a>
       <a href="check.html">Проверить узел</a>
-      <a href="premium.html">Премиум</a>
       <a href="status.html">Статус</a>
       <a href="legal.html">Условия</a>
     </nav>
@@ -41,11 +42,11 @@
       <h1>Прокси и VPN, <span class="grad-txt">проверенные трафиком</span></h1>
       <p class="sub">Два пула на одной платформе проверки: открытая прокси-база ({{pool.total|30 576}} HTTP/SOCKS) и VPN-конфигурации ({{vpn.verified|150}} узлов, {{vpn.countries|29}} стран). Каждая запись проходит полный прогон реальными соединениями перед публикацией.</p>
       <div class="cta-row">
-        <a class="btn btn-1" href="vpn.html">Получить VPN</a>
+        <a class="btn btn-1" href="free.html">Получить VPN бесплатно</a>
         <a class="btn btn-2" href="proxy.html">Открыть прокси-пул</a>
       </div>
       <div class="console" role="img" aria-label="Живая выдача пула">
-        <div class="console-bar"><span class="dot"></span><span class="t">poolnet://vpn-pool — live</span><span class="id">{{vpn.generation|gen-8207ce0d9106}}</span></div>
+        <div class="console-bar"><span class="dot"></span><span class="t">PoolNet://vpn-pool — live</span><span class="id">{{vpn.generation|gen-8207ce0d9106}}</span></div>
         <div class="console-body">
           <div class="c-l">
 <!--begin:rows:console--><div class="crow"><span class="cc" data-cc="US">US</span><span class="cb"><i style="width:100.0%"></i></span><span class="cn">25</span></div><div class="crow"><span class="cc" data-cc="DE">DE</span><span class="cb"><i style="width:80.0%"></i></span><span class="cn">20</span></div><div class="crow"><span class="cc" data-cc="FR">FR</span><span class="cb"><i style="width:76.0%"></i></span><span class="cn">19</span></div><div class="crow"><span class="cc" data-cc="NL">NL</span><span class="cb"><i style="width:52.0%"></i></span><span class="cn">13</span></div><div class="crow"><span class="cc" data-cc="PL">PL</span><span class="cb"><i style="width:48.0%"></i></span><span class="cn">12</span></div><div class="crow"><span class="cc" data-cc="FI">FI</span><span class="cb"><i style="width:40.0%"></i></span><span class="cn">10</span></div><!--end:rows:console-->
@@ -123,41 +124,17 @@
     </div>
   </section>
 
-  <section>
-    <div class="wrap">
-      <div class="prem-tease">
-        <div>
-          <div class="pk">ДОСТУПНО СЕЙЧАС</div>
-          <h3>Free</h3>
-          <ul>
-            <li>Полный доступ к прокси-пулу</li>
-            <li>VPN-конфигурации {{vpn.countries|29}} стран с активными узлами</li>
-            <li>Публичные журнал отсева и статус прогона</li>
-          </ul>
-        </div>
-        <div>
-          <div class="pk">В РАЗРАБОТКЕ</div>
-          <h3>Premium</h3>
-          <p style="color:var(--mut)">Выделенная инфраструктура, стабильная скорость и приоритетная поддержка. Подробности и цены будут опубликованы на этой странице.</p>
-          <div class="cta-row" style="justify-content:flex-start;margin-top:1.4rem">
-            <a class="btn btn-1" href="premium.html">Тариф Premium</a>
-            <a class="btn btn-2" href="status.html">статус сети</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer class="site">
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
-        <span>poolnet</span>
+        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <span>PoolNet</span>
       </div>
       <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>
-      <p class="cop">© 2026 poolnet</p>
+      <p class="cop">© 2026 PoolNet</p>
     </div>
     <nav aria-label="Ссылки">
       <a href="index.html">Главная</a>
@@ -165,7 +142,6 @@
       <a href="proxy.html">Прокси-пул</a>
       <a href="verify.html">Проверка</a>
       <a href="check.html">Проверить узел</a>
-      <a href="premium.html">Премиум</a>
       <a href="status.html">Статус</a>
     </nav>
   </div>

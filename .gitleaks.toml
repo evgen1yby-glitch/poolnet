@@ -1,6 +1,6 @@
 # Scan history and staged files for credentials. Data dirs and toolchains are
 # not part of the repository; excluding them keeps the scan fast and honest.
-title = "poolnet"
+title = "PoolNet"
 [extend]
 useDefault = true
 

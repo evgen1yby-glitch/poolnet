@@ -1,5 +1,5 @@
 [Unit]
-Description=poolnet — hub API and the public site
+Description=PoolNet — hub API and the public site
 After=network-online.target
 Wants=network-online.target
 

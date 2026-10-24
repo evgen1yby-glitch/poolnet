@@ -53,7 +53,7 @@ def dur(s: int) -> str:
 
 
 def wordmark() -> str:
-    return '<a class="wordmark" href="#"><i>p</i>poolnet</a>'
+    return '<a class="wordmark" href="#"><i>p</i>PoolNet</a>'
 
 
 def topbar(active: str = "landing") -> str:

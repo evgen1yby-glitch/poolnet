@@ -341,3 +341,39 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
 .legal h2{font-size:1.25rem;font-weight:600;letter-spacing:-.01em;margin:2rem 0 .55rem}
 .legal p{color:var(--mut);margin:.55rem 0}
 .legal a{color:var(--txt);text-decoration:underline;text-underline-offset:.16em}
+
+
+/* ==== v9: raster brand mark (white line art, transparent) ==== */
+.brand .logo-img{width:1.9rem;height:1.9rem;object-fit:contain;flex:none}
+.fbrand .logo-img{width:1.9rem;height:1.9rem;object-fit:contain;opacity:.5}
+
+/* ==== v10: free bar, free subscription, download card ==== */
+.freebar{background:linear-gradient(90deg,rgba(139,92,255,.16),rgba(56,189,248,.10));border-bottom:1px solid var(--line);font-size:.8rem}
+.freebar-in{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding-block:.42rem;color:var(--mut)}
+.freebar-in b{color:var(--txt)}
+.freebar-in a{color:var(--mut)}
+.freebar-cta{flex:none;border:1px solid rgba(139,92,255,.45);border-radius:999px;padding:.3rem .75rem;color:var(--txt)!important;background:rgba(139,92,255,.12);font-weight:600}
+.freebox{max-width:52rem}
+.freecard{background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:clamp(1.3rem,3vw,2rem)}
+.freecard h2{font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.02em;margin:.3rem 0 .6rem}
+.freecard p{color:var(--mut);margin:.5rem 0 1rem}
+.freeresult{margin-top:1.2rem;border-top:1px solid var(--line);padding-top:1rem}
+.freeresult h3{font-size:1rem;margin-bottom:.7rem}
+.freelink{display:grid;grid-template-columns:11rem 1fr auto;gap:.6rem;align-items:center;padding:.5rem 0;border-bottom:1px dashed var(--line);font-size:.82rem}
+.freelink span{color:var(--dim)}
+.freelink code{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--txt);overflow-wrap:anywhere}
+.freenote{color:var(--dim);font-size:.82rem;margin-top:.8rem}
+.freenote a{text-decoration:underline;text-underline-offset:.16em;color:var(--mut)}
+.dlcard{margin:1.6rem auto 0;max-width:56rem;border:1px solid var(--line2);border-radius:16px;background:rgba(14,14,20,.72);padding:1rem 1.1rem;text-align:left}
+.dlhead{display:flex;justify-content:space-between;gap:.8rem;flex-wrap:wrap;align-items:baseline}
+.dlk{font-weight:600;color:var(--txt)}
+.dlnote{font-size:.76rem;color:var(--dim);font-family:"JetBrains Mono",monospace}
+.dlb{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.75rem}
+.dlb a{display:inline-flex;gap:.45rem;align-items:center;border:1px solid var(--line2);border-radius:9px;padding:.42rem .66rem;font-family:"JetBrains Mono",monospace;font-size:.76rem;color:var(--mut);background:rgba(255,255,255,.02)}
+.dlb a:hover{border-color:var(--vio);color:var(--txt)}
+.dlb b{color:var(--cyn);font-weight:600}
+.dlfoot{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.85rem;font-size:.8rem}
+.dlfoot>a:first-child{color:var(--mut)}
+.dlfoot .btn{padding:.55rem 1rem;font-size:.84rem}
+.mini{padding:.35rem .6rem!important;font-size:.74rem!important}
+@media (max-width:34rem){.freebar-in{flex-wrap:wrap}.freelink{grid-template-columns:1fr}.dlfoot .btn{width:100%}}

@@ -1,5 +1,5 @@
 [Unit]
-Description=poolnet — one proxy-pool refresh cycle
+Description=PoolNet — one proxy-pool refresh cycle
 After=network-online.target
 Wants=network-online.target
 

@@ -215,3 +215,20 @@ td code { font-size: 0.82rem; }
   .url { max-width: 100%; }
   header, main { padding-left: 1.1rem; padding-right: 1.1rem; }
 }
+
+/* Subscription dashboard: six counters above the tables. */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.7rem;margin:0 0 1.2rem}
+.stat{border:1px solid var(--rule);border-radius:10px;padding:.8rem .95rem;background:var(--paper-2)}
+.stat-k{font-size:.72rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em}
+.stat-v{font-size:1.55rem;font-weight:700;margin-top:.2rem}
+.stat-h{font-size:.7rem;color:var(--ink-3);margin-top:.15rem}
+.issue select{background:var(--paper-2);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:.55rem .6rem;min-width:8rem}
+
+.tscroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:56rem){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .issue{flex-wrap:wrap}
+  .issue input,.issue select{min-width:0;width:100%;max-width:none!important}
+  .issue .btn{width:100%}
+  .tscroll table{min-width:46rem}
+}

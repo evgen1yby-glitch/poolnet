@@ -1,4 +1,4 @@
-# Архитектура poolnet
+# Архитектура PoolNet
 
 Статус: M5 завершён, M6 (production-grade упаковка) выполнен. В проде один
 процесс — `hub` (FastAPI). `pool` — отдельный движок, который публикует файлы
@@ -129,7 +129,7 @@ VPN-поток идёт из хранилища `hub`: `/api/v1/stats` и сек
 ## Репозиторий и данные
 
 ```
-poolnet/
+PoolNet/
 ├── hub/src/hub/        FastAPI-ядро, gateway/poolstatus/siteview, pipeline, bot
 ├── hub/tests/          pytest-набор
 ├── web/site/           публичный сайт (HTML/CSS/шрифты)

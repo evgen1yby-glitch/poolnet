@@ -18,7 +18,7 @@ import hashlib
 import json
 import os
 import shutil
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -119,7 +119,12 @@ class Store:
                 token_hash  TEXT PRIMARY KEY,
                 telegram_id INTEGER NOT NULL,
                 status      TEXT NOT NULL DEFAULT 'active',
-                created_at  TEXT NOT NULL
+                created_at  TEXT NOT NULL,
+                label       TEXT NOT NULL DEFAULT '',
+                expires_at  TEXT,
+                username    TEXT NOT NULL DEFAULT '',
+                source      TEXT NOT NULL DEFAULT '',
+                last_seen   TEXT
             );
             CREATE INDEX IF NOT EXISTS subscription_tokens_status
                 ON subscription_tokens (status);
@@ -186,10 +191,15 @@ class Store:
         token_columns = {
             row[1] for row in conn.execute("PRAGMA table_info(subscription_tokens)")
         }
-        if token_columns and "label" not in token_columns:
-            conn.execute(
-                "ALTER TABLE subscription_tokens ADD COLUMN label TEXT NOT NULL DEFAULT ''"
-            )
+        for column, ddl in {
+            "label": "ALTER TABLE subscription_tokens ADD COLUMN label TEXT NOT NULL DEFAULT ''",
+            "expires_at": "ALTER TABLE subscription_tokens ADD COLUMN expires_at TEXT",
+            "username": "ALTER TABLE subscription_tokens ADD COLUMN username TEXT NOT NULL DEFAULT ''",
+            "source": "ALTER TABLE subscription_tokens ADD COLUMN source TEXT NOT NULL DEFAULT ''",
+            "last_seen": "ALTER TABLE subscription_tokens ADD COLUMN last_seen TEXT",
+        }.items():
+            if token_columns and column not in token_columns:
+                conn.execute(ddl)
         conn.commit()
 
     @staticmethod
@@ -200,7 +210,10 @@ class Store:
         conn.execute(
             "CREATE TABLE IF NOT EXISTS subscription_tokens ("
             "token_hash TEXT PRIMARY KEY, telegram_id INTEGER NOT NULL, "
-            "status TEXT NOT NULL DEFAULT 'active', created_at TEXT NOT NULL)"
+            "status TEXT NOT NULL DEFAULT 'active', created_at TEXT NOT NULL, "
+            "label TEXT NOT NULL DEFAULT '', expires_at TEXT, "
+            "username TEXT NOT NULL DEFAULT '', source TEXT NOT NULL DEFAULT '', "
+            "last_seen TEXT)"
         )
         columns = {row[1] for row in conn.execute("PRAGMA table_info(subscriptions)")}
         if "token" not in columns:
@@ -294,14 +307,20 @@ class Store:
         return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
     def issue_subscription(
-        self, token: str, telegram_id: int, *, label: str = ""
+        self,
+        token: str,
+        telegram_id: int,
+        *,
+        label: str = "",
+        expires_at: str | None = None,
+        username: str = "",
+        source: str = "panel",
     ) -> bool:
         """Persist a new active token; return False only on a token collision.
 
-        `telegram_id` is 0 for a key minted in the operator panel rather than by
-        the bot. That is not a placeholder for a missing value — the column is
-        the bot's identity for the holder, and a panel-issued key has none. Zero
-        says so, and the panel's list distinguishes the two by it.
+        `telegram_id` is 0 for a key minted on the web or in the panel rather
+        than by the bot. `expires_at` is an ISO timestamp or None for a token
+        with no term; new public keys always carry a term.
         """
         import sqlite3
 
@@ -310,13 +329,16 @@ class Store:
             try:
                 conn.execute(
                     "INSERT INTO subscription_tokens"
-                    " (token_hash, telegram_id, status, created_at, label)"
-                    " VALUES (?, ?, 'active', ?, ?)",
+                    " (token_hash, telegram_id, status, created_at, label, expires_at, username, source)"
+                    " VALUES (?, ?, 'active', ?, ?, ?, ?, ?)",
                     (
                         self._subscription_key(token),
                         telegram_id,
                         datetime.now(timezone.utc).isoformat(),
                         label,
+                        expires_at,
+                        username,
+                        source,
                     ),
                 )
             except sqlite3.IntegrityError:
@@ -328,14 +350,64 @@ class Store:
             conn.close()
 
     def subscription_status(self, token: str) -> str | None:
-        """Return active/revoked for a known bearer token, without storing it."""
+        """Return active/expired/revoked for a bearer token, without storing it."""
         conn = self.connect()
         try:
             row = conn.execute(
-                "SELECT status FROM subscription_tokens WHERE token_hash = ?",
+                "SELECT status, expires_at FROM subscription_tokens WHERE token_hash = ?",
                 (self._subscription_key(token),),
             ).fetchone()
-            return str(row[0]) if row else None
+        finally:
+            conn.close()
+        if not row:
+            return None
+        status, expires_at = str(row[0]), row[1]
+        if status == "active" and expires_at:
+            try:
+                expiry = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+            except ValueError:
+                expiry = None
+            if expiry is not None and expiry <= datetime.now(timezone.utc):
+                return "expired"
+        return status
+
+    def touch_subscription(self, token: str) -> None:
+        """Record the last successful fetch, best-effort; never raises."""
+        conn = self.connect()
+        try:
+            conn.execute(
+                "UPDATE subscription_tokens SET last_seen = ? WHERE token_hash = ?",
+                (datetime.now(timezone.utc).isoformat(), self._subscription_key(token)),
+            )
+            conn.commit()
+        except Exception:
+            pass
+        finally:
+            conn.close()
+
+    def extend_subscription(self, prefix: str, days: int) -> int:
+        """Add days to every token whose digest starts with `prefix`."""
+        conn = self.connect()
+        try:
+            rows = conn.execute(
+                "SELECT token_hash, expires_at FROM subscription_tokens"
+                " WHERE token_hash LIKE ? AND status = 'active'",
+                (prefix + "%",),
+            ).fetchall()
+            now = datetime.now(timezone.utc)
+            for digest, expires_at in rows:
+                try:
+                    base = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00")) if expires_at else now
+                except ValueError:
+                    base = now
+                if base < now:
+                    base = now
+                conn.execute(
+                    "UPDATE subscription_tokens SET expires_at = ? WHERE token_hash = ?",
+                    ((base + timedelta(days=days)).isoformat(), digest),
+                )
+            conn.commit()
+            return len(rows)
         finally:
             conn.close()
 
