@@ -1,5 +1,7 @@
 # PoolNet
 
+[**Сайт**](https://poolnet.online) · [**Автосписки**](https://github.com/evgen1yby-glitch/poolnet/tree/lists) · [CI](https://github.com/evgen1yby-glitch/poolnet/actions) · [Аудит](docs/AUDIT-2026-10-24.md)
+
 Единая платформа **PoolNet** (poolnet.online): открытая прокси-база
 (HTTP / SOCKS4 / SOCKS5) и VPN-конфигурации (vless / ss / vmess / trojan) —
 два пула, один стандарт проверки реальными соединениями, открытые данные и
@@ -7,6 +9,7 @@
 
 Репозиторий объединяет два прежних проекта: `hub` (freevpn, контрольная
 плоскость VPN-пула) и `pool` (open-proxy-pool, движок прокси-базы).
+
 ## Что здесь есть
 
 | Каталог | Что это | Стек | Лицензия |
@@ -16,9 +19,29 @@
 | `pool/` | Прокси-база: 202 источника, дедупликация, проверка, бенчмарк источников, публикация JSON/TXT | Node ≥ 20.11, TypeScript | MIT |
 | `docs/` | Документация объединения и эксплуатации | — | — |
 
-Данные прогонов (`data/`, `*/data/`), секреты и окружение в git не попадают:
+Данные прогонов (`data/`, `*/data/`), секреты и окружение в `main` не попадают:
 каталог публикации создаётся на сервере, а сайт и API читают его через
-`POOLNET_POOL_DIR` / `HUB_SITE`.
+`POOLNET_POOL_DIR` / `HUB_SITE`. Публичные снимки лежат отдельно, в ветке
+[`lists`](https://github.com/evgen1yby-glitch/poolnet/tree/lists).
+
+## Автоматические списки
+
+Ветка `lists` обновляется GitHub Actions каждые 15 минут из опубликованных
+проверенных данных. Это те же узлы, что видит сайт: прокси-цикл и VPN-поколение,
+без ручной сборки.
+
+| Что | Ссылка |
+| --- | --- |
+| Все прокси | [pool/all.txt](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/all.txt) |
+| HTTP / SOCKS5 / SOCKS4 | [HTTP](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/http.txt) · [SOCKS5](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/socks5.txt) · [SOCKS4](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/socks4.txt) |
+| JSON с метаданными | [proxies.json](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/proxies.json) |
+| VPN для Happ / Hiddify | [sing-box base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.base64) |
+| VPN для Xray / v2rayNG | [xray base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-xray.base64) |
+| Clash / mihomo | [clash](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.clash) |
+
+Ссылку можно добавлять в клиент как подписку. Для персонального ключа на 7 дней
+лучше использовать [poolnet.online/free](https://poolnet.online/free): он
+показывает срок и не зависит от снимка ветки.
 
 ## Как это работает
 

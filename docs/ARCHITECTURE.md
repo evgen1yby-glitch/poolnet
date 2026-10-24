@@ -89,10 +89,19 @@ VPN-поток идёт из хранилища `hub`: `/api/v1/stats` и сек
 ### `GET /pool/*`
 
 Закрытый allow-list: `http.txt`, `socks4.txt`, `socks5.txt`, `all.txt`,
-`proxies.json`, `meta.json`, `stats.json` и `country/XX.txt` (ровно две
-заглавные буквы). Всё остальное — 404. Файлы отдаются потоком с
-`Cache-Control: max-age=60`. Старые адреса `/data/*` отвечают 307 на
-`/pool/*`.
+`top100.txt`, `top1000.txt`, `proxies.json`, `manifest.json`,
+`benchmark.json`, `history.json`, `meta.json`, `stats.json` и
+`country/XX.txt` (ровно две заглавные буквы). Всё остальное — 404. Файлы
+отдаются потоком с `Cache-Control: max-age=60`. Старые адреса `/data/*`
+отвечают 307 на `/pool/*`.
+
+### `GET /vpn/*`
+
+Публичные payload'ы текущего VPN-поколения: `verified-*` и `curated-*`
+(`.base64`, `.singbox`, `.json`, `.clash`) и `manifest.json`. Отдаются только
+имена, перечисленные в манифесте поколения; произвольные файлы каталога и
+`..` недоступны. Это снимок для зеркала `lists`, а персональные ключи со
+сроком по-прежнему выдаются через `/sub/<token>`.
 
 ### `GET /api/check`
 

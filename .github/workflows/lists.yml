@@ -1,0 +1,39 @@
+name: lists
+
+on:
+  schedule:
+    # GitHub may delay the start; the branch is a snapshot, not a transaction.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lists
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build snapshot
+        run: python scripts/build_lists.py --out "$RUNNER_TEMP/lists"
+      - name: Publish the lists branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/lists"
+          git init -q
+          git checkout -q -b lists
+          git config user.name "PoolNet lists"
+          git config user.email "lists@poolnet.online"
+          git add -A
+          git commit -qm "lists: snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin lists

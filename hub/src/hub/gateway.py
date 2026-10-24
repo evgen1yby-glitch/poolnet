@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import hashlib
 import ipaddress
+import json
 import re
 import logging
 import threading
@@ -67,6 +68,8 @@ POOL_FILES = {
     "socks4.txt": "text/plain; charset=utf-8",
     "socks5.txt": "text/plain; charset=utf-8",
     "all.txt": "text/plain; charset=utf-8",
+    "top100.txt": "text/plain; charset=utf-8",
+    "top1000.txt": "text/plain; charset=utf-8",
     "proxies.json": "application/json",
     "manifest.json": "application/json",
     "benchmark.json": "application/json",
@@ -79,6 +82,17 @@ POOL_FILES = {
 PAGE_SLUGS = ("vpn", "proxy", "verify", "check", "free", "status", "legal")
 
 _COUNTRY_SHARD = re.compile(r"^[A-Z]{2}\.txt$")
+
+#: VPN generation payloads are public subscriptions, but only the files the
+#: manifest declares. A suffix allow-list alone would let an internal temp file
+#: through if one ever appeared beside them.
+VPN_TYPES = {
+    ".base64": "text/plain; charset=utf-8",
+    ".singbox": "application/json",
+    ".json": "application/json",
+    ".clash": "text/yaml; charset=utf-8",
+    ".yaml": "text/yaml; charset=utf-8",
+}
 _CHECK_ADDR = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}:\d{1,5}$")
 
 
@@ -320,6 +334,44 @@ def register_gateway(
             return PlainTextResponse("нет такой страницы", status_code=404)
         # The allow-list constrains the name; resolve-then-contain also refuses
         # a symlink planted inside the publication dir that points elsewhere.
+        try:
+            candidate.resolve().relative_to(directory.resolve())
+        except (OSError, ValueError):
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        return FileResponse(
+            candidate,
+            media_type=ctype,
+            headers={"Cache-Control": "max-age=60", "Content-Disposition": "inline"},
+        )
+
+    @app.get("/vpn/{name:path}", include_in_schema=False)
+    async def vpn_file(name: str) -> Response:
+        """The current VPN generation's public subscription payloads.
+
+        Only names listed in the generation manifest are served. Tokens are
+        still what the website hands out for a short-term personal link; this
+        route is the failover snapshot the GitHub `lists` branch mirrors, so a
+        client that cannot reach the API can still import the same nodes.
+        """
+        generation = store.current_generation()
+        if not generation:
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        directory = store.generation_path(generation)
+        try:
+            manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        allowed = {
+            str(item.get("name"))
+            for item in manifest.get("payloads", [])
+            if isinstance(item, dict) and item.get("name")
+        }
+        if name != "manifest.json" and name not in allowed:
+            return PlainTextResponse("нет такой страницы", status_code=404)
+        ctype = "application/json" if name == "manifest.json" else VPN_TYPES.get(Path(name).suffix)
+        candidate = directory / name
+        if ctype is None or not candidate.is_file():
+            return PlainTextResponse("нет такой страницы", status_code=404)
         try:
             candidate.resolve().relative_to(directory.resolve())
         except (OSError, ValueError):
