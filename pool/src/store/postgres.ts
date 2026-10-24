@@ -146,6 +146,7 @@ export class PostgresStore implements Store {
     entries: Array<{
       key: string;
       country: string | null;
+      geoIp?: string | null;
       city: string | null;
       asn: number | null;
       org: string | null;

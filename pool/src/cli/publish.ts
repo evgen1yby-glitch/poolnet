@@ -1,8 +1,10 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { config, ensureDir } from '../config.js';
 import { log } from '../log.js';
 import { createStore } from '../store/index.js';
 import { subnetOfHost } from '../store/types.js';
+import { publicationGuard } from '../publish/guard.js';
 import { renderAll } from '../publish/render.js';
 import { atomicWriteJson } from '../io/jsonl.js';
 
@@ -23,6 +25,20 @@ export async function cmdPublish(): Promise<number> {
       perSubnet.set(s, n);
       return true;
     });
+    const guard = publicationGuard(cfg.dataDir, capped.length);
+    if (guard.open) {
+      log.warn(
+        `publish: refusing ${capped.length} after ${guard.previous}; keeping the previous generation`,
+      );
+      atomicWriteJson(path.join(cfg.dataDir, 'degraded.json'), {
+        at: Date.now(),
+        reason: 'publication dropped by more than half',
+        attempted: capped.length,
+        previous: guard.previous,
+      });
+      return 0;
+    }
+    fs.rmSync(path.join(cfg.dataDir, 'degraded.json'), { force: true });
     const report = renderAll(capped, {
       dataDir: cfg.dataDir,
       topN: cfg.topN,

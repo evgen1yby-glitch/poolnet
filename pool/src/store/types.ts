@@ -1,5 +1,8 @@
 import type { Anonymity } from '../check/stage.js';
 
+/** Bump when a check can no longer be compared with earlier evidence. */
+export const CHECKER_VERSION = 2;
+
 export interface CheckResultRecord {
   protocol: string;
   host: string;
@@ -28,6 +31,8 @@ export interface ProxyRecord extends CheckResultRecord {
   okChecks: number;
   fails: number;
   country: string | null;
+  /** The address the country was resolved from (the exit IP, not the host). */
+  geoIp?: string | null;
   city: string | null;
   asn: number | null;
   org: string | null;
@@ -37,6 +42,10 @@ export interface ProxyRecord extends CheckResultRecord {
   uptime30d: [number, number];
   latencySamples: number[];
   disabledUntil: number | null;
+  /** Missing on records written before the forwarding proof existed. */
+  checkerVersion?: number;
+  /** Successful/failed checks recorded since `checkerVersion` was set. */
+  versionChecks?: number;
 }
 
 export interface Store {
@@ -64,6 +73,8 @@ export interface Store {
 export interface GeoEntry {
   key: string;
   country: string | null;
+  /** The address the country was resolved from (the exit IP, not the host). */
+  geoIp?: string | null;
   city: string | null;
   asn: number | null;
   org: string | null;
@@ -130,12 +141,16 @@ export function newRecord(r: CheckResultRecord): ProxyRecord {
     uptime30d: [1, r.alive ? 1 : 0],
     latencySamples: r.latencyMs !== null ? [r.latencyMs] : [],
     disabledUntil: null,
+    checkerVersion: CHECKER_VERSION,
+    versionChecks: 1,
   };
 }
 
 export function applyResult(rec: ProxyRecord, r: CheckResultRecord): ProxyRecord {
   const now = r.checkedAt;
   const ageMs = now - rec.lastCheck;
+  const versionChecks =
+    rec.checkerVersion === CHECKER_VERSION ? (rec.versionChecks ?? 0) + 1 : 1;
   const lat = mergeLatency(rec.latencySamples, r.latencyMs);
   const merged: ProxyRecord = {
     ...rec,
@@ -165,6 +180,8 @@ export function applyResult(rec: ProxyRecord, r: CheckResultRecord): ProxyRecord
     uptime24h: rollWindow(rec.uptime24h, r.alive, ageMs, 24 * HOUR),
     uptime7d: rollWindow(rec.uptime7d, r.alive, ageMs, 7 * 24 * HOUR),
     uptime30d: rollWindow(rec.uptime30d, r.alive, ageMs, 30 * 24 * HOUR),
+    checkerVersion: CHECKER_VERSION,
+    versionChecks,
   };
   return merged;
 }

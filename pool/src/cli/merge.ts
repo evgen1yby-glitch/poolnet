@@ -9,6 +9,7 @@ import type { CheckResultRecord } from '../store/types.js';
 import { geoLookup } from '../geo/index.js';
 import { readCandidates } from './fetch.js';
 import { subnetOfHost } from '../store/types.js';
+import { publicationGuard } from '../publish/guard.js';
 import { renderAll } from '../publish/render.js';
 import { appendHistory, buildBenchmark, type CycleStats, type HistoryPoint } from '../benchmark/index.js';
 
@@ -79,18 +80,26 @@ export async function cmdMerge(): Promise<MergeReport> {
 
     // ---- geo enrichment for freshly alive proxies ----
     const pool = await store.loadPool();
-    const needGeo = [...pool.values()].filter((r) => r.alive && !r.country);
-    const ipHosts = [...new Set(needGeo.map((r) => r.host))];
+    // Country is the *exit* country. Resolving the proxy host instead made
+    // records disagree with where their traffic actually left the network.
+    const needGeo = [...pool.values()].filter(
+      (r) => r.alive && r.remoteIp && r.geoIp !== r.remoteIp,
+    );
+    const exitIps = [...new Set(needGeo.map((r) => r.remoteIp!))];
     let geoFilled = 0;
-    if (ipHosts.length) {
-      const geo = await geoLookup(ipHosts);
-      const entries = needGeo.map((r) => ({
-        key: r.key,
-        country: geo.get(r.host)?.country ?? null,
-        city: geo.get(r.host)?.city ?? null,
-        asn: geo.get(r.host)?.asn ?? null,
-        org: geo.get(r.host)?.org ?? null,
-      }));
+    if (exitIps.length) {
+      const geo = await geoLookup(exitIps);
+      const entries = needGeo.map((r) => {
+        const info = geo.get(r.remoteIp!);
+        return {
+          key: r.key,
+          country: info?.country ?? null,
+          geoIp: r.remoteIp,
+          city: info?.city ?? null,
+          asn: info?.asn ?? null,
+          org: info?.org ?? null,
+        };
+      });
       await store.applyGeo(entries);
       geoFilled = entries.filter((e) => e.country).length;
     }
@@ -125,6 +134,35 @@ export async function cmdMerge(): Promise<MergeReport> {
     });
 
     const generatedAt = Date.now();
+    const guard = publicationGuard(cfg.dataDir, capped.length);
+    if (guard.open) {
+      log.warn(
+        `publish: refusing ${capped.length} after ${guard.previous}; keeping the previous generation`,
+      );
+      atomicWriteJson(path.join(cfg.dataDir, 'degraded.json'), {
+        at: Date.now(),
+        reason: 'publication dropped by more than half',
+        attempted: capped.length,
+        previous: guard.previous,
+      });
+      return {
+        startedAt,
+        finishedAt: Date.now(),
+        shards: cfg.shardCount,
+        resultsIn: results.length,
+        aliveIn: 0,
+        poolSize: pool.size,
+        published: guard.previous,
+        byProtocol: {},
+        pendingForNextRun: 0,
+        geoFilled: 0,
+        pruned: 0,
+        maxPerSubnet: cfg.maxPerSubnet,
+        aliveBySource: {},
+        parsedBySource: {},
+      };
+    }
+    fs.rmSync(path.join(cfg.dataDir, 'degraded.json'), { force: true });
     const report = renderAll(capped, {
       dataDir: cfg.dataDir,
       topN: cfg.topN,

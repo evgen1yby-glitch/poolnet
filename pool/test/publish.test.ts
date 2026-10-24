@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { publicationGuard } from '../src/publish/guard.js';
 import { renderAll, qualitySort, toPublished } from '../src/publish/render.js';
 import {
   newRecord,
@@ -96,6 +97,10 @@ test('renderAll writes all artifacts with sane content', () => {
     assert.equal(fs.existsSync(path.join(dir, 'country/ZZ.txt')), false, 'stale shard removed');
     const top = fs.readFileSync(path.join(dir, 'top2.txt'), 'utf8').trim().split('\n');
     assert.equal(top.length, 2);
+    const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8'));
+    assert.equal(manifest.count, 8);
+    assert.equal(manifest.files.some((f: { name: string }) => f.name === 'all.txt'), true);
+    assert.equal(manifest.files.every((f: { sha256: string }) => f.sha256.length === 64), true);
     const stats = JSON.parse(fs.readFileSync(path.join(dir, 'stats.json'), 'utf8'));
     assert.equal(stats.total, 8);
     assert.equal(stats.byProtocol.socks5, 1);
@@ -132,6 +137,22 @@ test('publication refuses unproven exits and the checker itself', () => {
   }
 });
 
+test('publication guard keeps the previous files on a >50% collapse', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pool-guard-'));
+  try {
+    assert.equal(publicationGuard(dir, 10).open, false);
+    fs.writeFileSync(
+      path.join(dir, 'meta.json'),
+      JSON.stringify({ counts: { published: 1000 } }),
+      'utf8',
+    );
+    assert.equal(publicationGuard(dir, 499).open, true);
+    assert.equal(publicationGuard(dir, 500).open, false);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('qualitySort prefers elite, then non-mitm, then latency', () => {
   const a = toPublished(rec({ anonymity: 'elite', latencyMs: 800 }));
   const b = toPublished(rec({ anonymity: 'anonymous', latencyMs: 100 }));
@@ -140,6 +161,16 @@ test('qualitySort prefers elite, then non-mitm, then latency', () => {
   assert.ok(qualitySort(a, b) < 0);
   assert.ok(qualitySort(d, c) < 0);
   assert.equal(qualitySort(a, d), 0);
+});
+
+test('uptime from an older checker is unknown until three new checks', () => {
+  const old = rec({ checkerVersion: undefined, okChecks: 10, uptime30d: [10, 10] });
+  assert.equal(toPublished(old).uptime30d, null);
+  let next = applyResult(old, mk());
+  assert.equal(toPublished(next).uptime30d, null, 'first proof is not history');
+  next = applyResult(next, mk({ checkedAt: next.lastCheck + 1 }));
+  next = applyResult(next, mk({ checkedAt: next.lastCheck + 1 }));
+  assert.equal(toPublished(next).uptime30d, 100);
 });
 
 test('applyResult drops a stale grade when the new check cannot grade anonymity', () => {

@@ -1,6 +1,7 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { percentile, uptimePct, type ProxyRecord } from '../store/types.js';
+import { CHECKER_VERSION, percentile, uptimePct, type ProxyRecord } from '../store/types.js';
 
 export interface PublishedProxy {
   protocol: string;
@@ -52,7 +53,12 @@ export function toPublished(rec: ProxyRecord): PublishedProxy {
 export const MIN_UPTIME_OK_CHECKS = 3;
 
 function publishedUptime(rec: ProxyRecord, window: [number, number]): number | null {
-  return rec.okChecks < MIN_UPTIME_OK_CHECKS ? null : uptimePct(window);
+  // Pre-version records carry history from before the forwarding proof, so
+  // their percentage is not comparable with today's checks. Show "unknown"
+  // until the record is rechecked, rather than inheriting a false 100%.
+  if (rec.checkerVersion !== CHECKER_VERSION) return null;
+  if ((rec.versionChecks ?? 0) < MIN_UPTIME_OK_CHECKS) return null;
+  return uptimePct(window);
 }
 
 const ANON_RANK: Record<string, number> = { elite: 0, anonymous: 1, transparent: 2, unknown: 3 };
@@ -73,11 +79,6 @@ export function lineFor(p: PublishedProxy): string {
   return `${p.protocol}://${auth}${p.host}:${p.port}`;
 }
 
-export function plainLineFor(p: PublishedProxy): string {
-  const auth = p.user ? `${p.user}:${p.pass ?? ''}@` : '';
-  return `${auth}${p.host}:${p.port}`;
-}
-
 export interface RenderOptions {
   dataDir: string;
   topN: number;
@@ -95,6 +96,7 @@ export interface RenderReport {
 
 export function renderAll(records: ProxyRecord[], opts: RenderOptions): RenderReport {
   const dir = path.join(opts.dataDir);
+  let writeSeq = 0;
   fs.mkdirSync(dir, { recursive: true });
   fs.mkdirSync(path.join(dir, 'country'), { recursive: true });
 
@@ -115,9 +117,19 @@ export function renderAll(records: ProxyRecord[], opts: RenderOptions): RenderRe
     .sort(qualitySort);
 
   const files: string[] = [];
+  const manifestFiles: Array<{ name: string; bytes: number; sha256: string }> = [];
   const write = (rel: string, content: string) => {
-    fs.writeFileSync(path.join(dir, rel), content);
+    const body = Buffer.from(content, 'utf8');
+    const target = path.join(dir, rel);
+    const tmp = `${target}.tmp-${process.pid}-${writeSeq++}`;
+    fs.writeFileSync(tmp, body);
+    fs.renameSync(tmp, target);
     files.push(rel);
+    manifestFiles.push({
+      name: rel,
+      bytes: body.length,
+      sha256: crypto.createHash('sha256').update(body).digest('hex'),
+    });
   };
 
   write('all.txt', pool.map(lineFor).join('\n') + '\n');
@@ -132,7 +144,7 @@ export function renderAll(records: ProxyRecord[], opts: RenderOptions): RenderRe
   }
 
   write(`top${opts.topN}.txt`, pool.slice(0, opts.topN).map(lineFor).join('\n') + '\n');
-  write('top100.txt', pool.slice(0, 100).map(plainLineFor).join('\n') + '\n');
+  write('top100.txt', pool.slice(0, 100).map(lineFor).join('\n') + '\n');
 
   // JSON carries full metadata; stripped fields keep the export lean.
   write(
@@ -235,6 +247,21 @@ export function renderAll(records: ProxyRecord[], opts: RenderOptions): RenderRe
     'last update',
     new Date(opts.generatedAt).toISOString().slice(0, 16).replace('T', ' '),
     'informational',
+  );
+
+  write(
+    'manifest.json',
+    `${JSON.stringify(
+      {
+        generatedAt: opts.generatedAt,
+        generatedIso: new Date(opts.generatedAt).toISOString(),
+        count: pool.length,
+        byProtocol,
+        files: manifestFiles,
+      },
+      null,
+      2,
+    )}\n`,
   );
 
   return { total: pool.length, byProtocol, files };

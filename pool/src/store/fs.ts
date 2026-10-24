@@ -66,6 +66,7 @@ export class FsStore implements Store {
       rec.city = e.city;
       rec.asn = e.asn;
       rec.org = e.org;
+      if (e.geoIp !== undefined) rec.geoIp = e.geoIp;
     }
   }
 
