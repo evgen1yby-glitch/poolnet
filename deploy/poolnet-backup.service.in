@@ -1,0 +1,13 @@
+[Unit]
+Description=poolnet — back up hub.db and pool state
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+UMask=0077
+User=@USER@
+Group=@GROUP@
+ExecStart=@DIR@/scripts/backup.sh
+Nice=10
+IOSchedulingClass=idle

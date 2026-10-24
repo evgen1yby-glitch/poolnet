@@ -1,0 +1,12 @@
+[Unit]
+Description=poolnet — health and freshness check
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+UMask=0077
+User=@USER@
+Group=@GROUP@
+Environment=POOLNET_INTERNAL_URL=http://127.0.0.1:8090
+ExecStart=/usr/bin/python3 @DIR@/scripts/healthcheck.py

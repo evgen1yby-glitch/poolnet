@@ -1,0 +1,11 @@
+[Unit]
+Description=poolnet — trim checks and event history
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+UMask=0077
+User=@USER@
+Group=@GROUP@
+ExecStart=/usr/bin/python3 @DIR@/scripts/hub_retention.py --root @DIR@/hub

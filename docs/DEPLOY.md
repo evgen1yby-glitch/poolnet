@@ -47,6 +47,8 @@ HUB_CHANNEL_ID=<id канала>
 HUB_BOT_SECRET=<секрет админки>
 # Необязательно: оставить панель только этим адресам (иначе — любой IP).
 # HUB_ADMIN_IPS=1.2.3.4,5.6.7.8
+# Необязательно: суточный бюджет бесплатных веб-ключей (по умолчанию 2000).
+# HUB_FREE_DAILY_LIMIT=2000
 EOF
 chmod 640 /etc/poolnet/poolnet.env
 chown root:poolnet /etc/poolnet/poolnet.env
@@ -175,3 +177,41 @@ nginx -t && systemctl reload nginx
 hub-api …`), убрать `poolnet-legacy.conf` и перезагрузить nginx. Каталоги
 данных не пересекаются (`hub/data`, `pool/data`), поэтому откат не теряет
 опубликованное.
+
+## 5. Бэкапы и ретеншн
+
+`deploy/poolnet-backup.timer` снимает согласованный `sqlite3 .backup` базы и
+архив `pool/.state` + `pool/data` ежедневно в 03:15 UTC; хранятся 14 копий.
+`deploy/poolnet-retention.timer` раз в неделю удаляет `checks` старше 30 дней
+и обрезает `events.ndjson` до 20 000 последних строк.
+
+```sh
+install -d -o astrobot -g astrobot -m 700 /var/backups/poolnet
+sed -e 's|@DIR@|/home/dev/poolnet|g' -e 's|@USER@|astrobot|g' \
+  -e 's|@GROUP@|astrobot|g' deploy/poolnet-backup.service.in \
+  | sudo tee /etc/systemd/system/poolnet-backup.service >/dev/null
+sudo cp deploy/poolnet-backup.timer deploy/poolnet-retention.timer \
+  /etc/systemd/system/
+sed -e 's|@DIR@|/home/dev/poolnet|g' -e 's|@USER@|astrobot|g' \
+  -e 's|@GROUP@|astrobot|g' deploy/poolnet-retention.service.in \
+  | sudo tee /etc/systemd/system/poolnet-retention.service >/dev/null
+sudo systemctl daemon-reload
+sudo systemctl enable --now poolnet-backup.timer poolnet-retention.timer
+# Проверка: sudo systemctl start poolnet-backup.service && ls -lh /var/backups/poolnet
+```
+
+## 6. Мониторинг
+
+`deploy/poolnet-healthcheck.timer` каждые 5 минут проверяет `/healthz` (возраст
+VPN-поколения) и `/api/status.json` (свежесть прокси-пула). При сбое таймер
+пишет в journal; если задан `POOLNET_ALERT_WEBHOOK`, отправляет туда JSON
+`{"text": "..."}`. Порог пула — 2 часа, VPN — 6 часов, переопределяется
+`POOLNET_MAX_POOL_HOURS`/`POOLNET_MAX_VPN_HOURS`.
+
+```sh
+sed -e 's|@DIR@|/home/dev/poolnet|g' -e 's|@USER@|astrobot|g' \
+  -e 's|@GROUP@|astrobot|g' deploy/poolnet-healthcheck.service.in \
+  | sudo tee /etc/systemd/system/poolnet-healthcheck.service >/dev/null
+sudo cp deploy/poolnet-healthcheck.timer /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now poolnet-healthcheck.timer
+```
