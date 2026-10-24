@@ -401,7 +401,12 @@ class Store:
             conn.close()
 
     def extend_subscription(self, prefix: str, days: int) -> int:
-        """Add days to every token whose digest starts with `prefix`."""
+        """Add days to the one token whose digest starts with `prefix`.
+
+        A short prefix is ambiguous by construction; returning the match count
+        lets the caller refuse with 409 instead of silently changing several
+        keys the operator did not name.
+        """
         conn = self.connect()
         try:
             rows = conn.execute(
@@ -409,6 +414,8 @@ class Store:
                 " WHERE token_hash LIKE ? AND status = 'active'",
                 (prefix + "%",),
             ).fetchall()
+            if len(rows) != 1:
+                return len(rows)
             now = datetime.now(timezone.utc)
             for digest, expires_at in rows:
                 try:
@@ -443,6 +450,18 @@ class Store:
             )
             conn.commit()
             return cursor.rowcount == 1
+        finally:
+            conn.close()
+
+    def count_subscriptions_since(self, since: str, *, source: str | None = None) -> int:
+        conn = self.connect()
+        try:
+            sql = "SELECT COUNT(*) FROM subscription_tokens WHERE created_at >= ?"
+            params: list[str] = [since]
+            if source:
+                sql += " AND source = ?"
+                params.append(source)
+            return int(conn.execute(sql, params).fetchone()[0])
         finally:
             conn.close()
 

@@ -68,6 +68,7 @@ POOL_FILES = {
     "socks5.txt": "text/plain; charset=utf-8",
     "all.txt": "text/plain; charset=utf-8",
     "proxies.json": "application/json",
+    "manifest.json": "application/json",
     "meta.json": "application/json",
     "stats.json": "application/json",
 }

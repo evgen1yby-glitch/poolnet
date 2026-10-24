@@ -1316,7 +1316,14 @@ class Pipeline:
         rows = conn.execute(
             "SELECT DISTINCT c.dedup_key, n.state FROM checks c"
             " JOIN nodes n ON n.dedup_key = c.dedup_key"
-            " WHERE c.stage = 'http' AND c.ok = 1 AND c.run_at >= ?",
+            " WHERE c.stage = 'http' AND c.ok = 1 AND c.run_at >= ?"
+            # A success followed by a failure is not proof of life: the later
+            # result is the current one. The old query could carry a dead node
+            # for the whole freshness window after the probe had seen it fail.
+            " AND NOT EXISTS ("
+            "   SELECT 1 FROM checks f WHERE f.dedup_key = c.dedup_key"
+            "   AND f.stage = 'http' AND f.run_at > c.run_at"
+            " )",
             (cutoff.isoformat(),),
         ).fetchall()
         out: list[Node] = []

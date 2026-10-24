@@ -810,7 +810,23 @@ def create_app(store: Store | None, sources: dict | None = None):
             return JSONResponse(
                 {"error": "too many keys from this network; try again later"},
                 status_code=429,
-                headers={"Cache-Control": "no-store"},
+                headers={"Cache-Control": "no-store", "Retry-After": "600"},
+            )
+        # A per-/24 bucket alone lets a botnet spread across many networks.
+        # The daily global budget is deliberately generous; it is a circuit
+        # breaker against runaway issuance, not a monetisation limit.
+        try:
+            daily_limit = max(0, int(os.environ.get("HUB_FREE_DAILY_LIMIT", "2000")))
+        except ValueError:
+            daily_limit = 2000
+        day_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        if daily_limit and store.count_subscriptions_since(
+            day_start.isoformat(), source="web"
+        ) >= daily_limit:
+            return JSONResponse(
+                {"error": "daily free-key budget exhausted; try again tomorrow"},
+                status_code=429,
+                headers={"Cache-Control": "no-store", "Retry-After": "3600"},
             )
         expires = datetime.now(timezone.utc) + timedelta(days=7)
         for _ in range(3):
@@ -1033,7 +1049,7 @@ def create_app(store: Store | None, sources: dict | None = None):
             return refusal
         form = await request.form()
         prefix = str(form.get("id") or "").strip()
-        if not 8 <= len(prefix) <= 12 or not all(c in "0123456789abcdef" for c in prefix):
+        if len(prefix) != 12 or not all(c in "0123456789abcdef" for c in prefix):
             return JSONResponse({"error": "bad id"}, status_code=400)
         try:
             days = int(str(form.get("days") or "7"))
@@ -1043,6 +1059,8 @@ def create_app(store: Store | None, sources: dict | None = None):
         count = store.extend_subscription(prefix, days)
         if not count:
             return JSONResponse({"status": "unknown"}, status_code=404)
+        if count > 1:
+            return JSONResponse({"status": "ambiguous", "count": count}, status_code=409)
         return JSONResponse({"status": "extended", "count": count, "days": days})
 
     @app.post("/admin/keys/revoke")
@@ -1060,7 +1078,7 @@ def create_app(store: Store | None, sources: dict | None = None):
             return refusal
         form = await request.form()
         prefix = str(form.get("id") or "").strip()
-        if not 8 <= len(prefix) <= 12 or not all(c in "0123456789abcdef" for c in prefix):
+        if len(prefix) != 12 or not all(c in "0123456789abcdef" for c in prefix):
             return JSONResponse({"error": "bad id"}, status_code=400)
         conn = store.connect()
         try:
@@ -1071,6 +1089,8 @@ def create_app(store: Store | None, sources: dict | None = None):
             ).fetchall()
             if not rows:
                 return JSONResponse({"status": "unknown"}, status_code=404)
+            if len(rows) != 1:
+                return JSONResponse({"status": "ambiguous", "count": len(rows)}, status_code=409)
             for (digest,) in rows:
                 conn.execute(
                     "UPDATE subscription_tokens SET status = 'revoked'"
