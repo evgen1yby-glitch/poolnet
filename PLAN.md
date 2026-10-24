@@ -282,8 +282,10 @@ PoolNet/
 - [x] Этап 1 (частично, 2026-10-24): мониторинг свежести с таймером и
   webhook, exit-country по `remoteIp`, VPN carry-over только по последней
   проверке. Uptime новых проверок не наследует старые 100% (версия чекера).
-- [ ] Остаток этапа 1: restore drill, freshness/stale_days в API, полная
-  публичная воронка VPN, деградация в `/healthz`.
+- [x] Restore drill (`scripts/restore_check.sh`), stale-источники в статусе,
+  `carried/verified` в воронке VPN, редирект старого `:8444` на домен.
+- [ ] Остаток этапа 1: freshness/stale_days отдельным полем API, деградация
+  в `/healthz` при устаревании пула (сейчас её ловит healthcheck-таймер).
 - [x] Этап 2 (2026-10-24): таблица бенчмарка, единый оффер 7 дней, живые числа
   без hardcode, мобильные файлы/поиск, контраст, skip-link/aria-current,
   touch-targets, live-region и подтверждение копирования на `/free`, legal

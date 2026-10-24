@@ -55,6 +55,11 @@ server {
 
     server_tokens off;
 
+    # Retired endpoint: subscriptions and pages live on the domain now. Keep
+    # the IP certificate valid for clients that still have an old link; the
+    # redirect preserves the path and query (the token is in the path).
+    return 301 https://poolnet.online$request_uri;
+
     access_log /var/log/nginx/hub.access.log hub_safe;
     error_log  /var/log/nginx/hub.error.log warn;
 

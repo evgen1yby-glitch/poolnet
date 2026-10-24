@@ -215,3 +215,13 @@ sed -e 's|@DIR@|/home/dev/poolnet|g' -e 's|@USER@|astrobot|g' \
 sudo cp deploy/poolnet-healthcheck.timer /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now poolnet-healthcheck.timer
 ```
+
+Старый IP-endpoint `:8444` теперь отвечает `301` на `https://poolnet.online`;
+его шаблон — `hub/deploy/nginx-hub-8444.conf.in`.
+
+Проверка восстановления (не трогает рабочую базу):
+
+```sh
+./scripts/restore_check.sh
+# restore-ok nodes=… subscriptions=… source=/var/backups/poolnet/…
+```
