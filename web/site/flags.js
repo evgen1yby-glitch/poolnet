@@ -275,6 +275,17 @@ const countryName = (cc) => {
   return table[cc] || COUNTRY_NAMES[cc] || cc;
 };
 
+const codeForName = (value) => {
+  const needle = String(value || "").trim().toLowerCase();
+  if (!needle) return null;
+  for (const table of [COUNTRY_NAMES, COUNTRY_NAMES_RU]) {
+    for (const [cc, name] of Object.entries(table)) {
+      if (String(name).toLowerCase() === needle) return cc;
+    }
+  }
+  return null;
+};
+
 // The merged site marks every country element with `data-cc`; mounting once
 // after parse puts the flag in front of the label. Idempotent so a page can
 // re-run it after injecting rows.
@@ -304,5 +315,5 @@ if (document.readyState === 'loading') {
   start();
 }
 
-window.Flags = { flagSvg, countryName, mount };
+window.Flags = { flagSvg, countryName, codeForName, mount };
 

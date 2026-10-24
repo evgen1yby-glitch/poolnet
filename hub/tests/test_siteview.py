@@ -183,13 +183,13 @@ def test_proxy_rows_replace_the_block(tmp_path):
     data["proxy_rows"] = data["proxy_rows"][:1]
     out = render_text(tmp_path, block("rows:proxy", "<tr><td>old</td></tr>"), data)
     assert out == (
-        '<tr><td class="pa">1</td>'
-        '<td class="addr">45.85.119.124:80</td>'
-        '<td><span class="pb">HTTP</span></td>'
-        '<td><span class="pb g-elite">elite</span></td>'
-        '<td class="num">7 ms</td>'
-        '<td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td>'
-        '<td class="num"><span class="ccx" data-cc="GB">GB</span></td></tr>'
+        '<tr><td class="pa" data-label="#">1</td>'
+        '<td class="addr" data-label="Proxy">45.85.119.124:80</td>'
+        '<td data-label="Protocol"><span class="pb">HTTP</span></td>'
+        '<td data-label="Grade"><span class="pb g-elite">elite</span></td>'
+        '<td class="num" data-label="Latency">7 ms</td>'
+        '<td class="up" data-label="Uptime"><span class="upb"><i style="width:100%"></i></span>100%</td>'
+        '<td class="num" data-label="Country"><span class="ccx" data-cc="GB">GB</span></td></tr>'
     )
 
 

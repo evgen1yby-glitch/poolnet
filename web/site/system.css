@@ -82,7 +82,7 @@ nav.main a.on::after{content:"";position:absolute;left:0;right:0;bottom:-.55rem;
 @media (prefers-reduced-motion:reduce){.console-bar .dot{animation:none}}
 .console-bar .t{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--mut);letter-spacing:.04em}
 .console-bar .id{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--dim)}
-.console-body{display:grid;grid-template-columns:1.35fr 1fr;min-height:248px}
+.console-body{display:grid;grid-template-columns:1.35fr 1fr;min-height:248px;overflow-wrap:anywhere}
 .console-body>*{padding:1.15rem 1.3rem}
 @media (max-width:56rem){.console-body{grid-template-columns:1fr}.console-body .c-r{border-top:1px solid var(--line)}}
 .c-l{border-right:1px solid var(--line)}
@@ -381,4 +381,21 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
 .stale{margin:1rem 0 0;padding:.7rem 1rem;border:1px solid rgba(251,191,36,.35);border-radius:10px;background:rgba(251,191,36,.08);color:var(--txt);font-size:.86rem}
 @media (pointer:coarse){
   .btn,.freebar-cta,.pg-btn,.lang-b{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+}
+
+
+/* ==== v13: proxy rows become cards on phones ==== */
+@media (max-width:34rem){
+  .tcard{background:transparent;border:0;overflow:visible}
+  .tscroll{overflow:visible}
+  table.pt{display:block;min-width:0}
+  table.pt thead{display:none}
+  table.pt tbody{display:flex;flex-direction:column;gap:.6rem}
+  table.pt tr{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;padding:.75rem .9rem;border:1px solid var(--line);border-radius:12px;background:var(--s1)}
+  table.pt td{display:flex;justify-content:space-between;gap:.8rem;border:0;padding:.2rem 0;white-space:normal;min-width:0}
+  table.pt td::before{content:attr(data-label);color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;flex:none}
+  table.pt td.addr{grid-column:1/-1;font-weight:600}
+  table.pt td.pa{display:none}
+  table.pt td.up .upb{width:min(40vw,9rem)}
+  table.pt td.num{text-align:right}
 }

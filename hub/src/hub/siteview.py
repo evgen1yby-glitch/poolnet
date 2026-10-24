@@ -136,15 +136,16 @@ def _rows_proxy(rows: list, _inner: str) -> str:
         uptime_width = _esc(uptime_text if uptime_text is not None else "0")
         uptime_suffix = "%" if uptime_text is not None else ""
         country = _text(row.get("country"))
+        labels = ("#", "Proxy", "Protocol", "Grade", "Latency", "Uptime", "Country")
         out.append(
-            f'<tr><td class="pa">{rank}</td>'
-            f'<td class="addr">{address}</td>'
-            f'<td><span class="pb">{protocol}</span></td>'
-            f'<td><span class="pb {grade_class}">{_esc(grade)}</span></td>'
-            f'<td class="num">{latency} ms</td>'
-            f'<td class="up"><span class="upb"><i style="width:{uptime_width}%"></i></span>'
+            f'<tr><td class="pa" data-label="{labels[0]}">{rank}</td>'
+            f'<td class="addr" data-label="{labels[1]}">{address}</td>'
+            f'<td data-label="{labels[2]}"><span class="pb">{protocol}</span></td>'
+            f'<td data-label="{labels[3]}"><span class="pb {grade_class}">{_esc(grade)}</span></td>'
+            f'<td class="num" data-label="{labels[4]}">{latency} ms</td>'
+            f'<td class="up" data-label="{labels[5]}"><span class="upb"><i style="width:{uptime_width}%"></i></span>'
             f"{uptime}{uptime_suffix}</td>"
-            f'<td class="num"><span class="ccx" data-cc="{country}">{country}</span></td></tr>'
+            f'<td class="num" data-label="{labels[6]}"><span class="ccx" data-cc="{country}">{country}</span></td></tr>'
         )
     return "".join(out)
 

@@ -21,6 +21,7 @@
         loading: "loading…",
         error: "Could not load the list. Try again.",
         failed: "request failed",
+        labels: ["#", "Proxy", "Protocol", "Grade", "Latency", "Uptime", "Country"],
       }
     : {
         all: "все страны",
@@ -32,6 +33,7 @@
         loading: "загрузка…",
         error: "Не удалось загрузить список. Попробуйте ещё раз.",
         failed: "ошибка запроса",
+        labels: ["#", "Прокси", "Протокол", "Класс", "Задержка", "Аптайм", "Страна"],
       };
 
   const body = document.getElementById("ptbody");
@@ -128,14 +130,15 @@
         const knownUptime = rawUptime != null && rawUptime !== "";
         const uptime = knownUptime ? Math.max(0, Math.min(100, Number(rawUptime))) : null;
         const grade = String(row.grade || "unknown");
+        const label = (index) => ` data-label="${esc(text.labels[index])}"`;
         return (
-          `<tr><td class="pa">${esc(row.rank)}</td>` +
-          `<td class="addr">${esc(row.address)}</td>` +
-          `<td><span class="pb">${esc(String(row.protocol).toUpperCase())}</span></td>` +
-          `<td><span class="pb g-${esc(grade)}">${esc(grade)}</span></td>` +
-          `<td class="num">${esc(row.latency_ms)} ms</td>` +
-          `<td class="up"><span class="upb"><i style="width:${uptime ?? 0}%"></i></span>${uptime == null ? "—" : `${uptime}%`}</td>` +
-          `<td class="num"><span class="ccx" data-cc="${esc(row.country)}">${esc(row.country)}</span></td></tr>`
+          `<tr><td class="pa"${label(0)}>${esc(row.rank)}</td>` +
+          `<td class="addr"${label(1)}>${esc(row.address)}</td>` +
+          `<td${label(2)}><span class="pb">${esc(String(row.protocol).toUpperCase())}</span></td>` +
+          `<td${label(3)}><span class="pb g-${esc(grade)}">${esc(grade)}</span></td>` +
+          `<td class="num"${label(4)}>${esc(row.latency_ms)} ms</td>` +
+          `<td class="up"${label(5)}><span class="upb"><i style="width:${uptime ?? 0}%"></i></span>${uptime == null ? "—" : `${uptime}%`}</td>` +
+          `<td class="num"${label(6)}><span class="ccx" data-cc="${esc(row.country)}">${esc(row.country)}</span></td></tr>`
         );
       })
       .join("");
@@ -162,6 +165,7 @@
 
   function apply(payload) {
     renderCountries(payload.countries || []);
+    country.value = state.country;
     renderRows(payload.rows || []);
     const total = payload.total || 0;
     const from = total ? (payload.page - 1) * payload.per + 1 : 0;
@@ -204,7 +208,18 @@
   function reset() {
     state.page = 1;
     state.q = search.value.trim();
-    state.country = country.value;
+    // The country picker has names; the search box may be given a name too.
+    // Translate it instead of promising a name search the API cannot do.
+    const named = window.Flags && window.Flags.codeForName
+      ? window.Flags.codeForName(state.q)
+      : null;
+    if (named && !country.value) {
+      state.country = named;
+      state.q = "";
+      search.value = "";
+    } else {
+      state.country = country.value;
+    }
     state.proto = selected("[data-proto]");
     state.grade = selected("[data-grade]");
     // Turning the last chip off reads as "show nothing"; the useful reading is

@@ -18,6 +18,9 @@ POOL_NAMES = {
     "socks5.txt",
     "all.txt",
     "proxies.json",
+    "manifest.json",
+    "benchmark.json",
+    "history.json",
     "meta.json",
     "stats.json",
 }
