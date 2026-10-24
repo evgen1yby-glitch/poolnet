@@ -264,6 +264,23 @@ sources:
   - url: https://raw.githubusercontent.com/DukeMehdi/FreeList-V2ray-Configs/main/Configs/All-DukeMehdi-Configs.txt
     name: DukeMehdi/all
 
+  # --- Third pass: checked aggregators, 2026-10-23 ------------------------ #
+  # 3609 nodes (trojan 1848, vless 1150, ss 536, vmess 75). The repository
+  # tests configs with xray before publishing; all_configs.txt is the union,
+  # so the per-protocol splits are not polled separately.
+  - url: https://raw.githubusercontent.com/Delta-Kronecker/V2ray-Config/main/config/all_configs.txt
+    name: Delta-Kronecker/all
+
+  # 2369 nodes (vless 1718, ss 237, hysteria2 221, trojan 176, tuic 3).
+  - url: https://raw.githubusercontent.com/Barabama/FreeNodes/refs/heads/main/nodes/freeclashnode.txt
+    name: Barabama/freeclashnode
+
+  # 9049 nodes (vless 3508, vmess 4233, ss 885, trojan 301, hysteria2 121):
+  # an aggregate of hundreds of repositories, deduplicated by our own key.
+  # Large, but it is the widest vmess source after VestraNet.
+  - url: https://raw.githubusercontent.com/liMilCo/v2r/HEAD/configs.txt
+    name: liMilCo/v2r
+
 # Operational knobs. Everything here is a policy, not a secret.
 canary_token: ""
 source_pass_rate: 1.0
