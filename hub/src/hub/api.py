@@ -1579,6 +1579,9 @@ def _generation_age(store: Store, generation: str | None) -> float | None:
     return round(time.time() - manifest.stat().st_mtime)
 
 
+_STATUS_RUNS_CACHE: tuple[tuple[str, int, int], list[dict]] | None = None
+
+
 def _status_runs(store: Store, limit: int = 200) -> list[dict]:
     """Funnel counts per probing run, oldest first, for the history chart.
 
@@ -1595,6 +1598,15 @@ def _status_runs(store: Store, limit: int = 200) -> list[dict]:
     needs the recent shape, not the first week of it.
     """
     import json
+
+    global _STATUS_RUNS_CACHE
+    try:
+        stat = store.log.stat()
+    except OSError:
+        return []
+    key = (str(store.log), stat.st_mtime_ns, stat.st_size)
+    if _STATUS_RUNS_CACHE is not None and _STATUS_RUNS_CACHE[0] == key:
+        return _STATUS_RUNS_CACHE[1][-limit:]
 
     runs: list[dict] = []
     try:
@@ -1626,6 +1638,7 @@ def _status_runs(store: Store, limit: int = 200) -> list[dict]:
                 )
     except OSError:
         return []
+    _STATUS_RUNS_CACHE = (key, runs)
     return runs[-limit:]
 
 

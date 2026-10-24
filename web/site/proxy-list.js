@@ -40,11 +40,19 @@
   const search = document.getElementById("f-search");
   const country = document.getElementById("f-country");
   const perPage = document.getElementById("f-per");
-  const info = document.getElementById("pg-info");
-  const pageLabel = document.getElementById("pg-page");
-  const prev = document.getElementById("pg-prev");
-  const next = document.getElementById("pg-next");
-  if (!body || !search || !country || !perPage || !prev || !next) return;
+  const infos = ["pg-info", "pg-info-bottom"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  const pageLabels = ["pg-page", "pg-page-bottom"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  const prevs = ["pg-prev", "pg-prev-bottom"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  const nexts = ["pg-next", "pg-next-bottom"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  if (!body || !search || !country || !perPage || !prevs.length || !nexts.length) return;
 
   const params = new URLSearchParams(location.search);
   const state = {
@@ -170,12 +178,19 @@
     const total = payload.total || 0;
     const from = total ? (payload.page - 1) * payload.per + 1 : 0;
     const to = Math.min(payload.page * payload.per, total);
-    info.textContent = text.show(from, to, total, payload.generated_utc || "—");
-    pageLabel.innerHTML = `<b>${esc(payload.page)}</b> / ${esc(payload.pages)}`;
-    prev.disabled = payload.page <= 1;
-    next.disabled = payload.page >= payload.pages;
-    prev.setAttribute("aria-label", text.prev);
-    next.setAttribute("aria-label", text.next);
+    const showing = text.show(from, to, total, payload.generated_utc || "—");
+    infos.forEach((node) => { node.textContent = showing; });
+    pageLabels.forEach((node) => {
+      node.innerHTML = `<b>${esc(payload.page)}</b> / ${esc(payload.pages)}`;
+    });
+    prevs.forEach((node) => {
+      node.disabled = payload.page <= 1;
+      node.setAttribute("aria-label", text.prev);
+    });
+    nexts.forEach((node) => {
+      node.disabled = payload.page >= payload.pages;
+      node.setAttribute("aria-label", text.next);
+    });
     state.page = payload.page;
   }
 
@@ -189,7 +204,7 @@
     if (state.country) query.set("country", state.country);
     if (state.q) query.set("q", state.q);
     const ticket = ++inFlight;
-    info.textContent = text.loading;
+    infos.forEach((node) => { node.textContent = text.loading; });
     fetch(`/api/proxies?${query.toString()}`, { cache: "no-store" })
       .then((response) => {
         if (!response.ok) throw new Error(text.failed);
@@ -201,7 +216,7 @@
         writeUrl();
       })
       .catch(() => {
-        if (ticket === inFlight) info.textContent = text.error;
+        if (ticket === inFlight) infos.forEach((node) => { node.textContent = text.error; });
       });
   }
 
@@ -268,16 +283,16 @@
     state.page = 1;
     load();
   });
-  prev.addEventListener("click", () => {
+  prevs.forEach((node) => node.addEventListener("click", () => {
     if (state.page > 1) {
       state.page -= 1;
       load();
     }
-  });
-  next.addEventListener("click", () => {
+  }));
+  nexts.forEach((node) => node.addEventListener("click", () => {
     state.page += 1;
     load();
-  });
+  }));
 
   load();
 })();
