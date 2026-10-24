@@ -284,8 +284,8 @@ PoolNet/
   проверке. Uptime новых проверок не наследует старые 100% (версия чекера).
 - [x] Restore drill (`scripts/restore_check.sh`), stale-источники в статусе,
   `carried/verified` в воронке VPN, редирект старого `:8444` на домен.
-- [ ] Остаток этапа 1: freshness/stale_days отдельным полем API, деградация
-  в `/healthz` при устаревании пула (сейчас её ловит healthcheck-таймер).
+- [x] Этап 1 закрыт: stale-источники в `/status/data`, `/healthz` отдаёт
+  `stale`, healthcheck-таймер проверяет свежесть и умеет webhook.
 - [x] Этап 2 (2026-10-24): таблица бенчмарка, единый оффер 7 дней, живые числа
   без hardcode, мобильные файлы/поиск, контраст, skip-link/aria-current,
   touch-targets, live-region и подтверждение копирования на `/free`, legal
