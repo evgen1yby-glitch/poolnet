@@ -508,6 +508,9 @@ def create_app(store: Store | None, sources: dict | None = None):
     # Public free keys: three per hour per subnet is enough for a household and
     # not enough to mint a pool of throwaway subscriptions.
     free_limiter = RateLimiter(rate=5 / 3600.0, burst=3, max_buckets=4096)
+    # Five login attempts per quarter hour per subnet. The secret is long, but
+    # an unauthenticated form on the public vhost should still have a ceiling.
+    admin_login_limiter = RateLimiter(rate=5 / 900.0, burst=5, max_buckets=4096)
 
     #: The interface mockup is a design artifact, not a product surface, and it
     #: lives in the repository rather than in the package. It is served from
@@ -900,13 +903,17 @@ def create_app(store: Store | None, sources: dict | None = None):
         for a script and useless for a person, who has no way to tell "wrong
         secret" from "not allowed at all" and nothing to act on.
         """
-        if not _is_loopback_request(request) or _admin_session(request) is None:
+        if not _is_loopback_request(request):
+            return PlainTextResponse("not found", status_code=404)
+        if _admin_session(request) is None:
             return RedirectResponse("/admin/login", status_code=303)
         return HTMLResponse(_admin_html())
 
     @app.get("/admin/login", response_class=HTMLResponse)
-    async def admin_login_page():
-        """The form. Served to anyone who can reach loopback; carries no data."""
+    async def admin_login_page(request: Request):
+        """The form. Local/allowlisted peers only; carries no data."""
+        if not _is_loopback_request(request):
+            return PlainTextResponse("not found", status_code=404)
         return HTMLResponse(_admin_login_html())
 
     @app.post("/admin/login")
@@ -920,7 +927,13 @@ def create_app(store: Store | None, sources: dict | None = None):
         logging in, and that already needs the secret.
         """
         if not _is_loopback_request(request):
-            return JSONResponse({"error": "forbidden"}, status_code=403)
+            return PlainTextResponse("not found", status_code=404)
+        if not admin_login_limiter.allow(hash_ip(client_address(request))):
+            return HTMLResponse(
+                _admin_login_html(error="Слишком много попыток. Повторите через 15 минут."),
+                status_code=429,
+                headers={"Retry-After": "900"},
+            )
         secret = os.environ.get("HUB_BOT_SECRET", "")
         if not secret:
             return JSONResponse({"error": "no secret configured"}, status_code=403)
@@ -931,16 +944,17 @@ def create_app(store: Store | None, sources: dict | None = None):
                 _admin_login_html(error="Секрет не совпал."), status_code=403
             )
         response = RedirectResponse("/admin", status_code=303)
+        # Secure only when the request actually arrived over TLS. The panel is
+        # also legitimately reached over plain HTTP through an SSH tunnel; a
+        # hard-coded Secure cookie would make that login appear to succeed and
+        # then send no cookie at all.
+        proto = (request.headers.get("x-forwarded-proto") or request.url.scheme).lower()
         response.set_cookie(
             _ADMIN_COOKIE,
             _admin_cookie_value(secret),
             httponly=True,
             samesite="strict",
-            # No `Secure`: the panel is reached over plain HTTP through an SSH
-            # tunnel, and a `Secure` cookie would not be sent at all — the login
-            # would appear to succeed and every following request would be
-            # anonymous.
-            secure=False,
+            secure=proto == "https",
             path="/admin",
             max_age=60 * 60 * 12,
         )
@@ -1452,23 +1466,32 @@ def _admin_session(request: Request) -> str | None:
 
 
 def _is_loopback_request(request: Request) -> bool:
-    """True when the socket peer is loopback.
+    """True for local requests, or for peers explicitly allowlisted by the operator.
 
-    The panel's first layer. nginx forwards from 127.0.0.1, so a request that
-    arrived through the operator's own vhost passes; a request from anywhere
-    else does not, whatever headers it carries. `X-Forwarded-For` is deliberately
-    not consulted — a header is attacker-controlled, and this check is the one
-    that has to hold when the secret leaks.
+    The panel is local by default: reached through an SSH tunnel, or from the
+    same host. `HUB_ADMIN_IPS` (comma-separated) is the opt-in for remote
+    access; it matches the resolved peer address and never a client-supplied
+    header. `X-Forwarded-For` is deliberately not consulted — a header is
+    attacker-controlled, and this is the layer that has to hold if a secret
+    leaks.
     """
     import ipaddress
 
     peer = request.client.host if request.client else ""
     try:
-        return ipaddress.ip_address(peer).is_loopback
+        address = ipaddress.ip_address(peer)
     except ValueError:
         # Not an address at all: a unix socket, or the test transport, which
         # uses the literal string "testclient". Not provably local, so refused.
         return False
+    if address.is_loopback:
+        return True
+    allowed = {
+        item.strip()
+        for item in os.environ.get("HUB_ADMIN_IPS", "").split(",")
+        if item.strip()
+    }
+    return str(address) in allowed
 
 
 def _admin_refusal(request: Request):
@@ -1479,9 +1502,10 @@ def _admin_refusal(request: Request):
 
     Three layers, and all three matter:
 
-    * **the socket peer must be loopback** — the only layer that can tell a
-      local request from a remote one when a proxy sits in front, which is why
-      nginx also denies `/admin` at the edge;
+    * **the socket peer must be local or allowlisted** — the only layer that
+      can tell a local request from a remote one when a proxy sits in front;
+      non-local peers get the same 404 as a missing page, so the panel does not
+      advertise itself;
     * **an unset secret closes the panel** — with both sides empty,
       `compare_digest("", "")` is True and a host that never configured a secret
       would serve the token list to any local caller;
@@ -1491,7 +1515,7 @@ def _admin_refusal(request: Request):
       /admin" got 403 with no way to find out why.
     """
     if not _is_loopback_request(request):
-        return JSONResponse({"error": "forbidden"}, status_code=403)
+        return PlainTextResponse("not found", status_code=404)
     if _admin_session(request) is None:
         return JSONResponse({"error": "forbidden"}, status_code=403)
     return None

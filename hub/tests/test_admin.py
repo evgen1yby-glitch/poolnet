@@ -159,7 +159,7 @@ def test_loopback_only_even_with_the_right_secret(tmp_path, monkeypatch):
     api = TestClient(create_app(store=store, sources={}))
 
     refused = api.get("/admin/data", headers={"x-hub-secret": SECRET})
-    assert refused.status_code == 403, (
+    assert refused.status_code == 404, (
         "a peer that is not loopback must be refused even with the correct secret"
     )
 
@@ -273,8 +273,8 @@ def test_the_header_still_works_for_scripts(tmp_path, monkeypatch):
     store.connect().close()
     api = TestClient(create_app(store=store, sources={}))
 
-    # Not loopback: refused even with the right header.
-    assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 403
+    # Not loopback: hidden like a missing page, even with the right header.
+    assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 404
 
     monkeypatch.setattr(api_module, "_is_loopback_request", lambda request: True)
     assert api.get("/admin/data", headers={"x-hub-secret": SECRET}).status_code == 200
