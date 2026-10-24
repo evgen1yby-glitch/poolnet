@@ -288,6 +288,7 @@ function mount(root) {
     node.classList.add('with-flag');
     node.insertAdjacentHTML('afterbegin', flagSvg(cc));
     if (!node.getAttribute('title')) node.setAttribute('title', countryName(cc));
+    if (!node.getAttribute('aria-label')) node.setAttribute('aria-label', countryName(cc));
   });
 }
 

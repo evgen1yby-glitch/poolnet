@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Статус PoolNet: свежие цифры обеих баз, воронка проверки и время публикации.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
 <title>Статус — PoolNet</title>
@@ -11,11 +12,12 @@
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
+<a class="skip" href="#main">К содержанию</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить ключ на 7 дней</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — на главную">
-      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Разделы">
@@ -24,7 +26,7 @@
       <a href="proxy.html">Прокси-пул</a>
       <a href="verify.html">Проверка</a>
       <a href="check.html">Проверить узел</a>
-      <a href="status.html" class="on">Статус</a>
+      <a href="status.html" class="on" aria-current="page">Статус</a>
     </nav>
     <div class="lang" role="group" aria-label="Язык">
       <a class="lang-b on" href="status.html" hreflang="ru" aria-current="true">RU</a>
@@ -33,7 +35,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
@@ -46,14 +48,15 @@
   <section>
     <div class="wrap">
       <div class="journal" id="jvpn" style="font-size:.92rem">
-        <div><span class="dim">прогон</span> <b>{{vpn.generation|gen-8207ce0d9106}}</b> · 2026-10-22 · {{vpn.updated_utc|10:29}} UTC</div>
+        <div><span class="dim">прогон</span> <b>{{vpn.generation|gen-8207ce0d9106}}</b> · {{vpn.updated_utc|10:29}} UTC</div>
         <div><span class="dim">источники, строк</span> <b>{{vpn.funnel.raw|55 149}}</b> → <span class="dim">распознано</span> <b>{{vpn.funnel.parsed|11 076}}</b> → <span class="dim">TCP</span> <b>{{vpn.funnel.tcp|6 208}}</b> → <span class="dim">TLS</span> <b>{{vpn.funnel.tls|3 571}}</b></div>
         <div><span class="dim">конфигурация поднята</span> <b>{{vpn.funnel.config|904}}</b> → <span class="g">сквозной запрос выполнен</span> <b>{{vpn.funnel.http|98}}</b></div>
         <div><span class="dim">пул после публикации</span> <b>{{vpn.verified|150}}</b> узлов · <span class="dim">стран</span> <b>{{vpn.countries|29}}</b> · <span class="dim">всего узлов в базе</span> <b>{{vpn.known|997}}</b></div>
         <div><span class="dim">качество базы</span> 60+ : <b>0</b> · 30–59 : <b>734</b> · 0–29 : <b>263</b></div>
       </div>
+      <div class="stale" id="stale" role="status" hidden></div>
       <div class="journal" id="jpool" style="font-size:.92rem;margin-top:1.2rem">
-        <div><b>Прокси-база</b> · обновлено 2026-10-22 · {{pool.generated_utc|13:54}} UTC</div>
+        <div><b>Прокси-база</b> · обновлено {{pool.generated_utc|13:54}} UTC</div>
         <div><span class="dim">пул</span> <b>{{pool.total|30 576}}</b> · <span class="dim">протоколы</span> http <b>{{pool.by_protocol.http|28 999}}</b> · socks5 <b>{{pool.by_protocol.socks5|1 179}}</b> · socks4 <b>{{pool.by_protocol.socks4|398}}</b></div>
         <div><span class="dim">грейды</span> elite <b>{{pool.grades.elite|24 997}}</b> · anonymous <b>{{pool.grades.anonymous|449}}</b> · transparent <b>{{pool.grades.transparent|658}}</b> · unknown <b>{{pool.grades.unknown|4 472}}</b></div>
         <div><span class="dim">задержка</span> медиана <b>{{pool.median_ms|127}} ms</b> · p95 <b>{{pool.p95_ms|5671}} ms</b> · <span class="dim">стран</span> <b>{{pool.countries|115}}</b></div>
@@ -115,7 +118,8 @@
             `<div><span class="dim">источники</span> <b>${f(p.sources)}</b> — бенчмарк источников последнего цикла</div>`;
         }
       } catch (err) {
-        /* статус-страница остаётся на статических значениях */
+        var stale = document.getElementById("stale");
+        if (stale) { stale.textContent = "Данные не обновились: показаны последние опубликованные значения."; stale.hidden = false; }
       }
     })();
   </script>
@@ -125,7 +129,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>

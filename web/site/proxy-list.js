@@ -49,7 +49,9 @@
     page: Math.max(1, parseInt(params.get("page") || "1", 10) || 1),
     per: [10, 25, 50, 100].includes(parseInt(params.get("per") || "", 10))
       ? parseInt(params.get("per"), 10)
-      : 50,
+      : window.matchMedia("(max-width:34rem)").matches
+        ? 25
+        : 50,
     q: params.get("q") || "",
     country: (params.get("country") || "").toUpperCase(),
     proto: split(params.get("proto")),
@@ -122,7 +124,9 @@
     }
     body.innerHTML = rows
       .map((row) => {
-        const uptime = Math.max(0, Math.min(100, Number(row.uptime_7d) || 0));
+        const rawUptime = row.uptime_30d ?? row.uptime_7d;
+        const knownUptime = rawUptime != null && rawUptime !== "";
+        const uptime = knownUptime ? Math.max(0, Math.min(100, Number(rawUptime))) : null;
         const grade = String(row.grade || "unknown");
         return (
           `<tr><td class="pa">${esc(row.rank)}</td>` +
@@ -130,7 +134,7 @@
           `<td><span class="pb">${esc(String(row.protocol).toUpperCase())}</span></td>` +
           `<td><span class="pb g-${esc(grade)}">${esc(grade)}</span></td>` +
           `<td class="num">${esc(row.latency_ms)} ms</td>` +
-          `<td class="up"><span class="upb"><i style="width:${uptime}%"></i></span>${uptime}%</td>` +
+          `<td class="up"><span class="upb"><i style="width:${uptime ?? 0}%"></i></span>${uptime == null ? "—" : `${uptime}%`}</td>` +
           `<td class="num"><span class="ccx" data-cc="${esc(row.country)}">${esc(row.country)}</span></td></tr>`
         );
       })

@@ -70,6 +70,26 @@ def test_none_of_the_site_pages_index_as_operator_panels(site_client):
         assert response.headers.get("x-robots-tag") is None
 
 
+def test_free_vpn_offer_is_one_story_on_index_vpn_and_free():
+    """The three pages must not promise different versions of the same key."""
+    import re
+
+    for name in ("index", "vpn", "free", "en/index", "en/vpn", "en/free"):
+        html = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
+        assert "не пробный период" not in html, name
+        assert "not a trial period" not in html, name
+        assert "ограничений нет" not in html, name
+        assert "no restrictions" not in html, name
+        assert "7 дней" in html or "7-day" in html, name
+
+    for name in ("index", "vpn", "en/index", "en/vpn"):
+        html = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
+        hero = re.search(r'<section class="hero">.*?<div class="cta-row">(.*?)</div>', html, re.S)
+        assert hero is not None, name
+        assert 'href="free.html"' in hero.group(1), name
+        assert "7" in hero.group(1), name
+
+
 def test_english_tree_serves_and_matches_the_russian_contract():
     """`/en/*` is a second language of the same site, not a separate product.
 

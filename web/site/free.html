@@ -12,11 +12,12 @@
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
+<a class="skip" href="#main">К содержанию</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить ключ на 7 дней</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — на главную">
-      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Разделы">
@@ -35,11 +36,11 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
-      <span class="chip"><i></i>7 дней · без регистрации · без оплаты</span>
+      <span class="chip"><i></i>бесплатный ключ на 7 дней · без оплаты · новый после истечения</span>
       <h1>Бесплатная <span class="grad-txt">VPN-подписка</span></h1>
       <p class="sub">Одна ссылка для Happ/Xray: одна страна — один профиль с внутренней ротацией серверов. Узлы собраны из публичных источников; мы не оператор узлов и не даём гарантий.</p>
     </div>
@@ -50,9 +51,9 @@
       <div class="freecard">
         <div class="pk">БЕСПЛАТНО · 7 ДНЕЙ</div>
         <h2>Получить подписку</h2>
-        <p>Нажмите кнопку — сервер выдаст ключ на 7 дней. Никакой почты, аккаунта и оплаты. Ссылку можно добавить в Happ, Hiddify, v2rayNG или Clash.</p>
-        <button type="button" class="btn btn-1" id="get">Получить подписку на 7 дней</button>
-        <div id="result" class="freeresult" hidden></div>
+        <p>Нажмите кнопку — сервер выдаст бесплатный ключ на 7 дней, без оплаты; после истечения можно получить новый, а Telegram-бот доступен по желанию. Ссылку можно добавить в Happ, Hiddify, v2rayNG или Clash.</p>
+        <button type="button" class="btn btn-1" id="get">Получить ключ на 7 дней</button>
+        <div id="result" class="freeresult" aria-live="polite" tabindex="-1" hidden></div>
         <p class="freenote">Публичные узлы могут логировать или менять трафик. Не используйте их для чувствительных данных без собственного шифрования. <a href="legal.html">Условия использования</a>.</p>
         <div id="tgbox" hidden>
           <p class="freenote">Хотите получать свежие подписки в Telegram?</p>
@@ -82,18 +83,25 @@
         if (!x.ok) { out.innerHTML = '<p class="freenote">Не удалось: ' + esc(x.body.error || "ошибка") + '</p>'; return; }
         var base = x.body.subscription;
         var until = x.body.expires_at ? x.body.expires_at.slice(0, 16).replace("T", " ") + " UTC" : "";
+        out.focus();
         out.innerHTML = '<h3>Готово — ключ действует до ' + esc(until) + '</h3>' +
           link("Happ / Xray (ротация по стране)", base + "?core=xray") +
           link("Base64 — полный список", base + "?format=base64") +
           link("Base64 — по одному узлу на страну", base + "?format=base64&unique=1") +
           '<p class="freenote">В базе хранится только хеш ключа: сохраните ссылку сейчас. По истечении срока выпустите новую.</p>';
+        out.focus();
       })
       .catch(function () { out.innerHTML = '<p class="freenote">Сервер недоступен, попробуйте позже.</p>'; })
       .then(function () { btn.disabled = false; });
   });
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest("[data-copy]");
-    if (b) navigator.clipboard && navigator.clipboard.writeText(b.getAttribute("data-copy"));
+    if (!b || !navigator.clipboard) return;
+    navigator.clipboard.writeText(b.getAttribute("data-copy")).then(function () {
+      var before = b.textContent;
+      b.textContent = "скопировано";
+      setTimeout(function () { b.textContent = before; }, 1500);
+    });
   });
   fetch("/api/v1/bot").then(function (r) { return r.json(); }).then(function (d) {
     if (d && d.username) { var a = document.getElementById("tg"); a.href = "https://t.me/" + d.username + "?start=site_free"; document.getElementById("tgbox").hidden = false; }
@@ -105,7 +113,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>

@@ -26,7 +26,7 @@ _BLOCK = re.compile(r"<!--begin:([\w:.-]+)-->(.*?)<!--end:\1-->", re.S)
 
 _MISSING = object()
 _FUNNEL_STAGES = {
-    "raw": ("ИСТОЧНИКИ", "адресов из 189 публичных источников"),
+    "raw": ("ИСТОЧНИКИ", "адресов из публичных источников"),
     "parsed": ("РАЗБОР", "записей распознаны по протоколу и адресу"),
     "tcp": ("TCP", "соединений установлено успешно"),
     "tls": ("TLS", "рукопожатий TLS завершено"),
@@ -130,9 +130,11 @@ def _rows_proxy(rows: list, _inner: str) -> str:
         grade = _plain(row.get("grade"))
         grade_class = _esc("g-" + grade.lower()) if grade != "—" else "g-unknown"
         latency = _text(row.get("latency_ms"))
-        uptime_text = _format(row.get("uptime_7d"))
+        uptime_value = row.get("uptime_30d", row.get("uptime_7d"))
+        uptime_text = _format(uptime_value)
         uptime = _esc(uptime_text) if uptime_text is not None else "—"
         uptime_width = _esc(uptime_text if uptime_text is not None else "0")
+        uptime_suffix = "%" if uptime_text is not None else ""
         country = _text(row.get("country"))
         out.append(
             f'<tr><td class="pa">{rank}</td>'
@@ -141,10 +143,30 @@ def _rows_proxy(rows: list, _inner: str) -> str:
             f'<td><span class="pb {grade_class}">{_esc(grade)}</span></td>'
             f'<td class="num">{latency} ms</td>'
             f'<td class="up"><span class="upb"><i style="width:{uptime_width}%"></i></span>'
-            f"{uptime}%</td>"
+            f"{uptime}{uptime_suffix}</td>"
             f'<td class="num"><span class="ccx" data-cc="{country}">{country}</span></td></tr>'
         )
     return "".join(out)
+
+
+def _share(value: Any) -> float | None:
+    """Benchmark rates are fractions (0..1); older snapshots used percent."""
+    number = _as_number(value)
+    if number is None:
+        return None
+    if number <= 1:
+        number *= 100
+    return max(0.0, min(100.0, round(number, 1)))
+
+
+def _percent_cell(value: Any) -> str:
+    share = _share(value)
+    return "—" if share is None else f"{_esc(_plain(share))}%"
+
+
+def _median_cell(value: Any) -> str:
+    number = _as_number(value)
+    return "—" if number is None or number <= 0 else f"{_text(number)} ms"
 
 
 def _rows_sources(rows: list, _inner: str) -> str:
@@ -153,21 +175,21 @@ def _rows_sources(rows: list, _inner: str) -> str:
         if not isinstance(row, dict):
             continue
         source = _text(row.get("id"))
-        live_rate = _esc(_plain(row.get("live_rate")))
         candidates = _text(row.get("candidates"))
         alive = _text(row.get("alive"))
-        median = _text(row.get("median_ms"))
-        elite_rate = _esc(_plain(row.get("elite_rate")))
+        live_rate = _percent_cell(row.get("live_rate"))
+        median = _median_cell(row.get("median_ms"))
+        elite_rate = _percent_cell(row.get("elite_rate"))
         published = _text(row.get("published"))
         out.append(
             f'<tr><td class="pa">{index}</td>'
             f'<td class="addr">{source}</td>'
-            f'<td class="num">{live_rate}%</td>'
-            f'<td class="num">{candidates} / {alive}</td>'
-            f'<td class="num">{median} ms</td>'
-            f'<td class="num">{elite_rate}%</td>'
-            f'<td><span class="pb">{published}</span></td>'
-            f'<td class="pa">—</td></tr>'
+            f'<td class="num">{candidates}</td>'
+            f'<td class="num">{alive}</td>'
+            f'<td class="num">{live_rate}</td>'
+            f'<td class="num">{median}</td>'
+            f'<td class="num">{elite_rate}</td>'
+            f'<td><span class="pb">{published}</span></td></tr>'
         )
     return "".join(out)
 

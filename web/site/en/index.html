@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="PoolNet — an open catalog of public VPN nodes and proxy lists with a free 7-day key.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
 <title>PoolNet — VPN and open proxy pool</title>
@@ -11,15 +12,16 @@
 <link rel="stylesheet" href="../system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get free VPN</a></div></div>
+<a class="skip" href="#main">Skip to content</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get a 7-day key</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — home">
-      <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Sections">
-      <a href="index.html" class="on">Home</a>
+      <a href="index.html" class="on" aria-current="page">Home</a>
       <a href="vpn.html">VPN</a>
       <a href="proxy.html">Proxy pool</a>
       <a href="verify.html">Verification</a>
@@ -34,7 +36,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
@@ -42,7 +44,8 @@
       <h1>Proxies and VPN, <span class="grad-txt">validated by real traffic</span></h1>
       <p class="sub">Two pools on one verification platform: an open proxy database ({{pool.total|30 576}} HTTP/SOCKS) and VPN configurations ({{vpn.verified|150}} nodes, {{vpn.countries|29}} countries). Every entry goes through a full run of real connections before publication.</p>
       <div class="cta-row">
-        <a class="btn btn-1" href="vpn.html">Get VPN</a>
+        <a class="btn btn-1" href="free.html">Get a 7-day key</a>
+        <a class="btn btn-2" href="/pool/all.txt" download>Download proxy lists</a>
         <a class="btn btn-2" href="proxy.html">Open proxy pool</a>
       </div>
       <div class="console" role="img" aria-label="Live pool feed">
@@ -55,7 +58,7 @@
             <div><span class="c-big">{{vpn.verified|150}} <small>nodes</small></span></div>
             <div class="c-sub">{{vpn.countries|29}} countries · run {{vpn.updated_utc|10:29}} UTC</div>
             <a class="c-btn" href="vpn.html">Connect · <span data-cc="DE">Germany</span></a>
-            <div class="c-note">updated 2026-10-22 · {{vpn.updated_utc|10:29}} UTC</div>
+            <div class="c-note">run {{vpn.generation|gen-8207ce0d9106}} · {{vpn.updated_utc|10:29}} UTC</div>
           </div>
         </div>
       </div>
@@ -72,8 +75,8 @@
         <div class="b-mod b5">
           <div class="pk">VPN</div>
           <h3>Free VPN</h3>
-          <p>A configuration for the selected country built from verified nodes. No registration required, no restrictions.</p>
-          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t"><span data-cc="DE">Germany</span> · connected</div><div class="cm-s">shard of 23 nodes</div></div></div>
+          <p>A free 7-day key is issued on the site without payment; you can get a new one after it expires, and the Telegram bot is optional.</p>
+          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t"><span data-cc="DE">Germany</span> · connected</div><div class="cm-s">nodes from the current run</div></div></div>
           <a class="golink" href="vpn.html">VPN page</a>
         </div>
         <div class="b-mod b4">
@@ -130,7 +133,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Public node catalog. Connections go directly from the client to the node; traffic does not pass through us. We do not operate the nodes and give no warranty of availability, security or legality; use at your own risk. <a href="legal.html">Terms of use</a>.</p>

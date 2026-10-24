@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="How PoolNet verifies nodes: CONNECT, exit IP, TLS and honest uptime history.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
 <title>Node verification — PoolNet</title>
@@ -11,18 +12,19 @@
 <link rel="stylesheet" href="../system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get free VPN</a></div></div>
+<a class="skip" href="#main">Skip to content</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get a 7-day key</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — home">
-      <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Sections">
       <a href="index.html">Home</a>
       <a href="vpn.html">VPN</a>
       <a href="proxy.html">Proxy pool</a>
-      <a href="verify.html" class="on">Verification</a>
+      <a href="verify.html" class="on" aria-current="page">Verification</a>
       <a href="check.html">Check node</a>
       <a href="status.html">Status</a>
       <a href="legal.html">Terms</a>
@@ -34,13 +36,13 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
       <span class="chip"><i></i>6 stages · real connections</span>
       <h1>Verification <span class="grad-txt">by real connections</span></h1>
-      <p class="sub">Each stage is a network connection, not a ping. A node that fails any stage is excluded from the output. The rejection log is published together with the results.</p>
+      <p class="sub">Each stage is a network connection, not a ping. A node that fails any stage is excluded from the output.</p>
     </div>
   </section>
 
@@ -52,7 +54,7 @@
       </div>
       <div class="big-funnel">
         <!--begin:rows:funnel-->
-        <div class="fcard"><div class="fk">01 · SOURCES</div><div class="fv">55 149</div><div class="fd">addresses from 189 public sources</div></div>
+        <div class="fcard"><div class="fk">01 · SOURCES</div><div class="fv">55 149</div><div class="fd">addresses from public sources</div></div>
         <div class="fcard"><div class="fk">02 · PARSING</div><div class="fv">11 076</div><div class="fd">entries recognized by protocol and address</div></div>
         <div class="fcard"><div class="fk">03 · TCP</div><div class="fv">6 208</div><div class="fd">connections established successfully</div></div>
         <div class="fcard"><div class="fk">04 · TLS</div><div class="fv">3 571</div><div class="fd">TLS handshakes completed</div></div>
@@ -98,7 +100,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Public node catalog. Connections go directly from the client to the node; traffic does not pass through us. We do not operate the nodes and give no warranty of availability, security or legality; use at your own risk. <a href="legal.html">Terms of use</a>.</p>

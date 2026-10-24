@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Прокси-пул PoolNet: живые HTTP, SOCKS5 и SOCKS4 с проверкой exit-IP, задержкой и аптаймом.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
 <title>Прокси-пул — PoolNet</title>
@@ -11,17 +12,18 @@
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
+<a class="skip" href="#main">К содержанию</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить ключ на 7 дней</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — на главную">
-      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Разделы">
       <a href="index.html">Главная</a>
       <a href="vpn.html">VPN</a>
-      <a href="proxy.html" class="on">Прокси-пул</a>
+      <a href="proxy.html" class="on" aria-current="page">Прокси-пул</a>
       <a href="verify.html">Проверка</a>
       <a href="check.html">Проверить узел</a>
       <a href="status.html">Статус</a>
@@ -35,15 +37,15 @@
 </header>
 
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
       <span class="chip"><i></i>база живых прокси · обновление каждые 15 минут · медиана {{pool.median_ms|127}} ms</span>
       <h1>Открытый <span class="grad-txt">прокси-пул</span></h1>
-      <p class="sub">{{pool.total|30 576}} живых записей: HTTP, SOCKS5, SOCKS4. Анонимность, задержка и аптайм измеряются реальными соединениями — не пингом. Выдача публикуется сразу и без ограничений.</p>
+      <p class="sub">{{pool.total|30 576}} живых записей: HTTP, SOCKS5, SOCKS4. Анонимность, задержка и аптайм измеряются реальными соединениями — не пингом. Выдача публикуется сразу.</p>
       <div class="cta-row">
-        <a class="btn btn-1" href="#files">Открыть выдачу</a>
+        <a class="btn btn-1" href="#pool">Открыть таблицу пула</a>
         <a class="btn btn-2" href="verify.html">Методика проверки узлов</a>
       </div>
       <div class="dlcard">
@@ -65,14 +67,14 @@
     </div>
   </section>
 
-  <section>
+  <section id="pool">
     <div class="wrap">
       <div class="sec-head">
         <h2>Пул <span class="grad-txt">прямо сейчас</span></h2>
         <p>Поисковый индекс адреса, сети и страны; сортировка по аптайму за 30 дней.</p>
       </div>
       <div class="toolbar">
-        <div class="tool-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="f-search" aria-label="Поиск по адресу, стране или сети" placeholder="Поиск по адресу, стране или сети" maxlength="100" autocomplete="off"></div>
+        <div class="tool-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="f-search" aria-label="Поиск по адресу, коду страны или сети" placeholder="Поиск по адресу, коду страны или сети" maxlength="100" autocomplete="off"></div>
         <div class="fchips"><button type="button" class="fchip on" data-proto="http" aria-pressed="true">HTTP</button><button type="button" class="fchip on" data-proto="socks5" aria-pressed="true">SOCKS5</button><button type="button" class="fchip on" data-proto="socks4" aria-pressed="true">SOCKS4</button></div>
       </div>
       <div class="toolbar" style="margin-top:0">
@@ -80,7 +82,7 @@
         <label class="tool-x sel"><span class="sr-only">Страна</span><select id="f-country" aria-label="Страна"><option value="">все страны</option></select></label>
         <label class="tool-x sel"><span class="sr-only">На странице</span><select id="f-per" aria-label="Строк на странице"><option value="10">10</option><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option></select></label>
       </div>
-      <div class="tcard"><div class="tscroll"><table class="pt"><thead><tr><th>#</th><th>Proxy</th><th>Protocol</th><th>Grade</th><th>Latency</th><th>Uptime 7d</th><th>Country</th></tr></thead><tbody id="ptbody"><!--begin:rows:proxy--><tr><td class="pa">1</td><td class="addr">45.85.119.124:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">7 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="GB">GB</span></td></tr><tr><td class="pa">2</td><td class="addr">172.67.194.35:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">3</td><td class="addr">185.148.105.221:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="RU">RU</span></td></tr><tr><td class="pa">4</td><td class="addr">206.238.238.39:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="SG">SG</span></td></tr><tr><td class="pa">5</td><td class="addr">172.67.167.117:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">6</td><td class="addr">104.27.19.230:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">7</td><td class="addr">198.41.200.112:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">8</td><td class="addr">63.141.128.78:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa">9</td><td class="addr">104.254.140.6:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa">10</td><td class="addr">104.18.14.32:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><!--end:rows:proxy--></tbody></table></div></div>
+      <div class="tcard"><div class="tscroll"><table class="pt"><caption class="sr-only">Прокси-пул</caption><thead><tr><th scope="col">#</th><th scope="col">Proxy</th><th scope="col">Protocol</th><th scope="col">Grade</th><th scope="col">Latency</th><th scope="col">Uptime 30d</th><th scope="col">Country</th></tr></thead><tbody id="ptbody"><!--begin:rows:proxy--><tr><td class="pa">1</td><td class="addr">45.85.119.124:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">7 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="GB">GB</span></td></tr><tr><td class="pa">2</td><td class="addr">172.67.194.35:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">3</td><td class="addr">185.148.105.221:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="RU">RU</span></td></tr><tr><td class="pa">4</td><td class="addr">206.238.238.39:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="SG">SG</span></td></tr><tr><td class="pa">5</td><td class="addr">172.67.167.117:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">6</td><td class="addr">104.27.19.230:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">7</td><td class="addr">198.41.200.112:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">8</td><td class="addr">63.141.128.78:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa">9</td><td class="addr">104.254.140.6:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa">10</td><td class="addr">104.18.14.32:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><!--end:rows:proxy--></tbody></table></div></div>
       <div class="pager"><span id="pg-info" aria-live="polite">показано 10 из {{pool.total|30 576}}</span><span class="pg-nav"><button type="button" class="pg-btn" id="pg-prev" disabled aria-label="Предыдущая страница">‹</button><span id="pg-page"><b>1</b> / 1</span><button type="button" class="pg-btn" id="pg-next" disabled aria-label="Следующая страница">›</button></span></div>
     </div>
   </section>
@@ -111,8 +113,8 @@
         <h2>Источники <span class="grad-txt">и их вклад</span></h2>
         <p>Бенчмарк внешних листов: сколько адресов переживёт проверку. Данные оживают только после полного прохода.</p>
       </div>
-      <div class="tcard"><div class="tscroll"><table class="pt"><thead><tr><th>#</th><th>Источник</th><th>Живые</th><th>Медиана</th><th>Elite</th><th>Публикаций</th></tr></thead><tbody><!--begin:rows:sources--><tr><td class="pa">1</td><td class="addr">gnxd3riftt2we-rh-http</td><td class="num">95.7%</td><td class="num">22 / 23</td><td class="num">17 ms</td><td class="num">95.5%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">2</td><td class="addr">gnxd3riftt2we-st-http</td><td class="num">95.5%</td><td class="num">21 / 22</td><td class="num">17 ms</td><td class="num">95.2%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">3</td><td class="addr">ch4120n-zw</td><td class="num">94.4%</td><td class="num">17 / 18</td><td class="num">1254 ms</td><td class="num">0.0%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">4</td><td class="addr">maximilianfeix-http</td><td class="num">78.4%</td><td class="num">40 / 51</td><td class="num">3107 ms</td><td class="num">27.5%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">5</td><td class="addr">relayglass-all</td><td class="num">77.0%</td><td class="num">57 / 74</td><td class="num">1258 ms</td><td class="num">8.8%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">6</td><td class="addr">stormsia-socks5</td><td class="num">75.9%</td><td class="num">22 / 29</td><td class="num">3676 ms</td><td class="num">9.1%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><tr><td class="pa">7</td><td class="addr">zaeem20-socks5</td><td class="num">75.0%</td><td class="num">54 / 72</td><td class="num">1258.5 ms</td><td class="num">13.0%</td><td><span class="pb">500</span></td><td class="pa">—</td></tr><!--end:rows:sources--></tbody></table></div></div>
-      <p class="pa" style="margin-top:.8rem">полный бенчмарк — {{pool.sources_total|194}} источников · обновляется вместе с прогоном</p>
+      <div class="tcard"><div class="tscroll"><table class="pt"><caption class="sr-only">Источники</caption><thead><tr><th scope="col">#</th><th scope="col">Источник</th><th scope="col">Проверено кандидатов</th><th scope="col">Живых</th><th scope="col">Живые %</th><th scope="col">Медиана</th><th scope="col">Elite %</th><th scope="col">Публикаций</th></tr></thead><tbody><!--begin:rows:sources--><tr><td class="pa">1</td><td class="addr">gnxd3riftt2we-st-http</td><td class="num">15</td><td class="num">15</td><td class="num">100%</td><td class="num">22 ms</td><td class="num">100%</td><td><span class="pb">500</span></td></tr><tr><td class="pa">2</td><td class="addr">thordata-socks5</td><td class="num">27</td><td class="num">23</td><td class="num">85.2%</td><td class="num">1458 ms</td><td class="num">8.7%</td><td><span class="pb">59</span></td></tr><tr><td class="pa">3</td><td class="addr">zloi-user-socks5</td><td class="num">47</td><td class="num">39</td><td class="num">83%</td><td class="num">2251 ms</td><td class="num">28.2%</td><td><span class="pb">139</span></td></tr><tr><td class="pa">4</td><td class="addr">health-list-socks5</td><td class="num">140</td><td class="num">102</td><td class="num">72.9%</td><td class="num">1513 ms</td><td class="num">16.7%</td><td><span class="pb">609</span></td></tr><tr><td class="pa">5</td><td class="addr">zaeem20-socks5</td><td class="num">56</td><td class="num">40</td><td class="num">71.4%</td><td class="num">1291.5 ms</td><td class="num">15%</td><td><span class="pb">203</span></td></tr><tr><td class="pa">6</td><td class="addr">stormsia-socks5</td><td class="num">24</td><td class="num">17</td><td class="num">70.8%</td><td class="num">1678 ms</td><td class="num">5.9%</td><td><span class="pb">42</span></td></tr><tr><td class="pa">7</td><td class="addr">relayglass-all</td><td class="num">76</td><td class="num">53</td><td class="num">69.7%</td><td class="num">1258 ms</td><td class="num">15.1%</td><td><span class="pb">397</span></td></tr><tr><td class="pa">8</td><td class="addr">maximilianfeix-http</td><td class="num">42</td><td class="num">29</td><td class="num">69%</td><td class="num">1271 ms</td><td class="num">17.2%</td><td><span class="pb">190</span></td></tr><!--end:rows:sources--></tbody></table></div></div>
+      <p class="pa" style="margin-top:.8rem">топ-8 из {{pool.sources_total|194}} источников · обновляется вместе с прогоном</p>
     </div>
   </section>
 
@@ -122,7 +124,7 @@
         <h2>Файлы <span class="grad-txt">и API</span></h2>
         <p>Выдача публикуется полностью, включая узлы, не попавшие в сортировку демо-страницы.</p>
       </div>
-      <div class="filelist"><div class="lr"><span class="ff">/pool/proxies.json</span><span class="fd2">полная выдача с метаданными · ~5 МБ</span><a href="/pool/proxies.json">{{pool.files.all|30 576}}</a></div><div class="lr"><span class="ff">/pool/meta.json</span><span class="fd2">метаданные прогона: цикл, источники, грейды</span><a href="/pool/meta.json">структура</a></div><div class="lr"><span class="ff">/pool/http.txt</span><span class="fd2">текстовый список HTTP</span><a href="/pool/http.txt">{{pool.files.http|28 999}}</a></div><div class="lr"><span class="ff">/pool/socks5.txt</span><span class="fd2">текстовый список SOCKS5</span><a href="/pool/socks5.txt">{{pool.files.socks5|1 179}}</a></div><div class="lr"><span class="ff">/pool/socks4.txt</span><span class="fd2">текстовый список SOCKS4</span><a href="/pool/socks4.txt">{{pool.files.socks4|398}}</a></div><div class="lr"><span class="ff" data-cc="CA">/pool/country/CA.txt</span><span class="fd2">шард по стране ({{pool.shards|89}} шардов)</span><a href="/pool/country/CA.txt">{{pool.files.ca|12 271}}</a></div><div class="lr"><span class="ff">/pool/all.txt</span><span class="fd2">все протоколы одним списком</span><a href="/pool/all.txt">{{pool.files.all|30 576}}</a></div></div>
+      <div class="filelist"><div class="lr"><span class="ff">/pool/proxies.json</span><span class="fd2">полная выдача с метаданными</span><a href="/pool/proxies.json">{{pool.files.all|30 576}}</a></div><div class="lr"><span class="ff">/pool/meta.json</span><span class="fd2">метаданные прогона: цикл, источники, грейды</span><a href="/pool/meta.json">структура</a></div><div class="lr"><span class="ff">/pool/http.txt</span><span class="fd2">текстовый список HTTP</span><a href="/pool/http.txt">{{pool.files.http|28 999}}</a></div><div class="lr"><span class="ff">/pool/socks5.txt</span><span class="fd2">текстовый список SOCKS5</span><a href="/pool/socks5.txt">{{pool.files.socks5|1 179}}</a></div><div class="lr"><span class="ff">/pool/socks4.txt</span><span class="fd2">текстовый список SOCKS4</span><a href="/pool/socks4.txt">{{pool.files.socks4|398}}</a></div><div class="lr"><span class="ff" data-cc="CA">/pool/country/CA.txt</span><span class="fd2">шард по стране ({{pool.shards|89}} шардов)</span><a href="/pool/country/CA.txt">{{pool.files.ca|12 271}}</a></div><div class="lr"><span class="ff">/pool/all.txt</span><span class="fd2">все протоколы одним списком</span><a href="/pool/all.txt">{{pool.files.all|30 576}}</a></div></div>
       <p style="margin-top:1rem;color:var(--mut);font-size:.88rem">Каждую запись считайте враждебной: публичный прокси может перехватывать и подменять трафик. Не отправляйте через него аккаунты, пароли и приватные данные.</p>
     </div>
   </section>
@@ -150,7 +152,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>

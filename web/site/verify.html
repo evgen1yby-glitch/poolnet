@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Как PoolNet проверяет узлы: CONNECT, exit-IP, TLS и честный аптайм по истории.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
 <title>Проверка узлов — PoolNet</title>
@@ -11,18 +12,19 @@
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
+<a class="skip" href="#main">К содержанию</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить ключ на 7 дней</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — на главную">
-      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Разделы">
       <a href="index.html">Главная</a>
       <a href="vpn.html">VPN</a>
       <a href="proxy.html">Прокси-пул</a>
-      <a href="verify.html" class="on">Проверка</a>
+      <a href="verify.html" class="on" aria-current="page">Проверка</a>
       <a href="check.html">Проверить узел</a>
       <a href="status.html">Статус</a>
       <a href="legal.html">Условия</a>
@@ -34,13 +36,13 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
       <span class="chip"><i></i>6 этапов · реальные соединения</span>
       <h1>Проверка <span class="grad-txt">реальными соединениями</span></h1>
-      <p class="sub">Каждый этап — сетевое соединение, а не пинг. Узел, не прошедший любой из этапов, исключается из выдачи. Журнал отсева публикуется вместе с результатами.</p>
+      <p class="sub">Каждый этап — сетевое соединение, а не пинг. Узел, не прошедший любой из этапов, исключается из выдачи.</p>
     </div>
   </section>
 
@@ -52,7 +54,7 @@
       </div>
       <div class="big-funnel">
         <!--begin:rows:funnel-->
-        <div class="fcard"><div class="fk">01 · ИСТОЧНИКИ</div><div class="fv">55 149</div><div class="fd">адресов из 189 публичных источников</div></div>
+        <div class="fcard"><div class="fk">01 · ИСТОЧНИКИ</div><div class="fv">55 149</div><div class="fd">адресов из публичных источников</div></div>
         <div class="fcard"><div class="fk">02 · РАЗБОР</div><div class="fv">11 076</div><div class="fd">записей распознаны по протоколу и адресу</div></div>
         <div class="fcard"><div class="fk">03 · TCP</div><div class="fv">6 208</div><div class="fd">соединений установлено успешно</div></div>
         <div class="fcard"><div class="fk">04 · TLS</div><div class="fv">3 571</div><div class="fd">рукопожатий TLS завершено</div></div>
@@ -98,7 +100,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>

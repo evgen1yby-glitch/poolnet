@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import copy
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -195,12 +196,58 @@ def test_proxy_rows_replace_the_block(tmp_path):
 def test_source_rows_replace_the_block(tmp_path):
     out = render_text(tmp_path, block("rows:sources", "<tr><td>old</td></tr>"), payload())
     assert out.count("<tr>") == 1
+    assert out.count("<td") == 8
     assert '<td class="addr">gnxd3riftt2we-rh-http</td>' in out
+    assert '<td class="num">23</td><td class="num">22</td>' in out
     assert '<td class="num">95.7%</td>' in out
-    assert '<td class="num">23 / 22</td>' in out
     assert '<td class="num">17 ms</td>' in out
     assert '<td class="num">95.5%</td>' in out
     assert '<span class="pb">500</span>' in out
+
+
+def test_source_rates_are_fractions_and_missing_cells_are_dashes(tmp_path):
+    data = payload()
+    data["source_rows"] = [
+        {
+            "id": "fractional",
+            "candidates": 10,
+            "alive": 9,
+            "live_rate": 0.9,
+            "published": None,
+            "median_ms": None,
+            "elite_rate": 0.25,
+        },
+        {
+            "id": "out-of-range",
+            "candidates": None,
+            "alive": None,
+            "live_rate": 120,
+            "published": None,
+            "median_ms": 0,
+            "elite_rate": -5,
+        },
+    ]
+    out = render_text(tmp_path, block("rows:sources"), data)
+    assert '<td class="num">90%</td>' in out
+    assert '<td class="num">25%</td>' in out
+    assert '<td class="num">—</td>' in out
+    assert '<span class="pb">—</span>' in out
+    assert "120%" not in out and "-5%" not in out
+    assert "100%" in out and "0%" in out
+    assert "— ms" not in out
+
+
+def test_source_table_headers_match_cells_on_both_pages():
+    for page in ("proxy.html", "en/proxy.html"):
+        html = (SITE_DIR / page).read_text(encoding="utf-8")
+        before, after = html.split("<!--begin:rows:sources-->", 1)
+        rows = after.split("<!--end:rows:sources-->", 1)[0]
+        heads = before.rsplit("<thead>", 1)[1].split("</thead>", 1)[0]
+        assert heads.count("<th") == 8, page
+        first_row = re.search(r"<tr>.*?</tr>", rows, re.S)
+        assert first_row is not None, page
+        assert first_row.group(0).count("<td") == 8, page
+        assert ("топ-8" in html) if page == "proxy.html" else ("top 8" in html)
 
 
 def test_protocol_bars_scale_to_the_largest_value(tmp_path):
@@ -307,3 +354,23 @@ def test_index_map_block_replaces_every_static_dot():
     assert rendered is not None
     assert "<title>🇩🇪 DE: 20</title>" in rendered
     assert "<title>🇸🇬 SG: 6</title>" not in rendered
+
+
+def test_secondary_text_meets_contrast_and_table_headers_are_legible():
+    def luminance(color: str) -> float:
+        channels = [int(color[i : i + 2], 16) / 255 for i in (1, 3, 5)]
+        linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    def contrast(a: str, b: str) -> float:
+        high, low = sorted((luminance(a), luminance(b)), reverse=True)
+        return (high + 0.05) / (low + 0.05)
+
+    css = (SITE_DIR / "system.css").read_text(encoding="utf-8")
+    dim = re.search(r"--dim:(#[0-9a-fA-F]{6})", css).group(1)
+    bg = re.search(r"--bg:(#[0-9a-fA-F]{6})", css).group(1)
+    s1 = re.search(r"--s1:(#[0-9a-fA-F]{6})", css).group(1)
+    assert contrast(dim, bg) >= 4.5
+    assert contrast(dim, s1) >= 4.5
+    size = re.search(r"\.pt th\{[^}]*font-size:([0-9.]+)rem", css).group(1)
+    assert float(size) >= 0.75

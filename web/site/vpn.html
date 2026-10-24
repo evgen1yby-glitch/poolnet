@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Бесплатная VPN-подписка PoolNet на 7 дней: импорт в Happ, Hiddify, v2rayNG или Clash.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
 <title>VPN — PoolNet</title>
@@ -11,16 +12,17 @@
 <link rel="stylesheet" href="system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить VPN бесплатно</a></div></div>
+<a class="skip" href="#main">К содержанию</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Бесплатно</b> · публичные источники · без гарантий — <a href="legal.html">условия</a></span><a class="freebar-cta" href="free.html">Получить ключ на 7 дней</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — на главную">
-      <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Разделы">
       <a href="index.html">Главная</a>
-      <a href="vpn.html" class="on">VPN</a>
+      <a href="vpn.html" class="on" aria-current="page">VPN</a>
       <a href="proxy.html">Прокси-пул</a>
       <a href="verify.html">Проверка</a>
       <a href="check.html">Проверить узел</a>
@@ -34,15 +36,15 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
-      <span class="chip"><i></i>бесплатно · без регистрации · {{vpn.countries|29}} стран</span>
+      <span class="chip"><i></i>бесплатный ключ на 7 дней · без оплаты · {{vpn.countries|29}} стран</span>
       <h1>VPN, собранный из <span class="grad-txt">проверенных узлов</span></h1>
       <p class="sub">Конфигурация для VPN-клиента на базе узла, прошедшего полную проверку. Проверка общая с базой прокси-пула платформы: один стандарт качества.</p>
       <div class="cta-row">
-        <a class="btn btn-1" href="free.html">Получить VPN бесплатно</a>
+        <a class="btn btn-1" href="free.html">Получить ключ на 7 дней</a>
         <a class="btn btn-2" href="verify.html">Методика проверки узлов</a>
       </div>
     </div>
@@ -58,15 +60,15 @@
         <div class="stepc">
           <div class="sn grad-txt">01</div>
           <div>
-            <h3>Запрос в бота</h3>
-            <p>Telegram-бот возвращает список стран с активными узлами и принимает выбор. Аккаунт на сайте не требуется.</p>
+            <h3>Получить ключ</h3>
+            <p>Бесплатный ключ на 7 дней выдаётся на сайте без оплаты, после истечения можно получить новый, а Telegram-бот доступен по желанию.</p>
           </div>
         </div>
         <div class="stepc">
           <div class="sn grad-txt">02</div>
           <div>
             <h3>Выбор страны</h3>
-            <p>Бот формирует шарду — конфигурацию выбранной страны из активных узлов этой страны.</p>
+            <p>Подписка включает страны с активными узлами; в боте можно выбрать одну страну.</p>
           </div>
         </div>
         <div class="stepc">
@@ -86,9 +88,7 @@
         <div class="b-mod b7">
           <div class="pk">СТРАНЫ</div>
           <h3>{{vpn.countries|29}} стран прямо сейчас</h3>
-          <div class="chips" style="margin-top:.9rem">
-            <span>US <b>25</b></span><span>DE <b>20</b></span><span>FR <b>19</b></span><span>NL <b>13</b></span><span>PL <b>12</b></span><span>FI <b>10</b></span><span>SG <b>6</b></span><span>GB <b>4</b></span><span>JP <b>4</b></span><span>TR <b>4</b></span><span>CA <b>3</b></span><span>IN <b>3</b></span><span>LT <b>3</b></span><span>LV <b>3</b></span><span>TH <b>3</b></span><span>CL <b>2</b></span><span>+13 · в боте</span>
-          </div>
+          <div class="mflags" style="margin-top:.9rem"><!--begin:rows:countries--><span class="cflag">страны с активными узлами</span><!--end:rows:countries--></div>
           <p style="margin-top:1rem">Страны без подтверждённых узлов не попадают в выдачу.</p>
           <a class="golink" href="proxy.html">пул прокси — отдельная база платформы</a>
         </div>
@@ -96,11 +96,11 @@
           <div class="pk">ПРИНЦИПЫ</div>
           <h3>Условия тарифа</h3>
           <ul style="list-style:none;margin-top:.7rem;display:flex;flex-direction:column;gap:.55rem">
-            <li style="color:var(--mut);font-size:.94rem">— Доступ бесплатный целиком: не пробный период</li>
+            <li style="color:var(--mut);font-size:.94rem">— Бесплатный ключ на 7 дней, без оплаты; после истечения можно получить новый</li>
             <li style="color:var(--mut);font-size:.94rem">— Все узлы проверены в последнем прогоне</li>
             <li style="color:var(--mut);font-size:.94rem">— Трафик не проходит и не хранится на наших серверах</li>
           </ul>
-          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t"><span data-cc="DE">Германия</span> · подключено</div><div class="cm-s">шард из 20 узлов · {{vpn.updated_utc|10:29}} UTC</div></div></div>
+          <div class="conn-mock"><span class="dot"></span><div><div class="cm-t"><span data-cc="DE">Германия</span> · подключено</div><div class="cm-s">узлы текущего прогона · {{vpn.updated_utc|10:29}} UTC</div></div></div>
         </div>
       </div>
     </div>
@@ -142,7 +142,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="assets/logo.png" srcset="assets/logo-64.png 64w, assets/logo-96.png 96w, assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>

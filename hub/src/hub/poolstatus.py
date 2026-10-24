@@ -204,6 +204,21 @@ def _number(value, default: float = 0.0) -> float:
     return value if isinstance(value, (int, float)) and not isinstance(value, bool) else default
 
 
+def _optional_number(value) -> float | None:
+    """Keep an honest `null` (unknown uptime) instead of turning it into 0%."""
+    return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+
+
+def _optional_int(value) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def _optional_number(value) -> int | float | None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return value if math.isfinite(value) else None
+
+
 def pool_payload(directory: Path) -> dict:
     """The published proxy-pool aggregates, read from the TS engine's data dir.
 
@@ -298,7 +313,7 @@ _PROXY_LOCK = threading.Lock()
 #: The order the page promises: "sorted by 30-day uptime". Ties go to the
 #: faster node, then the address, so equal rows never reshuffle between reads.
 _PROXY_SORT = lambda row: (  # noqa: E731 - one expression, used once
-    -_number(row.get("uptime_30d")),
+    -(_optional_number(row.get("uptime_30d")) if _optional_number(row.get("uptime_30d")) is not None else -1),
     row.get("latency_ms") if isinstance(row.get("latency_ms"), int) else 10**9,
     str(row.get("host")),
 )
@@ -331,13 +346,15 @@ def proxy_index(directory: Path) -> list[dict]:
 
 
 def _proxy_view(row: dict, rank: int) -> dict:
+    uptime = row.get("uptime_30d", row.get("uptime_7d"))
     return {
         "rank": rank,
         "address": f"{row.get('host')}:{row.get('port')}",
         "protocol": str(row.get("protocol") or ""),
         "grade": str(row.get("anonymity") or "unknown"),
         "latency_ms": _int(row.get("latency_ms")),
-        "uptime_7d": _number(row.get("uptime_7d")),
+        "uptime_7d": _optional_number(row.get("uptime_7d")),
+        "uptime_30d": _optional_number(uptime),
         "country": str(row.get("country") or ""),
     }
 
@@ -425,15 +442,20 @@ def _source_rows(benchmark: dict, limit: int = 8) -> list[dict]:
     clean.sort(key=lambda row: ranks.get(str(row.get("id")), 10**6))
     out: list[dict] = []
     for row in clean[:limit]:
+        candidates = _optional_int(row.get("candidates"))
+        alive = _optional_int(row.get("alive"))
+        live_rate = _optional_number(row.get("liveRate"))
+        if live_rate is None and candidates:
+            live_rate = (alive or 0) / candidates
         out.append(
             {
                 "id": str(row.get("id") or ""),
-                "candidates": _int(row.get("candidates")),
-                "alive": _int(row.get("alive")),
-                "live_rate": _number(row.get("liveRate")),
-                "published": _int(row.get("published")),
-                "median_ms": _int(row.get("medianLatency")),
-                "elite_rate": _number(row.get("eliteRate")),
+                "candidates": candidates,
+                "alive": alive,
+                "live_rate": live_rate,
+                "published": _optional_int(row.get("published")),
+                "median_ms": _optional_number(row.get("medianLatency")),
+                "elite_rate": _optional_number(row.get("eliteRate")),
             }
         )
     return out

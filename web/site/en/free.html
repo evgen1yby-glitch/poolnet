@@ -12,11 +12,12 @@
 <link rel="stylesheet" href="../system.css">
 </head>
 <body>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get free VPN</a></div></div>
+<a class="skip" href="#main">Skip to content</a>
+<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="legal.html">terms</a></span><a class="freebar-cta" href="free.html">Get a 7-day key</a></div></div>
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="index.html" aria-label="PoolNet — home">
-      <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+      <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
       <span class="bn">PoolNet</span>
     </a>
     <nav class="main" aria-label="Sections">
@@ -35,11 +36,11 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
-      <span class="chip"><i></i>7 days · no signup · no payment</span>
+      <span class="chip"><i></i>free 7-day key · no payment · new one after expiry</span>
       <h1>Free <span class="grad-txt">VPN subscription</span></h1>
       <p class="sub">One link for Happ/Xray: one country — one profile with built-in server rotation. Nodes are collected from public sources; we do not operate them and give no warranty.</p>
     </div>
@@ -50,9 +51,9 @@
       <div class="freecard">
         <div class="pk">FREE · 7 DAYS</div>
         <h2>Get the subscription</h2>
-        <p>Press the button and the server issues a seven-day key. No email, account or payment. Add the link to Happ, Hiddify, v2rayNG or Clash.</p>
-        <button type="button" class="btn btn-1" id="get">Get a 7-day subscription</button>
-        <div id="result" class="freeresult" hidden></div>
+        <p>Press the button and the server issues a free 7-day key, no payment; you can get a new one after it expires, and the Telegram bot is optional. Add the link to Happ, Hiddify, v2rayNG or Clash.</p>
+        <button type="button" class="btn btn-1" id="get">Get a 7-day key</button>
+        <div id="result" class="freeresult" aria-live="polite" tabindex="-1" hidden></div>
         <p class="freenote">Public nodes can log or modify traffic. Do not use them for sensitive data without your own encryption. <a href="../legal.html">Terms of use</a>.</p>
         <div id="tgbox" hidden>
           <p class="freenote">Want fresh subscriptions in Telegram?</p>
@@ -80,6 +81,7 @@
         if (!x.ok) { out.innerHTML = '<p class="freenote">Failed: ' + esc(x.body.error || "error") + '</p>'; return; }
         var base = x.body.subscription;
         var until = x.body.expires_at ? x.body.expires_at.slice(0, 16).replace("T", " ") + " UTC" : "";
+        out.focus();
         out.innerHTML = '<h3>Done — valid until ' + esc(until) + '</h3>' +
           link("Happ / Xray (rotation by country)", base + "?core=xray") +
           link("Base64 — full list", base + "?format=base64") +
@@ -91,7 +93,12 @@
   });
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest("[data-copy]");
-    if (b) navigator.clipboard && navigator.clipboard.writeText(b.getAttribute("data-copy"));
+    if (!b || !navigator.clipboard) return;
+    navigator.clipboard.writeText(b.getAttribute("data-copy")).then(function () {
+      var before = b.textContent;
+      b.textContent = "copied";
+      setTimeout(function () { b.textContent = before; }, 1500);
+    });
   });
   fetch("/api/v1/bot").then(function (r) { return r.json(); }).then(function (d) {
     if (d && d.username) { var a = document.getElementById("tg"); a.href = "https://t.me/" + d.username + "?start=site_free"; document.getElementById("tgbox").hidden = false; }
@@ -103,7 +110,7 @@
   <div class="wrap foot">
     <div>
       <div class="fbrand">
-        <img class="logo-img" src="../assets/logo.png" alt="" width="32" height="32">
+        <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.5rem" alt="" width="32" height="32">
         <span>PoolNet</span>
       </div>
       <p>Public node catalog. Connections go directly from the client to the node; traffic does not pass through us. We do not operate the nodes and give no warranty of availability, security or legality; use at your own risk. <a href="legal.html">Terms of use</a>.</p>
