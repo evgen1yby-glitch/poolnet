@@ -261,6 +261,21 @@ PoolNet/
   `apple-touch-icon`; подключён в шапке/футере, favicon, админке, login и
   старом UI. Чужие проекты не затронуты.
 
+### M11 — аудит 2026-10-24 и план улучшений
+Полный отчёт: [`docs/AUDIT-2026-10-24.md`](docs/AUDIT-2026-10-24.md).
+- [ ] Этап 0 (0–2 дня): SSRF/500/cookie-age/no-store; перепроверка прокси
+  (ложные elite, uptime 100, exit_ip == сервер); атомарная публикация и
+  circuit breaker; зелёный CI (hub deps, Node 22/glob, ruff pin); реальный
+  `expire` подписки; закрыть `/metrics`; права `hub.db`.
+- [ ] Этап 1 (3–7 дней): мониторинг/алерты, бэкапы и restore drill, ретеншн
+  `checks`/`events`, uptime по истории, exit-country, согласованные воронки,
+  freshness в API, VPN carry-over, деградация в `/healthz`.
+- [ ] Этап 2 (1–2 недели): таблица бенчмарка, единый оффер 7 дней, живые числа
+  без hardcode, мобильные файлы/таблица/поиск, контраст/touch/ARIA, логотип
+  64–96 px, legal 68ch, SEO/copy truth-pass.
+- [ ] Этап 3: root LICENSE/NOTICE/OFL, чистка мёртвых ассетов и дублей,
+  truth-pass документации, бренд `hub` → PoolNet, расширение CI/Playwright.
+
 ## Правила проекта (обязательные)
 
 1. Реализации строго по макету и ТЗ: не добавлять блоки/функции без явной просьбы.
