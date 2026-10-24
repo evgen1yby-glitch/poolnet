@@ -19,6 +19,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: install sing-box
+        run: |
+          curl -fsSL -o /tmp/sing-box.tar.gz \
+            https://github.com/SagerNet/sing-box/releases/download/v1.12.14/sing-box-1.12.14-linux-amd64.tar.gz
+          tar -xzf /tmp/sing-box.tar.gz -C /tmp
+          echo "SINGBOX_BIN=/tmp/sing-box-1.12.14-linux-amd64/sing-box" >> "$GITHUB_ENV"
+          /tmp/sing-box-1.12.14-linux-amd64/sing-box version
       - name: install
         run: pip install -e "./hub[dev]"
       - name: ruff
