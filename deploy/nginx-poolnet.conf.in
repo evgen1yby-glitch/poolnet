@@ -40,6 +40,11 @@ server {
 
     server_tokens off;
 
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header Strict-Transport-Security "max-age=31536000" always;
+
     # One canonical host: www answers a redirect, so links and cookies do not
     # split between two names.
     if ($host = www.poolnet.online) {
@@ -48,6 +53,12 @@ server {
 
     access_log /var/log/nginx/poolnet.access.log PoolNet_safe;
     error_log  /var/log/nginx/poolnet.error.log warn;
+
+    # Prometheus metrics are for the operator over localhost/SSH, never the
+    # public origin. The app stays reachable for scraping through the tunnel.
+    location = /metrics {
+        return 404;
+    }
 
     # Subscription fetches are the hottest path; the app also rate-limits, and
     # nginx caps a scanner before it reaches Python.

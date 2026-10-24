@@ -219,7 +219,7 @@ def build_bot(config: BotConfig, gate: Gate, *, status_sink=None):
     drives the handlers directly. This is what "no bot token yet" means in
     practice — the code is complete and exercised, the token is not.
     """
-    if config.transport is None:
+    if config.transport is None or isinstance(config.transport, MockTransport):
         return None
 
     try:
@@ -276,7 +276,6 @@ def build_bot(config: BotConfig, gate: Gate, *, status_sink=None):
         else:
             await _deny(message, "Not a member.")
 
-    @dispatcher.channel_chat_member()
     @dispatcher.chat_member()
     async def on_member_update(event, **_) -> None:
         old = _status_of(event.old_chat_member) if getattr(event, "old_chat_member", None) else "none"

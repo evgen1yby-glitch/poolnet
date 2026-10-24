@@ -10,6 +10,7 @@ python-multipart>=0.0.9
 uvicorn>=0.30           # 0.54.0
 pydantic-settings>=2.4  # 2.16.0
 aiogram>=3.15           # optional: the bot runs in mock mode without a token
+pyyaml>=6.0             # Clash-format subscription output
 
 # Dev / CI only: `python -m pytest tests`
 pytest>=8.3             # 9.1.1

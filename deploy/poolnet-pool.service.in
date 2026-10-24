@@ -5,6 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
+UMask=0077
 User=@USER@
 Group=@GROUP@
 WorkingDirectory=@DIR@/pool

@@ -8,6 +8,7 @@ Type=simple
 # `@DIR@`, `@USER@`, `@GROUP@` are substituted before the unit is installed;
 # systemd does not expand variables in User=/WorkingDirectory=, so a unit
 # cannot carry one operator's paths and work anywhere else.
+UMask=0077
 User=@USER@
 Group=@GROUP@
 WorkingDirectory=@DIR@/hub

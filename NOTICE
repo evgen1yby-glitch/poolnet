@@ -1,0 +1,33 @@
+PoolNet
+Copyright (C) 2026 PoolNet contributors
+
+License summary
+---------------
+- hub/ (control plane and the public site under web/site):
+  GNU Affero General Public License v3.0 or later.
+  Full text: hub/LICENSE
+- pool/ (proxy-pool engine):
+  MIT License.
+  Full text: pool/LICENSE
+
+See the root LICENSE for the composite licensing statement.
+
+Third-party notices
+-------------------
+Fonts tracked under web/site/fonts/ are distributed under the SIL Open Font
+License, version 1.1 (OFL-1.1):
+
+- JetBrains Mono
+  Copyright 2020 The JetBrains Mono Project Authors
+  https://github.com/JetBrains/JetBrainsMono
+  License: OFL-1.1
+
+- Inter Tight
+  Copyright 2016 The Inter Project Authors
+  https://github.com/rsms/inter
+  License: OFL-1.1
+
+The complete OFL-1.1 text and per-font attribution are in docs/THIRD-PARTY.md.
+
+Geolocation data used by the pool is covered by the provider's terms; see
+pool/NOTICE (MaxMind/DB-IP) before redistributing derived databases.

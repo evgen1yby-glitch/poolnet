@@ -15,7 +15,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -27,12 +26,22 @@ dependencies = [
     "uvicorn>=0.30",
     "aiogram>=3.15",
     "pydantic-settings>=2.4",
+    # Clash-format subscription output parses YAML; the import is lazy, but the
+    # feature is part of the published API rather than an optional extra.
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.24",
+    # Starlette's TestClient imports httpx at call time; pytest never does, so
+    # a fresh `pip install -e "./hub[dev]"` needs it declared here.
+    "httpx>=0.27",
+    # FastAPI parses the admin login form through python-multipart. It is a
+    # runtime dependency in requirements.txt too; repeating it keeps the dev
+    # extra self-contained for CI and fresh virtualenvs.
+    "python-multipart>=0.0.9",
     # Pinned: the gate is `ruff check src tests` with this release's rules.
     "ruff==0.6.9",
 ]

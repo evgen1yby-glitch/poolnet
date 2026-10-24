@@ -8,6 +8,8 @@
 (прокси HTTP/SOCKS и VPN-конфиги) на одной платформе проверки. Старые
 проекты по отдельности после переключения закрываются.
 
+Текущее состояние и открытые дефекты: [`docs/AUDIT-2026-10-24.md`](docs/AUDIT-2026-10-24.md).
+
 ## Структура репозитория
 
 ```
@@ -19,10 +21,10 @@ PoolNet/
 │                        index / vpn / proxy / verify / free / status / legal + system.css)
 ├── hub/               ← контрольная плоскость VPN-пула (Python 3.11, FastAPI, aiogram)
 │   ├── src/hub        (api/gateway, siteview/poolstatus, bot, pipeline 6 этапов, store)
-│   ├── tests          (pytest-набор ~557 тестов)
+│   ├── tests          (pytest-набор ~637 тестов)
 │   ├── deploy         (systemd-юниты), scripts, tools (sing-box/xray — только локально)
 │   └── LICENSE        AGPL-3.0
-└── pool/              ← движок прокси-базы (Node 20, TS, бин: opp)
+└── pool/              ← движок прокси-базы (Node ≥ 20.11, TS, бин: opp)
     ├── src            (sources/parse/check/benchmark/publish/distributed)
     ├── workers/api    (edge-API, справочная реализация)
     └── LICENSE        MIT
@@ -87,7 +89,8 @@ PoolNet/
   origin из PoolNet не выполняется.
 - [x] RU-only copy audit: цифры доведены до свежего прогона (13:54 UTC:
   30 576 / 24 997 / 127 ms / 115 стран; цикл 3 330 205 → 753 682 → 3 000 →
-  3 519, 187/194 источников; 89 совпадает с шардами), мёртвые ссылки убраны,
+  3 519, 187/194 источников на тот момент — сейчас 202; 89 совпадает с
+  шардами), мёртвые ссылки убраны,
   `#` остался только у честно отключённой кнопки Telegram-бота.
 - `/status` теперь отдаёт страницу сайта (старая страница hub — только на
   установке без сайта).
@@ -98,7 +101,7 @@ PoolNet/
 ### M4 — CI/GitHub
 - [x] GitHub Actions: `hub` — pytest + ruff (ruff 0.6.9 пинован в dev-deps,
   иначе новые релизы включают новые правила и краснеет унаследованная база);
-  `pool` — `npm ci` + typecheck + lint + 117 unit-тестов; сайт —
+  `pool` — `npm ci` + typecheck + lint + 117 unit-тестов (сейчас 118); сайт —
   `scripts/site_links.py` (8 страниц, битые ссылки, retired :8931, `href="#"`).
 - [x] Секреты: `.gitleaks.toml` + workflow `secrets` (gitleaks-action) +
   pre-commit (gitleaks, ruff, базовые проверки); ключи — только GitHub
@@ -159,7 +162,7 @@ PoolNet/
 - [x] CI: site-workflow через `make site`, path-фильтры смотрят `web/site/**`;
   hub/pool workflows ставят свои зависимости напрямую (дешевле в CI).
 - [x] Гейты: hub 623 passed / 1 skipped, ruff 0.6.9 чисто; pool typecheck/lint
-  + 117 тестов; linkcheck 8 страниц; Playwright 1440/390 — 7 страниц + 404,
+  + 117 тестов (сейчас 118); linkcheck 8 страниц; Playwright 1440/390 — 7 страниц + 404,
   0 overflow, 0 console errors; рендер проверен на живых данных (30 898
   записей, 112 стран, 25 405 elite).
 
@@ -189,27 +192,17 @@ PoolNet/
   записями не перезаписывались и оставались от старых циклов (файлы с 14 окт);
   рендер теперь удаляет неактуальные `country/*.txt` (72 шарда, 0 строк вне
   публикации).
-- Гейты: hub 633 passed / 1 skipped, pool 117, linkcheck 16 страниц,
+- Гейты: hub 633 passed / 1 skipped, pool 118, linkcheck 16 страниц,
   Playwright RU/EN 1440/390 — 0 overflow, 0 console errors; карта проверена
   координатами и скриншотом.
-
-### M9 — домен poolnet.online
-- [x] DNS: `poolnet.online` и `www` → 193.34.212.154.
-- [x] TLS: Let's Encrypt (webroot), сертификат до 22.01.2027; vhost
-  `deploy/nginx-poolnet.conf.in` на :443 (name-based, соседние проекты не
-  затронуты), :80 → HTTPS и ACME, `www` → apex 301.
-- [x] Публичный бренд сайта переименован в **PoolNet** (16 страниц, RU/EN);
-  внутреннее имя сервиса/каталогов осталось `PoolNet` (systemd, пути).
-- [x] `HUB_BASE_URL=https://poolnet.online`; заголовки подписок и ссылки
-  теперь указывают на домен.
-- [ ] GitHub-публикация и перенос старых адресов — по решению владельца.
 
 ### M8 — расширение socks5-источников
 - [x] Веб-ресёрч и проверка GitHub (поиск, Atom-фиды коммитов, raw-файлы)
   + измерение живой доли тем же чекером (2026-10-23).
-- [x] Добавлены 5 источников socks5 (реестр 199): `minoa-socks5` (61%),
-  `zloi-user-socks5` (85%), `argh94-socks5` (43%), `proxygenerator-stable-
-  socks5` (44%), `thordata-socks5` (79%) — доли по сэмплу текущего цикла.
+- [x] Добавлены 5 источников socks5 (реестр 199 на тот момент):
+  `minoa-socks5` (61%), `zloi-user-socks5` (85%), `argh94-socks5` (43%),
+  `proxygenerator-stable-socks5` (44%), `thordata-socks5` (79%) — доли по
+  сэмплу текущего цикла.
 - [x] Парсер `plain` принимает хвостовую метку страны `ip:port:Country`
   (hideip.me), с тестами; числовой хвост по-прежнему отвергается.
 - [x] Отклонены: Firmfox (193k строк, 1.5% живых), KangProxy и ShiftyTR
@@ -232,17 +225,31 @@ PoolNet/
   (`proxyscrape-socks5-repo` 2 795 строк, 36% живых; `proxyscrape-v4-socks5`
   2 000, 38%); VPN-реестр 38, добавлены `aviamasters/all` (7 632 узла),
   `kamaji/merged` (20 378), `TGParse/vless|ss|trojan` (6 022) — worker увидел
-  **98 483 raw** вместо 64 637, цикл пула принял 202 источника.
+  **98 483 raw** вместо 64 637, цикл пула принял 202 источника. Это текущий
+  реестр: 202 источника.
 - [x] VPN-пайплайн переведён на объединённый репозиторий: `hub-worker` и
   `hub-probe` теперь запускают `/home/dev/poolnet/hub` (данные перенесены
   в `hub/data`, 163 МБ, старый каталог сохранён). После переноса worker
   увидел **64 637 raw** вместо 55 133 — новые источники реально в пайплайне;
   probe запущен в `hubns`, healthz и подписки 200.
 
+### M9 — домен poolnet.online
+- [x] DNS: `poolnet.online` и `www` → 193.34.212.154.
+- [x] TLS: Let's Encrypt (webroot), сертификат до 22.01.2027; vhost
+  `deploy/nginx-poolnet.conf.in` на :443 (name-based, соседние проекты не
+  затронуты), :80 → HTTPS и ACME, `www` → apex 301.
+- [x] Публичный бренд сайта переименован в **PoolNet** (16 страниц, RU/EN);
+  внутренние имена — строчными: `poolnet.service`, `poolnet-pool.service`,
+  каталог `/opt/poolnet`, пользователь/группа `poolnet`, пути `pool/data`.
+- [x] `HUB_BASE_URL=https://poolnet.online`; заголовки подписок и ссылки
+  теперь указывают на домен.
+- [ ] GitHub-публикация и перенос старых адресов — по решению владельца.
+
 ### M10 — бесплатная подписка, админка, айдентика
 - [x] Premium-страница удалена (RU/EN), ссылки и упоминания вычищены.
 - [x] Бесплатная подписка: `/free` и `/en/free`; `POST /api/free-subscription`
-  выдаёт ключ на **7 дней** (source=web, rate limit 3/час на /24, без аккаунта);
+  выдаёт ключ на **7 дней** (source=web, 5 ключей/час на /24 при burst 3,
+  без аккаунта);
   страница показывает ссылки Happ/Xray (ротация по стране), Base64 и Base64+unique.
 - [x] Видимая полоса на всех страницах: «Бесплатно · публичные источники ·
   без гарантий» + кнопка «Получить VPN бесплатно»; на `/proxy` — блок
@@ -256,25 +263,32 @@ PoolNet/
   секрету (`HUB_BOT_SECRET`), лимит 5 попыток/15 мин, Secure-cookie на HTTPS.
   `HUB_ADMIN_IPS` — опциональное ограничение по IP (иначе 404). Подсказка с
   путём к секрету удалена со страницы входа.
-- [x] Логотип: исходник `docs/brand/poolnet-source.jpg`; прозрачные
-  `web/site/assets/logo.png` (512), `logo-192`, `favicon-32`,
-  `apple-touch-icon`; подключён в шапке/футере, favicon, админке, login и
-  старом UI. Чужие проекты не затронуты.
+- [x] Логотип: исходник `docs/brand-poolnet-source.jpg`; прозрачные
+  `web/site/assets/logo.png` (512), `favicon-32`, `apple-touch-icon`;
+  подключён в шапке/футере, favicon, админке, login и старом UI. Чужие
+  проекты не затронуты. Неиспользуемый `logo-192` удалён в M11.
 
 ### M11 — аудит 2026-10-24 и план улучшений
 Полный отчёт: [`docs/AUDIT-2026-10-24.md`](docs/AUDIT-2026-10-24.md).
-- [ ] Этап 0 (0–2 дня): SSRF/500/cookie-age/no-store; перепроверка прокси
-  (ложные elite, uptime 100, exit_ip == сервер); атомарная публикация и
-  circuit breaker; зелёный CI (hub deps, Node 22/glob, ruff pin); реальный
-  `expire` подписки; закрыть `/metrics`; права `hub.db`.
+- [x] Этап 0 (2026-10-24): закрыты SSRF/500/cookie-age/no-store; убрана
+  absolute-form подмена прокси и добавлена nonce-проверка; публикация требует
+  доказанный exit-IP и не пускает IP самого чекера; честный `uptime=null` до
+  3 успехов; зелёный CI (hub deps, Node 22/glob, ruff pin); реальный `expire`
+  подписки; `/metrics` закрыт снаружи; права `hub.db` и `UMask=0077`.
+- [ ] Остаток этапа 0: атомарная публикация и circuit breaker.
 - [ ] Этап 1 (3–7 дней): мониторинг/алерты, бэкапы и restore drill, ретеншн
-  `checks`/`events`, uptime по истории, exit-country, согласованные воронки,
-  freshness в API, VPN carry-over, деградация в `/healthz`.
-- [ ] Этап 2 (1–2 недели): таблица бенчмарка, единый оффер 7 дней, живые числа
-  без hardcode, мобильные файлы/таблица/поиск, контраст/touch/ARIA, логотип
-  64–96 px, legal 68ch, SEO/copy truth-pass.
-- [ ] Этап 3: root LICENSE/NOTICE/OFL, чистка мёртвых ассетов и дублей,
-  truth-pass документации, бренд `hub` → PoolNet, расширение CI/Playwright.
+  `checks`/`events`, exit-country, freshness в API, VPN carry-over,
+  деградация в `/healthz`. Uptime для новых проверок не фабрикуется; старую
+  историю ещё нужно вытеснить новыми циклами.
+- [x] Этап 2 (2026-10-24): таблица бенчмарка, единый оффер 7 дней, живые числа
+  без hardcode, мобильные файлы/поиск, контраст, skip-link/aria-current,
+  touch-targets, live-region и подтверждение копирования на `/free`, legal
+  68ch, stale-бейдж, meta/SEO/caption/scope, логотип 64/96.
+- [ ] Остаток этапа 2: пейджер снизу и карточки таблицы на узком экране,
+  поиск по названию страны, aria-подписи флагов и компактное мобильное меню.
+- [x] Этап 3 (2026-10-24): root LICENSE/NOTICE/THIRD-PARTY, чистка мёртвых
+  ассетов и дублей, truth-pass документации, бренд `hub` → PoolNet.
+- [ ] Остаток этапа 3: Playwright-пробы в CI (локальные пробы выполнены).
 
 ## Правила проекта (обязательные)
 

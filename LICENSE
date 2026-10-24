@@ -1,0 +1,30 @@
+PoolNet repository licensing
+============================
+
+This repository combines two independently licensed projects. The root license
+is composite; the full text for each component lives beside its code.
+
+hub/ — GNU Affero General Public License, version 3 or later
+------------------------------------------------------------
+The hub control plane (server, tests, scripts, deployment templates, and the
+public site under web/site) is licensed under the GNU Affero General Public
+License, version 3 or (at your option) any later version (AGPL-3.0-or-later).
+
+Full license text: hub/LICENSE
+SPDX-License-Identifier: AGPL-3.0-or-later
+
+pool/ — MIT License
+-------------------
+The proxy-pool engine is licensed under the MIT License.
+
+Full license text: pool/LICENSE
+SPDX-License-Identifier: MIT
+
+Documentation and third-party material
+--------------------------------------
+Files under docs/ document the combined project and follow the license of the
+component they describe. Font files and other third-party assets keep their own
+licenses; see NOTICE and docs/THIRD-PARTY.md. If an individual file carries a
+license header, that header applies to that file.
+
+Copyright (C) 2026 PoolNet contributors.
