@@ -61,6 +61,15 @@ def test_free_keys_are_rate_limited(client):
     assert codes[3] == 429
 
 
+def test_a_daily_global_budget_backs_up_the_per_subnet_bucket(client, monkeypatch):
+    api, _store = client
+    monkeypatch.setenv("HUB_FREE_DAILY_LIMIT", "1")
+    assert api.post("/api/free-subscription").status_code == 200
+    second = api.post("/api/free-subscription")
+    assert second.status_code == 429
+    assert second.headers.get("retry-after")
+
+
 def test_expired_key_is_a_404_and_admin_reports_it(client):
     api, store = client
     token = "expired-test-token"

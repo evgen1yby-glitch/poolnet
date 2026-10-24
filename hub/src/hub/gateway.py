@@ -69,6 +69,8 @@ POOL_FILES = {
     "all.txt": "text/plain; charset=utf-8",
     "proxies.json": "application/json",
     "manifest.json": "application/json",
+    "benchmark.json": "application/json",
+    "history.json": "application/json",
     "meta.json": "application/json",
     "stats.json": "application/json",
 }
