@@ -69,7 +69,7 @@ POOL_FILES = {
 }
 
 #: Extensionless page paths the site owns, for the cache policy in `api.py`.
-PAGE_SLUGS = ("vpn", "proxy", "verify", "check", "premium", "status")
+PAGE_SLUGS = ("vpn", "proxy", "verify", "check", "premium", "status", "legal")
 
 _COUNTRY_SHARD = re.compile(r"^[A-Z]{2}\.txt$")
 _CHECK_ADDR = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}:\d{1,5}$")

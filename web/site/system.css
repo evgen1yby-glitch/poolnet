@@ -334,3 +334,10 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
 .pg-btn:disabled{opacity:.35;cursor:not-allowed}
 .pb.g-anonymous{color:#a78bfa;border-color:rgba(167,139,250,.45)}
 .pb.g-transparent{color:#f59e0b;border-color:rgba(245,158,11,.4)}
+
+
+/* ==== v8: legal page ==== */
+.legal{max-width:58rem}
+.legal h2{font-size:1.25rem;font-weight:600;letter-spacing:-.01em;margin:2rem 0 .55rem}
+.legal p{color:var(--mut);margin:.55rem 0}
+.legal a{color:var(--txt);text-decoration:underline;text-underline-offset:.16em}

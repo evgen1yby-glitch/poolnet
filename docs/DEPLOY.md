@@ -1,4 +1,4 @@
-# Переключение продакшена на evilgate
+# Переключение продакшена на poolnet
 
 Документ — для сервера, на котором уже работают прежние `hub` (:8444) и
 демо-пул (:8931). Домен, DNS и выпуск сертификата выполняются вне
@@ -97,16 +97,16 @@ sudo -u evilgate env OPP_DATA_DIR=/opt/evilgate/pool/data \
 ## 4. nginx и TLS
 
 ```sh
-certbot certonly --nginx -d evilgate.online -d www.evilgate.online
-install -m 0644 deploy/nginx-evilgate.conf.in /etc/nginx/conf.d/evilgate.conf
+certbot certonly --webroot -w /var/www/certbot -d poolnet.online -d www.poolnet.online
+install -m 0644 deploy/nginx-poolnet.conf.in /etc/nginx/conf.d/evilgate.conf
 nginx -t && systemctl reload nginx
 ```
 
 Сертификат обновляется существующим таймером certbot; `ssl_certificate`
-указывает на стандартный путь `/etc/letsencrypt/live/evilgate.online/`.
+указывает на стандартный путь `/etc/letsencrypt/live/poolnet.online/`.
 
-Проверка: `curl -sS https://evilgate.online/api/status.json`,
-`https://evilgate.online/`, `/pool/http.txt`, `/status`.
+Проверка: `curl -sS https://poolnet.online/api/status.json`,
+`https://poolnet.online/`, `/pool/http.txt`, `/status`.
 
 ## 5. Старые адреса
 

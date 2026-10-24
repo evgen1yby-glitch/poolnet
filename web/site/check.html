@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
-<title>Проверить узел — evilgate</title>
+<title>Проверить узел — poolnet</title>
 <meta name="description" content="Проверка одного прокси реальным соединением: вердикт, задержка и адрес выхода.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2313131a'/%3E%3Cpath d='M9 26V12a7 7 0 0 1 14 0v14' stroke='%238b5cff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='19' r='2' fill='%2338bdf8'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="system.css">
@@ -13,9 +13,9 @@
 <body>
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="index.html" aria-label="evilgate — на главную">
+    <a class="brand" href="index.html" aria-label="poolnet — на главную">
       <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cff"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="url(#lg)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#38bdf8"/></svg>
-      <span class="bn">evilgate</span>
+      <span class="bn">poolnet</span>
     </a>
     <nav class="main" aria-label="Разделы">
       <a href="index.html">Главная</a>
@@ -25,6 +25,7 @@
       <a href="check.html" class="on">Проверить узел</a>
       <a href="premium.html">Премиум</a>
       <a href="status.html">Статус</a>
+      <a href="legal.html">Условия</a>
     </nav>
     <div class="lang" role="group" aria-label="Язык">
       <a class="lang-b on" href="check.html" hreflang="ru" aria-current="true">RU</a>
@@ -64,7 +65,7 @@
         <div class="chk-res" id="chk-res" aria-live="polite">
           <p class="chk-idle">Введите адрес и запустите проверку. Результат описывает только этот момент: через минуту узел может быть уже недоступен.</p>
         </div>
-        <p class="chk-note">Проверка идёт с сервера evilgate, а не из вашей сети — узел видит адрес и задержку сервера. Приватные и служебные адреса не проверяются.</p>
+        <p class="chk-note">Проверка идёт с сервера poolnet, а не из вашей сети — узел видит адрес и задержку сервера. Приватные и служебные адреса не проверяются.</p>
       </div>
     </div>
   </section>
@@ -89,10 +90,10 @@
     <div>
       <div class="fbrand">
         <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#13131a" stroke="rgba(255,255,255,.16)"/><path d="M9 26V12a7 7 0 0 1 14 0v14" stroke="#656878" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="16" cy="19" r="2" fill="#656878"/></svg>
-        <span>evilgate</span>
+        <span>poolnet</span>
       </div>
-      <p>Каталог проверенных публичных узлов. Пул агрегирует только опубликованные списки; соединение устанавливается напрямую между клиентом и узлом, трафик не проходит через наши серверы. Мы не являемся оператором узлов.</p>
-      <p class="cop">© 2026 evilgate</p>
+      <p>Публичный каталог узлов. Соединение клиент—узел устанавливается напрямую, трафик не проходит через нас. Мы не оператор узлов и не гарантируем их работу, безопасность или законность; используйте на свой риск. <a href="legal.html">Условия использования</a>.</p>
+      <p class="cop">© 2026 poolnet</p>
     </div>
     <nav aria-label="Ссылки">
       <a href="index.html">Главная</a>

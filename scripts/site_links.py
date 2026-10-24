@@ -31,7 +31,7 @@ def main() -> int:
     required = {
         f"{tree}{name}.html"
         for tree in ("", "en/")
-        for name in ("index", "vpn", "proxy", "verify", "check", "premium", "status", "404")
+        for name in ("index", "vpn", "proxy", "verify", "check", "premium", "status", "404", "legal")
     }
     seen = {p.relative_to(SITE).as_posix() for p in pages}
     missing = required - seen

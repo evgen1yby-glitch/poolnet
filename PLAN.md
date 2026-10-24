@@ -1,8 +1,8 @@
-# evilgate — план объединения двух проектов в один
+# poolnet — план объединения двух проектов в один
 
 Объединение **hub** (freevpn: контрольная плоскость VPN-конфигураций, Python) и
 **pool** (open-proxy-pool: открытая прокси-база, TypeScript) в единый проект
-**evilgate** (evilgate.online) по макету `web/site` (v4: obsidian + aurora).
+**poolnet** (poolnet.online) по макету `web/site` (v4: obsidian + aurora).
 
 Итоговая цель: один репозиторий, один сайт, один прод-сервис, обе базы
 (прокси HTTP/SOCKS и VPN-конфиги) на одной платформе проверки. Старые
@@ -114,7 +114,7 @@ evilgate/
 ### M5 — переключение продакшена
 - [x] systemd-юнит evilgate (hub-api) с доменом и путями объединённого дерева:
   `deploy/evilgate.service.in` (`HUB_SITE`, `EVILGATE_POOL_DIR`, loopback).
-- [x] TLS-vhost evilgate.online: `deploy/nginx-evilgate.conf.in` (name-based
+- [x] TLS-vhost poolnet.online: `deploy/nginx-poolnet.conf.in` (name-based
   :443, лимиты подписок, redacted-логи, потоковая отдача /pool/*).
 - [x] Прокси-планировщик на сервере (решение владельца):
   `deploy/evilgate-pool.service.in` + `deploy/evilgate-pool.timer`
@@ -136,7 +136,7 @@ evilgate/
   30 944 записи / 109 стран (2026-10-22T22:20:40Z). Бюджеты старого прода
   сохранены в `/etc/evilgate/pool.env` (3000/150/350 + GFP_API_KEY), иначе
   цикл уходил на 114k кандидатов.
-- [ ] Домен: `evilgate.online` не резолвится (не зарегистрирован/не указывает
+- [ ] Домен: `poolnet.online` не резолвится (не зарегистрирован/не указывает
   сюда) — TLS-vhost по домену и редиректы старых адресов ждут DNS.
 
 ### M6 — production-grade упаковка
@@ -192,6 +192,17 @@ evilgate/
 - Гейты: hub 633 passed / 1 skipped, pool 117, linkcheck 16 страниц,
   Playwright RU/EN 1440/390 — 0 overflow, 0 console errors; карта проверена
   координатами и скриншотом.
+
+### M9 — домен poolnet.online
+- [x] DNS: `poolnet.online` и `www` → 193.34.212.154.
+- [x] TLS: Let's Encrypt (webroot), сертификат до 22.01.2027; vhost
+  `deploy/nginx-poolnet.conf.in` на :443 (name-based, соседние проекты не
+  затронуты), :80 → HTTPS и ACME, `www` → apex 301.
+- [x] Публичный бренд сайта переименован в **poolnet** (16 страниц, RU/EN);
+  внутреннее имя сервиса/каталогов осталось `evilgate` (systemd, пути).
+- [x] `HUB_BASE_URL=https://poolnet.online`; заголовки подписок и ссылки
+  теперь указывают на домен.
+- [ ] GitHub-публикация и перенос старых адресов — по решению владельца.
 
 ### M8 — расширение socks5-источников
 - [x] Веб-ресёрч и проверка GitHub (поиск, Atom-фиды коммитов, raw-файлы)
