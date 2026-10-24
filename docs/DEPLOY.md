@@ -7,8 +7,8 @@
 ## 1. Подготовка дерева и зависимостей
 
 ```sh
-git clone <репозиторий> /opt/evilgate
-cd /opt/evilgate
+git clone <репозиторий> /opt/poolnet
+cd /opt/poolnet
 
 pip install -e "./hub[dev]"        # или requirements в системный python3
 cd pool && npm ci --no-audit --no-fund && cd ..
@@ -27,22 +27,22 @@ python scripts/site_links.py
 Оба юнита читают `EnvironmentFile`, поэтому значения не попадают в git:
 
 ```sh
-install -d /etc/evilgate
-cat >/etc/evilgate/evilgate.env <<'EOF'
+install -d /etc/poolnet
+cat >/etc/poolnet/poolnet.env <<'EOF'
 HUB_TOKEN=<токен подписок>
 HUB_CHANNEL_ID=<id канала>
 EOF
-chmod 600 /etc/evilgate/evilgate.env
+chmod 600 /etc/poolnet/poolnet.env
 # pool.env: бюджеты цикла и ключи источников. Без них цикл берёт дефолты
 # движка и может уйти на сотни тысяч кандидатов вместо выборки.
-cat >/etc/evilgate/pool.env <<'ENVFILE'
+cat >/etc/poolnet/pool.env <<'ENVFILE'
 OPP_MAX_NEW_PER_CYCLE=3000
 OPP_PER_SOURCE_MIN=150
 OPP_CONCURRENCY=350
 GFP_API_KEY=<ключ источника gfp, если используется>
 ENVFILE
-chmod 640 /etc/evilgate/pool.env
-chown root:evilgate /etc/evilgate/pool.env
+chmod 640 /etc/poolnet/pool.env
+chown root:poolnet /etc/poolnet/pool.env
 ```
 
 ### Перенос данных со старой установки
@@ -51,10 +51,10 @@ chown root:evilgate /etc/evilgate/pool.env
 первого запуска таймера — иначе очередь и история начнутся с нуля:
 
 ```sh
-rsync -a /old/checkout/data/  /opt/evilgate/pool/data/
-rsync -a /old/checkout/.state/ /opt/evilgate/pool/.state/
-rsync -a /old/checkout/.work/  /opt/evilgate/pool/.work/
-cp -p /old/checkout/.env.local /opt/evilgate/pool/.env.local
+rsync -a /old/checkout/data/  /opt/poolnet/pool/data/
+rsync -a /old/checkout/.state/ /opt/poolnet/pool/.state/
+rsync -a /old/checkout/.work/  /opt/poolnet/pool/.work/
+cp -p /old/checkout/.env.local /opt/poolnet/pool/.env.local
 ```
 
 Старый планировщик (cron/systemd) после этого отключается, демо-порты
@@ -67,26 +67,26 @@ cp -p /old/checkout/.env.local /opt/evilgate/pool/.env.local
 (каталог публикации прокси-пула).
 
 ```sh
-sed -e 's|@DIR@|/opt/evilgate|g' -e 's|@USER@|evilgate|g' \
-    -e 's|@GROUP@|evilgate|g' -e 's|@HUB_ROOT@|/opt/evilgate/hub|g' \
-    -e 's|@POOL_DIR@|/opt/evilgate/pool/data|g' deploy/evilgate.service.in \
-    >/etc/systemd/system/evilgate.service
+sed -e 's|@DIR@|/opt/poolnet|g' -e 's|@USER@|poolnet|g' \
+    -e 's|@GROUP@|poolnet|g' -e 's|@HUB_ROOT@|/opt/poolnet/hub|g' \
+    -e 's|@POOL_DIR@|/opt/poolnet/pool/data|g' deploy/poolnet.service.in \
+    >/etc/systemd/system/poolnet.service
 
-sed -e 's|@DIR@|/opt/evilgate|g' -e 's|@USER@|evilgate|g' \
-    -e 's|@GROUP@|evilgate|g' -e 's|@NODE@|/usr/bin/node|g' \
-    deploy/evilgate-pool.service.in >/etc/systemd/system/evilgate-pool.service
+sed -e 's|@DIR@|/opt/poolnet|g' -e 's|@USER@|poolnet|g' \
+    -e 's|@GROUP@|poolnet|g' -e 's|@NODE@|/usr/bin/node|g' \
+    deploy/poolnet-pool.service.in >/etc/systemd/system/poolnet-pool.service
 
-install -m 0644 deploy/evilgate-pool.timer /etc/systemd/system/
+install -m 0644 deploy/poolnet-pool.timer /etc/systemd/system/
 
 systemctl daemon-reload
-systemctl enable --now evilgate.service evilgate-pool.timer
+systemctl enable --now poolnet.service poolnet-pool.timer
 ```
 
 Первый цикл пула можно прогнать вручную до включения таймера:
 
 ```sh
-sudo -u evilgate env OPP_DATA_DIR=/opt/evilgate/pool/data \
-  /usr/bin/node /opt/evilgate/pool/node_modules/.bin/tsx src/index.ts cycle
+sudo -u poolnet env OPP_DATA_DIR=/opt/poolnet/pool/data \
+  /usr/bin/node /opt/poolnet/pool/node_modules/.bin/tsx src/index.ts cycle
 ```
 
 Проверка хуба: `curl -s http://127.0.0.1:8090/api/status.json | head -c 200`.
@@ -98,7 +98,7 @@ sudo -u evilgate env OPP_DATA_DIR=/opt/evilgate/pool/data \
 
 ```sh
 certbot certonly --webroot -w /var/www/certbot -d poolnet.online -d www.poolnet.online
-install -m 0644 deploy/nginx-poolnet.conf.in /etc/nginx/conf.d/evilgate.conf
+install -m 0644 deploy/nginx-poolnet.conf.in /etc/nginx/conf.d/poolnet.conf
 nginx -t && systemctl reload nginx
 ```
 
@@ -114,18 +114,18 @@ nginx -t && systemctl reload nginx
 
 ```sh
 sed 's|@IP_DASHED@|<IP-через-дефис>|g' deploy/legacy-redirect.conf.in \
-    >/etc/nginx/conf.d/evilgate-legacy.conf
+    >/etc/nginx/conf.d/poolnet-legacy.conf
 nginx -t && systemctl reload nginx
 ```
 
 `:8444` отдаёт `301` на домен (подписки продолжают работать), `:8931/data/*`
 — на `/pool/*`, остальное — на `/proxy`. Старые юниты останавливаются, когда
 в логах редиректов не остаётся запросов; тогда же удаляются старые vhost и
-`evilgate-legacy.conf`.
+`poolnet-legacy.conf`.
 
 ## 6. Откат
 
-Остановить `evilgate.service`, вернуть старые юниты (`systemctl enable --now
-hub-api …`), убрать `evilgate-legacy.conf` и перезагрузить nginx. Каталоги
+Остановить `poolnet.service`, вернуть старые юниты (`systemctl enable --now
+hub-api …`), убрать `poolnet-legacy.conf` и перезагрузить nginx. Каталоги
 данных не пересекаются (`hub/data`, `pool/data`), поэтому откат не теряет
 опубликованное.

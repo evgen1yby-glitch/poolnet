@@ -59,9 +59,9 @@ _MAP_MAX_R = 2.6
 
 
 def pool_dir(store: Store) -> Path:
-    """Where the proxy engine publishes: `EVILGATE_POOL_DIR`, else a sibling."""
+    """Where the proxy engine publishes: `POOLNET_POOL_DIR`, else a sibling."""
     return Path(
-        os.environ.get("EVILGATE_POOL_DIR", "") or store.root.parent / "pool" / "data"
+        os.environ.get("POOLNET_POOL_DIR", "") or store.root.parent / "pool" / "data"
     )
 
 
@@ -628,7 +628,7 @@ class SiteDataSource:
     def __init__(self, store: Store, directory: Path | None = None) -> None:
         self.store = store
         #: `None` means "resolve from the environment on every request", which
-        #: keeps `EVILGATE_POOL_DIR` an operational knob rather than a startup
+        #: keeps `POOLNET_POOL_DIR` an operational knob rather than a startup
         #: constant; tests rely on that too.
         self.directory = directory
         self._lock = threading.Lock()

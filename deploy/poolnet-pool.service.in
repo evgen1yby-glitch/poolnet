@@ -1,5 +1,5 @@
 [Unit]
-Description=evilgate — one proxy-pool refresh cycle
+Description=poolnet — one proxy-pool refresh cycle
 After=network-online.target
 Wants=network-online.target
 
@@ -9,7 +9,7 @@ User=@USER@
 Group=@GROUP@
 WorkingDirectory=@DIR@/pool
 Environment=OPP_DATA_DIR=@DIR@/pool/data
-EnvironmentFile=-/etc/evilgate/pool.env
+EnvironmentFile=-/etc/poolnet/pool.env
 # `tsx` from the project's own node_modules: the toolchain is installed by
 # `npm ci` and pinned by package-lock.json, not by whatever runs as /usr/bin/node.
 ExecStart=@NODE@ @DIR@/pool/node_modules/.bin/tsx src/index.ts cycle

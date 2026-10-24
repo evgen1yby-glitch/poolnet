@@ -87,7 +87,7 @@ def test_missing_publication_is_empty_not_an_error(tmp_path):
 
 
 def _client(tmp_path: Path, monkeypatch, pool: Path) -> TestClient:
-    monkeypatch.setenv("EVILGATE_POOL_DIR", str(pool))
+    monkeypatch.setenv("POOLNET_POOL_DIR", str(pool))
     monkeypatch.setenv("HUB_SITE", str(tmp_path / "no-site"))
     return TestClient(create_app(store=Store(tmp_path / "store")))
 

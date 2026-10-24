@@ -133,7 +133,7 @@ def test_vpn_section_is_exactly_the_v1_stats_payload(client):
 
 def test_pool_section_carries_the_published_aggregates(client, monkeypatch):
     api, tmp_path = client
-    monkeypatch.setenv("EVILGATE_POOL_DIR", str(_pool_dir(tmp_path)))
+    monkeypatch.setenv("POOLNET_POOL_DIR", str(_pool_dir(tmp_path)))
     pool = api.get("/api/status.json").json()["pool"]
     assert pool["available"] is True
     assert pool["total"] == 30
@@ -161,7 +161,7 @@ def test_benchmark_top_is_capped_at_eight(client, monkeypatch):
     meta = json.loads((pool_dir / "benchmark.json").read_text(encoding="utf-8"))
     meta["sources"] = [dict(meta["sources"][0], id=f"src-{i}") for i in range(12)]
     (pool_dir / "benchmark.json").write_text(json.dumps(meta), encoding="utf-8")
-    monkeypatch.setenv("EVILGATE_POOL_DIR", str(pool_dir))
+    monkeypatch.setenv("POOLNET_POOL_DIR", str(pool_dir))
     pool = api.get("/api/status.json").json()["pool"]
     assert pool["sources"] == 12
     assert len(pool["benchmark_top"]) == 8
@@ -171,7 +171,7 @@ def test_benchmark_top_is_capped_at_eight(client, monkeypatch):
 def test_without_a_proxy_base_the_pool_section_stays_honest(client, monkeypatch):
     """No engine run on this install yet: an explicit `false`, never an empty lie."""
     api, _ = client
-    monkeypatch.setenv("EVILGATE_POOL_DIR", "/does/not/exist")
+    monkeypatch.setenv("POOLNET_POOL_DIR", "/does/not/exist")
     assert api.get("/api/status.json").json()["pool"] == {"available": False}
 
 
@@ -180,7 +180,7 @@ def test_a_corrupt_pool_file_is_not_an_endpoint_error(client, monkeypatch):
     api, tmp_path = client
     pool = _pool_dir(tmp_path)
     (pool / "stats.json").write_text('{"total": ', encoding="utf-8")
-    monkeypatch.setenv("EVILGATE_POOL_DIR", str(pool))
+    monkeypatch.setenv("POOLNET_POOL_DIR", str(pool))
     pool_section = api.get("/api/status.json").json()["pool"]
     # The run counts survive through meta.json; the stats-only fields don't lie.
     assert pool_section["available"] is True

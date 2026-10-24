@@ -154,7 +154,7 @@ def test_source_cache_rebuilds_when_a_published_file_changes(tmp_path):
 
 def test_cache_follows_the_env_when_no_directory_was_pinned(tmp_path, monkeypatch):
     directory = _publication(tmp_path)
-    monkeypatch.setenv("EVILGATE_POOL_DIR", str(directory))
+    monkeypatch.setenv("POOLNET_POOL_DIR", str(directory))
     source = poolstatus.SiteDataSource(_store(tmp_path / "store"))
     data, _version = source.get()
     assert data["pool"]["total"] == 30

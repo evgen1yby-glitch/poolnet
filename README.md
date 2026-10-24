@@ -7,9 +7,6 @@
 
 Репозиторий объединяет два прежних проекта: `hub` (freevpn, контрольная
 плоскость VPN-пула) и `pool` (open-proxy-pool, движок прокси-базы).
-Публичное имя — **poolnet**; внутреннее имя сервиса и каталогов в коде —
-`evilgate` (systemd-юнит, пути и переменные).
-
 ## Что здесь есть
 
 | Каталог | Что это | Стек | Лицензия |
@@ -21,7 +18,7 @@
 
 Данные прогонов (`data/`, `*/data/`), секреты и окружение в git не попадают:
 каталог публикации создаётся на сервере, а сайт и API читают его через
-`EVILGATE_POOL_DIR` / `HUB_SITE`.
+`POOLNET_POOL_DIR` / `HUB_SITE`.
 
 ## Как это работает
 
@@ -50,7 +47,7 @@
 ```sh
 # hub: веб/API (сайт отдаётся, если указан HUB_SITE)
 pip install -e "./hub[dev]"
-HUB_SITE=web/site EVILGATE_POOL_DIR=../pool/data python -m hub serve --port 8090
+HUB_SITE=web/site POOLNET_POOL_DIR=../pool/data python -m hub serve --port 8090
 
 # pool: один цикл и публикация в data/
 cd pool

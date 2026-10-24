@@ -57,7 +57,7 @@ def _pool_dir(tmp_path: Path, total: int = 4242) -> Path:
 
 def _client(tmp_path: Path, monkeypatch, pool: Path) -> TestClient:
     monkeypatch.setenv("HUB_SITE", str(SITE_DIR))
-    monkeypatch.setenv("EVILGATE_POOL_DIR", str(pool))
+    monkeypatch.setenv("POOLNET_POOL_DIR", str(pool))
     return TestClient(create_app(store=Store(tmp_path / "store")))
 
 

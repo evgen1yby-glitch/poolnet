@@ -30,9 +30,9 @@ def make_client(monkeypatch):
     def _make(pool_dir: Path | None) -> TestClient:
         tmp = Path(f"/tmp/opencode/pooltest-{id(monkeypatch)}")
         if pool_dir is not None:
-            monkeypatch.setenv("EVILGATE_POOL_DIR", str(pool_dir))
+            monkeypatch.setenv("POOLNET_POOL_DIR", str(pool_dir))
         else:
-            monkeypatch.setenv("EVILGATE_POOL_DIR", str(tmp / "absent"))
+            monkeypatch.setenv("POOLNET_POOL_DIR", str(tmp / "absent"))
         return TestClient(create_app(store=Store(tmp)))
 
     return _make

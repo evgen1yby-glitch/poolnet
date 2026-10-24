@@ -1,4 +1,4 @@
-# Архитектура evilgate
+# Архитектура poolnet
 
 Статус: M5 завершён, M6 (production-grade упаковка) выполнен. В проде один
 процесс — `hub` (FastAPI). `pool` — отдельный движок, который публикует файлы
@@ -27,7 +27,7 @@
   (таблицы, карта, воронка), которые заменяются живыми данными при рендере.
 - `pool/src` — TypeScript-движок: источники → дедупликация → проверка
   реальными соединениями → обогащение → публикация в `pool/data`.
-- `deploy/` — systemd-юниты (`evilgate.service`, `evilgate-pool.timer`) и
+- `deploy/` — systemd-юниты (`poolnet.service`, `poolnet-pool.timer`) и
   шаблоны nginx (TLS-vhost, лимиты подписок, redacted-логи, потоковая
   отдача `/pool/*`, редиректы старых сервисов).
 - `Makefile` и `.github/workflows/` — единые гейты: `make check` локально,
@@ -80,7 +80,7 @@ VPN-поток идёт из хранилища `hub`: `/api/v1/stats` и сек
 ```
 
 `vpn` побайтно совпадает с `/api/v1/stats`. `pool` читает только
-`meta.json`, `stats.json` и `benchmark.json` из `EVILGATE_POOL_DIR`; при
+`meta.json`, `stats.json` и `benchmark.json` из `POOLNET_POOL_DIR`; при
 отсутствии каталога или всех трёх файлов возвращается
 `{"available": false}`. Отсутствующий или битый JSON — не ошибка запроса:
 значение просто не попадает в ответ.
@@ -129,7 +129,7 @@ VPN-поток идёт из хранилища `hub`: `/api/v1/stats` и сек
 ## Репозиторий и данные
 
 ```
-evilgate/
+poolnet/
 ├── hub/src/hub/        FastAPI-ядро, gateway/poolstatus/siteview, pipeline, bot
 ├── hub/tests/          pytest-набор
 ├── web/site/           публичный сайт (HTML/CSS/шрифты)

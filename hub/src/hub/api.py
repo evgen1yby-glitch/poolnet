@@ -385,7 +385,7 @@ class _CachePolicy:
             or path == "/en"
             or path.startswith("/en/")
         ):
-            # The evilgate site pages: rebuilt often and reviewed immediately,
+            # The poolnet site pages: rebuilt often and reviewed immediately,
             # the same bug class `/design/` guards against — a cached
             # stylesheet beside fresh markup. `/static/` and `/design/` above
             # take precedence; a suffix this far down is a site path, and the
@@ -523,7 +523,7 @@ def create_app(store: Store | None, sources: dict | None = None):
         or store.root / "docs" / "design"
     )
 
-    #: The public site of the merged project (`evilgate`): multipage static
+    #: The public site of the merged project (`poolnet`): multipage static
     #: grown from the design mockup, served under `/` when present. It lives
     #: beside the hub checkout (`../web/site`) so `git pull` deploys pages on
     #: the next request without a restart, for the same reason `/design/` is

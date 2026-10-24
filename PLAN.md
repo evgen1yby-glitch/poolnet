@@ -11,11 +11,11 @@
 ## Структура репозитория
 
 ```
-evilgate/
+poolnet/
 ├── PLAN.md            ← этот план
 ├── README.md
 ├── .gitignore
-├── web/site/          ← единый сайт (морф из макета docs/design/evilgate v4:
+├── web/site/          ← единый сайт (морф из макета docs/design/poolnet v4:
 │                        index / vpn / proxy / verify / premium / status + system.css)
 ├── hub/               ← контрольная плоскость VPN-пула (Python 3.11, FastAPI, aiogram)
 │   ├── src/hub        (api/gateway, siteview/poolstatus, bot, pipeline 6 этапов, store)
@@ -62,7 +62,7 @@ evilgate/
 ### M2 — общая платформа данных
 - `pool` публикует в общий каталог (shared data dir), `hub` берёт оттуда
   `meta.json`/`proxies.json` — единый сокет публикации, без дублей кода.
-- Единый `GET /api/status.json` на evilgate: поля VPN-пула (funnel/gen/страны)
+- Единый `GET /api/status.json` на poolnet: поля VPN-пула (funnel/gen/страны)
   + поля прокси-базы (poolTotal/грейды/медиана/цикл) — статус-страница читает
   его один запрос.
 - `runId`/отпечаток списка: заполняется реальным значением из pool-прогона.
@@ -74,8 +74,8 @@ evilgate/
 
 ### M3 — сайт целиком + мотивация ссылок
 - [x] Все ссылки: «Открыть пул» → внутренний путь (не :8931), файлы выдачи
-  (http/socks4/socks5/country-шарды) публикуются на evilgate — hub-api отдаёт
-  `/pool/*` из `EVILGATE_POOL_DIR` по закрытому allow-list (top-level имена +
+  (http/socks4/socks5/country-шарды) публикуются на poolnet — hub-api отдаёт
+  `/pool/*` из `POOLNET_POOL_DIR` по закрытому allow-list (top-level имена +
   `country/XX.txt`), `/data/*` → 307 на `/pool/*`.
 - [x] Чек-инструмент «проверить любой узел»: страница `check.html` +
   `GET /api/check?proxy=host:port&proto=http|socks4|socks5` (порт
@@ -84,7 +84,7 @@ evilgate/
   вердикт, задержка, адрес выхода.
 - [x] 404-страница `404.html` (сайт-стиль) + редирект старых `/data/*`.
   Переадресация старых хостов (:8444/design, :8931) — задача M5, на чужом
-  origin из evilgate не выполняется.
+  origin из poolnet не выполняется.
 - [x] RU-only copy audit: цифры доведены до свежего прогона (13:54 UTC:
   30 576 / 24 997 / 127 ms / 115 стран; цикл 3 330 205 → 753 682 → 3 000 →
   3 519, 187/194 источников; 89 совпадает с шардами), мёртвые ссылки убраны,
@@ -112,17 +112,17 @@ evilgate/
   имя/орг/видимость — по отдельной команде.
 
 ### M5 — переключение продакшена
-- [x] systemd-юнит evilgate (hub-api) с доменом и путями объединённого дерева:
-  `deploy/evilgate.service.in` (`HUB_SITE`, `EVILGATE_POOL_DIR`, loopback).
+- [x] systemd-юнит poolnet (hub-api) с доменом и путями объединённого дерева:
+  `deploy/poolnet.service.in` (`HUB_SITE`, `POOLNET_POOL_DIR`, loopback).
 - [x] TLS-vhost poolnet.online: `deploy/nginx-poolnet.conf.in` (name-based
   :443, лимиты подписок, redacted-логи, потоковая отдача /pool/*).
 - [x] Прокси-планировщик на сервере (решение владельца):
-  `deploy/evilgate-pool.service.in` + `deploy/evilgate-pool.timer`
+  `deploy/poolnet-pool.service.in` + `deploy/poolnet-pool.timer`
   (`*:07/15`, совпадает с контрактом «каждые 15 минут»).
 - [x] Переадресация старых сервисов: `deploy/legacy-redirect.conf.in` (:8444 →
   домен с сохранением путей, :8931/data/* → /pool/*, остальное → /proxy).
 - [x] Порядок установки, окружение, откат — `docs/DEPLOY.md`.
-- [x] Применение на сервере (2026-10-22): `evilgate.service` активен на
+- [x] Применение на сервере (2026-10-22): `poolnet.service` активен на
   127.0.0.1:8090, прежний vhost :8444 (IP-сертификат) отдаёт объединённый
   сайт; `hub-api` остановлен и снят с автозапуска; данные VPN остались в
   `/home/dev/freevpn`, публикация пула — `/home/dev/proxylist/data` (юнит
@@ -131,10 +131,10 @@ evilgate/
   `/api/status.json` и живой чек работают, подписки `/sub/<token>` — 200.
 - [x] Публикатор пула перенесён в объединённый репозиторий: данные и state
   скопированы в `pool/data`/`pool/.state`/`pool/.work`, цикл идёт
-  `evilgate-pool.timer` (07/22/37/52), старый cron `proxylist/refresh-site.sh`
+  `poolnet-pool.timer` (07/22/37/52), старый cron `proxylist/refresh-site.sh`
   удалён, демо-порты :8931/:8933 остановлены. Первый цикл на новом месте:
   30 944 записи / 109 стран (2026-10-22T22:20:40Z). Бюджеты старого прода
-  сохранены в `/etc/evilgate/pool.env` (3000/150/350 + GFP_API_KEY), иначе
+  сохранены в `/etc/poolnet/pool.env` (3000/150/350 + GFP_API_KEY), иначе
   цикл уходил на 114k кандидатов.
 - [ ] Домен: `poolnet.online` не резолвится (не зарегистрирован/не указывает
   сюда) — TLS-vhost по домену и редиректы старых адресов ждут DNS.
@@ -199,7 +199,7 @@ evilgate/
   `deploy/nginx-poolnet.conf.in` на :443 (name-based, соседние проекты не
   затронуты), :80 → HTTPS и ACME, `www` → apex 301.
 - [x] Публичный бренд сайта переименован в **poolnet** (16 страниц, RU/EN);
-  внутреннее имя сервиса/каталогов осталось `evilgate` (systemd, пути).
+  внутреннее имя сервиса/каталогов осталось `poolnet` (systemd, пути).
 - [x] `HUB_BASE_URL=https://poolnet.online`; заголовки подписок и ссылки
   теперь указывают на домен.
 - [ ] GitHub-публикация и перенос старых адресов — по решению владельца.
@@ -234,7 +234,7 @@ evilgate/
   `kamaji/merged` (20 378), `TGParse/vless|ss|trojan` (6 022) — worker увидел
   **98 483 raw** вместо 64 637, цикл пула принял 202 источника.
 - [x] VPN-пайплайн переведён на объединённый репозиторий: `hub-worker` и
-  `hub-probe` теперь запускают `/home/dev/evilgate/hub` (данные перенесены
+  `hub-probe` теперь запускают `/home/dev/poolnet/hub` (данные перенесены
   в `hub/data`, 163 МБ, старый каталог сохранён). После переноса worker
   увидел **64 637 raw** вместо 55 133 — новые источники реально в пайплайне;
   probe запущен в `hubns`, healthz и подписки 200.
@@ -253,5 +253,5 @@ evilgate/
 
 ## Открытые вопросы (решение владельца)
 
-- Имя GitHub-репозитория и организация (fallback: evilgate).
+- Имя GitHub-репозитория и организация (fallback: poolnet).
 - Использовать ли workers/api TS-движка (сейчас не задействован).

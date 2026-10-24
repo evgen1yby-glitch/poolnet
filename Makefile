@@ -1,4 +1,4 @@
-# evilgate — repo-wide development entry points.
+# poolnet — repo-wide development entry points.
 .PHONY: test lint site check help
 
 # Hub pytest, then pool unit tests.
