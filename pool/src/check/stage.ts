@@ -1,9 +1,8 @@
+import crypto from 'node:crypto';
 import tls from 'node:tls';
-import { tcpConnect } from './net.js';
 import net from 'node:net';
 import { NET_CHECK, type EchoTarget } from './errors.js';
 import { connectThrough, type ProxyTarget } from './proxy-client.js';
-import { httpFallbackFor } from './targets.js';
 
 export type Anonymity = 'transparent' | 'anonymous' | 'elite' | 'unknown';
 
@@ -179,9 +178,10 @@ interface Fetched {
 }
 
 /**
- * Fetch `target` through the proxy. HTTP proxies that refuse CONNECT fall
- * back to an absolute-form GET, which covers the CDN-fronted open proxies
- * that only speak plain HTTP.
+ * Fetch `target` through the proxy. Every protocol must complete its own
+ * tunnel (CONNECT for HTTP proxies); there is deliberately no absolute-form
+ * GET fallback, because a web server or CDN that answers by Host is not proof
+ * that the request left through a forward proxy.
  */
 async function fetchThrough(
   proxy: ProxyTarget,
@@ -193,53 +193,46 @@ async function fetchThrough(
   const u = new URL(target.url);
   const isTls = u.protocol === 'https:';
   const port = u.port ? Number(u.port) : isTls ? 443 : 80;
+  const nonce = crypto.randomBytes(12).toString('hex');
   try {
     const conn = await connectThrough(proxy, u.hostname, port, Math.min(budget(), stage1TimeoutMs));
     try {
       // whatever the proxy already sent after the handshake belongs to this
       // request: a coalesced reply must not be read as an empty response
       const initial = conn.reader.detach();
-      const res = await fetchOver(conn.sock, initial, u.hostname, u.pathname + u.search, isTls, budget());
-      return interpret(res, isTls);
+      const res = await fetchOver(conn.sock, initial, u.hostname, u.pathname + u.search, isTls, nonce, budget());
+      return interpret(res, isTls, target.parser, nonce);
     } finally {
       conn.sock.destroy();
     }
   } catch (e) {
-    if (proxy.protocol !== 'http') {
-      return {
-        ok: false,
-        status: 0,
-        complete: false,
-        remoteIp: null,
-        headers: null,
-        tlsIssuer: null,
-        tlsMitm: false,
-        supportsTls: false,
-        error: e instanceof NET_CHECK ? e.message : String(e),
-      };
-    }
-    try {
-      const httpT = httpFallbackFor(target);
-      return await plainHttpGet(proxy, httpT, budget);
-    } catch (e2) {
-      return {
-        ok: false,
-        status: 0,
-        complete: false,
-        remoteIp: null,
-        headers: null,
-        tlsIssuer: null,
-        tlsMitm: false,
-        supportsTls: false,
-        error: e2 instanceof NET_CHECK ? e2.message : String(e2),
-      };
-    }
+    return {
+      ok: false,
+      status: 0,
+      complete: false,
+      remoteIp: null,
+      headers: null,
+      tlsIssuer: null,
+      tlsMitm: false,
+      supportsTls: false,
+      error: e instanceof NET_CHECK ? e.message : String(e),
+    };
   }
 }
 
-function interpret(res: HttpResult, isTls: boolean): Fetched {
-  const ok = res.status >= 200 && res.status < 400 && res.complete;
+function interpret(res: HttpResult, isTls: boolean, parser: EchoTarget['parser'], nonce: string): Fetched {
   const echo = parseEcho(res.body);
+  // An echo target must repeat the per-request header we sent: a response
+  // produced by an intermediary that never forwarded the request cannot fake
+  // it. Targets that return no header view are judged on status/body alone.
+  const nonceOk =
+    parser !== 'json' || echo.headers === null || echo.headers['x-pool-check'] === nonce;
+  const ok = res.status >= 200 && res.status < 400 && res.complete && nonceOk;
+  const error = !nonceOk
+    ? 'echo nonce mismatch'
+    : ok
+      ? null
+      : `HTTP ${res.status} complete=${res.complete}`;
   return {
     ok,
     status: res.status,
@@ -249,7 +242,7 @@ function interpret(res: HttpResult, isTls: boolean): Fetched {
     tlsIssuer: res.tlsIssuer,
     tlsMitm: res.tlsMitm,
     supportsTls: isTls,
-    error: ok ? null : `HTTP ${res.status} complete=${res.complete}`,
+    error,
   };
 }
 
@@ -268,21 +261,6 @@ function dead(error: string | null, started: number, fetched?: Fetched): CheckOu
   };
 }
 
-/** Absolute-form GET through the proxy without CONNECT. */
-async function plainHttpGet(proxy: ProxyTarget, target: EchoTarget, budget: () => number): Promise<Fetched> {
-  const sock = await tcpConnect(proxy.host, proxy.port, budget());
-  try {
-    sock.write(
-      `GET ${target.url} HTTP/1.1\r\nHost: ${new URL(target.url).host}\r\n` +
-        `User-Agent: open-proxy-pool/0.1\r\nAccept: */*\r\nConnection: close\r\n\r\n`,
-    );
-    const res = await readHttpResponse(sock, Buffer.alloc(0), budget());
-    return interpret({ ...res, supportsTls: false, tlsIssuer: null, tlsMitm: false }, false);
-  } finally {
-    sock.destroy();
-  }
-}
-
 /** Send a relative GET over an already-established tunnel, read the full body. */
 async function fetchOver(
   sock: net.Socket,
@@ -290,6 +268,7 @@ async function fetchOver(
   host: string,
   path: string,
   isTls: boolean,
+  nonce: string,
   timeoutMs: number,
 ): Promise<HttpResult> {
   let tlsIssuer: string | null = null;
@@ -313,7 +292,8 @@ async function fetchOver(
   }
   transport.write(
     `GET ${path} HTTP/1.1\r\nHost: ${host}\r\n` +
-      `User-Agent: open-proxy-pool/0.1\r\nAccept: */*\r\nConnection: close\r\n\r\n`,
+      `User-Agent: open-proxy-pool/0.1\r\nX-Pool-Check: ${nonce}\r\n` +
+      `Accept: */*\r\nConnection: close\r\n\r\n`,
   );
   const res = await readHttpResponse(transport, initial, timeoutMs);
   return { ...res, supportsTls: isTls, tlsIssuer, tlsMitm };

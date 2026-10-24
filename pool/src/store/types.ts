@@ -148,8 +148,13 @@ export function applyResult(rec: ProxyRecord, r: CheckResultRecord): ProxyRecord
     // so publishing it as fresh would be a lie
     lastOk: r.alive ? now : null,
     latencyMs: r.latencyMs ?? rec.latencyMs,
-    remoteIp: r.remoteIp ?? rec.remoteIp,
-    anonymity: r.anonymity !== 'unknown' ? r.anonymity : rec.anonymity,
+    // Only this check's exit evidence counts. Carrying the previous address
+    // forward would keep a false "exits here" claim after a target that does
+    // not report one, and the publication guard would never see it.
+    remoteIp: r.remoteIp,
+    // a new check is the only evidence we accept: if this run could not grade
+    // anonymity, the previous grade (often a false "elite") must not survive
+    anonymity: r.anonymity,
     tlsIssuer: r.tlsIssuer ?? rec.tlsIssuer,
     tlsMitm: r.tlsMitm || rec.tlsMitm,
     supportsTls: r.supportsTls || rec.supportsTls,

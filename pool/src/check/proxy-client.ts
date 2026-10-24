@@ -164,13 +164,13 @@ async function httpConnect(
     }
     head += `Connection: keep-alive${CRLF}${CRLF}`;
     sock.write(head);
-    const line = (await reader.readUntil('\n', timeoutMs)).toString('latin1').replace(/\r$/, '');
+    const line = (await reader.readUntil('\n', timeoutMs)).toString('latin1').replace(/\r?\n$/, '');
     const m = /^HTTP\/1\.[01] (\d{3})/.exec(line);
     if (!m) throw new NET_CHECK('http proxy: malformed status line');
     const status = Number(m[1]);
     if (status !== 200) throw new NET_CHECK(`http proxy: CONNECT -> ${status}`);
     for (;;) {
-      const h = (await reader.readUntil('\n', timeoutMs)).toString('latin1').replace(/\r$/, '');
+      const h = (await reader.readUntil('\n', timeoutMs)).toString('latin1').replace(/\r?\n$/, '');
       if (h === '') break;
     }
     return { sock, reader };

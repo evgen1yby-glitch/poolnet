@@ -5,7 +5,7 @@ One-time setup after the first push, in order of impact on discoverability.
 ## Repository settings
 
 - [ ] **Description** (one line, shows in search):
-      `Verified public proxy pool, republished every 15 minutes — 173 sources, anonymity grades, latency, geo, and a live website`
+      `Verified public proxy pool, republished every 15 minutes — 202 sources, anonymity grades, latency, geo, and a live website`
 - [ ] **Website URL** — the platform site served by `hub`; it appears next to
       the repo name everywhere
 - [ ] **Topics** — the strongest discovery channel on GitHub:

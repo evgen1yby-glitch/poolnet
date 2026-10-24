@@ -27,12 +27,6 @@ export function targetFor(url: string): EchoTarget {
   return { url, parser, label: new URL(url).host };
 }
 
-export function httpFallbackFor(t: EchoTarget): EchoTarget {
-  if (!t.url.startsWith('https://')) return t;
-  const u = new URL(t.url);
-  return { url: `http://${u.host}${u.pathname}${u.search}`, parser: t.parser, label: t.label };
-}
-
 export function defaultTargets(): EchoTarget[] {
   return config().checkTargets.map(targetFor);
 }

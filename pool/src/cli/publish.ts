@@ -28,6 +28,7 @@ export async function cmdPublish(): Promise<number> {
       topN: cfg.topN,
       generatedAt: now,
       publishHistory: cfg.publishHistory,
+      serverIp: process.env.OPP_SERVER_IP,
     });
     atomicWriteJson(path.join(cfg.dataDir, 'meta.json'), {
       generatedAt: now,

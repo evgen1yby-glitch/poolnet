@@ -14,7 +14,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "node --import tsx --test test/**/*.test.ts",
+    "test": "node --import tsx --test test/*.test.ts",
     "cycle": "tsx src/index.ts cycle",
     "fetch": "tsx src/index.ts fetch",
     "validate": "tsx src/index.ts validate",

@@ -130,6 +130,7 @@ export async function cmdMerge(): Promise<MergeReport> {
       topN: cfg.topN,
       generatedAt,
       publishHistory: cfg.publishHistory,
+      serverIp: process.env.OPP_SERVER_IP,
     });
 
     const meta = {

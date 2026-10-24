@@ -2,7 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { checkProxy } from '../src/check/stage.js';
 import type { EchoTarget } from '../src/check/errors.js';
-import { startEchoServer, startSocks5Server } from './helpers/mocks.js';
+import {
+  startEchoServer,
+  startFakeCdnServer,
+  startFakeConnectProxy,
+  startHttpProxyServer,
+  startSocks5Server,
+} from './helpers/mocks.js';
 
 const TARGETS: EchoTarget[] = [];
 
@@ -58,6 +64,67 @@ test('checkProxy: anonymous proxy (proxy header, no client IP)', async () => {
     assert.equal(out.alive, true);
     assert.equal(out.anonymity, 'anonymous');
   });
+});
+
+test('checkProxy: a web host that answers any Host is not a proxy', async () => {
+  const cdn = await startFakeCdnServer();
+  const targets: EchoTarget[] = [{ url: 'http://example.com/get', parser: 'json', label: 'fake-cdn' }];
+  try {
+    const out = await checkProxy(
+      { protocol: 'http', host: '127.0.0.1', port: cdn.port },
+      { timeoutMs: 3000, stage1TimeoutMs: 1000, targets },
+    );
+    assert.equal(out.alive, false, 'absolute-form GET must not be accepted');
+    assert.match(out.error ?? '', /CONNECT/);
+  } finally {
+    await cdn.close();
+  }
+});
+
+test('checkProxy: a CONNECT-refusing HTTP proxy is dead', async () => {
+  const proxy = await startFakeCdnServer();
+  const targets: EchoTarget[] = [{ url: 'https://example.com/get', parser: 'json', label: 'fake-cdn' }];
+  try {
+    const out = await checkProxy(
+      { protocol: 'http', host: '127.0.0.1', port: proxy.port },
+      { timeoutMs: 3000, stage1TimeoutMs: 1000, targets },
+    );
+    assert.equal(out.alive, false);
+  } finally {
+    await proxy.close();
+  }
+});
+
+test('checkProxy: a working HTTP proxy completes CONNECT and is graded', async () => {
+  const echo = await startEchoServer(0);
+  const proxy = await startHttpProxyServer();
+  const targets: EchoTarget[] = [{ url: `http://127.0.0.1:${echo.port}/get`, parser: 'json', label: 'mock' }];
+  try {
+    const out = await checkProxy(
+      { protocol: 'http', host: '127.0.0.1', port: proxy.port },
+      { timeoutMs: 5000, stage1TimeoutMs: 3000, targets },
+    );
+    assert.equal(out.alive, true, `error: ${out.error}`);
+    assert.equal(out.anonymity, 'elite');
+  } finally {
+    await echo.close();
+    await proxy.close();
+  }
+});
+
+test('checkProxy: a host that accepts CONNECT but does not tunnel is dead', async () => {
+  const proxy = await startFakeConnectProxy();
+  const targets: EchoTarget[] = [{ url: 'http://example.com/get', parser: 'json', label: 'fake-tunnel' }];
+  try {
+    const out = await checkProxy(
+      { protocol: 'http', host: '127.0.0.1', port: proxy.port },
+      { timeoutMs: 3000, stage1TimeoutMs: 1000, targets },
+    );
+    assert.equal(out.alive, false);
+    assert.match(out.error ?? '', /nonce/);
+  } finally {
+    await proxy.close();
+  }
 });
 
 test('checkProxy: dead port is reported dead, not thrown', async () => {

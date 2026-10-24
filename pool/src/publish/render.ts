@@ -33,15 +33,26 @@ export function toPublished(rec: ProxyRecord): PublishedProxy {
     anonymity: rec.anonymity,
     exitIp: rec.remoteIp,
     country: rec.country,
-    uptime1h: uptimePct(rec.uptime1h),
-    uptime24h: uptimePct(rec.uptime24h),
-    uptime7d: uptimePct(rec.uptime7d),
-    uptime30d: uptimePct(rec.uptime30d),
+    uptime1h: publishedUptime(rec, rec.uptime1h),
+    uptime24h: publishedUptime(rec, rec.uptime24h),
+    uptime7d: publishedUptime(rec, rec.uptime7d),
+    uptime30d: publishedUptime(rec, rec.uptime30d),
     mitm: rec.tlsMitm,
     supportsTls: rec.supportsTls,
     lastOk: rec.lastOk ?? rec.lastCheck,
     sources: rec.seenBy.length,
   };
+}
+
+/**
+ * A brand-new record has one successful check and therefore a 100% rolling
+ * window. Publishing that number is a fabrication: it says nothing about the
+ * next 30 days. Null until there is a small amount of real history.
+ */
+export const MIN_UPTIME_OK_CHECKS = 3;
+
+function publishedUptime(rec: ProxyRecord, window: [number, number]): number | null {
+  return rec.okChecks < MIN_UPTIME_OK_CHECKS ? null : uptimePct(window);
 }
 
 const ANON_RANK: Record<string, number> = { elite: 0, anonymous: 1, transparent: 2, unknown: 3 };
@@ -72,6 +83,8 @@ export interface RenderOptions {
   topN: number;
   generatedAt: number;
   publishHistory: boolean;
+  /** Public address of the checker host: never publish a proxy that egresses here. */
+  serverIp?: string;
 }
 
 export interface RenderReport {
@@ -85,8 +98,19 @@ export function renderAll(records: ProxyRecord[], opts: RenderOptions): RenderRe
   fs.mkdirSync(dir, { recursive: true });
   fs.mkdirSync(path.join(dir, 'country'), { recursive: true });
 
+  const serverIp = (opts.serverIp ?? process.env.OPP_SERVER_IP ?? "").trim();
   const pool = records
-    .filter((r) => r.lastOk !== null && r.lastOk > 0)
+    .filter(
+      (r) =>
+        r.lastOk !== null &&
+        r.lastOk > 0 &&
+        // Without the echo's exit address there is no proof the request left
+        // through the proxy at all; and a proxy that egresses from this host
+        // is a reflection of the checker, not a third-party exit.
+        typeof r.remoteIp === "string" &&
+        r.remoteIp.length > 0 &&
+        (!serverIp || r.remoteIp !== serverIp),
+    )
     .map(toPublished)
     .sort(qualitySort);
 

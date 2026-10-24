@@ -47,9 +47,10 @@ one network cannot dominate the published list.
   and the header-bearing echoes (httpbingo, postman-echo) are the ones
   proxies block. Phase A is liveness + latency on the most permissive target;
   phase B grades anonymity by walking the JSON echo list until one answers.
-- **Absolute-form fallback.** A growing family of open proxies are
-  CDN-fronted and only speak `GET http://host/path`. For HTTP proxies the
-  checker falls back to that form instead of failing the CONNECT.
+- **Tunnel or nothing.** Every protocol must complete its own tunnel (CONNECT
+  for HTTP proxies). An absolute-form `GET http://host/path` is not accepted as
+  proof of forwarding: a CDN or web server answering by Host does not show that
+  the request left through a proxy.
 - **Full-body reads.** Connect-then-stall proxies are not alive; a response
   counts only when the body is complete (content-length or terminal chunk).
 

@@ -50,7 +50,10 @@ const ECHO = (body: string) =>
 test('checkProxy: a coalesced CONNECT reply + response is alive, not dead', async () => {
   const body = JSON.stringify({ origin: '203.0.113.9', headers: {} });
   const proxy = await startCoalescingProxy(ECHO(body));
-  const targets: EchoTarget[] = [{ url: 'http://127.0.0.1:1/get', parser: 'json', label: 'mock' }];
+  // This fixture answers from bytes pipelined with the handshake, before it
+  // can see the request (and therefore before it can echo its nonce), so it
+  // exercises the byte-coalescing path rather than JSON nonce verification.
+  const targets: EchoTarget[] = [{ url: 'http://127.0.0.1:1/get', parser: 'text', label: 'mock' }];
   try {
     const out = await checkProxy(
       { protocol: 'socks5', host: '127.0.0.1', port: proxy.port },

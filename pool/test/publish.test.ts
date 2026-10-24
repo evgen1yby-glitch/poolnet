@@ -107,6 +107,31 @@ test('renderAll writes all artifacts with sane content', () => {
   }
 });
 
+test('publication refuses unproven exits and the checker itself', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pool-publish-exit-'));
+  try {
+    const report = renderAll(
+      [
+        rec({ host: '1.1.1.1', remoteIp: null }),
+        rec({ host: '2.2.2.2', remoteIp: '203.0.113.9' }),
+        rec({ host: '3.3.3.3', remoteIp: '193.34.212.154' }),
+      ],
+      {
+        dataDir: dir,
+        topN: 10,
+        generatedAt: Date.now(),
+        publishHistory: false,
+        serverIp: '193.34.212.154',
+      },
+    );
+    assert.equal(report.total, 1, 'only the proven third-party exit is published');
+    const all = fs.readFileSync(path.join(dir, 'all.txt'), 'utf8').trim();
+    assert.equal(all, 'socks5://2.2.2.2:1080');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('qualitySort prefers elite, then non-mitm, then latency', () => {
   const a = toPublished(rec({ anonymity: 'elite', latencyMs: 800 }));
   const b = toPublished(rec({ anonymity: 'anonymous', latencyMs: 100 }));
@@ -115,6 +140,29 @@ test('qualitySort prefers elite, then non-mitm, then latency', () => {
   assert.ok(qualitySort(a, b) < 0);
   assert.ok(qualitySort(d, c) < 0);
   assert.equal(qualitySort(a, d), 0);
+});
+
+test('applyResult drops a stale grade when the new check cannot grade anonymity', () => {
+  const base = rec({ anonymity: 'elite' });
+  const next = applyResult(
+    base,
+    mk({ alive: true, anonymity: 'unknown', checkedAt: base.checkedAt + 10 }),
+  );
+  assert.equal(next.anonymity, 'unknown');
+});
+
+test('toPublished does not fabricate 100% uptime for a new record', () => {
+  let record = rec();
+  assert.equal(record.okChecks, 1);
+  for (const window of ['uptime1h', 'uptime24h', 'uptime7d', 'uptime30d'] as const) {
+    assert.equal(toPublished(record)[window], null);
+  }
+  record = applyResult(record, mk({ checkedAt: record.checkedAt + 10 }));
+  assert.equal(record.okChecks, 2);
+  assert.equal(toPublished(record).uptime30d, null, 'still fewer than three successes');
+  record = applyResult(record, mk({ checkedAt: record.checkedAt + 10 }));
+  assert.equal(record.okChecks, 3);
+  assert.equal(toPublished(record).uptime30d, 100);
 });
 
 test('rolling windows and percentiles behave', () => {

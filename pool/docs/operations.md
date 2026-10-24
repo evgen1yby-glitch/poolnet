@@ -29,6 +29,7 @@ free under the 20-concurrent-jobs limit of GitHub's Free plan).
 | published lists look stale        | lower `OPP_PUBLISH_FRESH_MS` (default 4h)              |
 | checks too aggressive             | lower `OPP_CONCURRENCY`, raise `OPP_STAGE1_TIMEOUT_MS` |
 | echo targets blocked by a network | adjust `OPP_CHECK_TARGETS` order                       |
+| publication includes the checker  | set `OPP_SERVER_IP` to the host's public IPv4          |
 
 ## Failure modes
 

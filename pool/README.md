@@ -7,7 +7,7 @@
 ![http](https://img.shields.io/endpoint?url=https://cdn.jsdelivr.net/gh/OWNER/REPO@main/data/badges/http.json)
 [![license](https://img.shields.io/badge/license-MIT-brightgreen)](LICENSE)
 
-**A public proxy pool that is actually verified.** 194 published lists are
+**A public proxy pool that is actually verified.** 202 published lists are
 consumed as-is — nothing is scanned — and every candidate has to carry a full
 request through a real connection before it earns a place in the pool. The
 result is republished every fifteen minutes as plain text and JSON; the
@@ -76,7 +76,7 @@ sources.yaml ─► fetch ─► parse & dedupe ─► verify (matrix, disposabl
              ─► enrich ─► store ─► render ─► data/ ─► commit
 ```
 
-1. **Collect** — 194 published lists, fetched as-is, once per cycle, with a
+1. **Collect** — 202 published lists, fetched as-is, once per cycle, with a
    contact-bearing user agent. No port scanning, ever.
 2. **Parse** — bare `ip:port`, `scheme://`, credentials and annotation tails
    all count; duplicates merge with provenance.
@@ -93,8 +93,8 @@ Full pipeline documentation: [docs/architecture.md](docs/architecture.md),
 
 ```bash
 npm ci
-npm test                          # 103 tests, no network needed
-npx tsx src/index.ts cycle        # one full cycle in-process
+node --import tsx --test test/*.test.ts   # 118 tests, no network needed
+npx tsx src/index.ts cycle                # one full cycle in-process
 ```
 
 The pipeline needs no secrets to run: the scheduled refresh works on GitHub
@@ -168,14 +168,14 @@ COORDINATOR_URL=https://… npx tsx src/index.ts node    # on a volunteer box
 
 ## Roadmap
 
-- [x] 173 sources, tolerant parsing, dedupe with provenance
+- [x] 202 sources, tolerant parsing, dedupe with provenance
 - [x] Two-phase verification: liveness + anonymity grading
 - [x] Enrichment: latency, uptime windows, geo, TLS-MITM flag
 - [x] Text lists, JSON, country shards, shields badges
 - [x] Published data rendered by the platform site (`web/site`)
 - [ ] Distributed verification via community validator nodes
 - [ ] Historical per-proxy uptime pages (90-day retention)
-- [ ] Optional Cloudflare Worker API with CORS and edge caching
+- [x] Optional Cloudflare Worker API with CORS and edge caching (`workers/api`)
 
 ## Source freshness
 
