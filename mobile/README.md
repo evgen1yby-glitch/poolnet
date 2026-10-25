@@ -30,6 +30,17 @@ npx eas build --platform android --profile production
 `eas.json` уже содержит профили `development`, `preview`, `production`.
 Bundle ID / package: `online.poolnet.mobile`, scheme: `poolnet://`.
 
+Локальный preview APK (debug signing, не для Google Play):
+
+```sh
+export ANDROID_HOME=/path/to/Android/Sdk
+npm run build:android
+# android/app/build/outputs/apk/release/app-release.apk
+```
+
+Production-подпись делается через EAS/собственный keystore; этот APK нельзя
+загружать в Play как production.
+
 ## Структура
 
 ```text
