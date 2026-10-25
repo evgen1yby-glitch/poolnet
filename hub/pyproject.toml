@@ -28,7 +28,7 @@ dependencies = [
     "pydantic-settings>=2.4",
     # Clash-format subscription output parses YAML; the import is lazy, but the
     # feature is part of the published API rather than an optional extra.
-    "pyyaml>=6.0",
+    "pyyaml>=6.0.3",
 ]
 
 [project.optional-dependencies]
