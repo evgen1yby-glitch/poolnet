@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "PoolNet",
+    "slug": "poolnet-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "poolnet",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/images/icon.png",
+      "bundleIdentifier": "online.poolnet.mobile",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "online.poolnet.mobile",
+      "predictiveBackGestureEnabled": false,
+      "adaptiveIcon": {
+        "backgroundColor": "#07070a",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/favicon.png",
+      "name": "PoolNet Mobile"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#07070a",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 128
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "backgroundColor": "#07070a",
+    "extra": {
+      "apiUrl": "https://poolnet.online"
+    }
+  }
+}

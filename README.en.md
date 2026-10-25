@@ -90,6 +90,7 @@ More: [methodology](https://poolnet.online/verify) and
 | `web/site/` | bilingual site: pools, verification, free key, status | AGPL-3.0 |
 | `hub/` | VPN pool: collection, 6-stage checks, subscriptions, bot, APIs | AGPL-3.0 |
 | `pool/` | proxy pool: sources, checks, benchmark, JSON/TXT publication | MIT |
+| `mobile/` | Expo/React Native app: countries, key, proxies, profile | AGPL-3.0 |
 | `docs/` | architecture, deployment, audit, third-party notices | — |
 
 ## Contributing
