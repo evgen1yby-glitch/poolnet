@@ -91,6 +91,10 @@
         <div id="status" class="freestatus" role="status" aria-live="polite">Checking availability…</div>
         <button type="button" class="btn btn-1" id="get" disabled>Preparing…</button>
         <div id="result" class="freeresult" aria-live="polite" tabindex="-1" hidden></div>
+        <div class="starcta" id="starcta" hidden>
+          <div><b>Did PoolNet help you?</b><span>Star the repository on GitHub — it helps other people find the project and signals that the open data is worth maintaining.</span></div>
+          <a class="btn btn-2" href="https://github.com/evgen1yby-glitch/poolnet" target="_blank" rel="noopener">Star on GitHub</a>
+        </div>
         <p class="freenote">The IP address is not stored: only an irreversible hash is used for the limit. On a shared IP (office or mobile carrier) the key may already be issued — try later or use the public lists. <a href="/en/legal">Terms</a>.</p>
         <div id="tgbox" hidden>
           <p class="freenote">Want fresh subscriptions in Telegram?</p>
@@ -249,6 +253,8 @@
           link("Base64 — one node per country", base + "?format=base64&unique=1") +
           '<p class="freenote">Only the key hash is stored: save the link now. One key per IP in 24 hours.</p>';
         out.focus();
+        var star = document.getElementById("starcta");
+        if (star) star.hidden = false;
       })
       .catch(function () {
         setStatus("Server unavailable, try again later.", "warn");

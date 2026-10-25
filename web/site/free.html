@@ -91,6 +91,10 @@
         <div id="status" class="freestatus" role="status" aria-live="polite">Проверяем доступность…</div>
         <button type="button" class="btn btn-1" id="get" disabled>Подготовка…</button>
         <div id="result" class="freeresult" aria-live="polite" tabindex="-1" hidden></div>
+        <div class="starcta" id="starcta" hidden>
+          <div><b>PoolNet оказался полезен?</b><span>Поставьте звезду на GitHub — это помогает другим найти проект и показывает, что открытые данные стоит поддерживать.</span></div>
+          <a class="btn btn-2" href="https://github.com/evgen1yby-glitch/poolnet" target="_blank" rel="noopener">Поставить звезду</a>
+        </div>
         <p class="freenote">IP-адрес не сохраняется: только необратимый хеш для проверки лимита. Если IP общий (офис, мобильный оператор), ключ может быть уже выдан — попробуйте позже или используйте публичные списки. <a href="/legal">Условия использования</a>.</p>
         <div id="tgbox" hidden>
           <p class="freenote">Хотите получать свежие подписки в Telegram?</p>
@@ -249,6 +253,8 @@
           link("Base64 — по одному узлу на страну", base + "?format=base64&unique=1") +
           '<p class="freenote">В базе хранится только хеш ключа: сохраните ссылку сейчас. Один ключ на IP в 24 часа.</p>';
         out.focus();
+        var star = document.getElementById("starcta");
+        if (star) star.hidden = false;
       })
       .catch(function () {
         setStatus("Сервер недоступен, попробуйте позже.", "warn");

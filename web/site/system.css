@@ -428,3 +428,11 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
   .freestep .step-state{grid-column:2;justify-self:start}
   .freelink{grid-template-columns:1fr}
 }
+
+/* ==== v15: optional star CTA after a successful free-key issue ==== */
+.starcta[hidden]{display:none}
+.starcta{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:1.1rem 0 .2rem;padding:.9rem 1rem;border:1px solid rgba(139,92,255,.3);border-radius:12px;background:rgba(139,92,255,.06)}
+.starcta b{display:block;font-size:.92rem;color:var(--txt)}
+.starcta span{display:block;color:var(--dim);font-size:.8rem;margin-top:.2rem;max-width:34rem}
+.starcta .btn{flex:none}
+@media (max-width:34rem){.starcta .btn{width:100%}}
