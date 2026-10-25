@@ -14,6 +14,33 @@ function asConfigs(payload: unknown): XrayConfig[] {
   return [];
 }
 
+type Routing = Record<string, unknown> & {
+  rules?: Record<string, unknown>[];
+  balancers?: Record<string, unknown>[];
+};
+
+function buildRouting(source: unknown, fallbackTag: string): Routing {
+  const routing = (source && typeof source === 'object' ? { ...(source as Routing) } : {}) as Routing;
+  const rules = Array.isArray(routing.rules) ? [...routing.rules] : [];
+  // DNS via the physical link avoids a dead remote DNS path; it is a known
+  // beta trade-off and is documented in the release notes.
+  rules.unshift({ type: 'field', port: '53,853', outboundTag: 'direct' });
+  const balancers = Array.isArray(routing.balancers) ? routing.balancers : [];
+  if (balancers.length) {
+    routing.balancers = balancers.map((balancer) => ({
+      ...balancer,
+      fallbackTag: (balancer.fallbackTag as string | undefined) || fallbackTag,
+    }));
+    routing.rules = rules;
+  } else {
+    routing.rules = [
+      { type: 'field', ip: ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.0/8', '169.254.0.0/16', '100.64.0.0/10'], outboundTag: 'direct' },
+      { type: 'field', network: 'tcp,udp', outboundTag: fallbackTag },
+    ];
+  }
+  return routing;
+}
+
 /**
  * Build a TUN config from the same Xray payload the website hands out.
  * The server returns one config per country; choose the selected country by
@@ -55,18 +82,11 @@ export async function buildXrayConfig(subscriptionUrl: string, country?: string 
         sniffing: { enabled: true, destOverride: ['http', 'tls', 'quic'] },
       },
     ],
-    // PoolNet's server config uses a least-ping balancer. Xray Core's mobile
-    // build can report an empty balancer before observatory data exists, which
-    // leaves every packet on the direct path. Pin the first node in this
-    // country instead; the UI already represents one selected country.
-    routing: {
-      domainStrategy: 'AsIs',
-      rules: [
-        { type: 'field', port: '53,853', outboundTag: 'direct' },
-        { type: 'field', ip: ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.0/8', '169.254.0.0/16', '100.64.0.0/10', '::1/128', 'fc00::/7', 'fe80::/10'], outboundTag: 'direct' },
-        { type: 'field', network: 'tcp,udp', outboundTag: String(proxy.tag) },
-      ],
-    },
+    // Keep the server's least-ping balancer, but give it a fallback. Before
+    // the observatory produces its first sample Xray returns an empty tag;
+    // without `fallbackTag` that left the whole tunnel on the direct path.
+    // DNS stays direct for reliability; other traffic goes through the balancer.
+    routing: buildRouting(config.routing, String(proxy.tag)),
   };
   delete clean.remarks;
   return JSON.stringify(clean);

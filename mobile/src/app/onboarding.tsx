@@ -42,7 +42,7 @@ export default function OnboardingScreen() {
         </View>
         <View style={styles.cta}>
           <PrimaryButton label="Начать" onPress={() => router.replace('/(tabs)')} />
-          <PrimaryButton label="У меня уже есть ключ" tone="ghost" onPress={() => router.replace('/(tabs)/key')} />
+          <PrimaryButton label="У меня уже есть ключ" tone="ghost" onPress={() => router.replace('/key')} />
         </View>
       </View>
     </SafeAreaView>

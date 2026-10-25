@@ -79,11 +79,11 @@ export default function HomeScreen() {
 
   const onOrb = () => {
     if (!hasKey) {
-      router.push('/(tabs)/key');
+      router.push('/key');
       return;
     }
     if (!tunnelSupported) {
-      router.push('/(tabs)/key');
+      router.push('/key');
       return;
     }
     if (connected) {
@@ -137,7 +137,7 @@ export default function HomeScreen() {
         </View>
 
         <Pressable
-          onPress={() => (hasKey ? router.push('/(tabs)/servers') : router.push('/(tabs)/key'))}
+          onPress={() => (hasKey ? router.push('/servers') : router.push('/key'))}
           style={[styles.serverRow, { backgroundColor: theme.surface, borderColor: theme.line }]}>
           <View style={[styles.cc, { backgroundColor: theme.surface2, borderColor: theme.line }]}>
             <Text style={[styles.ccText, { color: theme.text }]}>{country?.cc ?? 'AUTO'}</Text>
@@ -162,13 +162,13 @@ export default function HomeScreen() {
             </Text>
             <PrimaryButton
               label={connected ? 'Отключить VPN' : 'Открыть ключ и ссылку'}
-              onPress={() => (connected ? void disconnect() : router.push('/(tabs)/key'))}
+              onPress={() => (connected ? void disconnect() : router.push('/key'))}
               tone={connected ? 'ghost' : 'accent'}
               icon={connected ? 'power-outline' : 'key-outline'}
             />
           </Card>
         ) : (
-          <PrimaryButton label="Получить бесплатный ключ" onPress={() => router.push('/(tabs)/key')} />
+          <PrimaryButton label="Получить бесплатный ключ" onPress={() => router.push('/key')} />
         )}
 
         <View style={styles.statsRow}>
@@ -184,7 +184,7 @@ export default function HomeScreen() {
           </Card>
         </View>
 
-        <Pressable onPress={() => router.push('/(tabs)/servers')} style={[styles.linkRow, { borderColor: theme.line }]}>
+        <Pressable onPress={() => router.push('/servers')} style={[styles.linkRow, { borderColor: theme.line }]}>
           <Ionicons name="globe-outline" size={17} color={theme.accent} />
           <Text style={[styles.linkText, { color: theme.muted }]}>Посмотреть серверы и страны</Text>
           <Ionicons name="chevron-forward" size={16} color={theme.dim} />

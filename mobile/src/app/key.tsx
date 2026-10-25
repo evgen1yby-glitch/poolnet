@@ -5,7 +5,8 @@ import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AppBar, Card, ErrorState, Eyebrow, Lead, Pill, PrimaryButton, ProfileButton, Screen, Title } from '@/components/ui';
+import { useRouter } from 'expo-router';
+import { AppBar, Card, CloseButton, ErrorState, Eyebrow, Lead, Pill, PrimaryButton, Screen, Title } from '@/components/ui';
 import { api, ApiError } from '@/lib/api';
 import { daysLeft, formatDate, formatRetry } from '@/lib/format';
 import { useAppStore } from '@/store/app';
@@ -13,6 +14,7 @@ import { useTheme } from '@/theme';
 
 export default function KeyScreen() {
   const theme = useTheme();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const subscription = useAppStore((state) => state.subscription);
   const country = useAppStore((state) => state.country);
@@ -84,7 +86,7 @@ export default function KeyScreen() {
 
   return (
     <>
-      <AppBar right={<ProfileButton />} />
+      <AppBar right={<CloseButton />} />
       <Screen>
         <Eyebrow>ПОДПИСКА</Eyebrow>
         <Title>Ключ</Title>
@@ -117,6 +119,7 @@ export default function KeyScreen() {
               <PrimaryButton label={copied ? 'Скопировано' : 'Скопировать ссылку'} onPress={() => void copy()} icon="copy-outline" />
             </Card>
 
+            <PrimaryButton label="Готово — к подключению" onPress={() => router.back()} tone="ghost" />
             <Text style={[styles.section, { color: theme.text }]}>Как подключить</Text>
             <View style={styles.steps}>
               {[

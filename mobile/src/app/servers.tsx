@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { AppBar, Card, Chip, Empty, ErrorState, Eyebrow, Lead, Pill, ProfileButton, Screen, SearchField, Title } from '@/components/ui';
+import { AppBar, Card, Chip, Empty, ErrorState, Eyebrow, Lead, Pill, CloseButton, Screen, SearchField, Title } from '@/components/ui';
+import { useRouter } from 'expo-router';
 import { api } from '@/lib/api';
 import { countryName } from '@/lib/format';
 import { useAppStore } from '@/store/app';
@@ -11,6 +12,7 @@ import { radius, useTheme } from '@/theme';
 
 export default function ServersScreen() {
   const theme = useTheme();
+  const router = useRouter();
   const country = useAppStore((state) => state.country);
   const setCountry = useAppStore((state) => state.setCountry);
   const status = useQuery({ queryKey: ['status'], queryFn: api.status });
@@ -33,12 +35,12 @@ export default function ServersScreen() {
   }, [favorites, filter, query, status.data?.vpn.by_country]);
 
   const select = (value: { cc: string; name: string; nodes: number }) => {
-    void setCountry(value);
+    void setCountry(value).then(() => router.back());
   };
 
   return (
     <>
-      <AppBar right={<ProfileButton />} />
+      <AppBar right={<CloseButton />} />
       <Screen>
         <View style={styles.topline}>
           <Eyebrow>ВЫБОР СТРАНЫ</Eyebrow>

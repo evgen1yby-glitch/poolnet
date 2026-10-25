@@ -34,7 +34,7 @@ export function Screen({
     <View
       style={[
         padded && { paddingHorizontal: 18 },
-        { paddingTop: 8, paddingBottom: 112 + insets.bottom, gap: 0 },
+        { paddingTop: 8, paddingBottom: 132 + insets.bottom, gap: 0 },
         style,
       ]}>
       {children}
@@ -64,6 +64,23 @@ export function AppBar({ right }: { right?: ReactNode }) {
       </View>
       {right}
     </View>
+  );
+}
+
+export function CloseButton() {
+  const theme = useTheme();
+  const router = useRouter();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Закрыть"
+      onPress={() => router.back()}
+      style={({ pressed }) => [
+        styles.iconButton,
+        { backgroundColor: theme.surface, borderColor: theme.line, opacity: pressed ? 0.65 : 1 },
+      ]}>
+      <Ionicons name="close" size={20} color={theme.muted} />
+    </Pressable>
   );
 }
 

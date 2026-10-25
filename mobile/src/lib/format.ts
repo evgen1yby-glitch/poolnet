@@ -31,7 +31,7 @@ export function countryName(cc: string): string {
 export function daysLeft(iso: string): number {
   const end = new Date(iso).getTime();
   if (!Number.isFinite(end)) return 0;
-  return Math.max(0, Math.ceil((end - Date.now()) / 86_400_000));
+  return Math.max(0, Math.min(7, Math.ceil((end - Date.now()) / 86_400_000)));
 }
 
 export function formatRetry(seconds: number): string {

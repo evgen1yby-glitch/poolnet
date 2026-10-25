@@ -49,6 +49,8 @@ export default function RootLayout() {
                 animation: 'fade',
               }}>
               <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="servers" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="key" options={{ presentation: 'modal' }} />
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
           </View>

@@ -13,10 +13,8 @@ type TabBarProps = {
 };
 
 const ITEMS: { name: string; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
-  { name: 'index', label: 'Главная', icon: 'power-outline' },
-  { name: 'servers', label: 'Серверы', icon: 'globe-outline' },
+  { name: 'index', label: 'VPN', icon: 'power-outline' },
   { name: 'proxy', label: 'Прокси', icon: 'git-network-outline' },
-  { name: 'key', label: 'Ключ', icon: 'key-outline' },
   { name: 'profile', label: 'Профиль', icon: 'person-outline' },
 ];
 

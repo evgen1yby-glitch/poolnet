@@ -67,7 +67,7 @@ PoolNet — публичный каталог двух пулов на одно�
 Android-клиент с встроенным VPN-туннелем (Xray TUN) — `mobile/`.
 HTML-прототип со всеми экранами — `/app/`. Исходники: Expo/React Native,
 [Скачать Android APK](https://poolnet.online/download) ·
-[Релиз и SHA-256](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.2.0),
+[Релиз и SHA-256](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.3.0),
 план — [docs/MOBILE-APP-PLAN.md](docs/MOBILE-APP-PLAN.md).
 
 [**Открыть на домене**](https://poolnet.online/app/) · [**Открыть по IP**](http://193.34.212.154:8098/app/)
