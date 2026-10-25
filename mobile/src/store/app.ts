@@ -33,13 +33,15 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ connection: status.running ? 'connected' : 'disconnected', connectionError: status.error });
   },
   setSubscription: async (value) => {
+    if (get().connection === 'connected') await stopTunnel();
     if (value) await storage.setSubscription(value);
     else await storage.clearSubscription();
-    set({ subscription: value });
+    set({ subscription: value, connection: 'disconnected', connectionError: null });
   },
   setCountry: async (value) => {
+    if (get().connection === 'connected') await stopTunnel();
     await storage.setCountry(value);
-    set({ country: value });
+    set({ country: value, connection: 'disconnected', connectionError: null });
   },
   connect: async () => {
     const { subscription, country } = get();
