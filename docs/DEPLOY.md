@@ -181,7 +181,22 @@ hub-api …`), убрать `poolnet-legacy.conf` и перезагрузить 
 данных не пересекаются (`hub/data`, `pool/data`), поэтому откат не теряет
 опубликованное.
 
-## 5. Бэкапы и ретеншн
+## 5. Мобильный концепт
+
+Интерактивный HTML-макет лежит в `web/site/app/` и доступен как
+`https://poolnet.online/app/` и на внешнем порту `8098`:
+
+```sh
+sed 's|@DIR@|/home/dev/poolnet|g' deploy/nginx-poolnet-app.conf.in \
+  | sudo tee /etc/nginx/conf.d/poolnet-app.conf >/dev/null
+sudo ufw allow 8098/tcp comment 'poolnet mobile mockup'
+sudo nginx -t && sudo nginx -s reload
+```
+
+Это концепт: подключение, серверы и прокси работают на локальном состоянии,
+реальные подписки — на сайте.
+
+## 6. Бэкапы и ретеншн
 
 `deploy/poolnet-backup.timer` снимает согласованный `sqlite3 .backup` базы и
 архив `pool/.state` + `pool/data` ежедневно в 03:15 UTC; хранятся 14 копий.
@@ -203,7 +218,7 @@ sudo systemctl enable --now poolnet-backup.timer poolnet-retention.timer
 # Проверка: sudo systemctl start poolnet-backup.service && ls -lh /var/backups/poolnet
 ```
 
-## 6. Автосписки в GitHub
+## 7. Автосписки в GitHub
 
 Ветку `lists` обновляет GitHub Actions (`.github/workflows/lists.yml`) и
 резервный таймер этой машины — оба собирают снимок из `/pool/*` и `/vpn/*`.
@@ -218,7 +233,7 @@ sudo cp deploy/poolnet-lists.timer /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now poolnet-lists.timer
 ```
 
-## 7. Мониторинг
+## 8. Мониторинг
 
 `deploy/poolnet-healthcheck.timer` каждые 5 минут проверяет `/healthz` (возраст
 VPN-поколения) и `/api/status.json` (свежесть прокси-пула). При сбое таймер

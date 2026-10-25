@@ -73,6 +73,16 @@ server {
         include /etc/nginx/proxy_params;
     }
 
+    # The interactive mobile concept. It is a static demo, not the API.
+    location = /app {
+        return 301 /app/;
+    }
+    location ^~ /app/ {
+        root /home/dev/poolnet/web/site;
+        index index.html;
+        try_files $uri $uri.html $uri/ =404;
+    }
+
     # Pool line files can be several megabytes; stream them without buffering
     # the whole body in nginx.
     location ^~ /pool/ {

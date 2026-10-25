@@ -62,6 +62,20 @@ PoolNet — публичный каталог двух пулов на одно�
 | <img src="docs/screenshots/proxy.webp" alt="Прокси-пул PoolNet" width="100%"> | <img src="docs/screenshots/vpn.webp" alt="VPN PoolNet" width="100%"> |
 | <img src="docs/screenshots/free.webp" alt="Бесплатная подписка PoolNet" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="PoolNet на телефоне" width="58%"> |
 
+## Мобильное приложение (концепт)
+
+Интерактивный HTML-макет со всеми экранами: подключение, серверы, прокси, ключ,
+профиль и знакомство.
+
+[**Открыть на домене**](https://poolnet.online/app/) · [**Открыть по IP**](http://193.34.212.154:8098/app/)
+
+| Подключение | Серверы | Прокси |
+| --- | --- | --- |
+| <img src="docs/screenshots/app-home.webp" alt="Экран подключения" width="100%"> | <img src="docs/screenshots/app-servers.webp" alt="Экран серверов" width="100%"> | <img src="docs/screenshots/app-proxy.webp" alt="Экран прокси" width="100%"> |
+
+Это дизайн-прототип: данные и состояние подключения локальные, реальные
+подписки и API остаются на сайте.
+
 ## Быстрый старт
 
 **VPN.** Открой [poolnet.online/free](https://poolnet.online/free), подожди
