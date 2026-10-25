@@ -2,135 +2,117 @@
 
 <h1 align="center">PoolNet</h1>
 
-<p align="center">Открытый каталог проверенных VPN-узлов и прокси.<br>
-Соединение идёт напрямую клиент → узел; мы не оператор узлов и не гарантируем их.</p>
+<p align="center"><a href="README.en.md">English</a> · Русский</p>
+
+<p align="center"><strong>Открытые списки VPN и прокси, проверенные реальными соединениями.</strong><br>
+Автообновление каждые 15 минут · бесплатный ключ на 7 дней · без аккаунта</p>
 
 <p align="center">
   <a href="https://poolnet.online"><img src="https://img.shields.io/badge/site-poolnet.online-7c5cff" alt="site"></a>
+  <a href="https://github.com/evgen1yby-glitch/poolnet/tree/lists"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/badges/alive.json" alt="proxies"></a>
+  <a href="https://github.com/evgen1yby-glitch/poolnet/tree/lists"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/badges/verified.json" alt="VPN nodes"></a>
   <a href="https://github.com/evgen1yby-glitch/poolnet/tree/lists"><img src="https://img.shields.io/badge/lists-auto--updated-38bdf8" alt="lists"></a>
   <a href="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/lists.yml"><img src="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/lists.yml/badge.svg" alt="lists workflow"></a>
   <a href="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/hub.yml"><img src="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/hub.yml/badge.svg" alt="hub CI"></a>
+  <a href="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/pool.yml"><img src="https://github.com/evgen1yby-glitch/poolnet/actions/workflows/pool.yml/badge.svg" alt="pool CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0%20%2B%20MIT-blue" alt="license"></a>
 </p>
 
-Единая платформа **PoolNet** (poolnet.online): открытая прокси-база
-(HTTP / SOCKS4 / SOCKS5) и VPN-конфигурации (vless / ss / vmess / trojan) —
-два пула, один стандарт проверки реальными соединениями, открытые данные и
-статусы.
+<p align="center"><a href="https://poolnet.online"><img src="docs/screenshots/home.webp" width="92%" alt="PoolNet — главная страница"></a></p>
 
-Репозиторий объединяет два прежних проекта: `hub` (freevpn, контрольная
-плоскость VPN-пула) и `pool` (open-proxy-pool, движок прокси-базы).
+## Что это
 
-## Что здесь есть
+PoolNet — публичный каталог двух пулов на одном движке проверки:
 
-| Каталог | Что это | Стек | Лицензия |
-| --- | --- | --- | --- |
-| `web/site/` | Публичный сайт: главная, VPN, прокси-пул, методика, проверка узла, бесплатная подписка, статус | статический HTML/CSS/JS | — |
-| `hub/` | VPN-пул: сбор из публичных источников, проверка в 6 этапов, публикация подписок, Telegram-бот, admin/status API | Python 3.11+, FastAPI, aiogram, SQLite | AGPL-3.0 |
-| `pool/` | Прокси-база: 202 источника, дедупликация, проверка, бенчмарк источников, публикация JSON/TXT | Node ≥ 20.11, TypeScript | MIT |
-| `docs/` | Документация объединения и эксплуатации | — | — |
+- **Прокси**: HTTP, SOCKS4 и SOCKS5. Соединение, exit-IP, задержка и аптайм
+  проверяются полным запросом через прокси, а не пингом.
+- **VPN**: VLESS, Shadowsocks, VMess и Trojan. Узел проходит TCP → TLS →
+  поднятую конфигурацию → сквозной HTTP-запрос. Не прошёл этап — не попал в
+  выдачу.
+- **Бесплатный ключ**: персональная подписка на 7 дней без Telegram и оплаты.
 
-Данные прогонов (`data/`, `*/data/`), секреты и окружение в `main` не попадают:
-каталог публикации создаётся на сервере, а сайт и API читают его через
-`POOLNET_POOL_DIR` / `HUB_SITE`. Публичные снимки лежат отдельно, в ветке
-[`lists`](https://github.com/evgen1yby-glitch/poolnet/tree/lists).
+Соединение всегда идёт **напрямую клиент → узел**. PoolNet не оператор узлов,
+не проксирует и не перепродаёт трафик. Мы не обещаем безопасность чужой
+инфраструктуры; списки — исходные данные, а не рекомендация.
 
-## Автоматические списки
+## Автосписки
 
-Ветка `lists` обновляется GitHub Actions каждые 15 минут из опубликованных
-проверенных данных. Это те же узлы, что видит сайт: прокси-цикл и VPN-поколение,
-без ручной сборки.
+Ветка [`lists`](https://github.com/evgen1yby-glitch/poolnet/tree/lists)
+обновляется GitHub Actions каждые 15 минут из живого проверенного снимка.
+Ссылки можно добавлять в клиент как подписку.
 
-| Что | Ссылка |
+| Данные | Ссылка |
 | --- | --- |
 | Все прокси | [pool/all.txt](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/all.txt) |
 | HTTP / SOCKS5 / SOCKS4 | [HTTP](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/http.txt) · [SOCKS5](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/socks5.txt) · [SOCKS4](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/socks4.txt) |
-| JSON с метаданными | [proxies.json](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/proxies.json) |
-| VPN для Happ / Hiddify | [sing-box base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.base64) |
-| VPN для Xray / v2rayNG | [xray base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-xray.base64) |
-| Clash / mihomo | [clash](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.clash) |
+| JSON с exit-IP, ASN, страной и аптаймом | [proxies.json](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/proxies.json) |
+| VPN для Happ / Hiddify / sing-box | [verified-sing-box.base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.base64) |
+| VPN для Xray / v2rayNG | [verified-xray.base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-xray.base64) |
+| Clash / mihomo | [verified-sing-box.clash](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.clash) |
+| Страновые срезы | [`pool/country/`](https://github.com/evgen1yby-glitch/poolnet/tree/lists/pool/country) |
 
-Ссылку можно добавлять в клиент как подписку. Для персонального ключа на 7 дней
-лучше использовать [poolnet.online/free](https://poolnet.online/free): он
-показывает срок и не зависит от снимка ветки.
+Публичная ветка — снимок, а не персональный ключ: у неё нет срока и
+статистики подписки. Для личного ключа на 7 дней с датой окончания:
+[poolnet.online/free](https://poolnet.online/free).
 
-## Как это работает
+## Скриншоты
 
-Оба пула проверяют записи **реальными соединениями**, а не пингом:
+| Прокси-пул | VPN |
+| --- | --- |
+| <img src="docs/screenshots/proxy.webp" alt="Прокси-пул PoolNet" width="100%"> | <img src="docs/screenshots/vpn.webp" alt="VPN PoolNet" width="100%"> |
+| <img src="docs/screenshots/free.webp" alt="Бесплатная подписка PoolNet" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="PoolNet на телефоне" width="58%"> |
 
-- VPN-узел: строка источника → разбор протокола → TCP → TLS → поднятая
-  конфигурация → сквозной HTTP-запрос. Не прошёл этап — не попал в выдачу.
-- Прокси: очередь публичных списков → дедупликация → выборка → проверка
-  соединения и анонимности → публикация. Каждый цикл обновляет выдачу и
-  бенчмарк источников.
+## Быстрый старт
 
-Сайт не проксирует трафик: соединение клиента идёт напрямую к узлу. PoolNet —
-каталог опубликованных списков и проверяющая сторона, не оператор узлов.
+**VPN.** Открой [poolnet.online/free](https://poolnet.online/free), нажми
+«Получить ключ на 7 дней» и добавь ссылку в Happ, Hiddify, v2rayNG или Clash.
+Без установки и аккаунта.
 
-## Архитектура
-
-Слои, поток данных, контракты `/api/status.json`, `/api/check` и `/pool/*`,
-отказы и раскладка репозитория — в [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-Сайт двуязычный (RU/EN, переключатель в шапке), страны помечены SVG-флагами.
-Числа на страницах `web/site` рендерятся из живых опубликованных данных
-(`pool/data` и хранилища `hub`); если данных нет, страницы сохраняют
-статический снимок и не показывают пустые блоки.
-
-## Бесплатная подписка
-На `/free` любой посетитель получает ключ на 7 дней (`POST /api/free-subscription`,
-`source=web`, без аккаунта и Telegram). Выдача ограничена 5 ключами в час на
-подсеть /24 при burst 3. Ключи бота/панели видны в `/admin` со сроком,
-источником и последним обращением. Платной страницы нет.
-
-## Админка
-Открыть: **https://poolnet.online/admin**. Вход — секрет оператора
-(`HUB_BOT_SECRET` из окружения сервера). По умолчанию панель доступна с любого
-IP; защита — секрет и лимит 5 попыток входа за 15 минут. Необязательный
-`HUB_ADMIN_IPS=1.2.3.4,5.6.7.8` (через запятую) ограничивает доступ этими
-адресами: остальным отвечает 404. В панели видны сроки, источник и последнее
-обращение подписок, есть выдача/продление/отзыв.
-
-## Запуск
-
+**Прокси.**
 ```sh
-# hub: веб/API (сайт отдаётся, если указан HUB_SITE)
+curl -s https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/all.txt | head
+curl -s https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/pool/proxies.json | jq '.proxies[0]'
+```
+
+**Свой инстанс.**
+```sh
 pip install -e "./hub[dev]"
-HUB_SITE=web/site POOLNET_POOL_DIR=pool/data python -m hub serve --port 8090
-
-# pool: один цикл и публикация в data/
-cd pool
-npm ci
-npm run cycle
-```
-
-Общие точки стыковки:
-
-- `GET /api/status.json` — статус обоих пулов одним запросом для статус-страницы;
-- `GET /api/check?proxy=host:port&proto=http|socks4|socks5` — живая проверка одного узла;
-- `GET /pool/*` — опубликованные файлы прокси-базы (`http.txt`, `socks5.txt`,
-  `country/XX.txt`, `proxies.json`, `meta.json`, `stats.json`, `all.txt`).
-
-## Проверки (как в CI)
-
-CI ставит `pip install -e "./hub[dev]"`, поэтому получает ровно тот ruff,
-который закреплён в `hub/pyproject.toml` (**0.6.9**). Локально сделайте то же
-самое; `make` откажется запускать произвольный ruff с PATH:
-
-```sh
-python3 -m venv .venv
-.venv/bin/pip install -e "./hub[dev]"
 cd pool && npm ci && cd ..
-make check RUFF=.venv/bin/ruff        # lint + test + site
+HUB_SITE=web/site POOLNET_POOL_DIR=pool/data python3 -m hub serve --port 8090
 ```
 
-Или по отдельности: `make lint RUFF=.venv/bin/ruff`, `make test`, `make site`.
-Без `RUFF=` Makefile берёт `python3 -m ruff` и проверяет, что это 0.6.9;
-несовпадение — ошибка с подсказкой, а не тихий прогон другими правилами.
-Те же хуки доступны через `pre-commit install` (`.pre-commit-config.yaml`),
-а секреты дополнительно проверяются gitleaks в CI.
+## Как проверяем
 
-## План
+**VPN:** источник → разбор протокола → TCP → TLS → поднятая конфигурация →
+сквозной HTTP. Ошибка на любом этапе означает, что узел не публикуется.
+**Прокси:** CONNECT-туннель → nonce-подтверждение форвардинга → exit-IP и
+заголовки → анонимность/задержка. Публикация исключает записи без
+доказанного exit-IP и записи, где exit-IP совпадает с IP проверяющего.
 
-Поэтапный план объединения и переключения продакшена — в [`PLAN.md`](PLAN.md).
-Аудит текущего состояния и очередь исправлений — в
-[`docs/AUDIT-2026-10-24.md`](docs/AUDIT-2026-10-24.md).
+Подробно: [методика](https://poolnet.online/verify) и
+[архитектура](docs/ARCHITECTURE.md). Аудит и ограничения:
+[docs/AUDIT-2026-10-24.md](docs/AUDIT-2026-10-24.md).
+
+## Что внутри
+
+| Каталог | Назначение | Лицензия |
+| --- | --- | --- |
+| `web/site/` | двуязычный сайт: пул, проверка, бесплатный ключ, статус | AGPL-3.0 |
+| `hub/` | VPN-пул: сбор, 6 этапов проверки, подписки, статус/админ API, бот | AGPL-3.0 |
+| `pool/` | прокси-пул: источники, проверка, бенчмарк, публикация JSON/TXT | MIT |
+| `docs/` | архитектура, деплой, аудит, лицензии | — |
+
+## Участие
+
+Перед PR: `make check RUFF=.venv/bin/ruff` и `python3 scripts/site_smoke.py`.
+Правила и тесты — в [CONTRIBUTING.md](CONTRIBUTING.md). Уязвимости — приватно,
+по [SECURITY.md](SECURITY.md).
+
+Если проект помогает, поставьте звезду: это помогает другим найти PoolNet и
+показывает, какие открытые данные стоит поддерживать.
+
+## Лицензии
+
+`hub/` и сайт — **AGPL-3.0-or-later**, `pool/` — **MIT**, шрифты — **OFL-1.1**.
+Полные тексты: [LICENSE](LICENSE), [NOTICE](NOTICE),
+[docs/THIRD-PARTY.md](docs/THIRD-PARTY.md).

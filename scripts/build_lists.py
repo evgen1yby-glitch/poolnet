@@ -61,6 +61,19 @@ def main() -> int:
     for name in proxy_files:
         write(out, f"pool/{name}", fetch(f"/pool/{name}", args.base))
     write(out, "pool/manifest.json", json.dumps(proxy_manifest, ensure_ascii=False, indent=2).encode())
+    proxy_count = proxy_manifest.get("count")
+    write(
+        out,
+        "pool/badges/alive.json",
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "label": "proxies",
+                "message": str(proxy_count if proxy_count is not None else "?"),
+                "color": "brightgreen",
+            }
+        ).encode(),
+    )
     for extra in ("meta.json", "stats.json", "benchmark.json", "history.json"):
         try:
             write(out, f"pool/{extra}", fetch(f"/pool/{extra}", args.base))
@@ -72,6 +85,17 @@ def main() -> int:
     for name in vpn_files:
         write(out, f"vpn/{name}", fetch(f"/vpn/{name}", args.base))
     write(out, "vpn/manifest.json", json.dumps(vpn_manifest, ensure_ascii=False, indent=2).encode())
+    nodes = max(
+        (int(item.get("nodes") or 0) for item in vpn_manifest.get("payloads", []) if isinstance(item, dict)),
+        default=0,
+    )
+    write(
+        out,
+        "vpn/badges/verified.json",
+        json.dumps(
+            {"schemaVersion": 1, "label": "VPN nodes", "message": str(nodes), "color": "blue"}
+        ).encode(),
+    )
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     repo = os.environ.get("GITHUB_REPOSITORY", "evgen1yby-glitch/poolnet")
