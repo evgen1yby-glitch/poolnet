@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /metrics
+Disallow: /status/data
+Disallow: /sub/
+
+Sitemap: https://poolnet.online/sitemap.xml

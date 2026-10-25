@@ -203,3 +203,30 @@ def test_the_logo_is_served_at_the_size_it_is_rendered():
     assert not (assets / "logo-192.png").exists()
     index = (SITE_DIR / "index.html").read_text(encoding="utf-8")
     assert "logo-64.png 64w" in index and "logo-96.png 96w" in index
+
+
+def test_robots_sitemap_and_social_card_are_public(site_client):
+    robots = site_client.get("/robots.txt")
+    assert robots.status_code == 200
+    assert "Sitemap: https://poolnet.online/sitemap.xml" in robots.text
+    assert "Disallow: /admin" in robots.text
+    sitemap = site_client.get("/sitemap.xml")
+    assert sitemap.status_code == 200
+    assert "<urlset" in sitemap.text
+    assert "https://poolnet.online/proxy" in sitemap.text
+    card = site_client.get("/assets/og.png")
+    assert card.status_code == 200
+    assert card.headers["content-type"] == "image/png"
+
+
+def test_indexable_pages_carry_canonical_hreflang_and_open_graph(site_client):
+    for path, canonical in (
+        ("/", "https://poolnet.online/"),
+        ("/proxy", "https://poolnet.online/proxy"),
+        ("/en/free", "https://poolnet.online/en/free"),
+    ):
+        html = site_client.get(path).text
+        assert f'<link rel="canonical" href="{canonical}">' in html, path
+        assert 'hreflang="ru"' in html and 'hreflang="en"' in html, path
+        assert 'property="og:image" content="https://poolnet.online/assets/og.png"' in html, path
+        assert 'name="robots" content="index, follow' in html, path

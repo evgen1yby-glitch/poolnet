@@ -111,6 +111,11 @@ HUB_SITE=web/site POOLNET_POOL_DIR=pool/data python3 -m hub serve --port 8090
 Если проект помогает, поставьте звезду: это помогает другим найти PoolNet и
 показывает, какие открытые данные стоит поддерживать.
 
+## Поиск
+
+Техническая SEO-разметка и чек-лист для Search Console/Яндекса —
+[docs/SEO.md](docs/SEO.md).
+
 ## Лицензии
 
 `hub/` и сайт — **AGPL-3.0-or-later**, `pool/` — **MIT**, шрифты — **OFL-1.1**.

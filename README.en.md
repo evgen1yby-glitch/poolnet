@@ -100,6 +100,11 @@ Before a PR: `make check RUFF=.venv/bin/ruff` and
 If this project is useful, a star helps other people find it and signals that
 the open data is worth maintaining.
 
+## Search
+
+Technical SEO markup and the Search Console/Yandex checklist:
+[docs/SEO.md](docs/SEO.md).
+
 ## License
 
 `hub/` and the site are **AGPL-3.0-or-later**; `pool/` is **MIT**; fonts are
