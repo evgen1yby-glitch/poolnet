@@ -78,8 +78,9 @@ class XrayTunnelService : VpnService() {
                     .allowFamily(OsConstants.AF_INET)
                     .addDnsServer("1.1.1.1")
                     .setBlocking(true)
-                // The app's own API calls should not loop through the tunnel.
-                try { builder.addDisallowedApplication(packageName) } catch (_: Exception) { }
+                // Xray's outbound sockets are protected by the controller below.
+                // The app itself stays inside the tunnel so a post-start probe
+                // measures the same path the user's browser will take.
                 val pfd = builder.establish() ?: throw IllegalStateException("VPN interface was not established")
                 val fd = pfd.detachFd()
                 tunFd = fd

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { storage, type StoredCountry, type StoredSubscription } from '@/lib/storage';
 import { buildXrayConfig } from '@/lib/xray';
-import { prepareTunnel, startTunnel, stopTunnel, tunnelStatus, tunnelSupported } from '@/lib/tunnel';
+import { prepareTunnel, startTunnel, stopTunnel, tunnelStatus, tunnelSupported, verifyTunnel } from '@/lib/tunnel';
 
 type AppState = {
   hydrated: boolean;
@@ -51,9 +51,29 @@ export const useAppStore = create<AppState>((set, get) => ({
     try {
       const granted = await prepareTunnel();
       if (!granted) throw new Error('Разрешение VPN не выдано');
-      const config = await buildXrayConfig(subscription.url, country?.name);
-      await startTunnel(config);
-      set({ connection: 'connected', connectionError: null });
+      const fallbacks = ['Нидерланды', 'США', 'Германия'];
+      const candidates = [
+        ...(country ? [country] : []),
+        ...fallbacks
+          .filter((name) => name !== country?.name)
+          .map((name) => ({ cc: name === 'США' ? 'US' : name === 'Германия' ? 'DE' : 'NL', name, nodes: 0 })),
+      ];
+      let lastError: unknown = null;
+      for (const candidate of candidates.slice(0, 3)) {
+        try {
+          const config = await buildXrayConfig(subscription.url, candidate.name);
+          await startTunnel(config);
+          await new Promise((resolve) => setTimeout(resolve, 900));
+          await verifyTunnel();
+          await get().setCountry(candidate);
+          set({ connection: 'connected', connectionError: null });
+          return;
+        } catch (error) {
+          lastError = error;
+          await stopTunnel().catch(() => undefined);
+        }
+      }
+      throw lastError ?? new Error('Нет доступного узла');
     } catch (error) {
       const raw = error instanceof Error ? error.message : String(error);
       if (__DEV__) console.warn('tunnel start failed', raw);
