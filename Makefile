@@ -29,6 +29,7 @@ lint:
 # Public site linkcheck (web/site).
 site:
 	python3 scripts/site_links.py
+	python3 scripts/site_sitemap.py --check
 
 # Everything CI gates on.
 check: lint test site

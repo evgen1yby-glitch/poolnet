@@ -4,6 +4,7 @@
 
 - `https://poolnet.online/sitemap.xml` — 16 индексируемых URL с `lastmod`,
   `changefreq` и `priority`; `hreflang` RU/EN — в `<head>` каждой страницы;
+  `make site` проверяет, что при добавлении страницы sitemap не забыли;
 - `robots.txt` разрешает сайт и закрывает `/admin`, `/api/`, `/metrics`,
   `/status/data`, `/sub/`;
 - внутренние ссылки — clean URLs (`/free`, `/proxy`), старые `.html`
