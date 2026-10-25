@@ -1,7 +1,7 @@
 # Runtime dependencies. Pinned to the floors `pyproject.toml` declares; the
 # versions beside them are what the server currently runs, recorded because
 # "works on my machine" is not a deploy plan.
-fastapi>=0.115          # 0.143.1
+fastapi>=0.159.1          # 0.143.1
 # FastAPI parses `request.form()` through starlette, which imports this at call
 # time and raises if it is missing. Without it `POST /admin/login` — the only
 # form in the project — answers 500 on a fresh install, and nothing in the
