@@ -1,0 +1,10 @@
+[Unit]
+Description=poolnet — refresh GitHub lists every 15 minutes
+
+[Timer]
+OnCalendar=*:12/15
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

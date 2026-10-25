@@ -200,7 +200,22 @@ sudo systemctl enable --now poolnet-backup.timer poolnet-retention.timer
 # Проверка: sudo systemctl start poolnet-backup.service && ls -lh /var/backups/poolnet
 ```
 
-## 6. Мониторинг
+## 6. Автосписки в GitHub
+
+Ветку `lists` обновляет GitHub Actions (`.github/workflows/lists.yml`) и
+резервный таймер этой машины — оба собирают снимок из `/pool/*` и `/vpn/*`.
+Таймеру нужен SSH-ключ с write-доступом к репозиторию (по умолчанию
+`~/.ssh/id_ed25519_github`, можно переопределить `POOLNET_GITHUB_KEY`):
+
+```sh
+sed -e 's|@DIR@|/home/dev/poolnet|g' -e 's|@USER@|astrobot|g' \
+  -e 's|@GROUP@|astrobot|g' deploy/poolnet-lists.service.in \
+  | sudo tee /etc/systemd/system/poolnet-lists.service >/dev/null
+sudo cp deploy/poolnet-lists.timer /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now poolnet-lists.timer
+```
+
+## 7. Мониторинг
 
 `deploy/poolnet-healthcheck.timer` каждые 5 минут проверяет `/healthz` (возраст
 VPN-поколения) и `/api/status.json` (свежесть прокси-пула). При сбое таймер

@@ -34,7 +34,7 @@ infrastructure. Treat every published node as untrusted.
 ## Automatic lists
 
 The [`lists`](https://github.com/evgen1yby-glitch/poolnet/tree/lists) branch is
-refreshed by GitHub Actions every 15 minutes from the live verified snapshot.
+refreshed automatically every 15 minutes from the live verified snapshot.
 Add a URL to your client as a subscription.
 
 | Data | URL |

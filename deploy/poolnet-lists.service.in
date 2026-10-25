@@ -1,0 +1,13 @@
+[Unit]
+Description=poolnet — publish the automatic lists snapshot to GitHub
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+UMask=0077
+User=@USER@
+Group=@GROUP@
+ExecStart=@DIR@/scripts/publish_lists.sh
+Nice=10
+IOSchedulingClass=idle
