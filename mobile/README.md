@@ -6,6 +6,12 @@ build**: выбор страны, бесплатный ключ на 7 дней,
 туннельному ядру, iOS Network Extension entitlement и Android VpnService.
 Не выдавайте текущую сборку за работающий VPN-клиент.
 
+## Preview APK
+
+Android companion preview: [PoolNet Mobile 0.1.0](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.1.0).
+Debug signing, no embedded tunnel; import the subscription into a VPN client.
+Do not upload this APK to Google Play.
+
 ## Запуск
 
 ```sh
