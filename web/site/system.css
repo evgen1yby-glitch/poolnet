@@ -436,3 +436,14 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
 .starcta span{display:block;color:var(--dim);font-size:.8rem;margin-top:.2rem;max-width:34rem}
 .starcta .btn{flex:none}
 @media (max-width:34rem){.starcta .btn{width:100%}}
+
+/* Mobile app download discovery */
+.lang .apk-link{border:1px solid rgba(139,92,255,.45);background:rgba(139,92,255,.14);color:var(--txt);font-weight:650;margin-left:.2rem;white-space:nowrap}
+.lang .apk-link:hover{background:rgba(139,92,255,.24);color:#fff}
+.app-banner{display:flex;align-items:center;gap:.8rem;max-width:43rem;margin:1.05rem auto 0;padding:.65rem .72rem;border:1px solid rgba(139,92,255,.32);border-radius:14px;background:linear-gradient(100deg,rgba(139,92,255,.12),rgba(56,189,248,.05));text-align:left}
+.app-banner img{width:2rem;height:2rem;object-fit:contain;flex:none}
+.app-banner span:nth-child(2){display:flex;flex-direction:column;gap:.12rem;min-width:0}
+.app-banner b{font-size:.82rem;color:var(--txt);font-weight:600}
+.app-banner small{font-size:.7rem;color:var(--dim)}
+.app-banner .ab-cta{margin-left:auto;flex:none;padding:.42rem .7rem;border-radius:8px;background:var(--txt);color:#0b0b10;font-size:.7rem;font-weight:650}
+@media (max-width:34rem){.app-banner{margin-top:.8rem}.app-banner small{font-size:.67rem}.app-banner .ab-cta{padding:.4rem .55rem}}
