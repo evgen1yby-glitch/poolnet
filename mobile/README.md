@@ -1,10 +1,13 @@
 # PoolNet Mobile
 
-Нативное приложение PoolNet на Expo/React Native. Текущий этап — **companion
-build**: выбор страны, бесплатный ключ на 7 дней, каталог прокси, статус и
-профиль. Встроенный VPN-туннель ещё не включён: он требует ADR по
-туннельному ядру, iOS Network Extension entitlement и Android VpnService.
-Не выдавайте текущую сборку за работающий VPN-клиент.
+Нативное приложение PoolNet на Expo/React Native. Android-сборка содержит
+встроенный VPN-туннель (`VpnService` + libXray/Xray-core TUN): бесплатный
+ключ, выбор страны, подключение/отключение, каталог прокси, профиль.
+iOS-сборка пока не сделана: нужен Apple organization account, Mac и Network
+Extension entitlement.
+
+Android APK распространяется с сайта `poolnet.online/download`; это не
+production-подпись и не сборка для Google Play.
 
 ## Preview APK
 
@@ -36,16 +39,19 @@ npx eas build --platform android --profile production
 `eas.json` уже содержит профили `development`, `preview`, `production`.
 Bundle ID / package: `online.poolnet.mobile`, scheme: `poolnet://`.
 
-Локальный preview APK (debug signing, не для Google Play):
+Android-проект лежит в `android/` (bare workflow: у нас есть NetworkExtension
+и VpnService, поэтому `expo prebuild` больше не запускать). Перед сборкой
+скачайте AAR с checksum:
 
 ```sh
+./scripts/fetch-libxray.sh
 export ANDROID_HOME=/path/to/Android/Sdk
 npm run build:android
 # android/app/build/outputs/apk/release/app-release.apk
 ```
 
-Production-подпись делается через EAS/собственный keystore; этот APK нельзя
-загружать в Play как production.
+APK подписан debug-ключом и предназначен для установки с сайта; для Google
+Play нужен production keystore и подписанный AAB.
 
 ## Структура
 
@@ -71,9 +77,10 @@ src/theme.ts             светлая/тёмная семантика
 
 ## Следующий гейт
 
-Перед реализацией кнопки «Подключиться»: ADR-002 (Xray-core/MPL или
-sing-box/GPL), юридическая проверка, iOS organization account + Network
-Extension entitlement, Android `VpnService` declaration. См.
+Android: `VpnService`, `libXray.aar`, Xray TUN fd, foreground notification,
+per-app exclusion, IPv4/IPv6 routes. Проверено на Android 16 emulator:
+внешний IP меняется на узел выбранной страны, отключение убирает `tun0`.
+iOS и App Store не входят в текущую сборку. Подробнее:
 [`../docs/MOBILE-APP-PLAN.md`](../docs/MOBILE-APP-PLAN.md).
 
 ## Проверки
