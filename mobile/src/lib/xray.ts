@@ -1,3 +1,5 @@
+import { countryName } from './format';
+
 export type XrayConfig = Record<string, unknown> & {
   remarks?: string;
   outbounds?: unknown[];
@@ -30,7 +32,8 @@ export async function buildXrayConfig(subscriptionUrl: string, country?: string 
     clearTimeout(timer);
   }
   const configs = asConfigs(payload);
-  const config = (country ? configs.find((item) => String(item.remarks || '').includes(country)) : undefined) ?? configs[0];
+  const label = country ? (country.length === 2 ? countryName(country) : country) : 'Нидерланды';
+  const config = configs.find((item) => String(item.remarks || '').includes(label)) ?? configs[0];
   if (!config || !Array.isArray(config.outbounds) || config.outbounds.length === 0) {
     throw new Error('в подписке нет Xray-конфигурации');
   }
