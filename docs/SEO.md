@@ -2,8 +2,8 @@
 
 Техническая часть уже сделана:
 
-- `https://poolnet.online/sitemap.xml` — 16 индексируемых URL с `hreflang`
-  RU/EN и `lastmod`;
+- `https://poolnet.online/sitemap.xml` — 16 индексируемых URL с `lastmod`,
+  `changefreq` и `priority`; `hreflang` RU/EN — в `<head>` каждой страницы;
 - `robots.txt` разрешает сайт и закрывает `/admin`, `/api/`, `/metrics`,
   `/status/data`, `/sub/`;
 - на каждой странице есть `title`, `description`, `canonical`, `hreflang`,

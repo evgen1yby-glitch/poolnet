@@ -1,67 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://poolnet.online/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/"/>
-    <lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://poolnet.online/en/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/"/>
-    <lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://poolnet.online/proxy</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/proxy"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/proxy"/>
-    <lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://poolnet.online/en/proxy</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/proxy"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/proxy"/>
-    <lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://poolnet.online/free</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/free"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/free"/>
-    <lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://poolnet.online/en/free</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/free"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/free"/>
-    <lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://poolnet.online/vpn</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/vpn"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/vpn"/>
-    <lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://poolnet.online/en/vpn</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/vpn"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/vpn"/>
-    <lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://poolnet.online/verify</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/verify"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/verify"/>
-    <lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://poolnet.online/en/verify</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/verify"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/verify"/>
-    <lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://poolnet.online/check</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/check"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/check"/>
-    <lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://poolnet.online/en/check</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/check"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/check"/>
-    <lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://poolnet.online/status</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/status"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/status"/>
-    <lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://poolnet.online/en/status</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/status"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/status"/>
-    <lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url>
-  <url><loc>https://poolnet.online/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/legal"/>
-    <lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://poolnet.online/en/legal</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://poolnet.online/legal"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://poolnet.online/en/legal"/>
-    <lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://poolnet.online/</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://poolnet.online/en/</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://poolnet.online/proxy</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://poolnet.online/en/proxy</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://poolnet.online/free</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://poolnet.online/en/free</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://poolnet.online/vpn</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://poolnet.online/en/vpn</loc><lastmod>2026-10-25</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://poolnet.online/verify</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://poolnet.online/en/verify</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://poolnet.online/check</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://poolnet.online/en/check</loc><lastmod>2026-10-25</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://poolnet.online/status</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://poolnet.online/en/status</loc><lastmod>2026-10-25</lastmod><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://poolnet.online/legal</loc><lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://poolnet.online/en/legal</loc><lastmod>2026-10-25</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
