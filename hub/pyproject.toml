@@ -43,7 +43,7 @@ dev = [
     # extra self-contained for CI and fresh virtualenvs.
     "python-multipart>=0.0.9",
     # Pinned: the gate is `ruff check src tests` with this release's rules.
-    "ruff==0.6.9",
+    "ruff==0.17.1",
 ]
 
 [project.scripts]
