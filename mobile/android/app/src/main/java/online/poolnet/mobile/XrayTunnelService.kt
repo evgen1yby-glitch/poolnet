@@ -9,6 +9,7 @@ import android.content.pm.ServiceInfo
 import android.net.VpnService
 import android.os.Build
 import android.os.ParcelFileDescriptor
+import android.system.OsConstants
 import libXray.DialerController
 import libXray.LibXray
 import org.json.JSONArray
@@ -71,9 +72,10 @@ class XrayTunnelService : VpnService() {
                     .setSession("PoolNet")
                     .setMtu(1500)
                     .addAddress("10.111.222.1", 30)
-                    .addAddress("fd00:1:fd00:1::1", 126)
                     .addRoute("0.0.0.0", 0)
-                    .addRoute("::", 0)
+                    // IPv4-only by design: not routing IPv6 would leak it
+                    // outside the tunnel, so the family is blocked instead.
+                    .allowFamily(OsConstants.AF_INET)
                     .addDnsServer("1.1.1.1")
                     .setBlocking(true)
                 // The app's own API calls should not loop through the tunnel.

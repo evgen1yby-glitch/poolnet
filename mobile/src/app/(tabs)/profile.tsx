@@ -2,9 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { AppBar, Eyebrow, Lead, Pill, ProfileButton, Screen, Title } from '@/components/ui';
+import { tunnelStatus } from '@/lib/tunnel';
 import { useAppStore } from '@/store/app';
 import { radius, useTheme } from '@/theme';
 
@@ -78,6 +79,25 @@ export default function ProfileScreen() {
           <MenuRow icon="shield-checkmark-outline" title="Как это работает" onPress={() => router.push('/onboarding')} />
           <MenuRow icon="pulse-outline" title="Методика проверки" onPress={() => void Linking.openURL(`${SITE}/verify`)} />
           <MenuRow icon="stats-chart-outline" title="Статус сервиса" onPress={() => void Linking.openURL(`${SITE}/status`)} />
+          <MenuRow
+            icon="build-outline"
+            title="Диагностика"
+            onPress={() => {
+              const state = useAppStore.getState();
+              void tunnelStatus().then((status) => {
+                Alert.alert(
+                  'Диагностика',
+                  [
+                    `Версия: ${version}`,
+                    `Платформа: ${Platform.OS} ${Platform.Version}`,
+                    `Туннель: ${status.running ? 'работает' : 'выключен'}`,
+                    `Страна: ${state.country?.cc ?? 'авто'}`,
+                    state.connectionError ? `Ошибка: ${state.connectionError}` : 'Ошибок нет',
+                  ].join('\n'),
+                );
+              });
+            }}
+          />
           <MenuRow icon="logo-github" title="GitHub проекта" onPress={() => void Linking.openURL(GITHUB)} />
         </View>
 

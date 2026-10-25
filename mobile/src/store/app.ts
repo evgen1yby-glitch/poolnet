@@ -55,9 +55,15 @@ export const useAppStore = create<AppState>((set, get) => ({
       await startTunnel(config);
       set({ connection: 'connected', connectionError: null });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Не удалось подключиться';
-      set({ connection: 'error', connectionError: message });
-      throw error;
+      const raw = error instanceof Error ? error.message : String(error);
+      if (__DEV__) console.warn('tunnel start failed', raw);
+      const friendly = /permission|разреш/i.test(raw)
+        ? 'Разрешение VPN не выдано.'
+        : /подписк|xray-конфиг|outbound/i.test(raw)
+          ? 'В подписке нет рабочей Xray-конфигурации. Выберите другую страну.'
+          : 'Не удалось поднять туннель. Проверьте соединение или выберите другой узел.';
+      set({ connection: 'error', connectionError: friendly });
+      throw new Error(friendly);
     }
   },
   disconnect: async () => {
