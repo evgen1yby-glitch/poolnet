@@ -21,3 +21,7 @@ app/src/main/java/inline/
 
 # Native tunnel dependency is fetched by scripts/fetch-libxray.sh
 app/libs/*.aar
+
+keystore.properties
+
+app/release.keystore

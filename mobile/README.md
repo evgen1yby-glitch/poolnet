@@ -50,8 +50,10 @@ npm run build:android
 # android/app/build/outputs/apk/release/app-release.apk
 ```
 
-APK подписан debug-ключом и предназначен для установки с сайта; для Google
-Play нужен production keystore и подписанный AAB.
+APK для сайта подписывается release-ключом из `android/keystore.properties`
+(файл и keystore не в git). Храните их в надёжном месте: без того же ключа
+обновления поверх установленного приложения невозможны. Для Google Play нужен
+подписанный AAB.
 
 ## Структура
 
