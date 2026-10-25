@@ -11,7 +11,7 @@ production-подпись и не сборка для Google Play.
 
 ## Preview APK
 
-Android companion preview: [PoolNet Mobile 0.1.0](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.1.0).
+Android Android VPN client: [PoolNet Mobile 0.2.0](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.2.0).
 Debug signing, no embedded tunnel; import the subscription into a VPN client.
 Do not upload this APK to Google Play.
 
