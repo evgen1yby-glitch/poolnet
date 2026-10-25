@@ -21,9 +21,9 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "web" / "site"
 PAGES = [
-    "/", "/vpn", "/proxy", "/free", "/status", "/verify", "/check", "/legal", "/404",
+    "/", "/vpn", "/proxy", "/free", "/status", "/verify", "/check", "/legal", "/download", "/404",
     "/en/", "/en/vpn", "/en/proxy", "/en/free", "/en/status", "/en/verify",
-    "/en/check", "/en/legal", "/en/404",
+    "/en/check", "/en/legal", "/en/download", "/en/404",
 ]
 
 

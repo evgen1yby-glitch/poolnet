@@ -35,6 +35,8 @@ PAGES = [
     ("/en/status", "0.5", "daily"),
     ("/legal", "0.4", "yearly"),
     ("/en/legal", "0.3", "yearly"),
+    ("/download", "0.8", "weekly"),
+    ("/en/download", "0.7", "weekly"),
 ]
 BASE = "https://poolnet.online"
 

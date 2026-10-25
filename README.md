@@ -66,7 +66,8 @@ PoolNet — публичный каталог двух пулов на одно�
 
 Интерактивный HTML-макет со всеми экранами: подключение, серверы, прокси, ключ,
 профиль и знакомство. Нативная основа — в `mobile/` (Expo/React Native),
-[Android preview APK](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.1.0),
+[Скачать Android APK](https://poolnet.online/download) ·
+[Релиз и SHA-256](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.1.0),
 план — [docs/MOBILE-APP-PLAN.md](docs/MOBILE-APP-PLAN.md).
 
 [**Открыть на домене**](https://poolnet.online/app/) · [**Открыть по IP**](http://193.34.212.154:8098/app/)
