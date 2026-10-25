@@ -219,7 +219,15 @@ def test_other_tables_survive_the_migration(tmp_path):
     conn = store.connect()
     tables = sorted(r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'"))
     conn.close()
-    assert tables == ["checks", "nodes", "publishes", "sources", "subscription_tokens", "subscriptions"], tables
+    assert tables == [
+        "checks",
+        "free_claims",
+        "nodes",
+        "publishes",
+        "sources",
+        "subscription_tokens",
+        "subscriptions",
+    ], tables
 
 
 # --------------------------------------------------------------------------- #

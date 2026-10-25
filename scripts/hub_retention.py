@@ -33,6 +33,9 @@ def main() -> int:
             print(f"checks older than {cutoff}: {count}")
             if not args.dry_run:
                 conn.execute("DELETE FROM checks WHERE run_at < ?", (cutoff,))
+                # Claim rows are tiny, but an IP hash should not be retained
+                # forever after its 24-hour purpose has expired.
+                conn.execute("DELETE FROM free_claims WHERE claimed_at < ?", (cutoff,))
                 conn.commit()
                 conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
         finally:

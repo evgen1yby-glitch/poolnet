@@ -103,6 +103,13 @@ def client_address(request) -> str:
     peer = request.client.host if request.client else ""
     try:
         if ipaddress.ip_address(peer).is_loopback:
+            # nginx overwrites X-Real-IP with `$remote_addr`; prefer it over a
+            # client-supplied X-Forwarded-For chain. This keeps the free-key
+            # one-per-IP rule tied to the actual peer instead of a spoofable
+            # header, and it works even when several proxies append to XFF.
+            real = request.headers.get("x-real-ip", "").strip()
+            if real:
+                return str(ipaddress.ip_address(real))
             forwarded = request.headers.get("x-forwarded-for", "").strip()
             if forwarded and "," not in forwarded:
                 return str(ipaddress.ip_address(forwarded))

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import ipaddress
 from datetime import datetime, timedelta, timezone
 import itertools
 import json
@@ -487,6 +488,86 @@ def _client_headers(
     return {k: v for k, v in headers.items() if v}
 
 
+_FREE_SECRET_FALLBACK = secrets.token_hex(32)
+
+
+def _free_secret() -> bytes:
+    """Stable server-side salt for IP hashes and wait challenges.
+
+    The environment secret is preferred so a restart does not invalidate every
+    challenge. Without one, an ephemeral secret is safer than writing a hash
+    salt into the repository; the only cost is that a restart resets a wait
+    that is still in progress.
+    """
+    value = (
+        os.environ.get("HUB_FREE_SECRET", "").strip()
+        or os.environ.get("HUB_BOT_SECRET", "").strip()
+    )
+    return (value or _FREE_SECRET_FALLBACK).encode("utf-8")
+
+
+def _free_wait_seconds() -> int:
+    try:
+        value = int(os.environ.get("HUB_FREE_WAIT_SECONDS", "5"))
+    except ValueError:
+        value = 5
+    return max(0, min(value, 60))
+
+
+def _free_claim_hours() -> int:
+    try:
+        value = int(os.environ.get("HUB_FREE_CLAIM_HOURS", "24"))
+    except ValueError:
+        value = 24
+    return max(1, min(value, 168))
+
+
+def _free_ip_key(request: Request) -> str | None:
+    """An irreversible key for this network, never the raw address.
+
+    IPv4 is per address (exactly what the visitor sees); IPv6 is per /64
+    because a single customer normally controls that whole prefix and can
+    otherwise rotate addresses for free. The salt prevents a trivially
+    reversible table of four billion hashes.
+    """
+    address = client_address(request)
+    try:
+        ip = ipaddress.ip_address(address)
+    except ValueError:
+        return None
+    if ip.version == 6:
+        ip = ipaddress.ip_network(f"{ip}/64", strict=False).network_address
+    return hmac.new(_free_secret(), str(ip).encode("ascii"), hashlib.sha256).hexdigest()
+
+
+def _free_challenge(ip_key: str) -> str:
+    issued = str(int(time.time()))
+    nonce = secrets.token_urlsafe(9)
+    body = f"{issued}.{nonce}"
+    mac = hmac.new(
+        _free_secret(), f"{body}.{ip_key}".encode("ascii"), hashlib.sha256
+    ).hexdigest()
+    return f"{body}.{mac}"
+
+
+def _free_challenge_age(value: str, ip_key: str) -> int | None:
+    """Seconds since a valid challenge was issued, or None if it is invalid."""
+    try:
+        issued, nonce, mac = str(value).split(".")
+        issued_at = int(issued)
+    except (TypeError, ValueError):
+        return None
+    age = int(time.time()) - issued_at
+    if age < 0 or age > 300 or not nonce:
+        return None
+    expected = hmac.new(
+        _free_secret(),
+        f"{issued}.{nonce}.{ip_key}".encode("ascii"),
+        hashlib.sha256,
+    ).hexdigest()
+    return age if hmac.compare_digest(mac, expected) else None
+
+
 def create_app(store: Store | None, sources: dict | None = None):
     """Build the FastAPI app.
 
@@ -523,10 +604,12 @@ def create_app(store: Store | None, sources: dict | None = None):
     ip_limiter = RateLimiter(rate=600 / 3600.0, burst=600, max_buckets=10_000)
     # Public free keys: three per hour per subnet is enough for a household and
     # not enough to mint a pool of throwaway subscriptions.
-    free_limiter = RateLimiter(rate=5 / 3600.0, burst=3, max_buckets=4096)
     # Five login attempts per quarter hour per subnet. The secret is long, but
     # an unauthenticated form on the public vhost should still have a ceiling.
     admin_login_limiter = RateLimiter(rate=5 / 900.0, burst=5, max_buckets=4096)
+    # The challenge is cheap but still a database read; a script must not be
+    # able to hammer it into a denial of service for real visitors.
+    free_challenge_limiter = RateLimiter(rate=30 / 60.0, burst=30, max_buckets=4096)
 
     #: The interface mockup is a design artifact, not a product surface, and it
     #: lives in the repository rather than in the package. It is served from
@@ -797,24 +880,118 @@ def create_app(store: Store | None, sources: dict | None = None):
         )
 
 
+    def _free_headers(**extra: str) -> dict:
+        return {"Cache-Control": "no-store", **extra}
+
+    @app.get("/api/free-status")
+    async def free_status(request: Request) -> JSONResponse:
+        """Whether this network may claim now, without exposing its address."""
+        if not free_challenge_limiter.allow(hash_ip(client_address(request))):
+            return JSONResponse(
+                {"error": "too many status checks"},
+                status_code=429,
+                headers=_free_headers(**{"Retry-After": "60"}),
+            )
+        ip_key = _free_ip_key(request)
+        if ip_key is None:
+            return JSONResponse(
+                {"error": "cannot determine client network"},
+                status_code=400,
+                headers=_free_headers(),
+            )
+        hours = _free_claim_hours()
+        remaining = store.free_claim_remaining(ip_key, hours=hours)
+        return JSONResponse(
+            {
+                "available": remaining == 0,
+                "retry_after": remaining,
+                "claim_hours": hours,
+                "wait_seconds": _free_wait_seconds(),
+            },
+            headers=_free_headers(),
+        )
+
+    @app.get("/api/free-challenge")
+    async def free_challenge(request: Request) -> JSONResponse:
+        """Issue a short, signed proof-of-wait challenge for this network."""
+        if not free_challenge_limiter.allow(hash_ip(client_address(request))):
+            return JSONResponse(
+                {"error": "too many challenge requests"},
+                status_code=429,
+                headers=_free_headers(**{"Retry-After": "60"}),
+            )
+        ip_key = _free_ip_key(request)
+        if ip_key is None:
+            return JSONResponse(
+                {"error": "cannot determine client network"},
+                status_code=400,
+                headers=_free_headers(),
+            )
+        remaining = store.free_claim_remaining(ip_key, hours=_free_claim_hours())
+        if remaining:
+            return JSONResponse(
+                {"error": "already claimed", "retry_after": remaining},
+                status_code=429,
+                headers=_free_headers(**{"Retry-After": str(remaining)}),
+            )
+        wait = _free_wait_seconds()
+        return JSONResponse(
+            {
+                "challenge": _free_challenge(ip_key),
+                "wait_seconds": wait,
+                "claim_hours": _free_claim_hours(),
+            },
+            headers=_free_headers(),
+        )
+
     @app.post("/api/free-subscription")
     async def free_subscription(request: Request) -> JSONResponse:
-        """A seven-day key for anyone, without Telegram or an account.
+        """A seven-day key for anyone, one per network per cooldown.
 
-        The site's free CTA is the top of the funnel; requiring the bot first
-        would make the funnel depend on a channel that may not exist yet. The
-        key is public and rate-limited per /24, and the panel can see it as
-        source=web next to bot- and panel-issued keys.
+        The key is free, but it is not unlimited: a signed challenge enforces a
+        short human pause, a persistent hashed-network claim prevents a reload
+        from minting a second key, and the daily global budget caps a botnet
+        spreading across many networks. The panel still sees source=web next to
+        bot- and panel-issued keys.
         """
-        if not free_limiter.allow(hash_ip(client_address(request))):
+        ip_key = _free_ip_key(request)
+        if ip_key is None:
             return JSONResponse(
-                {"error": "too many keys from this network; try again later"},
-                status_code=429,
-                headers={"Cache-Control": "no-store", "Retry-After": "600"},
+                {"error": "cannot determine client network"},
+                status_code=400,
+                headers=_free_headers(),
             )
-        # A per-/24 bucket alone lets a botnet spread across many networks.
-        # The daily global budget is deliberately generous; it is a circuit
-        # breaker against runaway issuance, not a monetisation limit.
+        try:
+            payload = await request.json()
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            payload = {}
+        age = _free_challenge_age(str((payload or {}).get("challenge", "")), ip_key)
+        if age is None:
+            return JSONResponse(
+                {"error": "Проверка устарела — обновите страницу и попробуйте снова."},
+                status_code=400,
+                headers=_free_headers(),
+            )
+        wait = _free_wait_seconds()
+        if age < wait:
+            return JSONResponse(
+                {
+                    "error": f"Подождите ещё {max(1, wait - age)} с.",
+                    "retry_after": max(1, wait - age),
+                },
+                status_code=429,
+                headers=_free_headers(**{"Retry-After": str(max(1, wait - age))}),
+            )
+
+        hours = _free_claim_hours()
+        remaining = store.claim_free_slot(ip_key, hours=hours)
+        if remaining:
+            return JSONResponse(
+                {"error": "Ключ с этого IP уже выдан.", "retry_after": remaining},
+                status_code=429,
+                headers=_free_headers(**{"Retry-After": str(remaining)}),
+            )
+
         try:
             daily_limit = max(0, int(os.environ.get("HUB_FREE_DAILY_LIMIT", "2000")))
         except ValueError:
@@ -823,11 +1000,13 @@ def create_app(store: Store | None, sources: dict | None = None):
         if daily_limit and store.count_subscriptions_since(
             day_start.isoformat(), source="web"
         ) >= daily_limit:
+            store.release_free_slot(ip_key)
             return JSONResponse(
                 {"error": "daily free-key budget exhausted; try again tomorrow"},
                 status_code=429,
-                headers={"Cache-Control": "no-store", "Retry-After": "3600"},
+                headers=_free_headers(**{"Retry-After": "3600"}),
             )
+
         expires = datetime.now(timezone.utc) + timedelta(days=7)
         for _ in range(3):
             token = _mint_token(0)
@@ -845,9 +1024,12 @@ def create_app(store: Store | None, sources: dict | None = None):
                         "expires_at": expires.isoformat(),
                         "subscription": f"{base}/sub/{token}" if base else f"/sub/{token}",
                     },
-                    headers={"Cache-Control": "no-store"},
+                    headers=_free_headers(),
                 )
-        return JSONResponse({"error": "could not issue token"}, status_code=503)
+        store.release_free_slot(ip_key)
+        return JSONResponse(
+            {"error": "could not issue token"}, status_code=503, headers=_free_headers()
+        )
 
     @app.post("/api/v1/bot/issue")
     async def issue_token(request: Request) -> JSONResponse:

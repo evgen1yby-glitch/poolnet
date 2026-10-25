@@ -64,9 +64,9 @@ PoolNet — публичный каталог двух пулов на одно�
 
 ## Быстрый старт
 
-**VPN.** Открой [poolnet.online/free](https://poolnet.online/free), нажми
-«Получить ключ на 7 дней» и добавь ссылку в Happ, Hiddify, v2rayNG или Clash.
-Без установки и аккаунта.
+**VPN.** Открой [poolnet.online/free](https://poolnet.online/free), подожди
+несколько секунд проверки и добавь ссылку в Happ, Hiddify, v2rayNG или Clash.
+Один ключ на IP в 24 часа, без установки и аккаунта.
 
 **Прокси.**
 ```sh

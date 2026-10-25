@@ -129,6 +129,13 @@ class Store:
             CREATE INDEX IF NOT EXISTS subscription_tokens_status
                 ON subscription_tokens (status);
 
+            -- One free key per network per cooldown. Only a keyed hash of the
+            -- address is stored: the raw IP never reaches disk.
+            CREATE TABLE IF NOT EXISTS free_claims (
+                ip_hash    TEXT PRIMARY KEY,
+                claimed_at TEXT NOT NULL
+            );
+
             -- One row per *payload* (tier x core x format, plus one per
             -- country shard). The generation is part of the key rather than the
             -- whole of it, because a run writes many payloads into one
@@ -373,6 +380,70 @@ class Store:
             if expiry <= datetime.now(timezone.utc):
                 return "expired"
         return status
+
+    def free_claim_remaining(self, ip_hash: str, *, hours: int = 24) -> int:
+        """Seconds left before this hashed network may claim another key."""
+        conn = self.connect()
+        try:
+            row = conn.execute(
+                "SELECT claimed_at FROM free_claims WHERE ip_hash = ?", (ip_hash,)
+            ).fetchone()
+        finally:
+            conn.close()
+        if not row:
+            return 0
+        try:
+            claimed = datetime.fromisoformat(str(row[0]).replace("Z", "+00:00"))
+            if claimed.tzinfo is None:
+                claimed = claimed.replace(tzinfo=timezone.utc)
+        except ValueError:
+            return 1
+        remaining = (claimed + timedelta(hours=hours) - datetime.now(timezone.utc)).total_seconds()
+        return max(0, int(remaining))
+
+    def claim_free_slot(self, ip_hash: str, *, hours: int = 24) -> int:
+        """Atomically reserve this network's one free key for `hours`.
+
+        Returns 0 when the slot was reserved, otherwise the seconds remaining.
+        `BEGIN IMMEDIATE` makes two concurrent requests from one network race
+        for the same row: exactly one can win, even on a multi-worker server.
+        """
+        conn = self.connect()
+        try:
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute(
+                "SELECT claimed_at FROM free_claims WHERE ip_hash = ?", (ip_hash,)
+            ).fetchone()
+            now = datetime.now(timezone.utc)
+            if row:
+                try:
+                    claimed = datetime.fromisoformat(str(row[0]).replace("Z", "+00:00"))
+                    if claimed.tzinfo is None:
+                        claimed = claimed.replace(tzinfo=timezone.utc)
+                except ValueError:
+                    claimed = now - timedelta(hours=hours)
+                remaining = (claimed + timedelta(hours=hours) - now).total_seconds()
+                if remaining > 0:
+                    conn.rollback()
+                    return max(1, int(remaining))
+            conn.execute(
+                "INSERT INTO free_claims (ip_hash, claimed_at) VALUES (?, ?)"
+                " ON CONFLICT(ip_hash) DO UPDATE SET claimed_at = excluded.claimed_at",
+                (ip_hash, now.isoformat()),
+            )
+            conn.commit()
+            return 0
+        finally:
+            conn.close()
+
+    def release_free_slot(self, ip_hash: str) -> None:
+        """Give a reservation back when token minting failed after the claim."""
+        conn = self.connect()
+        try:
+            conn.execute("DELETE FROM free_claims WHERE ip_hash = ?", (ip_hash,))
+            conn.commit()
+        finally:
+            conn.close()
 
     def subscription_expiry(self, token: str) -> str | None:
         """The stored term for a token, or None for a permanent one."""

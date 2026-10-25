@@ -59,26 +59,54 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="wrap hero-in">
-      <span class="chip"><i></i>free 7-day key · no payment · new one after expiry</span>
-      <h1>Free <span class="grad-txt">VPN subscription</span></h1>
-      <p class="sub">One link for Happ/Xray: one country — one profile with built-in server rotation. Nodes are collected from public sources; we do not operate them and give no warranty.</p>
+      <span class="chip"><i></i>7 days · one key per IP per 24 hours · no account</span>
+      <h1>Free <span class="grad-txt">VPN for 7 days</span></h1>
+      <p class="sub">One link for Happ, Hiddify, v2rayNG or Clash. No payment, no registration. Nodes come from public sources; we are not their operator and make no guarantees.</p>
     </div>
   </section>
 
   <section>
-    <div class="wrap freebox">
-      <div class="freecard">
+    <div class="wrap freebox freebox-v2">
+      <div class="freecard freecard-v2">
         <div class="pk">FREE · 7 DAYS</div>
-        <h2>Get the subscription</h2>
-        <p>Press the button and the server issues a free 7-day key, no payment; you can get a new one after it expires, and the Telegram bot is optional. Add the link to Happ, Hiddify, v2rayNG or Clash.</p>
-        <button type="button" class="btn btn-1" id="get">Get a 7-day key</button>
+        <h2>Get a key in one step</h2>
+        <p>The key is issued automatically. One IP gets one key per 24 hours; after the term you can request a new one.</p>
+        <ol class="freesteps">
+          <li class="freestep active" id="step1">
+            <span class="step-no">01</span>
+            <div><b>Check</b><small id="step1-note">Preparing a secure check…</small></div>
+            <span class="step-state" id="step1-state">…</span>
+          </li>
+          <li class="freestep" id="step2">
+            <span class="step-no">02</span>
+            <div><b>Limit</b><small>One key per IP per 24 hours protects the service from bulk issuance.</small></div>
+            <span class="step-state" id="step2-state">—</span>
+          </li>
+          <li class="freestep" id="step3">
+            <span class="step-no">03</span>
+            <div><b>Link</b><small>Import it into your VPN client — the configuration is already inside.</small></div>
+            <span class="step-state" id="step3-state">—</span>
+          </li>
+        </ol>
+        <div id="status" class="freestatus" role="status" aria-live="polite">Checking availability…</div>
+        <button type="button" class="btn btn-1" id="get" disabled>Preparing…</button>
         <div id="result" class="freeresult" aria-live="polite" tabindex="-1" hidden></div>
-        <p class="freenote">Public nodes can log or modify traffic. Do not use them for sensitive data without your own encryption. <a href="../legal.html">Terms of use</a>.</p>
+        <p class="freenote">The IP address is not stored: only an irreversible hash is used for the limit. On a shared IP (office or mobile carrier) the key may already be issued — try later or use the public lists. <a href="legal.html">Terms</a>.</p>
         <div id="tgbox" hidden>
           <p class="freenote">Want fresh subscriptions in Telegram?</p>
-          <a class="btn btn-2" id="tg" href="https://t.me/" rel="noopener">Get it in Telegram</a>
+          <a class="btn btn-2" id="tg" href="https://t.me/" rel="noopener">Get in Telegram</a>
         </div>
       </div>
+      <aside class="freeside">
+        <h3>What you get</h3>
+        <ul>
+          <li>7 days, no payment and no account.</li>
+          <li>One link for Happ / Xray, Hiddify, v2rayNG or Clash.</li>
+          <li>Nodes pass real TCP/TLS/HTTP checks.</li>
+          <li>The link is personal, but nodes are public — not for sensitive data.</li>
+        </ul>
+        <div class="freealt">Need lists without a key? Open the <a href="proxy.html">proxy pool</a> or <a href="vpn.html">VPN methodology</a>.</div>
+      </aside>
     </div>
   </section>
 </main>
@@ -86,29 +114,147 @@
 (function () {
   var btn = document.getElementById("get");
   var out = document.getElementById("result");
-  if (!btn || !out) return;
+  var status = document.getElementById("status");
+  var step1 = document.getElementById("step1");
+  var step1Note = document.getElementById("step1-note");
+  var step1State = document.getElementById("step1-state");
+  var step2State = document.getElementById("step2-state");
+  var step3State = document.getElementById("step3-state");
+  if (!btn || !out || !status) return;
+  var challenge = null;
+  var timer = 0;
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
   function link(label, url) {
     return '<div class="freelink"><span>' + esc(label) + '</span><code>' + esc(url) + '</code>' +
       '<button type="button" class="btn mini" data-copy="' + esc(url) + '">copy</button></div>';
   }
-  btn.addEventListener("click", function () {
-    btn.disabled = true; out.hidden = false; out.innerHTML = '<p class="freenote">Issuing…</p>';
-    fetch("/api/free-subscription", { method: "POST", cache: "no-store" })
+  function setStatus(text, kind) {
+    status.textContent = text;
+    status.className = "freestatus" + (kind ? " " + kind : "");
+  }
+  function formatWait(seconds) {
+    seconds = Math.max(0, Math.ceil(seconds));
+    var h = Math.floor(seconds / 3600);
+    var m = Math.ceil((seconds % 3600) / 60);
+    return h ? (h + " h " + m + " min") : (m + " min");
+  }
+  function stopTimer() { if (timer) { clearInterval(timer); timer = 0; } }
+  function countdown(seconds) {
+    stopTimer();
+    var left = Math.max(0, Math.ceil(seconds));
+    btn.disabled = true;
+    step1.className = "freestep active";
+    step1State.textContent = "wait";
+    step2State.textContent = "—";
+    step3State.textContent = "—";
+    function paint() {
+      if (left > 0) {
+        btn.textContent = "Please wait " + left + " s";
+        step1Note.textContent = "The check takes a few seconds; it slows automated requests.";
+        step1State.textContent = left + " s";
+      } else {
+        btn.disabled = false;
+        btn.textContent = "Get a 7-day key";
+        step1Note.textContent = "Check passed. You can get a key.";
+        step1State.textContent = "done";
+        step1.className = "freestep done";
+        setStatus("Ready. The key will be valid for 7 days.", "ok");
+      }
+    }
+    paint();
+    timer = setInterval(function () {
+      left -= 1;
+      paint();
+      if (left <= 0) stopTimer();
+    }, 1000);
+  }
+  function requestChallenge() {
+    fetch("/api/free-challenge", { cache: "no-store" })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
       .then(function (x) {
-        if (!x.ok) { out.innerHTML = '<p class="freenote">Failed: ' + esc(x.body.error || "error") + '</p>'; return; }
+        if (!x.ok) {
+          if (x.body.retry_after) {
+            btn.disabled = true;
+            btn.textContent = "Key already issued";
+            setStatus("This IP already received a key. The next one is available in " + formatWait(x.body.retry_after) + ".", "warn");
+            step1Note.textContent = "Limit: one key per IP in 24 hours.";
+            step1State.textContent = "limit";
+            step1.className = "freestep";
+            return;
+          }
+          throw new Error(x.body.error || "challenge");
+        }
+        challenge = x.body.challenge;
+        step2State.textContent = "1 / 24 h";
+        countdown(x.body.wait_seconds == null ? 5 : x.body.wait_seconds);
+      })
+      .catch(function () {
+        setStatus("Could not start the check. Refresh in a minute.", "warn");
+        btn.disabled = true;
+        btn.textContent = "Retry";
+      });
+  }
+  function loadStatus() {
+    fetch("/api/free-status", { cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j.available) {
+          btn.disabled = true;
+          btn.textContent = "Key already issued";
+          setStatus("This IP already received a key. The next one is available in " + formatWait(j.retry_after) + ".", "warn");
+          step1Note.textContent = "Limit: one key per IP in 24 hours.";
+          step1State.textContent = "limit";
+          step1.className = "freestep";
+          return;
+        }
+        requestChallenge();
+      })
+      .catch(function () {
+        setStatus("Server unavailable. Try again later.", "warn");
+        btn.disabled = true;
+        btn.textContent = "Unavailable";
+      });
+  }
+  btn.addEventListener("click", function () {
+    if (!challenge) return;
+    btn.disabled = true;
+    setStatus("Issuing the key…", "");
+    fetch("/api/free-subscription", {
+      method: "POST",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ challenge: challenge })
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (x) {
+        if (!x.ok) {
+          setStatus(x.body.error || "Could not issue a key.", "warn");
+          btn.disabled = false;
+          btn.textContent = "Try again";
+          return;
+        }
         var base = x.body.subscription;
         var until = x.body.expires_at ? x.body.expires_at.slice(0, 16).replace("T", " ") + " UTC" : "";
-        out.focus();
+        step1State.textContent = "done";
+        step2State.textContent = "done";
+        step3State.textContent = "done";
+        step1.className = step2.className = step3.className = "freestep done";
+        setStatus("Key issued. Save the link — it will not be shown again.", "ok");
+        btn.disabled = true;
+        btn.textContent = "Key issued";
+        out.hidden = false;
         out.innerHTML = '<h3>Done — valid until ' + esc(until) + '</h3>' +
           link("Happ / Xray (rotation by country)", base + "?core=xray") +
           link("Base64 — full list", base + "?format=base64") +
           link("Base64 — one node per country", base + "?format=base64&unique=1") +
-          '<p class="freenote">Only the key hash is stored: save the link now. Once it expires, issue a new one.</p>';
+          '<p class="freenote">Only the key hash is stored: save the link now. One key per IP in 24 hours.</p>';
+        out.focus();
       })
-      .catch(function () { out.innerHTML = '<p class="freenote">Server unavailable, try later.</p>'; })
-      .then(function () { btn.disabled = false; });
+      .catch(function () {
+        setStatus("Server unavailable, try again later.", "warn");
+        btn.disabled = false;
+        btn.textContent = "Try again";
+      });
   });
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest("[data-copy]");
@@ -122,7 +268,9 @@
   fetch("/api/v1/bot").then(function (r) { return r.json(); }).then(function (d) {
     if (d && d.username) { var a = document.getElementById("tg"); a.href = "https://t.me/" + d.username + "?start=site_free"; document.getElementById("tgbox").hidden = false; }
   }).catch(function () {});
+  loadStatus();
 })();
+
 </script>
 
 <footer class="site">

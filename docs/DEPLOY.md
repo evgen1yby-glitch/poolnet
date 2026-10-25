@@ -49,6 +49,9 @@ HUB_BOT_SECRET=<секрет админки>
 # HUB_ADMIN_IPS=1.2.3.4,5.6.7.8
 # Необязательно: суточный бюджет бесплатных веб-ключей (по умолчанию 2000).
 # HUB_FREE_DAILY_LIMIT=2000
+# HUB_FREE_WAIT_SECONDS=5
+# HUB_FREE_CLAIM_HOURS=24
+# HUB_FREE_SECRET=<отдельная соль для хешей IP и challenge>
 EOF
 chmod 640 /etc/poolnet/poolnet.env
 chown root:poolnet /etc/poolnet/poolnet.env

@@ -399,3 +399,32 @@ svg.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-sh
   table.pt td.up .upb{width:min(40vw,9rem)}
   table.pt td.num{text-align:right}
 }
+
+/* ==== v14: free-key claim flow ==== */
+.freebox-v2{max-width:64rem;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr);gap:1.2rem;align-items:start}
+.freecard-v2{padding:clamp(1.3rem,3vw,2rem)}
+.freesteps{list-style:none;margin:1.3rem 0;display:flex;flex-direction:column;gap:.55rem}
+.freestep{display:grid;grid-template-columns:2rem 1fr auto;gap:.75rem;align-items:center;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.018);padding:.75rem .85rem}
+.freestep .step-no{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--dim)}
+.freestep b{display:block;color:var(--txt);font-size:.9rem}
+.freestep small{display:block;color:var(--dim);font-size:.78rem;margin-top:.15rem}
+.freestep .step-state{font-family:"JetBrains Mono",monospace;font-size:.7rem;color:var(--dim);white-space:nowrap}
+.freestep.done .step-state{color:#4ade80}
+.freestep.active{border-color:rgba(139,92,255,.42);background:rgba(139,92,255,.06)}
+.freestatus{border:1px solid var(--line);border-radius:12px;padding:.8rem .9rem;margin:1rem 0;color:var(--mut);font-size:.86rem;background:var(--s1);min-height:2.7rem}
+.freestatus.warn{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.06)}
+.freestatus.ok{border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.06)}
+.freecard-v2 .btn{width:100%;margin-top:.2rem}
+.freeside{border:1px solid var(--line);border-radius:18px;background:var(--s1);padding:1.2rem}
+.freeside h3{font-size:1rem;margin-bottom:.7rem}
+.freeside ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;color:var(--mut);font-size:.86rem}
+.freeside li{padding-left:1rem;position:relative}
+.freeside li::before{content:"";position:absolute;left:0;top:.55em;width:4px;height:4px;border-radius:2px;background:var(--cyn)}
+.freealt{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--dim);font-size:.8rem}
+.freealt a{color:var(--mut);text-decoration:underline;text-underline-offset:.15em}
+@media (max-width:56rem){.freebox-v2{grid-template-columns:1fr}}
+@media (max-width:34rem){
+  .freestep{grid-template-columns:1.8rem 1fr;gap:.5rem}
+  .freestep .step-state{grid-column:2;justify-self:start}
+  .freelink{grid-template-columns:1fr}
+}

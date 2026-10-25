@@ -47,7 +47,8 @@ Add a URL to your client as a subscription.
 | Clash / mihomo | [verified-sing-box.clash](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.clash) |
 
 The branch is a snapshot, not a personal key: it has no subscription term.
-For a personal 7-day key use [poolnet.online/free](https://poolnet.online/free).
+For a personal 7-day key use [poolnet.online/free](https://poolnet.online/free):
+one key per IP per 24 hours after a short verification pause.
 
 ## Screenshots
 
