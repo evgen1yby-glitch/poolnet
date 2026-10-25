@@ -1,0 +1,26 @@
+name: Bug report
+description: Something in the site, API or lists is wrong
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste tokens, private keys or `.env` contents. For a security
+        issue use the private report link in SECURITY.md.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: URL, command, expected and actual result.
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Page, endpoint or generated list.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Logs or screenshots with secrets removed.
