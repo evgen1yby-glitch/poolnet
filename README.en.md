@@ -2,6 +2,8 @@
 
 <h1 align="center">PoolNet</h1>
 
+<p align="center"><a href="README.md">Русский</a> · English</p>
+
 <p align="center"><strong>Open VPN and proxy lists verified with real connections.</strong><br>
 Updated every 15 minutes · free 7-day key · no account required</p>
 
