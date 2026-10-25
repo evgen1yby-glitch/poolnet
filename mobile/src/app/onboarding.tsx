@@ -1,38 +1,58 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Flag } from '@/components/flag';
 
 import { Eyebrow, PrimaryButton } from '@/components/ui';
+import { languageOptions } from '@/i18n';
+import { useLanguage, useT } from '@/lib/use-t';
+import { useAppStore } from '@/store/app';
 import { useTheme } from '@/theme';
 
 export default function OnboardingScreen() {
   const theme = useTheme();
+  const t = useT();
+  const language = useLanguage();
+  const setLanguage = useAppStore((state) => state.setLanguage);
   const router = useRouter();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }} edges={['top', 'bottom']}>
       <View style={styles.wrap}>
         <View style={styles.brand}>
-          <Ionicons name="shield-checkmark" size={30} color={theme.accent} />
-          <Text style={[styles.brandText, { color: theme.text }]}>PoolNet</Text>
-          <Text style={[styles.brandTag, { color: theme.dim }]}>MOBILE</Text>
+          <View style={styles.brandLockup}>
+            <Ionicons name="shield-checkmark" size={30} color={theme.text} />
+            <Text style={[styles.brandText, { color: theme.text }]}>PoolNet</Text>
+            <Text style={[styles.brandTag, { color: theme.dim }]}>MOBILE</Text>
+          </View>
+          <View style={[styles.lang, { borderColor: theme.line }]}>
+            {languageOptions.map((option) => (
+              <Pressable
+                key={option.code}
+                accessibilityRole="button"
+                accessibilityState={{ selected: language === option.code }}
+                accessibilityLabel={option.label}
+                onPress={() => void setLanguage(option.code)}
+                style={[styles.langItem, language === option.code && { backgroundColor: theme.accentSoft }]}>
+                <Flag code={option.flag} size={12} />
+                <Text style={[styles.langText, { color: language === option.code ? theme.text : theme.dim }]}>{option.code.toUpperCase()}</Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
         <View style={styles.body}>
-          <Eyebrow>POOLNET MOBILE</Eyebrow>
+          <Eyebrow>{t('onboarding.eyebrow')}</Eyebrow>
           <Text style={[styles.title, { color: theme.text }]}>
-            Интернет{'\n'}без лишних <Text style={{ color: theme.accent }}>глаз.</Text>
+            {t('onboarding.title1')}{'\n'}{t('onboarding.title2')}
           </Text>
-          <Text style={[styles.lead, { color: theme.muted }]}>
-            Публичные VPN-узлы и прокси. PoolNet проверяет соединения, показывает факты и не обещает
-            того, чего нет.
-          </Text>
+          <Text style={[styles.lead, { color: theme.muted }]}>{t('onboarding.lead')}</Text>
           {[
-            ['shield-checkmark-outline', 'Проверено трафиком', 'TCP, TLS и сквозной HTTP-запрос — до публикации.'],
-            ['key-outline', 'Без аккаунта', 'Бесплатный ключ на 7 дней за несколько секунд.'],
-            ['lock-closed-outline', 'Прямое соединение', 'Трафик идёт клиент → узел. PoolNet не оператор.'],
+            ['globe-outline', t('onboarding.f1title'), t('onboarding.f1body')],
+            ['swap-horizontal-outline', t('onboarding.f2title'), t('onboarding.f2body')],
+            ['key-outline', t('onboarding.f3title'), t('onboarding.f3body')],
           ].map(([icon, title, body]) => (
             <View key={title} style={[styles.feature, { borderColor: theme.line }]}>
-              <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={18} color={theme.accent} />
+              <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={18} color={theme.text} />
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={[styles.featureTitle, { color: theme.text }]}>{title}</Text>
                 <Text style={[styles.featureText, { color: theme.dim }]}>{body}</Text>
@@ -41,8 +61,8 @@ export default function OnboardingScreen() {
           ))}
         </View>
         <View style={styles.cta}>
-          <PrimaryButton label="Начать" onPress={() => router.replace('/(tabs)')} />
-          <PrimaryButton label="У меня уже есть ключ" tone="ghost" onPress={() => router.replace('/key')} />
+          <PrimaryButton label={t('onboarding.start')} onPress={() => router.replace('/(tabs)')} />
+          <PrimaryButton label={t('onboarding.haveKey')} tone="ghost" onPress={() => router.replace('/key')} />
         </View>
       </View>
     </SafeAreaView>
@@ -51,7 +71,11 @@ export default function OnboardingScreen() {
 
 const styles = StyleSheet.create({
   wrap: { flex: 1, paddingHorizontal: 22, paddingBottom: 18 },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingTop: 6 },
+  brand: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 6 },
+  brandLockup: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  lang: { flexDirection: 'row', borderWidth: StyleSheet.hairlineWidth, borderRadius: 9, padding: 2 },
+  langItem: { height: 28, minWidth: 46, borderRadius: 7, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4 },
+  langText: { fontFamily: 'monospace', fontSize: 8.5, fontWeight: '600' },
   brandText: { fontSize: 16, fontWeight: '700' },
   brandTag: { fontFamily: 'monospace', fontSize: 9, letterSpacing: 1.2 },
   body: { flex: 1, justifyContent: 'center', gap: 0 },

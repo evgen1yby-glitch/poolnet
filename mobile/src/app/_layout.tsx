@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { View, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { TunnelSupervisor } from '@/components/tunnel-supervisor';
 import { useAppStore } from '@/store/app';
 import { useTheme } from '@/theme';
 
@@ -42,16 +43,17 @@ export default function RootLayout() {
         <ThemeProvider value={navigationTheme}>
           <View style={{ flex: 1, backgroundColor: theme.bg }}>
             <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />
+            <TunnelSupervisor />
             <Stack
               screenOptions={{
                 headerShown: false,
                 contentStyle: { backgroundColor: theme.bg },
-                animation: 'fade',
+                animation: 'slide_from_right',
               }}>
               <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="servers" options={{ presentation: 'modal' }} />
-              <Stack.Screen name="key" options={{ presentation: 'modal' }} />
-              <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
+              <Stack.Screen name="servers" />
+              <Stack.Screen name="key" />
+              <Stack.Screen name="onboarding" />
             </Stack>
           </View>
         </ThemeProvider>

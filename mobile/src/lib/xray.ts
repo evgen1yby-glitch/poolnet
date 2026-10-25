@@ -64,7 +64,11 @@ export async function buildXrayConfig(subscriptionUrl: string, country?: string 
   if (!config || !Array.isArray(config.outbounds) || config.outbounds.length === 0) {
     throw new Error('в подписке нет Xray-конфигурации');
   }
-  const outbounds = config.outbounds as Record<string, unknown>[];
+  const outbounds = (config.outbounds as Record<string, unknown>[]).map((item) =>
+    item.type === 'urltest'
+      ? { ...item, interval: '15s', interrupt_exist_connections: true }
+      : item,
+  );
   const proxy = outbounds.find((item) => {
     const tag = String(item.tag || '').toLowerCase();
     return tag && tag !== 'direct' && tag !== 'block' && item.protocol !== 'freedom';

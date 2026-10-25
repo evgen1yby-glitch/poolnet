@@ -5,13 +5,17 @@ import * as Haptics from 'expo-haptics';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Flag } from '@/components/flag';
 
 import { AppBar, Empty, ErrorState, Eyebrow, ProfileButton, SearchField, Title } from '@/components/ui';
 import { api, type ProxyRow } from '@/lib/api';
+import { useT, useLanguage } from '@/lib/use-t';
 import { radius, useTheme } from '@/theme';
 
 export default function ProxyScreen() {
   const theme = useTheme();
+  const t = useT();
+  const language = useLanguage();
   const insets = useSafeAreaInsets();
   const [rawQuery, setRawQuery] = useState('');
   const [query, setQuery] = useState('');
@@ -47,16 +51,16 @@ export default function ProxyScreen() {
       <AppBar right={<ProfileButton />} />
       <View style={{ paddingHorizontal: 18 }}>
         <View style={styles.topline}>
-          <Eyebrow>ПРОКСИ-БАЗА</Eyebrow>
+          <Eyebrow>{t('proxy.eyebrow')}</Eyebrow>
           <View style={styles.live}>
             <View style={[styles.dot, { backgroundColor: theme.success }]} />
             <Text style={[styles.liveText, { color: theme.muted }]}>LIVE</Text>
           </View>
         </View>
-        <Title>Прокси</Title>
+        <Title>{t('proxy.title')}</Title>
         <View style={styles.countLine}>
-          <Text style={[styles.count, { color: theme.text }]}>{total ? total.toLocaleString('ru-RU') : '—'}</Text>
-          <Text style={[styles.countMeta, { color: theme.dim }]}>живых адресов</Text>
+          <Text style={[styles.count, { color: theme.text }]}>{total ? total.toLocaleString(language === 'en' ? 'en-US' : 'ru-RU') : '—'}</Text>
+          <Text style={[styles.countMeta, { color: theme.dim }]}>{t('proxy.count')}</Text>
         </View>
         <View style={[styles.segment, { backgroundColor: theme.surface, borderColor: theme.line }]}>
           {(['all', 'http', 'socks5'] as const).map((value) => (
@@ -67,17 +71,17 @@ export default function ProxyScreen() {
               onPress={() => setProto(value)}
               style={[styles.segmentItem, proto === value && { backgroundColor: theme.surface2 }]}>
               <Text style={{ color: proto === value ? theme.text : theme.dim, fontSize: 11.5, fontWeight: '600' }}>
-                {value === 'all' ? 'Все' : value.toUpperCase()}
+                {value === 'all' ? t('proxy.all') : value.toUpperCase()}
               </Text>
             </Pressable>
           ))}
         </View>
-        <SearchField value={rawQuery} onChangeText={setRawQuery} placeholder="Адрес, страна или протокол" />
+        <SearchField value={rawQuery} onChangeText={setRawQuery} placeholder={t('proxy.search')} />
       </View>
 
       {list.isError ? (
         <View style={{ paddingHorizontal: 18 }}>
-          <ErrorState text="Каталог прокси не загрузился. Проверьте соединение." onRetry={() => list.refetch()} />
+          <ErrorState text={t('proxy.error')} onRetry={() => list.refetch()} />
         </View>
       ) : (
         <FlatList
@@ -92,7 +96,7 @@ export default function ProxyScreen() {
             list.isLoading ? (
               <View style={styles.loading}><ActivityIndicator color={theme.accent} /></View>
             ) : (
-              <Empty text="Нет прокси по этому фильтру. Сбросьте поиск или протокол." />
+              <Empty text={t('proxy.empty')} />
             )
           }
           ListFooterComponent={
@@ -101,7 +105,11 @@ export default function ProxyScreen() {
           renderItem={({ item }) => (
             <View style={[styles.row, { backgroundColor: theme.surface, borderColor: theme.line }]}>
               <View style={[styles.cc, { backgroundColor: theme.surface2, borderColor: theme.line }]}>
-                <Text style={[styles.ccText, { color: theme.text }]}>{item.country || '—'}</Text>
+                {item.country && item.country.length === 2 ? (
+                  <Flag code={item.country} size={20} />
+                ) : (
+                  <Text style={[styles.ccText, { color: theme.text }]}>{item.country || '—'}</Text>
+                )}
               </View>
               <View style={styles.rowMain}>
                 <Text style={[styles.address, { color: theme.text }]} numberOfLines={1}>{item.address}</Text>
@@ -111,7 +119,7 @@ export default function ProxyScreen() {
               </View>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`Скопировать ${item.address}`}
+                accessibilityLabel={t('proxy.copy', { address: item.address })}
                 onPress={() => void copy(item)}
                 style={({ pressed }) => [styles.copy, { backgroundColor: theme.surface2, opacity: pressed ? 0.6 : 1 }]}>
                 <Ionicons name={copied === item.address ? 'checkmark' : 'copy-outline'} size={15} color={copied === item.address ? theme.success : theme.muted} />

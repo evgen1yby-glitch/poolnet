@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useT } from '@/lib/use-t';
 import { radius, useTheme } from '@/theme';
 
 export function Screen({
@@ -69,11 +70,12 @@ export function AppBar({ right }: { right?: ReactNode }) {
 
 export function CloseButton() {
   const theme = useTheme();
+  const t = useT();
   const router = useRouter();
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="Закрыть"
+      accessibilityLabel={t('common.close')}
       onPress={() => router.back()}
       style={({ pressed }) => [
         styles.iconButton,
@@ -86,11 +88,12 @@ export function CloseButton() {
 
 export function ProfileButton() {
   const theme = useTheme();
+  const t = useT();
   const router = useRouter();
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="Профиль"
+      accessibilityLabel={t('common.profile')}
       onPress={() => router.push('/(tabs)/profile')}
       style={({ pressed }) => [
         styles.iconButton,
@@ -133,10 +136,10 @@ export function Pill({ children, tone = 'neutral' }: { children: ReactNode; tone
   const theme = useTheme();
   const colors =
     tone === 'success'
-      ? { bg: theme.successSoft, fg: theme.success, border: 'rgba(74,222,128,.25)' }
+      ? { bg: theme.successSoft, fg: theme.success, border: theme.lineStrong }
       : tone === 'warning'
-        ? { bg: 'rgba(251,191,36,.08)', fg: theme.warning, border: 'rgba(251,191,36,.25)' }
-        : { bg: theme.accentSoft, fg: theme.accent, border: 'rgba(139,92,255,.25)' };
+        ? { bg: theme.accentSoft, fg: theme.warning, border: theme.line }
+        : { bg: theme.accentSoft, fg: theme.accent, border: theme.lineStrong };
   return (
     <View style={[styles.pill, { backgroundColor: colors.bg, borderColor: colors.border }]}>
       <Text style={[styles.pillText, { color: colors.fg }]}>{children}</Text>
@@ -161,7 +164,7 @@ export function PrimaryButton({
 }) {
   const theme = useTheme();
   const bg = tone === 'accent' ? theme.accent : theme.surface;
-  const fg = tone === 'accent' ? '#FFFFFF' : theme.text;
+  const fg = tone === 'accent' ? (theme.dark ? '#0A0A0A' : '#FFFFFF') : theme.text;
   return (
     <Pressable
       accessibilityRole="button"
@@ -230,7 +233,7 @@ export function Chip({
       style={[
         styles.chip,
         {
-          borderColor: active ? 'rgba(139,92,255,.45)' : theme.line,
+          borderColor: active ? theme.lineStrong : theme.line,
           backgroundColor: active ? theme.accentSoft : 'transparent',
         },
       ]}>
@@ -250,11 +253,12 @@ export function Empty({ text }: { text: string }) {
 
 export function ErrorState({ text, onRetry }: { text: string; onRetry?: () => void }) {
   const theme = useTheme();
+  const t = useT();
   return (
     <Card style={{ gap: 10 }}>
-      <Text style={{ color: theme.text, fontSize: 14, fontWeight: '600' }}>Не удалось загрузить</Text>
+      <Text style={{ color: theme.text, fontSize: 14, fontWeight: '600' }}>{t('common.loadError')}</Text>
       <Text style={{ color: theme.muted, fontSize: 12, lineHeight: 18 }}>{text}</Text>
-      {onRetry ? <PrimaryButton label="Повторить" onPress={onRetry} tone="ghost" /> : null}
+      {onRetry ? <PrimaryButton label={t('common.retry')} onPress={onRetry} tone="ghost" /> : null}
     </Card>
   );
 }

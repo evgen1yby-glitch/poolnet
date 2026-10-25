@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useT } from '@/lib/use-t';
 import { useTheme } from '@/theme';
 
 type TabBarProps = {
@@ -12,14 +13,15 @@ type TabBarProps = {
   navigateToTab: (routeKey: string) => void;
 };
 
-const ITEMS: { name: string; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
-  { name: 'index', label: 'VPN', icon: 'power-outline' },
-  { name: 'proxy', label: 'Прокси', icon: 'git-network-outline' },
-  { name: 'profile', label: 'Профиль', icon: 'person-outline' },
+const ITEMS: { name: string; key: 'tabs.vpn' | 'tabs.proxy' | 'tabs.profile'; icon: keyof typeof Ionicons.glyphMap }[] = [
+  { name: 'index', key: 'tabs.vpn', icon: 'power-outline' },
+  { name: 'proxy', key: 'tabs.proxy', icon: 'git-network-outline' },
+  { name: 'profile', key: 'tabs.profile', icon: 'person-outline' },
 ];
 
 export function TabBar({ state, emitter, navigateToTab }: TabBarProps) {
   const theme = useTheme();
+  const t = useT();
   const insets = useSafeAreaInsets();
   return (
     <View
@@ -27,7 +29,7 @@ export function TabBar({ state, emitter, navigateToTab }: TabBarProps) {
         styles.wrap,
         {
           bottom: Math.max(insets.bottom, 10),
-          backgroundColor: theme.dark ? 'rgba(14,14,20,.94)' : 'rgba(255,255,255,.94)',
+          backgroundColor: theme.dark ? 'rgba(8,8,8,.96)' : 'rgba(255,255,255,.96)',
           borderColor: theme.lineStrong,
         },
       ]}>
@@ -40,7 +42,7 @@ export function TabBar({ state, emitter, navigateToTab }: TabBarProps) {
             key={route.key}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            accessibilityLabel={item.label}
+            accessibilityLabel={t(item.key)}
             onPress={() => {
               const event = emitter.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
               if (!active && !event.defaultPrevented) navigateToTab(route.key);
@@ -52,7 +54,7 @@ export function TabBar({ state, emitter, navigateToTab }: TabBarProps) {
             ]}>
             {active ? <View style={[styles.indicator, { backgroundColor: theme.accent }]} /> : null}
             <Ionicons name={item.icon} size={20} color={active ? theme.text : theme.dim} />
-            <Text style={[styles.label, { color: active ? theme.text : theme.dim }]}>{item.label}</Text>
+            <Text style={[styles.label, { color: active ? theme.text : theme.dim }]}>{t(item.key)}</Text>
           </Pressable>
         );
       })}

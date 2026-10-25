@@ -9,11 +9,14 @@ import { useRouter } from 'expo-router';
 import { AppBar, Card, CloseButton, ErrorState, Eyebrow, Lead, Pill, PrimaryButton, Screen, Title } from '@/components/ui';
 import { api, ApiError } from '@/lib/api';
 import { daysLeft, formatDate, formatRetry } from '@/lib/format';
+import { useT } from '@/lib/use-t';
 import { useAppStore } from '@/store/app';
 import { useTheme } from '@/theme';
 
 export default function KeyScreen() {
   const theme = useTheme();
+  const t = useT();
+  const language = useAppStore((state) => state.language);
   const router = useRouter();
   const queryClient = useQueryClient();
   const subscription = useAppStore((state) => state.subscription);
@@ -73,9 +76,18 @@ export default function KeyScreen() {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
     } catch (cause) {
       if (cause instanceof ApiError) {
-        setError(cause.retryAfter ? `${cause.message} Повторите через ${formatRetry(cause.retryAfter)}.` : cause.message);
+        const message = cause.retryAfter
+          ? t('key.retry', { time: formatRetry(cause.retryAfter, language) })
+          : cause.code === 'timeout'
+            ? t('error.timeout')
+            : cause.code === 'network'
+              ? t('error.network')
+              : cause.status >= 500
+                ? t('error.service')
+                : cause.message;
+        setError(message);
       } else {
-        setError('Не удалось получить ключ. Попробуйте позже.');
+        setError(t('key.errorGeneric'));
       }
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => undefined);
     } finally {
@@ -88,44 +100,44 @@ export default function KeyScreen() {
     <>
       <AppBar right={<CloseButton />} />
       <Screen>
-        <Eyebrow>ПОДПИСКА</Eyebrow>
-        <Title>Ключ</Title>
-        <Lead>Персональная ссылка на 7 дней. Один ключ на IP в 24 часа; IP хранится только как хеш.</Lead>
+        <Eyebrow>{t('key.eyebrow')}</Eyebrow>
+        <Title>{t('key.title')}</Title>
+        <Lead>{t('key.lead')}</Lead>
 
         {active && subscription ? (
           <>
-            <Card style={[styles.keyCard, { borderColor: 'rgba(139,92,255,.3)' }]}>
+            <Card style={[styles.keyCard, { borderColor: theme.lineStrong }]}>
               <View style={styles.rowBetween}>
                 <Text style={[styles.keyLabel, { color: theme.accent }]}>PERSONAL KEY</Text>
-                <Pill tone="success">АКТИВЕН</Pill>
+                <Pill tone="success">{t('key.active')}</Pill>
               </View>
               <View style={styles.daysRow}>
                 <Text style={[styles.days, { color: theme.text }]}>{left}</Text>
-                <Text style={[styles.daysMeta, { color: theme.muted }]}>дня осталось</Text>
+                <Text style={[styles.daysMeta, { color: theme.muted }]}>{t('key.daysLeft')}</Text>
               </View>
               <View style={[styles.progress, { backgroundColor: theme.line }]}>
                 <View style={[styles.progressFill, { backgroundColor: theme.accent, width: `${Math.max(4, Math.min(100, (left / 7) * 100))}%` }]} />
               </View>
               <View style={styles.rowBetween}>
-                <Text style={[styles.small, { color: theme.dim }]}>до {formatDate(subscription.expiresAt)}</Text>
-                <Text style={[styles.small, { color: theme.dim }]}>7 дней</Text>
+                <Text style={[styles.small, { color: theme.dim }]}>{t('key.until', { date: formatDate(subscription.expiresAt, language) })}</Text>
+                <Text style={[styles.small, { color: theme.dim }]}>{t('key.week')}</Text>
               </View>
               <View style={[styles.subBox, { borderColor: theme.line, backgroundColor: theme.bgAlt }]}>
                 <Text style={[styles.subText, { color: theme.muted }]} numberOfLines={1}>{subscriptionUrl}</Text>
-                <Pressable onPress={() => void copy()} accessibilityRole="button" accessibilityLabel="Скопировать ссылку" style={[styles.copy, { backgroundColor: theme.surface2 }]}>
+                <Pressable onPress={() => void copy()} accessibilityRole="button" accessibilityLabel={t('key.copy')} style={[styles.copy, { backgroundColor: theme.surface2 }]}>
                   <Ionicons name={copied ? 'checkmark' : 'copy-outline'} size={16} color={copied ? theme.success : theme.muted} />
                 </Pressable>
               </View>
-              <PrimaryButton label={copied ? 'Скопировано' : 'Скопировать ссылку'} onPress={() => void copy()} icon="copy-outline" />
+              <PrimaryButton label={copied ? t('key.copied') : t('key.copy')} onPress={() => void copy()} icon="copy-outline" />
             </Card>
 
-            <PrimaryButton label="Готово — к подключению" onPress={() => router.back()} tone="ghost" />
-            <Text style={[styles.section, { color: theme.text }]}>Как подключить</Text>
+            <PrimaryButton label={t('key.done')} onPress={() => router.back()} tone="ghost" />
+            <Text style={[styles.section, { color: theme.text }]}>{t('key.how')}</Text>
             <View style={styles.steps}>
               {[
-                ['01', 'Скопируйте ссылку', 'В ней уже есть конфигурация и срок.'],
-                ['02', 'Добавьте в клиент', 'Happ, Hiddify, v2rayNG или Clash — как подписку.'],
-                ['03', 'Проверьте соединение', 'Узлы сторонние. Не используйте для чувствительных данных.'],
+                ['01', t('key.step1title'), t('key.step1body')],
+                ['02', t('key.step2title'), t('key.step2body')],
+                ['03', t('key.step3title'), t('key.step3body')],
               ].map(([n, title, body]) => (
                 <View key={n} style={styles.step}>
                   <View style={[styles.stepNo, { backgroundColor: theme.accentSoft }]}>
@@ -145,29 +157,29 @@ export default function KeyScreen() {
               <Ionicons name="key-outline" size={25} color={theme.accent} />
             </View>
             <Text style={[styles.emptyTitle, { color: theme.text }]}>
-              {subscription ? 'Срок ключа истёк' : 'Ключа пока нет'}
+              {subscription ? t('key.expired') : t('key.none')}
             </Text>
             <Text style={[styles.emptyText, { color: theme.muted }]}>
-              Бесплатный ключ на 7 дней. Один ключ на IP в 24 часа. После истечения можно получить новый.
+              {t('key.empty')}
             </Text>
 
-            {status.isError ? <ErrorState text="Не удалось проверить доступность ключа." onRetry={() => status.refetch()} /> : null}
+            {status.isError ? <ErrorState text={t('key.checkError')} onRetry={() => status.refetch()} /> : null}
             {!status.data?.available && remaining > 0 ? (
               <Text style={[styles.retry, { color: theme.warning }]}>
-                С этого IP ключ уже выдан. Следующий — через {formatRetry(remaining)}.
+                {t('key.retry', { time: formatRetry(remaining, language) })}
               </Text>
             ) : null}
             {error ? <Text style={[styles.retry, { color: theme.danger }]}>{error}</Text> : null}
 
             <PrimaryButton
-              label={claiming ? (waitLeft > 0 ? `Подождите ${waitLeft} с` : 'Проверяем…') : 'Получить ключ на 7 дней'}
+              label={claiming ? (waitLeft > 0 ? t('key.wait', { seconds: waitLeft }) : t('key.checking')) : t('key.get')}
               onPress={() => void claim()}
               loading={claiming && waitLeft === 0}
               disabled={claiming || !status.data?.available || remaining > 0}
               icon="download-outline"
             />
             <Text style={[styles.fine, { color: theme.dim }]}>
-              Нажимая, вы соглашаетесь с условиями. Это публичные сторонние узлы; PoolNet не оператор и не даёт гарантий.
+              {t('key.fine')}
             </Text>
           </Card>
         )}
@@ -175,10 +187,10 @@ export default function KeyScreen() {
         {status.data?.available && active ? (
           <View style={[styles.claim, { borderColor: theme.line }]}>
             <View>
-              <Text style={[styles.claimTitle, { color: theme.text }]}>Следующий ключ</Text>
-              <Text style={[styles.claimMeta, { color: theme.dim }]}>после истечения текущего · не чаще 24 ч</Text>
+              <Text style={[styles.claimTitle, { color: theme.text }]}>{t('key.next')}</Text>
+              <Text style={[styles.claimMeta, { color: theme.dim }]}>{t('key.nextMeta')}</Text>
             </View>
-            <Text style={[styles.claimState, { color: theme.dim }]}>сначала срок</Text>
+            <Text style={[styles.claimState, { color: theme.dim }]}>{t('key.first')}</Text>
           </View>
         ) : null}
       </Screen>
