@@ -21,10 +21,9 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "web" / "site"
 PAGES = [
-    "/", "/vpn.html", "/proxy.html", "/free.html", "/status.html", "/verify.html",
-    "/check.html", "/legal.html", "/404.html",
-    "/en/", "/en/vpn.html", "/en/proxy.html", "/en/free.html", "/en/status.html",
-    "/en/verify.html", "/en/check.html", "/en/legal.html", "/en/404.html",
+    "/", "/vpn", "/proxy", "/free", "/status", "/verify", "/check", "/legal", "/404",
+    "/en/", "/en/vpn", "/en/proxy", "/en/free", "/en/status", "/en/verify",
+    "/en/check", "/en/legal", "/en/404",
 ]
 
 
@@ -42,6 +41,8 @@ def serve() -> tuple[http.server.ThreadingHTTPServer, str]:
             # enough, and it avoids a 5,000-character placeholder distorting
             # the width check.
             rel = "index.html" if self.path in ("/", "/en/") else self.path.lstrip("/")
+            if not (SITE / rel).is_file() and (SITE / f"{rel}.html").is_file():
+                rel = f"{rel}.html"
             if rel.endswith(".html"):
                 source = SITE / rel
                 if source.is_file():

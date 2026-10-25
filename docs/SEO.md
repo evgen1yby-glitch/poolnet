@@ -6,6 +6,8 @@
   `changefreq` и `priority`; `hreflang` RU/EN — в `<head>` каждой страницы;
 - `robots.txt` разрешает сайт и закрывает `/admin`, `/api/`, `/metrics`,
   `/status/data`, `/sub/`;
+- внутренние ссылки — clean URLs (`/free`, `/proxy`), старые `.html`
+  отвечают 301 на канонический адрес;
 - на каждой странице есть `title`, `description`, `canonical`, `hreflang`,
   Open Graph/Twitter Card и общая картинка `assets/og.png` 1200×630;
 - главная размечена как `WebSite`, страница прокси — как `Dataset`;

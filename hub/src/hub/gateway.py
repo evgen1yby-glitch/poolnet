@@ -431,14 +431,26 @@ def register_gateway(
         return RedirectResponse(f"/pool/{name}", status_code=307)
 
     @app.get("/{path:path}", include_in_schema=False)
-    async def site_page(path: str) -> Response:
+    async def site_page(path: str, request: Request) -> Response:
         """Every public page and asset of the merged site.
 
-        Registered after every other route, so nothing is shadowed. An
-        extensionless page path (`/vpn`) resolves to its `.html` file; anything
-        the site does not have is the site's 404 page, never a directory
-        listing.
+        Registered after every other route, so nothing is shadowed. The public
+        spelling of a page is extensionless (`/vpn`); `.html` URLs from old
+        links and search results answer a permanent redirect instead of
+        creating a second indexable copy. Anything the site does not have is
+        the site's 404 page, never a directory listing.
         """
+        if path.endswith(".html"):
+            clean = path[:-5]
+            if clean == "index":
+                target = "/"
+            elif clean.endswith("/index"):
+                target = "/" + clean[:-6] + "/"
+            else:
+                target = "/" + clean
+            if request.url.query:
+                target += "?" + request.url.query
+            return RedirectResponse(target, status_code=301)
         rel = (
             f"{path}.html"
             if (site_dir / f"{path}.html").is_file() and not (site_dir / path).is_file()

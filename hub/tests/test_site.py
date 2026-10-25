@@ -53,7 +53,9 @@ def test_every_site_page_serves(site_client):
     """All six pages answer 200 — a 404 between pages breaks navigation."""
     for page in ("vpn", "proxy", "verify", "check", "free", "status", "legal"):
         assert site_client.get(f"/{page}").status_code == 200, page
-        assert site_client.get(f"/{page}.html").status_code == 200, page
+        legacy = site_client.get(f"/{page}.html", follow_redirects=False)
+        assert legacy.status_code == 301, page
+        assert legacy.headers["location"] == f"/{page}", page
 
 
 def test_none_of_the_site_pages_index_as_operator_panels(site_client):
@@ -63,7 +65,7 @@ def test_none_of_the_site_pages_index_as_operator_panels(site_client):
     route fell back to the design resolver — which adds the `noindex` header
     and would silently de-index the product.
     """
-    for page in ("", "/vpn", "/proxy.html", "/status"):
+    for page in ("", "/vpn", "/proxy", "/status"):
         response = site_client.get(f"/{page}" if page else "/")
         assert response.status_code == 200
         assert "нет такого файла" not in response.text
@@ -86,7 +88,8 @@ def test_free_vpn_offer_is_one_story_on_index_vpn_and_free():
         html = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
         hero = re.search(r'<section class="hero">.*?<div class="cta-row">(.*?)</div>', html, re.S)
         assert hero is not None, name
-        assert 'href="free.html"' in hero.group(1), name
+        expected = 'href="/en/free"' if name.startswith("en/") else 'href="/free"'
+        assert expected in hero.group(1), name
         assert "7" in hero.group(1), name
 
 
@@ -119,7 +122,7 @@ def test_site_pages_are_not_cached(site_client):
     old CSS would render the new page broken and the review would blame the
     markup.
     """
-    for path in ("/", "/vpn", "/proxy.html", "/system.css"):
+    for path in ("/", "/vpn", "/proxy", "/system.css"):
         assert site_client.get(path).headers["cache-control"] == "no-cache", path
 
 

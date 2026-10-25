@@ -57,6 +57,9 @@ def main() -> int:
             path = href.split("#")[0]
             if not path:
                 continue
+            if path.endswith(".html"):
+                problems.append(f"{page.name}: legacy .html link {href}")
+                continue
             if path.startswith("/pool/"):
                 name = path[len("/pool/") :]
                 if name not in POOL_NAMES and not COUNTRY.match(name):
@@ -66,6 +69,10 @@ def main() -> int:
                 target = SITE / path[1:]
             else:
                 target = (page.parent / path).resolve()
+            if not target.exists() and target.suffix == "":
+                html_target = target.with_suffix(".html")
+                if html_target.is_file():
+                    target = html_target
             if not target.exists():
                 problems.append(f"{page.relative_to(SITE)}: broken link {path}")
 
