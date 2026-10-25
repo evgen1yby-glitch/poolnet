@@ -5,10 +5,11 @@ iOS/магазины остаются следующими этапами. Ос�
 `web/site/app/`, текущий API `poolnet.online` и репозиторий
 `evgen1yby-glitch/poolnet`.
 
-Фактический результат Android 0.2.0: Expo UI + `VpnService` + libXray/Xray-core
-TUN, страна/ключ/прокси, foreground notification, IPv4+IPv6 routes. Проверено
-на Android 16 emulator: exit IP сменился на NL-узел, `tun0` удаляется при
-отключении. iOS, App Store и Google Play не публиковались.
+Фактический результат Android 0.4.0: монохромный UI, RU/EN с флагами,
+`VpnService` + libXray/Xray-core TUN, страна/ключ/прокси, foreground
+notification, IPv4-only, автоматическое переключение шлюза. Проверено на
+Android emulator: трафик идёт через NL-узел, `tun0` удаляется при отключении.
+iOS, App Store и Google Play не публиковались.
 
 > **Стоп-гейт.** Это ещё не план «нажимай и кодируй»: четыре ADR ниже должны
 > быть закрыты до разработки UI и тем более до обещания кнопки «Подключиться».
@@ -490,7 +491,7 @@ Idempotency-Key: <uuid>
 ### Этап 1 — дизайн-система и каркас (3 недели)
 
 - Токены, компоненты, темная/светлая, RU/EN, иконки.
-- Навигация 5 вкладок, onboarding, splash/update gate.
+- Навигация 3 вкладок, простой список стран, onboarding, splash/update gate.
 - API client, error model, offline/caching, secure storage.
 - Аналитика/краши с opt-in.
 - **Выход:** все экраны на mock-данных; UI-тесты; preview build.

@@ -6,14 +6,14 @@
 iOS-сборка пока не сделана: нужен Apple organization account, Mac и Network
 Extension entitlement.
 
-Android APK распространяется с сайта `poolnet.online/download`; это не
-production-подпись и не сборка для Google Play.
+Android APK распространяется с сайта `poolnet.online/download`; это
+release-подпись PoolNet, но не сборка для Google Play.
 
 ## APK
 
-Android VPN client: [PoolNet Mobile 0.3.0](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.3.0).
-Debug signing; contains the embedded Xray TUN tunnel. Do not upload this APK
-to Google Play.
+Android VPN client: [PoolNet Mobile 0.4.0](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.4.0).
+Release-signed with the PoolNet key; contains the embedded Xray TUN tunnel.
+Do not upload this APK to Google Play.
 
 ## Запуск
 
