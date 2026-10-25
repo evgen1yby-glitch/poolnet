@@ -62,10 +62,10 @@ PoolNet — публичный каталог двух пулов на одно�
 | <img src="docs/screenshots/proxy.webp" alt="Прокси-пул PoolNet" width="100%"> | <img src="docs/screenshots/vpn.webp" alt="VPN PoolNet" width="100%"> |
 | <img src="docs/screenshots/free.webp" alt="Бесплатная подписка PoolNet" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="PoolNet на телефоне" width="58%"> |
 
-## Мобильное приложение (концепт)
+## Мобильное приложение
 
-Интерактивный HTML-макет со всеми экранами: подключение, серверы, прокси, ключ,
-профиль и знакомство. Нативная основа — в `mobile/` (Expo/React Native),
+Android-клиент с встроенным VPN-туннелем (Xray TUN) — `mobile/`.
+HTML-прототип со всеми экранами — `/app/`. Исходники: Expo/React Native,
 [Скачать Android APK](https://poolnet.online/download) ·
 [Релиз и SHA-256](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.2.0),
 план — [docs/MOBILE-APP-PLAN.md](docs/MOBILE-APP-PLAN.md).
