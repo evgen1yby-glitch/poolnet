@@ -282,6 +282,17 @@ def category_of(value: str) -> str:
     return "Прочее"
 
 ADULT_WORDS = re.compile(r"\b(?:xxx|adult|porn|erotic|эрот|18\+|sex)\b", re.I)
+BLOCKED_URL_PARTS = ("cache1.cinerama.uz/blocked", "/blocked/")
+CURATED_STREAMS = {
+    "Nauka.ru": ("https://stream8.cinerama.uz/1248/index.m3u8", "curated"),
+}
+
+
+def blocked_url(url: str) -> bool:
+    lowered = (url or "").lower()
+    return any(part in lowered for part in BLOCKED_URL_PARTS)
+
+
 QUALITY_WORDS = re.compile(
     r"\b(?:fullhd|full\s*hd|uhd|4k|2160p|1440p|1080p|1080i|720p|720i|576p|576i|480p|480i|360p|hd|sd)\b",
     re.I,
@@ -579,6 +590,113 @@ def probe_hls(url: str, timeout: float) -> dict | None:
     return None
 
 
+
+# HTML portals whose players expose a public HLS URL. These are crawled as
+# sources, not embedded: the checker never proxies their video.
+VITS_COUNTRY = {"Россия": "RU", "Беларусь": "BY", "Казахстан": "KZ"}
+
+
+def _page_text(url: str, timeout: float = 25) -> str:
+    status, _, body, _ = fetch(url, timeout, max_bytes=3_000_000)
+    return body.decode("utf-8", "replace") if status == 200 else ""
+
+
+def _vits_items() -> tuple[list[dict], dict]:
+    first = _page_text("https://vits.tv/ru/tv/")
+    if not first:
+        return [], {"id": "vits-tv", "url": "https://vits.tv/ru/tv/", "ok": False, "items": 0, "error": "index"}
+    pages = [int(number) for number in re.findall(r"/ru/tv/page/(\d+)/", first)]
+    links = set(re.findall(r'href="(/ru/tv/[^"/]+/)"', first))
+    for number in range(2, (max(pages) if pages else 1) + 1):
+        page = _page_text(f"https://vits.tv/ru/tv/page/{number}/")
+        links.update(re.findall(r'href="(/ru/tv/[^"/]+/)"', page))
+    links = sorted(link for link in links if not link.startswith("/ru/tv/page/"))
+
+    def one(path: str) -> dict | None:
+        page = _page_text("https://vits.tv" + path)
+        if not page:
+            return None
+        match = re.search(r'player-config="([^"]+)"', page)
+        if not match:
+            return None
+        try:
+            config = json.loads(html.unescape(match.group(1)))
+        except (ValueError, TypeError):
+            return None
+        driver = config.get("driver") or {}
+        source = driver.get("src") or (config.get("meta") or {}).get("stream_url") or ""
+        if not source or blocked_url(source):
+            return None
+        country_name = ""
+        country_match = re.search(r'"areaServed"\s*:\s*\{[^{}]*"name"\s*:\s*"([^"]+)"', page)
+        if country_match:
+            country_name = html.unescape(country_match.group(1))
+        country = VITS_COUNTRY.get(country_name, "")
+        if not country:
+            return None
+        category_match = re.search(r"Категория:\s*(?:<[^>]+>\s*)*([^<]+)", page)
+        category = html.unescape(category_match.group(1)).strip() if category_match else "Общие"
+        title = (config.get("title") or "").strip()
+        if not title:
+            return None
+        return {
+            "name": title,
+            "tvg_id": "",
+            "country": country,
+            "logo": (config.get("poster") or "").strip(),
+            "group": category,
+            "source": "vits-tv",
+            "url": source,
+        }
+
+    items = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as pool:
+        for item in pool.map(one, links):
+            if item:
+                items.append(item)
+    return items, {"id": "vits-tv", "url": "https://vits.tv/ru/tv/", "ok": True, "items": len(items)}
+
+
+def _rutv_items() -> tuple[list[dict], dict]:
+    index = _page_text("http://rutv.pw/")
+    if not index:
+        return [], {"id": "rutv-pw", "url": "http://rutv.pw/", "ok": False, "items": 0, "error": "index"}
+    paths = sorted(set(re.findall(r'href="(/[a-z0-9-]+)"', index)))
+    paths = [path for path in paths if path not in ("/favicon.ico",)]
+
+    def one(path: str) -> dict | None:
+        page = _page_text("http://rutv.pw" + path)
+        if not page:
+            return None
+        match = re.search(r'Playerjs\(\{id:"player", file:"([^"]+)"', page)
+        if not match:
+            return None
+        source = html.unescape(match.group(1))
+        if blocked_url(source):
+            return None
+        title = re.search(r"<title>(.*?)</title>", page, re.S)
+        name = html.unescape(title.group(1)).split("—")[0].split("прямой")[0].strip() if title else ""
+        name = re.sub(r"\s+", " ", name).strip()
+        if not name:
+            return None
+        logo = re.search(r'src="(imgs/[^"]+)"', page)
+        return {
+            "name": name,
+            "tvg_id": "",
+            "country": "RU",
+            "logo": urllib.parse.urljoin("http://rutv.pw/", html.unescape(logo.group(1))) if logo else "",
+            "group": category_of(name),
+            "source": "rutv-pw",
+            "url": source,
+        }
+
+    items = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as pool:
+        for item in pool.map(one, paths):
+            if item:
+                items.append(item)
+    return items, {"id": "rutv-pw", "url": "http://rutv.pw/", "ok": True, "items": len(items)}
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="web/site/tv/channels.json")
@@ -644,6 +762,14 @@ def main() -> int:
         m3u_items.extend(items)
         log(f"  {source['id']}: {len(items)}")
 
+    html_items = []
+    for scrape in (_vits_items, _rutv_items):
+        items, stat = scrape()
+        html_items.extend(items)
+        source_stats[stat["id"]] = {"ok": stat.get("ok", False), "items": stat["items"], "error": stat.get("error", "")}
+        log(f"  {stat['id']}: {stat['items']}")
+    m3u_items.extend(html_items)
+
     russian_ids = {
         item["tvg_id"].split("@", 1)[0].lower()
         for item in m3u_items
@@ -680,7 +806,7 @@ def main() -> int:
 
     def add_variant(channel: dict, url: str, source: str, quality: str = "") -> None:
         url = normalize_url(url)
-        if not url.startswith(("http://", "https://")):
+        if not url.startswith(("http://", "https://")) or blocked_url(url):
             return
         if any(item["url"] == url for item in channel["variants"]):
             return
@@ -732,6 +858,11 @@ def main() -> int:
         if item_name and not CYRILLIC.search(channel.get("name", "")) and CYRILLIC.search(item_name):
             channel["name"] = item_name
         add_variant(channel, item.get("url", ""), item["source"], quality_from_text(item.get("name", "")))
+
+    for channel_id, (url, source) in CURATED_STREAMS.items():
+        channel = merged.get(f"id:{channel_id.lower()}")
+        if channel:
+            add_variant(channel, url, source)
 
     candidates = []
     for channel in merged.values():
@@ -830,6 +961,9 @@ def main() -> int:
             current["quality"] = item["quality"]
     live = list(by_url.values())
     for channel in live:
+        channel["variants"] = [item for item in channel.get("variants", []) if not blocked_url(item.get("url", ""))]
+        if not channel["variants"]:
+            continue
         ordered = sorted(
             channel.get("variants", []),
             key=lambda item: (
@@ -849,6 +983,18 @@ def main() -> int:
             channel["latency_ms"] = best.get("latency_ms", channel.get("latency_ms"))
             channel["web_playable"] = bool(best.get("web_playable"))
             channel["https"] = bool(best.get("https"))
+    by_primary = {}
+    for channel in live:
+        current = by_primary.get(channel["url"])
+        if current is None:
+            by_primary[channel["url"]] = channel
+            continue
+        current["variants"].extend(channel.get("variants", []))
+        current["sources"] = sorted(set(current["sources"]) | set(channel.get("sources", [])))
+        if not current.get("logo") and channel.get("logo"):
+            current["logo"] = channel["logo"]
+            current["logo_status"] = channel.get("logo_status", "image")
+    live = list(by_primary.values())
     category_rank = {name: index for index, name in enumerate(CATEGORY_ORDER)}
     live.sort(key=lambda item: (category_rank.get(item["category"], 999), item["name"].lower()))
     by_country = Counter(item["country"] for item in live)
@@ -857,6 +1003,8 @@ def main() -> int:
         "duration_s": round(time.monotonic() - started, 1),
         "sources": [
             {"id": "iptv-org-api", "url": API, "ok": True, "items": len(channels_by_id)},
+            {"id": "vits-tv", "url": "https://vits.tv/ru/tv/", "ok": True, "items": len([item for item in m3u_items if item.get("source") == "vits-tv"])},
+            {"id": "rutv-pw", "url": "http://rutv.pw/", "ok": True, "items": len([item for item in m3u_items if item.get("source") == "rutv-pw"])},
             *[
                 {"id": source["id"], "url": source["url"], **source_stats.get(source["id"], {"ok": False, "items": 0, "error": "not fetched"})}
                 for source in M3U_SOURCES

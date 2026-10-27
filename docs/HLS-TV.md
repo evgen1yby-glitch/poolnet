@@ -35,6 +35,8 @@ The checker fetches a source registry, merges channels and probes each variant.
 | `iptv-org/iptv` countries `ru`, `by`, `kz` | country playlists | Primary source |
 | `Free-TV/IPTV` country playlists RU/BY/KZ | additional free-to-air links | Secondary |
 | `ngrch/iptv` `ru.m3u` | Russian regional/long-tail URLs | Secondary |
+| `vits.tv/ru/tv` | channel pages with `player-config` HLS driver | HTML crawler |
+| `rutv.pw` | channel pages with Playerjs `file:` HLS | HTML crawler |
 | `maxviazov/aptv-playlists` `rus.m3u` | curated Russian list with EPG-matched names | Secondary |
 | `smolnp/IPTVru` `IPTVru.m3u` | Russian/Belarusian long-tail list | Secondary |
 | `ntvampire/IPTV` `index.m3u` | Russian channel list with EPG | Secondary |
@@ -69,6 +71,7 @@ integrated: their links are unstable, unlicensed or already duplicate iptv-org.
    - decode gzip/deflate manifests before parsing;
    - prefer H.264/HEVC video variants over unknown or MPEG-2 variants;
    - keep every surviving source URL as a reserve, not just the first;
+   - reject the `cache1.cinerama.uz/blocked` placeholder and any URL containing `/blocked/`;
    - the page detects an audio-only playback and advances to the next reserve.
 7. Write `web/site/tv/channels.json` atomically (current implementation writes
    after the full run).
@@ -82,7 +85,7 @@ python3 scripts/hls_tv_checker.py \
   --workers 48 --timeout 7 --max-variants 2
 ```
 
-At the time of writing the production run produced 677 live unique channels, 307 web-playable, with 0 duplicate URLs and 0 duplicate names. 303 channels have at least one reserve stream. Counts move with each 30-minute run.
+At the time of writing the production run produced 778 live unique channels, 422 web-playable, with 0 duplicate URLs and 0 duplicate names. 377 channels have at least one reserve stream. Counts move with each 30-minute run.
 BY/KZ are smaller because only Russian-language live streams that survived the
 checker are published.
 
@@ -90,13 +93,13 @@ checker are published.
 
 The raw groups from API and M3U are normalised into one Russian taxonomy. "Кинозалы", "Кино и сериалы" and "Классика" become **Кино**; "Развлечения"/"Entertainment" become **Развлекательные**; "Познавательные" merge into **Документальные**; "Информационные" into **Новости**; "Основные"/"Популярные"/regional country labels into **Общие**; regional labels into **Региональные**. Unknown groups become **Прочее**, never a raw English/emoji group.
 
-Current distribution: Кино — 175, Общие — 107, Региональные — 92, Развлекательные — 52, Музыка — 47, Документальные — 41, Новости — 38, Спорт — 29, Детям — 27, Религия — 16, Путешествия — 10, Сериалы — 8, Образ жизни — 8, Магазины — 6, Культура — 5, Авто — 3, Кулинария — 3, Бизнес — 2, Семья — 2, Политика — 2, Юмор — 2, Наука — 1, Образование — 1. Countries are metadata only; the page filters by genre, not by country.
+Current distribution: Кино — 194, Общие — 96, Региональные — 94, Документальные — 64, Развлекательные — 54, Музыка — 54, Новости — 45, Детям — 40, Спорт — 36, Прочее — 25, Религия — 15, Путешествия — 14, Образ жизни — 8, Сериалы — 7, Магазины — 6, Культура — 5, Кулинария — 5, Авто — 4, Образование — 3, Наука — 2, Бизнес — 2, Политика — 2, Юмор — 2, Семья — 1. Countries are metadata only; the page filters by genre, not by country.
 
- Names of Russian channels written in Latin are converted to Cyrillic using iptv-org alt names, an explicit override table and a Russian transliteration fallback. Only international brands and numeric names remain Latin: 86, Jibek Joly, KTK, TDK 42, 360, Channel 9 (Israel), CNN, DW, Euronews, RT, RT Arabic, RT Balkan, RT en Espanol, Bollywood, Disney XD, Epic Drama, FoxKids, Fashion, Fashion TV, Mezzo, Mezzo Live, Discovery, RT Documentary Russian, TV BRICS, Fashion&LifeStyle.
+ Names of Russian channels written in Latin are converted to Cyrillic using iptv-org alt names, an explicit override table and a Russian transliteration fallback. Remaining Latin names are international brands or numeric names: 86, Armenia TV Satellite, Jibek Joly, KTK, TDK 42, 360, BBC World News, Channel 9 (Israel), CNN, DW, Euronews, RT, RT Arabic, RT Balkan, RT en Espanol, Bollywood, Disney XD, Epic Drama, FoxKids, FX, FX Life, Hollywood, Fashion, Fashion TV, Mezzo, Mezzo Live, Discovery, Discovery Channel, TV BRICS, Fashion&LifeStyle, Bloomberg, CNN International, France 24.
 
 ## Logos
 
-Every channel has a visual tile. A real logo is published only after an HTTPS fetch returns an image signature (PNG/JPEG/WebP/GIF/SVG); the logo is resolved by `tvg-id` or the source's `tvg-logo`. A dead, HTML or non-image URL is cleared and the card uses a deterministic monogram built from the channel name. Current snapshot: 464 validated logos, 213 monograms. The page also has an `onerror` fallback, so a logo that dies between runs never leaves a broken image.
+Every channel has a visual tile. A real logo is published only after an HTTPS fetch returns an image signature (PNG/JPEG/WebP/GIF/SVG); the logo is resolved by `tvg-id` or the source's `tvg-logo`. A dead, HTML or non-image URL is cleared and the card uses a deterministic monogram built from the channel name. Current snapshot: 513 validated logos, 265 monograms. The page also has an `onerror` fallback, so a logo that dies between runs never leaves a broken image.
 
 ## Output schema
 
@@ -106,10 +109,10 @@ Every channel has a visual tile. A real logo is published only after an HTTPS fe
   "duration_s": 93.2,
   "sources": [{"id": "iptv-org-api", "ok": true, "items": 31676}],
   "stats": {
-    "channels": 677,
-    "web_playable": 307,
-    "countries": {"RU": 666, "BY": 2, "KZ": 9},
-    "with_logo": 464
+    "channels": 778,
+    "web_playable": 422,
+    "countries": {"RU": 768, "BY": 2, "KZ": 8},
+    "with_logo": 513
   },
   "channels": [{
     "id": "Belarus24.by",
