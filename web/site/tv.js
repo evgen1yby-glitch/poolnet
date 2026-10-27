@@ -126,9 +126,11 @@
   var playerQueue = [];
   var playerIndex = 0;
   var playerSwitching = false;
+  var videoTimer = 0;
 
   function stopPlayer() {
     if (hls) { try { hls.destroy(); } catch (error) {} hls = null; }
+    if (videoTimer) { clearTimeout(videoTimer); videoTimer = 0; }
     playerChannel = null;
     playerQueue = [];
     playerIndex = 0;
@@ -147,6 +149,7 @@
     if (!playerChannel || index >= playerQueue.length) { showPlayerError(); return; }
     playerIndex = index;
     playerError.hidden = true;
+    if (videoTimer) { clearTimeout(videoTimer); videoTimer = 0; }
     var source = playerQueue[index].url;
     playerSub.textContent = (playerChannel.category || "HLS") + (index ? " · " + T.reserveOne + " " + (index + 1) : "");
     if (hls) { try { hls.destroy(); } catch (error) {} hls = null; }
@@ -161,6 +164,7 @@
       hls.on(Hls.Events.ERROR, function (_event, detail) {
         if (!detail || !detail.fatal || playerSwitching) return;
         playerSwitching = true;
+        if (videoTimer) { clearTimeout(videoTimer); videoTimer = 0; }
         window.setTimeout(function () { playerSwitching = false; playAt(index + 1); }, 350);
       });
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -170,6 +174,13 @@
     } else {
       showPlayerError();
     }
+    videoTimer = window.setTimeout(function () {
+      videoTimer = 0;
+      if (video.videoWidth === 0 && !playerSwitching) {
+        if (index + 1 < playerQueue.length) playAt(index + 1);
+        else showPlayerError();
+      }
+    }, 3200);
   }
   function showPlayer(channel) {
     playerChannel = channel;
