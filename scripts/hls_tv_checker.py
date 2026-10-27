@@ -15,7 +15,9 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import gzip
 import html
+import http.client
 import json
 import re
 import ssl
@@ -23,6 +25,7 @@ import sys
 import time
 import urllib.error
 import urllib.parse
+import zlib
 import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -328,10 +331,15 @@ def fetch(url: str, timeout: float, max_bytes: int = 2_000_000, headers: dict | 
     try:
         with urllib.request.urlopen(req, timeout=timeout, context=context) as response:
             data = response.read(max_bytes)
+            encoding = (response.headers.get("Content-Encoding") or "").lower()
+            if encoding == "gzip":
+                data = gzip.decompress(data)
+            elif encoding == "deflate":
+                data = zlib.decompress(data)
             return response.status, dict(response.headers), data, response.geturl()
     except urllib.error.HTTPError as exc:
         return exc.code, dict(exc.headers or {}), b"", url
-    except (urllib.error.URLError, TimeoutError, OSError, ssl.SSLError) as exc:
+    except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError, ssl.SSLError, EOFError, zlib.error) as exc:
         return 0, {"x-error": str(exc)[:120]}, b"", url
 
 
@@ -411,6 +419,15 @@ def base_name(name: str) -> str:
     text = RESERVE_WORDS.sub(" ", name)
     text = re.sub(r"\s+", " ", text).strip(" -—|")
     return text or name.strip()
+
+
+def codec_score(variant: dict) -> int:
+    codecs = (variant.get("codecs") or "").lower()
+    if any(token in codecs for token in ("avc1", "avc3", "hvc1", "hev1", "vp09", "av01")):
+        return 3
+    if any(token in codecs for token in ("mp2v", "mpeg2")):
+        return -2
+    return 0
 
 
 def quality_from_text(text: str) -> str:
@@ -742,7 +759,16 @@ def main() -> int:
                 live_variants.append({**variant, **result})
         if not live_variants:
             return None
-        live_variants.sort(key=lambda item: (item["https"], item["web_playable"], item["height"], -item["latency_ms"]), reverse=True)
+        live_variants.sort(
+            key=lambda item: (
+                item["https"],
+                item["web_playable"],
+                codec_score(item),
+                item["height"],
+                -item["latency_ms"],
+            ),
+            reverse=True,
+        )
         best = live_variants[0]
         if not best["live"]:
             return None
@@ -803,6 +829,26 @@ def main() -> int:
         if not current.get("quality") and item.get("quality"):
             current["quality"] = item["quality"]
     live = list(by_url.values())
+    for channel in live:
+        ordered = sorted(
+            channel.get("variants", []),
+            key=lambda item: (
+                bool(item.get("https")),
+                bool(item.get("web_playable")),
+                codec_score(item),
+                item.get("height") or 0,
+                -(item.get("latency_ms") or 0),
+            ),
+            reverse=True,
+        )
+        if ordered:
+            channel["variants"] = ordered
+            best = ordered[0]
+            channel["url"] = best["url"]
+            channel["quality"] = best.get("quality") or channel.get("quality") or "HLS"
+            channel["latency_ms"] = best.get("latency_ms", channel.get("latency_ms"))
+            channel["web_playable"] = bool(best.get("web_playable"))
+            channel["https"] = bool(best.get("https"))
     category_rank = {name: index for index, name in enumerate(CATEGORY_ORDER)}
     live.sort(key=lambda item: (category_rank.get(item["category"], 999), item["name"].lower()))
     by_country = Counter(item["country"] for item in live)
