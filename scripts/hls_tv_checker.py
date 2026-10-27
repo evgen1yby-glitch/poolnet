@@ -91,6 +91,14 @@ NAME_CATEGORY = {
 }
 
 
+def preferred_name(channel: dict) -> str:
+    names = [channel.get("name") or ""] + list(channel.get("alt_names") or [])
+    for name in names:
+        if CYRILLIC.search(name or ""):
+            return name
+    return channel.get("name") or ""
+
+
 def refine_category(name: str, category: str) -> str:
     key = clean_name(name)
     if key in NAME_CATEGORY:
@@ -235,6 +243,10 @@ def display_name(name: str) -> str:
 def clean_name(name: str) -> str:
     name = display_name(name)
     text = name.strip().lower().replace("ё", "е")
+    if text == "nauka":
+        text = "наука"
+    elif text.startswith("nauka "):
+        text = "наука " + text[6:]
     text = QUALITY_WORDS.sub(" ", text)
     text = re.sub(r"\[[^\]]*\]|\([^)]*\)", " ", text)
     text = re.sub(r"[^a-zа-я0-9]+", " ", text)
@@ -472,7 +484,7 @@ def main() -> int:
         key = f"id:{channel_id.lower()}"
         merged[key] = {
             "id": channel_id,
-            "name": display_name(channel.get("name") or channel_id),
+            "name": display_name(preferred_name(channel) or channel_id),
             "country": country,
             "country_name": COUNTRY_NAMES.get(country, country),
             "languages": sorted(languages),
