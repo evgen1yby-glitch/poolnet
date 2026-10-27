@@ -1,5 +1,5 @@
 #EXTM3U
-#PLAYLIST:PoolNet HLS TV — 778 live channels
+#PLAYLIST:PoolNet HLS TV — 735 live channels
 #EXTINF:-1 tvg-id="Channel10.ru" tvg-logo="https://i.imgur.com/k8JjFDw.png" group-title="Общие",10 канал
 https://live-gcore-1.rtbcdn.ru/stream/genetta-414.ntv.rutube.ru/00WXmpcsiwHuxpCCqAm9Dg/1793744468/c9e26bf5c003fd8d477200065ca1a05f/360p_stream.m3u8
 #EXTINF:-1 tvg-id="Channel10.ru" tvg-logo="https://i.imgur.com/k8JjFDw.png" group-title="Общие · резерв",10 канал · резерв 2
@@ -24,8 +24,6 @@ https://live-8knsk.cdnvideo.ru/8knsk/stream1/tracks-v1a1/mono.ts.m3u8?hls_proxy_
 https://sitv.ru/hls/s86.m3u8
 #EXTINF:-1 tvg-id="ArmeniaTVSatellite.am" tvg-logo="https://i.imgur.com/UnoI5uM.png" group-title="Общие",Armenia TV Satellite
 http://stream.mcquack.net/175/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="domashny-int" tvg-logo="https://ngrch.github.io/iptv/logos/domashniy.png" group-title="Общие",Dомашний International
-https://stream8.cinerama.uz/1436/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="JibekJoly.kz" tvg-logo="https://i.imgur.com/SqyXtgK.png" group-title="Общие",Jibek Joly
 https://stream.qazcdn.net/ex6r514/jjtv/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="ktk-kz" tvg-logo="https://i.imgur.com/BurrNTo.png" group-title="Общие",KTK
@@ -99,7 +97,7 @@ https://ingushetia.mediacdn.ru/cdn/ingushetia/tracks-v1a1/mono.ts.m3u8?filter.tr
 #EXTINF:-1 tvg-id="QazaqstanInternational.kz" tvg-logo="https://cdn.qazaqstan.tv/qazaqstan.png?w=420&h=196&format=png&resize=aspectfill&g=centeralt=" group-title="Общие",Казакстан Интернатионал
 https://qazaqstantv-stream.qazcdn.com/international/international/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="QazaqstanInternational.kz" tvg-logo="https://cdn.qazaqstan.tv/qazaqstan.png?w=420&h=196&format=png&resize=aspectfill&g=centeralt=" group-title="Общие · резерв",Казакстан Интернатионал · резерв 2
-https://stream8.cinerama.uz/1431/tracks-v1a1/mono.m3u8
+https://qazaqstantv-stream.qazcdn.com/international/international/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Channel16.ru" tvg-logo="https://i.imgur.com/7tNDKHe.png" group-title="Общие",Канал-16
 https://serv25.vintera.tv/test/k16/chunks.m3u8?nimblesessionid=280025576
 #EXTINF:-1 tvg-id="Channel16.ru" tvg-logo="https://i.imgur.com/7tNDKHe.png" group-title="Общие · резерв",Канал-16 · резерв 2
@@ -108,8 +106,6 @@ http://serv25.vintera.tv:8081/test/k16/chunks.m3u8?nimblesessionid=280025518
 http://stream.mcquack.net/39/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="kinokomedia-int" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Общие",Кинокомедия International
 http://stream.mcquack.net/265/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="kinopremiera-int" tvg-logo="https://ngrch.github.io/iptv/logos/kinopremiera.png" group-title="Общие",Кинопремьера International
-https://stream8.cinerama.uz/1207/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="Lugansk24.ua" tvg-logo="https://i.imgur.com/AihoVc0.png" group-title="Общие",Луганск 24
 https://streaming.televizor24.cc/live/29-req_offset_28000000-req_window_0-3k_v5.m3u8
 #EXTINF:-1 tvg-id="Lugansk24.ua" tvg-logo="https://i.imgur.com/AihoVc0.png" group-title="Общие · резерв",Луганск 24 · резерв 2
@@ -316,12 +312,20 @@ http://tvc-hls.cdnvideo.ru/tvc-res/smil:vd9221_2.smil/12ed865707c77a12eeecfa3177
 http://flussonic.linkintel.ru/tvc/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 8
 http://tvc-hls.cdnvideo.ru/tvc-res/smil:vd9221_2.smil/12ed865707c77a12eeecfa3177775684--tvc-res--vd9221_480p_2--tracks-v1a1--mono.m3u8?hls_proxy_host=22b5db40ced763465289cd8236e019fb
-#EXTINF:-1 tvg-id="TVCentrInternational.ru" tvg-logo="https://i.imgur.com/tsCOnBW.png" group-title="Общие",ТВ Центр International
-https://stream8.cinerama.uz/1281/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="TVCentrInternational.ru" tvg-logo="https://i.imgur.com/tsCOnBW.png" group-title="Общие · резерв",ТВ Центр International · резерв 2
-https://stream8.cinerama.uz/1281/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="TVCentrInternational.ru" tvg-logo="https://i.imgur.com/tsCOnBW.png" group-title="Общие · резерв",ТВ Центр International · резерв 3
-https://stream8.cinerama.uz/1281/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 9
+https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 10
+https://stream.smotrim.ru/hls2/russia24nl_smotrim/playlist_5.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 11
+https://stream.smotrim.ru/hls2/russia_24/playlist_3.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 12
+https://live.smotrim.ru/vgtrk/0/russia24-hd/1080p.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 13
+https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 14
+https://live.smotrim.ru/vgtrk/0/kultura-hd/track_105_319a299f/chunklist.m3u8
+#EXTINF:-1 tvg-id="" tvg-logo="https://www.moscow-telecom.ru/img/logo_channels/tvc_hd.svg" group-title="Общие · резерв",ТВ Центр · резерв 15
+http://flussonic.mkpnet.ru/tv-111deaa2142146ee/tracks-v1a1l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="TelekanalKrasnodar.ru" tvg-logo="https://i.imgur.com/YVtutzp.png" group-title="Общие",Телеканал Краснодар
 https://live-tvkrasnodar.cdnvideo.ru/tvkrasnodar/tvkrasnodar.sdp/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=111691cfa2b3e6ed7b2f3322ff53b6a8
 #EXTINF:-1 tvg-id="Telplus.ru" tvg-logo="https://i.imgur.com/1zbcZ3p.png" group-title="Общие",Телплюс
@@ -333,12 +337,10 @@ http://stream.mcquack.net/402/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="TKR.ru" tvg-logo="https://i.imgur.com/VqtPB7L.png" group-title="Общие",ТКР
 http://live.tkr.cdnvideo.ru/tkr/tkr.sdp/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=65727894416b24f5ebc095fd5879b8d1
 #EXTINF:-1 tvg-id="TNVPlanet.ru" tvg-logo="https://i.imgur.com/ijA1zDw.png" group-title="Общие",ТНВ-Планета
-https://stream8.cinerama.uz/1062/tracks-v1a1/mono.m3u8
+https://planeta.mediacdn.ru/cdn/tnvplanet/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="TNVPlanet.ru" tvg-logo="https://i.imgur.com/ijA1zDw.png" group-title="Общие · резерв",ТНВ-Планета · резерв 2
 https://planeta.mediacdn.ru/cdn/tnvplanet/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="TNVPlanet.ru" tvg-logo="https://i.imgur.com/ijA1zDw.png" group-title="Общие · резерв",ТНВ-Планета · резерв 3
-https://planeta.mediacdn.ru/cdn/tnvplanet/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="TNVPlanet.ru" tvg-logo="https://i.imgur.com/ijA1zDw.png" group-title="Общие · резерв",ТНВ-Планета · резерв 4
 http://origin5.mediacdn.ru/live/tnvplaneta/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="tcb" tvg-logo="https://i.imgur.com/6p4weSK.png" group-title="Общие",ТСВ
 https://tsv.md/stream/hls/tsv-online/0_1/index.m3u8?tkn=654171846
@@ -402,15 +404,11 @@ https://live-vgtrksmotrim.cdnvideo.ru/vgtrksmotrim/smotrim-live-03-srt.smil/trac
 https://live-vgtrksmotrim.cdnvideo.ru/vgtrksmotrim/smotrim-live-04-srt.smil/tracks-v5a1/mono.ts.m3u8?hls_proxy_host=5a1d3b5f5754e92f17cc47f3adee28f3
 #EXTINF:-1 tvg-id="360News.ru" tvg-logo="https://i.imgur.com/YXDeX8q.png" group-title="Новости · резерв",360° Новости · резерв 8
 https://live-vgtrksmotrim.cdnvideo.ru/vgtrksmotrim/smotrim-live-03-srt.smil/tracks-v5a1/mono.ts.m3u8?hls_proxy_host=5a1d3b5f5754e92f17cc47f3adee28f3
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости",BBC World News
-https://stream8.cinerama.uz/1251/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости",CGTN Русский
-https://stream8.cinerama.uz/1456/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости · резерв",CGTN Русский · резерв 2
 https://russian-liveali.cgtn.com/hls/LSvexABhNipibK5KRuUkvHZ7220802LSTeze9o8tdFXMHsb1VosgoT220802cd/playlist.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости · резерв",CGTN Русский · резерв 3
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости · резерв",CGTN Русский · резерв 2
 https://english-livetx.cgtn.com/hls/LSvexABhNipibK5KRuUkvHZ7220802LSTeze9o8tdFXMHsb1VosgoT220802_hd.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости · резерв",CGTN Русский · резерв 4
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Новости · резерв",CGTN Русский · резерв 3
 http://english-livetx.cgtn.com/hls/LSvexABhNipibK5KRuUkvHZ7220802LSTeze9o8tdFXMHsb1VosgoT220802_hd.m3u8
 #EXTINF:-1 tvg-id="9kanal-israel" tvg-logo="https://i.imgur.com/pttM3KQ.png" group-title="Новости",Channel 9 (Israel)
 https://contact.gostreaming.tv/Con-11/tracks-v1a1/mono.ts.m3u8
@@ -421,8 +419,6 @@ https://dwamdstream110.akamaized.net/hls/live/2017971/dwstream110/stream01/strea
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/8t9mdg9.png" group-title="Новости",Euronews
 https://cdn-euronews.akamaized.net/live/eds/euronews-ru/25071/euronews-ru-avc1_250000=21-mp4a_143200_rus=2.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/8t9mdg9.png" group-title="Новости · резерв",Euronews · резерв 2
-https://stream8.cinerama.uz/1024/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/8t9mdg9.png" group-title="Новости · резерв",Euronews · резерв 3
 https://stream1.cinerama.uz/1024/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="RT.ru" tvg-logo="https://dtil.tmsimg.com/assets/s142401_ld_h15_aa.png?lock=720x540" group-title="Новости",RT
 https://wisewatchoott.wiseplayout.com/RT/HD1080/HD1080.m3u8
@@ -555,20 +551,16 @@ http://46.46.143.222:1935/live/mp4:ldpr.stream_720p/chunklist_w1458322363.m3u8
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости",Мир 24
 https://hls-mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 2
-https://stream8.cinerama.uz/1219/tracks-v3a1/mono.m3u8
+http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 3
-https://stream8.cinerama.uz/1219/tracks-v1a1/mono.m3u8
+http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 4
 http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 5
-http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
+http://5.188.159.128:8070/mir_24/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 6
 http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
 #EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 7
-http://5.188.159.128:8070/mir_24/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 8
-http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=ceb47544f8d5cb4dd083338710e69ccd
-#EXTINF:-1 tvg-id="Mir24.ru" tvg-logo="https://i.imgur.com/dj9c8Yd.png" group-title="Новости · резерв",Мир 24 · резерв 9
 http://hls-mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="mordovia-24" tvg-logo="https://iptvx.one/picons/mordovia-24.png" group-title="Новости",Мордовия 24
 https://live-mordovia24.cdnvideo.ru/mordovia24/streamtr/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=2db07a74c5b7654a3f7784ccb4131e64
@@ -617,31 +609,19 @@ https://edge42.dc.beltelecom.by/ngtrk/_definst_/smil:informacionnyy.smil/chunkli
 #EXTINF:-1 tvg-id="PervyyRespublikanskiy.ru" tvg-logo="https://i.imgur.com/ti4OMBv.png" group-title="Новости",Первый Республиканский
 https://streaming.televizor24.cc/live/27-req_offset_28000000-req_window_0-3k_v5.m3u8
 #EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости",Россия-1
-https://stream8.cinerama.uz/1020/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 2
 https://live.chechensoft.ru/vainahtv/ngrp:vaynahtv_all/chunklist_w79596866_b646000.m3u8
+#EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 2
+https://stream.smotrim.ru/hls2/russia_hd/playlist_6.m3u8
 #EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 3
 https://stream.smotrim.ru/hls2/russia_hd/playlist_6.m3u8
 #EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 4
-https://stream.smotrim.ru/hls2/russia_hd/playlist_6.m3u8
-#EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 5
 https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
+#EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 5
+https://live.smotrim.ru/vgtrk/0/russia1-hd/1080p.m3u8
 #EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 6
 https://live.smotrim.ru/vgtrk/0/russia1-hd/1080p.m3u8
 #EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 7
-https://live.smotrim.ru/vgtrk/0/russia1-hd/1080p.m3u8
-#EXTINF:-1 tvg-id="rossia1" tvg-logo="https://ngrch.github.io/iptv/logos/rossiya_1.png" group-title="Новости · резерв",Россия-1 · резерв 8
 http://176.118.197.101/RossiyaHD/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Russia24.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Rossiya-24_Logo.svg/960px-Rossiya-24_Logo.svg.png" group-title="Новости",Россия-24
-https://stream8.cinerama.uz/1021/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Russia24.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Rossiya-24_Logo.svg/960px-Rossiya-24_Logo.svg.png" group-title="Новости · резерв",Россия-24 · резерв 2
-https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
-#EXTINF:-1 tvg-id="Russia24.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Rossiya-24_Logo.svg/960px-Rossiya-24_Logo.svg.png" group-title="Новости · резерв",Россия-24 · резерв 3
-https://stream.smotrim.ru/hls2/russia24nl_smotrim/playlist_5.m3u8
-#EXTINF:-1 tvg-id="Russia24.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Rossiya-24_Logo.svg/960px-Rossiya-24_Logo.svg.png" group-title="Новости · резерв",Россия-24 · резерв 4
-https://stream.smotrim.ru/hls2/russia_24/playlist_3.m3u8
-#EXTINF:-1 tvg-id="Russia24.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Rossiya-24_Logo.svg/960px-Rossiya-24_Logo.svg.png" group-title="Новости · резерв",Россия-24 · резерв 5
-https://live.smotrim.ru/vgtrk/0/russia24-hd/1080p.m3u8
 #EXTINF:-1 tvg-id="ua-tv" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/FreeDOMUAlogo.svg/960px-FreeDOMUAlogo.svg.png" group-title="Новости",Свобода
 https://dash4.antik.sk/live/test_uatv/playlist.m3u8
 #EXTINF:-1 tvg-id="ua-tv" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/FreeDOMUAlogo.svg/960px-FreeDOMUAlogo.svg.png" group-title="Новости · резерв",Свобода · резерв 2
@@ -717,17 +697,9 @@ https://stream.smotrim.ru/hls3/fasttv06/playlist_3.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",1ст_витч
 https://vsd202.okcdn.ru/hls/18613065353744.m3u8/sig/B9J5QEhnR6A/expires/1793226039909/srcIp/193.34.212.154/urls/95.163.35.74/clientType/36/srcAg/UNKNOWN/mid/16920359683856/18613065353744_high/index.m3u8
 #EXTINF:-1 tvg-id="Bollywood.ru" tvg-logo="https://i.imgur.com/YLQRnXt.png" group-title="Кино",Bollywood
-https://stream8.cinerama.uz/1444/tracks-v1a1/mono.m3u8
+http://176.118.197.101/Bollywood_HD/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Bollywood.ru" tvg-logo="https://i.imgur.com/YLQRnXt.png" group-title="Кино · резерв",Bollywood · резерв 2
-https://stream8.cinerama.uz/1444/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Bollywood.ru" tvg-logo="https://i.imgur.com/YLQRnXt.png" group-title="Кино · резерв",Bollywood · резерв 3
-https://stream8.cinerama.uz/1444/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Bollywood.ru" tvg-logo="https://i.imgur.com/YLQRnXt.png" group-title="Кино · резерв",Bollywood · резерв 4
 http://176.118.197.101/Bollywood_HD/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Bollywood.ru" tvg-logo="https://i.imgur.com/YLQRnXt.png" group-title="Кино · резерв",Bollywood · резерв 5
-http://176.118.197.101/Bollywood_HD/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Bollywood.ru" tvg-logo="https://i.imgur.com/YLQRnXt.png" group-title="Кино · резерв",Bollywood · резерв 6
-https://stream8.cinerama.uz/1444/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Disney XD
 https://vsd198.okcdn.ru/hls/18692975823571.m3u8/sig/fkJvXCPoR-Q/expires/1793226040268/srcIp/193.34.212.154/urls/95.163.35.103/clientType/36/srcAg/UNKNOWN/mid/16347434534867/18692975823571_high/index.m3u8
 #EXTINF:-1 tvg-id="Epic Drama" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/e/e1/Viasat_Epic_Drama_2026.svg" group-title="Кино",Epic Drama
@@ -738,8 +710,6 @@ https://vsd209.okcdn.ru/hls/18021149248015.m3u8/sig/0cGM0zoBmXQ/expires/17932260
 http://stream.mcquack.net/182/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/O2miSLA.png" group-title="Кино",FX Life
 http://stream.mcquack.net/129/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Hollywood
-https://stream8.cinerama.uz/1443/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Retrovision Кинопанорама
 https://lbgo.bozztv.com/07/ushba-rvisionkinopanorama/tracks-v1a1/mono.ts.m3u8?lb_backend_hint=6
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",VHS кино
@@ -749,15 +719,7 @@ http://46.53.200.153:7777/play/VIJU_TV_1000_novella/82452154.m3u8
 #EXTINF:-1 tvg-id="vijuTV1000russkoe.ru" tvg-logo="https://i.imgur.com/Meak2y4.png" group-title="Кино",viju TV1000 русское
 https://flussonic.mkpnet.ru/tv-7510472b0133abb2/tracks-v1a1a2l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="vijuTV1000russkoe.ru" tvg-logo="https://i.imgur.com/Meak2y4.png" group-title="Кино · резерв",viju TV1000 русское · резерв 2
-https://stream8.cinerama.uz/1059/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuTV1000russkoe.ru" tvg-logo="https://i.imgur.com/Meak2y4.png" group-title="Кино · резерв",viju TV1000 русское · резерв 3
-https://stream8.cinerama.uz/1059/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuTV1000russkoe.ru" tvg-logo="https://i.imgur.com/Meak2y4.png" group-title="Кино · резерв",viju TV1000 русское · резерв 4
-https://stream8.cinerama.uz/1058/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuTV1000russkoe.ru" tvg-logo="https://i.imgur.com/Meak2y4.png" group-title="Кино · резерв",viju TV1000 русское · резерв 5
 http://46.53.200.153:7777/play/a01g/87768851.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",viju TV1000 Русское кино
-https://stream8.cinerama.uz/1059/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",АPRICUS
 https://vsd163.okcdn.ru/hls/19607323151082.m3u8/sig/hkVKD7iC1v8/expires/1793226040856/srcIp/193.34.212.154/urls/185.180.203.65/clientType/36/srcAg/UNKNOWN/mid/17250536146922/19607323151082_low/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/mAcAAQF.png" group-title="Кино",Аисман
@@ -823,44 +785,32 @@ https://vsd258.okcdn.ru/hls/20088266361433.m3u8/sig/ApAOYLSfIUM/expires/17932260
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",ВИДЕОКАССЕТА
 https://vsd233.okcdn.ru/hls/20721116580421.m3u8/sig/D3vm2fgFVCU/expires/1793226042034/srcIp/193.34.212.154/urls/176.112.172.106/clientType/36/srcAg/UNKNOWN/mid/17328071132997/20721116580421_high/index.m3u8
 #EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино",Вижу TV1000
-https://stream8.cinerama.uz/1058/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/110/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино · резерв",Вижу TV1000 · резерв 2
-https://stream8.cinerama.uz/1058/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/110/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино · резерв",Вижу TV1000 · резерв 3
-http://stream.mcquack.net/110/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино · резерв",Вижу TV1000 · резерв 4
-http://stream.mcquack.net/110/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино · резерв",Вижу TV1000 · резерв 5
 http://217.11.177.56/streams/media/tv1000_720x576/index.m3u8
-#EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино · резерв",Вижу TV1000 · резерв 6
+#EXTINF:-1 tvg-id="vijuTV1000.ru" tvg-logo="https://i.imgur.com/ZMsyjSr.png" group-title="Кино · резерв",Вижу TV1000 · резерв 4
 http://46.53.200.153:7777/play/TV_1000/27192724.m3u8
 #EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино",Вижу TV1000 Action
 https://flussonic.mkpnet.ru/tv-0991ea2ac6292de8/tracks-v1a1a2l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино · резерв",Вижу TV1000 Action · резерв 2
-https://stream8.cinerama.uz/1225/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/100/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино · резерв",Вижу TV1000 Action · резерв 3
-https://stream8.cinerama.uz/1225/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/100/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино · резерв",Вижу TV1000 Action · резерв 4
-https://stream8.cinerama.uz/1225/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино · резерв",Вижу TV1000 Action · резерв 5
-http://stream.mcquack.net/100/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино · резерв",Вижу TV1000 Action · резерв 6
-http://stream.mcquack.net/100/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuTV1000action.ru" tvg-logo="https://i.imgur.com/TMmyuzh.png" group-title="Кино · резерв",Вижу TV1000 Action · резерв 7
 http://46.53.200.153:7777/play/a01h/70174515.m3u8
 #EXTINF:-1 tvg-id="viju-tv1000-novella" tvg-logo="https://www.cableman.ru/sites/default/files/viju_TV1000_%D0%BD%D0%BE%D0%B2%D0%B5%D0%BB%D0%BB%D0%B0_color_rgb_02%20%281%29.png" group-title="Кино",Вижу TV1000 Новелла
 http://46.53.200.153:7777/play/VIJU_TV_1000_novella/63265901.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино",Вийу+ Комеди
 https://flussonic.mkpnet.ru/tv-c385ec3bab3a3605/tracks-v1a1l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 2
-https://stream8.cinerama.uz/1061/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/201/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 3
-http://stream.mcquack.net/201/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 4
 http://flussonic.mkpnet.ru/tv-c385ec3bab3a3605/tracks-v1a1l1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 5
+#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 4
 http://stream.mcquack.net/201/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 6
+#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/YoNOFu7.png" group-title="Кино · резерв",Вийу+ Комеди · резерв 5
 http://46.53.200.153:7777/play/Viju_Comedy_HD/72891272.m3u8
 #EXTINF:-1 tvg-id="vijuPlusMegahit.ru" tvg-logo="https://i.imgur.com/oIQNddV.png" group-title="Кино",вийу+ Мегахит
 https://flussonic.mkpnet.ru/tv-3d1cedf99303d057/tracks-v1a1l1/mono.ts.m3u8
@@ -903,20 +853,14 @@ https://vsd113.okcdn.ru/hls/18074785810961.m3u8/sig/fngHEcZSrQ8/expires/17932260
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",дй Зоур
 https://vsd231.okcdn.ru/hls/25079244982876.m3u8/sig/qp379pPlq8Q/expires/1793226042945/srcIp/193.34.212.154/urls/185.226.55.118/clientType/36/srcAg/UNKNOWN/mid/21987214772060/25079244982876_high/index.m3u8
 #EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино",Дом кино
-https://stream8.cinerama.uz/1054/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 2
 https://streaming.thestream.cyou/live/44-req_offset_28000000-req_window_0-3k_v5.m3u8
-#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 3
+#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 2
 https://streaming.televizor24.cc/live/44-req_offset_28000000-req_window_0-3k_v5.m3u8
+#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 3
+http://stream.mcquack.net/236/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 4
-https://stream8.cinerama.uz/1054/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/236/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 5
-https://stream8.cinerama.uz/1054/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 6
-http://stream.mcquack.net/236/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 7
-http://stream.mcquack.net/236/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Domkino.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png/960px-%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0_%D0%94%D0%BE%D0%BC_%D0%9A%D0%B8%D0%BD%D0%BE.png" group-title="Кино · резерв",Дом кино · резерв 8
 http://88.212.15.50/live/test_dom_kino/playlist.m3u8
 #EXTINF:-1 tvg-id="DomkinoPremium.ru" tvg-logo="https://i.imgur.com/rJpQtvK.png" group-title="Кино",Дом кино Премиум
 http://stream.mcquack.net/108/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -927,25 +871,17 @@ http://stream.mcquack.net/108/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="DomkinoPremium.ru" tvg-logo="https://i.imgur.com/rJpQtvK.png" group-title="Кино · резерв",Дом кино Премиум · резерв 4
 http://88.212.15.50/live/test_dom_kino_premium/playlist.m3u8
 #EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино",Дорама
-https://stream8.cinerama.uz/1273/tracks-v1a1/mono.m3u8
+https://fs.uplink.kz/dorama/mono.m3u8?token=onlinetv
 #EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 2
 https://fs.uplink.kz/dorama/mono.m3u8?token=onlinetv
 #EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 3
-https://stream8.cinerama.uz/1273/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/412/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 4
-https://stream8.cinerama.uz/1273/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/412/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 5
-https://fs.uplink.kz/dorama/mono.m3u8?token=onlinetv
+http://109.248.236.51/dorama/tracks-v1a1a2/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 6
 http://stream.mcquack.net/412/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 7
-http://stream.mcquack.net/412/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 8
-http://109.248.236.51/dorama/tracks-v1a1a2/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Dorama.ru" tvg-logo="https://i.imgur.com/ZH5LuXU.png" group-title="Кино · резерв",Дорама · резерв 9
-http://stream.mcquack.net/412/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Дунё бо'илаб
-https://stream8.cinerama.uz/1006/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/vTRHAvD.png" group-title="Кино",Душевное
 http://stream.mcquack.net/213/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/vTRHAvD.png" group-title="Кино · резерв",Душевное · резерв 2
@@ -973,32 +909,24 @@ http://176.118.197.101/Illuzion+/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="IllusionPlus.ru" tvg-logo="https://i.imgur.com/9GvuHQ5.png" group-title="Кино · резерв",Иллюзион+ · резерв 3
 http://176.118.197.101/Illuzion+/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино",Индийское кино
-https://stream8.cinerama.uz/1060/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 2
-https://stream8.cinerama.uz/1060/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 3
 http://stream.mcquack.net/104/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
+#EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 2
+http://188.113.190.12/329/tracks-v1a1/mono.ts.m3u8
+#EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 3
+http://188.113.190.12/329/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 4
-http://188.113.190.12/329/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 5
-http://188.113.190.12/329/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="IndiyskoyeKino.ru" tvg-logo="https://i.imgur.com/LL8GyCh.png" group-title="Кино · резерв",Индийское кино · резерв 6
 http://188.113.190.12/329/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",ЙТКС
 https://vsd249.okcdn.ru/hls/19853514508919.m3u8/sig/gLfWfcYa8dw/expires/1793226044510/srcIp/193.34.212.154/urls/178.237.29.15/clientType/36/srcAg/UNKNOWN/mid/16922538493815/19853514508919_high/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Кикман
 https://vsd208.okcdn.ru/hls/19459058830041.m3u8/sig/GWS_FL_qQvk/expires/1793226044712/srcIp/193.34.212.154/urls/176.112.172.70/clientType/36/srcAg/UNKNOWN/mid/16625058334681/19459058830041_high/index.m3u8
 #EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино",Кино
-https://stream8.cinerama.uz/1227/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 2
-https://stream8.cinerama.uz/1227/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 3
 http://176.118.197.101/Cinema/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 4
+#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 2
 http://194.152.35.17/cinema/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 5
+#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 3
 http://flussonic.linkintel.ru/cinema/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 6
+#EXTINF:-1 tvg-id="Cinema.ru" tvg-logo="https://i.imgur.com/b5e9qUA.png" group-title="Кино · резерв",Кино · резерв 4
 http://flussonic.linkintel.ru/cinema/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Kino1.ru" tvg-logo="https://i.imgur.com/zsCPLs4.png" group-title="Кино",Кино 1
 http://stream.mcquack.net/395/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -1077,17 +1005,17 @@ https://lbgo.bozztv.com/07/ushba-rfilrms-i/tracks-v1a1/mono.ts.m3u8?lb_backend_h
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/0qGCS1S.png" group-title="Кино",КиноКлассика
 https://cityeden.catcast.tv/content/34185/index.m3u8
 #EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино",Кинокомедия
-https://stream8.cinerama.uz/1232/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 2
 https://cityeden.catcast.tv/content/41331/index.m3u8
-#EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 3
+#EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 2
 http://176.118.197.101/Kinokomediya/tracks-v1a1/mono.ts.m3u8
+#EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 3
+http://stream.mcquack.net/265/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 4
 http://stream.mcquack.net/265/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 5
 http://stream.mcquack.net/265/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="kinokomedia" tvg-logo="https://ngrch.github.io/iptv/logos/kinokomedia.png" group-title="Кино · резерв",Кинокомедия · резерв 6
-http://stream.mcquack.net/265/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
+https://cityeden.catcast.tv/content/41331/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Кинолампа
 https://vsd210.okcdn.ru/hls/18447400503823.m3u8/sig/YhwKWWptGmA/expires/1793226046669/srcIp/193.34.212.154/urls/95.163.35.99/clientType/36/srcAg/UNKNOWN/mid/16140584765199/18447400503823_high/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Киноливинг
@@ -1099,12 +1027,10 @@ https://stitch.teletarget.ru/vintera/kinomenu/ray2/1793139646791052d9bb37c1a4cae
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино · резерв",КиноМеню · резерв 2
 http://stitch.teletarget.ru/vintera/kinomenu/ray2/179313964831861c1c9bd64cc64b323bb4b9cdf3ddb8313abecf326f825dd032/lvl1.m3u8
 #EXTINF:-1 tvg-id="Kinomix.ru" tvg-logo="https://i.imgur.com/D4q2XUT.png" group-title="Кино",Киномикс
-https://stream8.cinerama.uz/1233/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/133/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinomix.ru" tvg-logo="https://i.imgur.com/D4q2XUT.png" group-title="Кино · резерв",Киномикс · резерв 2
 http://stream.mcquack.net/133/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinomix.ru" tvg-logo="https://i.imgur.com/D4q2XUT.png" group-title="Кино · резерв",Киномикс · резерв 3
-http://stream.mcquack.net/133/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Kinomix.ru" tvg-logo="https://i.imgur.com/D4q2XUT.png" group-title="Кино · резерв",Киномикс · резерв 4
 http://176.118.197.101/Kinomix/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",КиноМикс 1
 https://vsd281.okcdn.ru/hls/20667769162241.m3u8/sig/eniTyguT2-8/expires/1793226046767/srcIp/193.34.212.154/urls/178.237.29.195/clientType/36/srcAg/UNKNOWN/mid/17188156753665/20667769162241_high/index.m3u8
@@ -1113,80 +1039,60 @@ https://vsd243.okcdn.ru/hls/19892266666681.m3u8/sig/sNJ9MPGFYPM/expires/17932260
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/s1Pid0K.png" group-title="Кино",КиноМистика
 https://cityeden.catcast.tv/content/40783/index.m3u8
 #EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино",Кинопоказ
-https://stream8.cinerama.uz/1057/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/64/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино · резерв",Кинопоказ · резерв 2
-https://stream8.cinerama.uz/1057/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/64/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино · резерв",Кинопоказ · резерв 3
-http://stream.mcquack.net/64/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино · резерв",Кинопоказ · резерв 4
-http://stream.mcquack.net/64/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино · резерв",Кинопоказ · резерв 5
 http://176.118.197.101/Kinopokaz/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино · резерв",Кинопоказ · резерв 6
+#EXTINF:-1 tvg-id="Kinopokaz.ru" tvg-logo="https://i.imgur.com/nNjMyAq.png" group-title="Кино · резерв",Кинопоказ · резерв 4
 http://176.118.197.101/Kinopokaz/mono.m3u8
 #EXTINF:-1 tvg-id="Kinopremyera.ru" tvg-logo="https://i.imgur.com/s0UYT8T.png" group-title="Кино",Кинопремьера
-https://stream8.cinerama.uz/1207/tracks-v1a1/mono.m3u8
+http://5.188.159.128:8070/KINOPREMIERA/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Kinopremyera.ru" tvg-logo="https://i.imgur.com/s0UYT8T.png" group-title="Кино · резерв",Кинопремьера · резерв 2
 http://5.188.159.128:8070/KINOPREMIERA/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Kinopremyera.ru" tvg-logo="https://i.imgur.com/s0UYT8T.png" group-title="Кино · резерв",Кинопремьера · резерв 3
 http://5.188.159.128:8070/KINOPREMIERA/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Kinopremyera.ru" tvg-logo="https://i.imgur.com/s0UYT8T.png" group-title="Кино · резерв",Кинопремьера · резерв 4
-http://5.188.159.128:8070/KINOPREMIERA/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Kinopremyera.ru" tvg-logo="https://i.imgur.com/s0UYT8T.png" group-title="Кино · резерв",Кинопремьера · резерв 5
 http://185.121.1.163:8083/Kinopremyera/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино",Киносвидание
-https://stream8.cinerama.uz/1203/tracks-v1a1/mono.m3u8
+http://5.188.159.128:8070/kinosvidanie/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 2
-https://stream8.cinerama.uz/1203/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/171/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 3
-http://5.188.159.128:8070/kinosvidanie/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/171/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 4
-http://stream.mcquack.net/171/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 5
-http://stream.mcquack.net/171/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 6
 http://5.188.159.128:8070/kinosvidanie/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 7
+#EXTINF:-1 tvg-id="Kinosvidanie.ru" tvg-logo="https://i.imgur.com/ZRaWqxj.png" group-title="Кино · резерв",Киносвидание · резерв 5
 http://5.188.159.128:8070/kinosvidanie/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",КиноСезон
 https://stitch.teletarget.ru/vintera/movieseason/ray2/179313964834375342e14b4ba2343cca646555dac4c10332b717599c96575a3b/lvl1.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино · резерв",КиноСезон · резерв 2
 http://stitch.teletarget.ru/vintera/movieseason/ray2/17931396499037aa6fcec76123ceb38c38b46ba7e33686c2043a576fb248efe4/lvl1.m3u8
 #EXTINF:-1 tvg-id="Kinosemja.ru" tvg-logo="https://i.imgur.com/4BF5VeK.png" group-title="Кино",Киносемья
-https://stream8.cinerama.uz/1234/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/170/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinosemja.ru" tvg-logo="https://i.imgur.com/4BF5VeK.png" group-title="Кино · резерв",Киносемья · резерв 2
 http://stream.mcquack.net/170/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinosemja.ru" tvg-logo="https://i.imgur.com/4BF5VeK.png" group-title="Кино · резерв",Киносемья · резерв 3
 http://stream.mcquack.net/170/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Kinosemja.ru" tvg-logo="https://i.imgur.com/4BF5VeK.png" group-title="Кино · резерв",Киносемья · резерв 4
-http://stream.mcquack.net/170/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Kinosemja.ru" tvg-logo="https://i.imgur.com/4BF5VeK.png" group-title="Кино · резерв",Киносемья · резерв 5
 http://185.121.1.163:8083/Kinosemya/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино",Киносерия
-https://stream8.cinerama.uz/1235/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 2
 https://fs.uplink.kz/kinoseria/mono.m3u8?token=onlinetv
-#EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 3
+#EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 2
 http://176.118.197.101/Kinoseria/tracks-v1a1/mono.ts.m3u8
+#EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 3
+http://176.118.197.101/MirSeriala/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 4
-https://stream8.cinerama.uz/1235/tracks-v1a1/mono.m3u8
+http://176.118.197.101/MirSeriala/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 5
-http://176.118.197.101/MirSeriala/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 6
-http://176.118.197.101/MirSeriala/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Kinoseriya.ru" tvg-logo="https://i.imgur.com/iao7zLZ.png" group-title="Кино · резерв",Киносерия · резерв 7
 http://176.118.197.101/MirSeriala/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/I64FeIO.png" group-title="Кино",КиноФантастика
 https://cityeden.catcast.tv/content/45268/index.m3u8
 #EXTINF:-1 tvg-id="KinoHit.ru" tvg-logo="https://i.imgur.com/Ge8vkQM.png" group-title="Кино",Кинохит
-https://stream8.cinerama.uz/1055/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/126/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="KinoHit.ru" tvg-logo="https://i.imgur.com/Ge8vkQM.png" group-title="Кино · резерв",Кинохит · резерв 2
-https://stream8.cinerama.uz/1055/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/126/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="KinoHit.ru" tvg-logo="https://i.imgur.com/Ge8vkQM.png" group-title="Кино · резерв",Кинохит · резерв 3
-http://stream.mcquack.net/126/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="KinoHit.ru" tvg-logo="https://i.imgur.com/Ge8vkQM.png" group-title="Кино · резерв",Кинохит · резерв 4
-http://stream.mcquack.net/126/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="KinoHit.ru" tvg-logo="https://i.imgur.com/Ge8vkQM.png" group-title="Кино · резерв",Кинохит · резерв 5
 http://stream.mcquack.net/126/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/uuzuvD0.png" group-title="Кино",КиноЭкшен
 https://cityeden.catcast.tv/content/41333/index.m3u8
@@ -1243,12 +1149,10 @@ http://stream.mcquack.net/369/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="MosfilmGoldCollection.ru" tvg-logo="https://i.imgur.com/95Y8jb6.png" group-title="Кино · резерв",Мосфильм Золотая коллекция · резерв 3
 http://185.121.1.163:8083/Mosfilm/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Muzhskoekino.ru" tvg-logo="https://i.imgur.com/8RN3tQC.png" group-title="Кино",Мужское кино
-https://stream8.cinerama.uz/1237/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/107/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Muzhskoekino.ru" tvg-logo="https://i.imgur.com/8RN3tQC.png" group-title="Кино · резерв",Мужское кино · резерв 2
 http://stream.mcquack.net/107/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Muzhskoekino.ru" tvg-logo="https://i.imgur.com/8RN3tQC.png" group-title="Кино · резерв",Мужское кино · резерв 3
-http://stream.mcquack.net/107/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Muzhskoekino.ru" tvg-logo="https://i.imgur.com/8RN3tQC.png" group-title="Кино · резерв",Мужское кино · резерв 4
 http://stream.mcquack.net/107/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Мультфильмы VHS
 https://vsd250.okcdn.ru/hls/20186254871126.m3u8/sig/Q1mbgZ7ze58/expires/1793226049024/srcIp/193.34.212.154/urls/95.163.35.53/clientType/36/srcAg/UNKNOWN/mid/17379946547030/20186254871126_high/index.m3u8
@@ -1274,12 +1178,6 @@ http://stream.mcquack.net/362/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 http://stream.mcquack.net/362/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Nashemuzhskoe.ru" tvg-logo="https://i.imgur.com/QRWKpmb.png" group-title="Кино · резерв",Наше мужское · резерв 3
 http://stream.mcquack.net/362/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="NasheNovoeKino.ru" tvg-logo="https://i.imgur.com/IOxIsPj.png" group-title="Кино",Наше новое кино
-https://stream8.cinerama.uz/1051/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="NasheNovoeKino.ru" tvg-logo="https://i.imgur.com/IOxIsPj.png" group-title="Кино · резерв",Наше новое кино · резерв 2
-https://stream8.cinerama.uz/1051/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="NasheNovoeKino.ru" tvg-logo="https://i.imgur.com/IOxIsPj.png" group-title="Кино · резерв",Наше новое кино · резерв 3
-https://stream8.cinerama.uz/1051/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",НЕЗАБУДКА
 https://vsd496.okcdn.ru/hls/18640830859984.m3u8/sig/lG2c1EEyw88/expires/1793226050389/srcIp/193.34.212.154/urls/176.112.172.117/clientType/36/srcAg/UNKNOWN/mid/16300299995088/18640830859984_high/index.m3u8
 #EXTINF:-1 tvg-id="Nostalgia.ru" tvg-logo="https://i.imgur.com/YBdBc0J.png" group-title="Кино",Ностальгия
@@ -1349,18 +1247,14 @@ https://cdn-dvr.ntv.ru/Pes/tracks-v2a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://cdn2-static.ntv.ru/home/promo/24740/pes_llive.jpg" group-title="Кино · резерв",Пёс · резерв 3
 https://cdn-dvr.ntv.ru/Pes/tracks-v1a1/rewind-240.ts.m3u8
 #EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино",Ретро
-https://stream8.cinerama.uz/1047/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/191/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 2
-https://stream8.cinerama.uz/1047/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/191/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 3
 http://stream.mcquack.net/191/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 4
-http://stream.mcquack.net/191/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 5
-http://stream.mcquack.net/191/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 6
 http://176.118.197.101/Retro/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 7
+#EXTINF:-1 tvg-id="Retro.ru" tvg-logo="https://i.imgur.com/p21co1w.png" group-title="Кино · резерв",Ретро · резерв 5
 http://176.118.197.101/Retro/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Ретровижн
 https://lbgo.bozztv.com/07/ushba-rvision/tracks-v1a1/mono.ts.m3u8?lb_backend_hint=6
@@ -1375,16 +1269,12 @@ https://lbgo.bozztv.com/07/ushba-rvisionmotor/tracks-v1a1/mono.ts.m3u8?lb_backen
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/wR0pvRc.png" group-title="Кино",Рецепты Гурмана
 https://cityeden.catcast.tv/content/47516/index.m3u8
 #EXTINF:-1 tvg-id="RodnoeKino.ru" tvg-logo="https://i.imgur.com/H70LxoZ.png" group-title="Кино",Родное Кино
-https://stream8.cinerama.uz/1052/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/242/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="RodnoeKino.ru" tvg-logo="https://i.imgur.com/H70LxoZ.png" group-title="Кино · резерв",Родное Кино · резерв 2
-https://stream8.cinerama.uz/1052/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/242/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="RodnoeKino.ru" tvg-logo="https://i.imgur.com/H70LxoZ.png" group-title="Кино · резерв",Родное Кино · резерв 3
 http://stream.mcquack.net/242/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="RodnoeKino.ru" tvg-logo="https://i.imgur.com/H70LxoZ.png" group-title="Кино · резерв",Родное Кино · резерв 4
-http://stream.mcquack.net/242/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="RodnoeKino.ru" tvg-logo="https://i.imgur.com/H70LxoZ.png" group-title="Кино · резерв",Родное Кино · резерв 5
-http://stream.mcquack.net/242/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="RodnoeKino.ru" tvg-logo="https://i.imgur.com/H70LxoZ.png" group-title="Кино · резерв",Родное Кино · резерв 6
 http://176.118.197.101/RodnoeKino/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="RusskiyBestseller.ru" tvg-logo="https://i.imgur.com/w0ZE9QJ.png" group-title="Кино",Русский бестселлер
 https://flussonic.mkpnet.ru/tv-ccf8c891702508a7/tracks-v1a1l1/mono.ts.m3u8
@@ -1420,8 +1310,6 @@ https://vsd229.okcdn.ru/hls/18472743275051.m3u8/sig/dGTUKVTdx_k/expires/17932260
 https://vsd259.okcdn.ru/hls/20649899133500.m3u8/sig/3t-D3Y9Dqmk/expires/1793226052590/srcIp/193.34.212.154/urls/178.237.29.197/clientType/36/srcAg/UNKNOWN/mid/17994640607036/20649899133500_high/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Кино",Сериалтв
 https://vsd496.okcdn.ru/hls/19593072085737.m3u8/sig/I6lqW0rpW8g/expires/1793226052595/srcIp/193.34.212.154/urls/95.163.35.73/clientType/36/srcAg/UNKNOWN/mid/16967404636137/19593072085737_high/index.m3u8
-#EXTINF:-1 tvg-id="CityEdenKinoKomediya.ru" tvg-logo="https://i.imgur.com/Aga2XVA.png" group-title="Кино",Сити Эдем КиноКомедия
-https://cityeden.catcast.tv/content/41331/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://cdn2-static.ntv.ru/home/promo/24740/skoraya_pom_llive.jpg" group-title="Кино",Скорая помощь
 https://cdn-dvr.ntv.ru/Skoraja_pomosh/tracks-v2a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://cdn2-static.ntv.ru/home/promo/24740/skoraya_pom_llive.jpg" group-title="Кино · резерв",Скорая помощь · резерв 2
@@ -1567,22 +1455,14 @@ https://v4.proofix.ru/8tv-russia/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные",Fashion
 https://lbgo.bozztv.com/07/ushba93/tracks-v1a1/mono.ts.m3u8?lb_backend_hint=6
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Fashion · резерв 2
-https://stream8.cinerama.uz/1053/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Fashion · резерв 3
 https://fashionlive.mediacdn.ru/cdn/fashiontv/tracks-v5a1/mono.ts.m3u8?token=cdn
 #EXTINF:-1 tvg-id="Fashion TV" tvg-logo="" group-title="Развлекательные",Fashion TV
-https://stream8.cinerama.uz/1053/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Fashion TV" tvg-logo="" group-title="Развлекательные · резерв",Fashion TV · резерв 2
 https://lbgo.bozztv.com/07/ushba93/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Fashion TV" tvg-logo="" group-title="Развлекательные · резерв",Fashion TV · резерв 3
+#EXTINF:-1 tvg-id="Fashion TV" tvg-logo="" group-title="Развлекательные · резерв",Fashion TV · резерв 2
 http://fashionlive.mediacdn.ru/cdn/fashiontv/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные",Авто 24
 https://flussonic.mkpnet.ru/tv-a5fa84789fc4add5/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Авто 24 · резерв 2
-https://stream8.cinerama.uz/1430/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Авто 24 · резерв 3
-https://stream8.cinerama.uz/1430/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Авто 24 · резерв 4
 http://stream.mcquack.net/78/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="belarus2" tvg-logo="https://i.imgur.com/BpEHpPS.png" group-title="Развлекательные",Беларусь 2
 https://edge42.dc.beltelecom.by/ngtrk/_definst_/smil:belarus2/chunklist_b5160000_sleng.m3u8
@@ -1595,14 +1475,10 @@ https://edge50.dc.beltelecom.by/ngtrk/smil:belarus2.smil/chunklist_b5160000_slen
 #EXTINF:-1 tvg-id="belarus2" tvg-logo="https://i.imgur.com/BpEHpPS.png" group-title="Развлекательные · резерв",Беларусь 2 · резерв 5
 https://edge42.dc.beltelecom.by/ngtrk/_definst_/smil:belarus2.smil/chunklist_b5160000_sleng.m3u8
 #EXTINF:-1 tvg-id="VoprosyiOtvety.ru" tvg-logo="https://i.imgur.com/yjETxk1.png" group-title="Развлекательные",Вопросы и ответы
-https://stream8.cinerama.uz/1429/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/76/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="VoprosyiOtvety.ru" tvg-logo="https://i.imgur.com/yjETxk1.png" group-title="Развлекательные · резерв",Вопросы и ответы · резерв 2
-https://stream8.cinerama.uz/1429/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/76/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="VoprosyiOtvety.ru" tvg-logo="https://i.imgur.com/yjETxk1.png" group-title="Развлекательные · резерв",Вопросы и ответы · резерв 3
-http://stream.mcquack.net/76/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="VoprosyiOtvety.ru" tvg-logo="https://i.imgur.com/yjETxk1.png" group-title="Развлекательные · резерв",Вопросы и ответы · резерв 4
-http://stream.mcquack.net/76/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="VoprosyiOtvety.ru" tvg-logo="https://i.imgur.com/yjETxk1.png" group-title="Развлекательные · резерв",Вопросы и ответы · резерв 5
 http://stream.mcquack.net/76/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные",Ворлд Фашион
 https://cdn.wfc.tv/cdn/stream-rus-720p.m3u8
@@ -1631,8 +1507,10 @@ http://stream.mcquack.net/205/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="InvestigationDiscovery.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/InvestigationDiscoveryLogo2020.svg/960px-InvestigationDiscoveryLogo2020.svg.png" group-title="Развлекательные · резерв",Инвестигатион Дисковери · резерв 2
 http://stream.mcquack.net/205/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные",Инсайт
-https://stream8.cinerama.uz/1416/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/361/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Инсайт · резерв 2
+http://stream.mcquack.net/361/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные · резерв",Инсайт · резерв 3
 http://stream.mcquack.net/361/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Istoki.ru" tvg-logo="https://istoki.tv/local/templates/istoki_new/img/logo.png" group-title="Развлекательные",Истоки
 https://istoki.tv/live/stream1/chunklist_w31010869.m3u8
@@ -1728,26 +1606,14 @@ http://flussonic.linkintel.ru/Pyatnica/tracks-v1a1/mono.ts.m3u8
 http://stream.mcquack.net/463/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Развлекательные",РАЗ 2
 http://stream.mcquack.net/464/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Россия Культура" tvg-logo="" group-title="Развлекательные",Россия Культура
-https://stream8.cinerama.uz/1048/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Россия Культура" tvg-logo="" group-title="Развлекательные · резерв",Россия Культура · резерв 2
-https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
-#EXTINF:-1 tvg-id="Россия Культура" tvg-logo="" group-title="Развлекательные · резерв",Россия Культура · резерв 3
-https://live.smotrim.ru/vgtrk/0/kultura-hd/track_105_319a299f/chunklist.m3u8
-#EXTINF:-1 tvg-id="Россия Культура" tvg-logo="" group-title="Развлекательные · резерв",Россия Культура · резерв 4
-http://flussonic.mkpnet.ru/tv-111deaa2142146ee/tracks-v1a1l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://iptvx.one/picons/rutube-tv.png" group-title="Развлекательные",Рутубе
 https://live-gcore-1.rtbcdn.ru/stream/genetta-418.ntv.rutube.ru/xC7-p1gkbxcYia_UWNLaMQ/1793744502/9ae8e8a6dc58bdad66190475f9872ecd/360p_stream.m3u8
 #EXTINF:-1 tvg-id="Sarafan.ru" tvg-logo="https://i.imgur.com/u4q1rMT.png" group-title="Развлекательные",Сарафан
-https://stream8.cinerama.uz/1249/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/81/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Sarafan.ru" tvg-logo="https://i.imgur.com/u4q1rMT.png" group-title="Развлекательные · резерв",Сарафан · резерв 2
 http://stream.mcquack.net/81/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Sarafan.ru" tvg-logo="https://i.imgur.com/u4q1rMT.png" group-title="Развлекательные · резерв",Сарафан · резерв 3
 http://stream.mcquack.net/81/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Sarafan.ru" tvg-logo="https://i.imgur.com/u4q1rMT.png" group-title="Развлекательные · резерв",Сарафан · резерв 4
-http://stream.mcquack.net/81/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Sarafan.ru" tvg-logo="https://i.imgur.com/u4q1rMT.png" group-title="Развлекательные · резерв",Сарафан · резерв 5
-https://stream8.cinerama.uz/1249/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Smotrim100Prazdnik.ru" tvg-logo="https://i.imgur.com/NEcqFse.png" group-title="Развлекательные",Смотрим 100% Праздник
 https://stream.smotrim.ru/hls/fasttv04/playlist_3.m3u8
 #EXTINF:-1 tvg-id="Smotrim100Prazdnik.ru" tvg-logo="https://i.imgur.com/NEcqFse.png" group-title="Развлекательные · резерв",Смотрим 100% Праздник · резерв 2
@@ -1871,32 +1737,22 @@ http://178.124.179.122:8080/BT5/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="BoksTV.ru" tvg-logo="https://i.imgur.com/R1UjyfX.png" group-title="Спорт",Бокс ТВ
 http://stream.mcquack.net/154/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт",вийу+ Спорт
-https://stream8.cinerama.uz/1229/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/333/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 2
-https://stream8.cinerama.uz/1229/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/333/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 3
-http://stream.mcquack.net/333/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 4
-http://stream.mcquack.net/333/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 5
 http://46.53.200.153:7777/play/a01l/65676889.m3u8
-#EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 6
+#EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 4
 http://46.53.200.153:7777/play/a01l/63714926.m3u8
-#EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 7
+#EXTINF:-1 tvg-id="vijuPlusSport.ru" tvg-logo="https://i.imgur.com/fXESG0l.png" group-title="Спорт · резерв",вийу+ Спорт · резерв 5
 http://178.134.1.158:8081/viasatsport/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Волейбол
 https://river-3-399.rtbcdn.ru/stream/genetta-316.m9.rutube.ru/XDagvSTcLh0LFz_hO59FsA/1793744522/cc1b56aa4955a144f324ad58998513bb/360p_stream.m3u8
 #EXTINF:-1 tvg-id="Extreme" tvg-logo="" group-title="Спорт",Екстреме
 https://flussonic.mkpnet.ru/tv-1a9441fd32d63873/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Еуроспорт 1
-https://stream8.cinerama.uz/1439/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт · резерв",Еуроспорт 1 · резерв 2
 http://178.134.1.158:8081/eurosport/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Еуроспорт 2
-https://stream8.cinerama.uz/1452/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт · резерв",Еуроспорт 2 · резерв 2
-https://stream8.cinerama.uz/1452/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт · резерв",Еуроспорт 2 · резерв 3
 https://stream3.cinerama.uz/1452/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Конный мир
 https://hnc-free-viewlift.amagi.tv/playlist288_p.m3u8
@@ -1904,8 +1760,6 @@ https://hnc-free-viewlift.amagi.tv/playlist288_p.m3u8
 http://stream.mcquack.net/166/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="KHL.ru" tvg-logo="https://i.imgur.com/RgdHdOV.png" group-title="Спорт · резерв",КХЛ · резерв 2
 http://176.118.197.101/KHL/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",КХЛ KHL
-https://stream8.cinerama.uz/1422/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/pwxT0ON.png" group-title="Спорт",КХЛ KHL Prime
 http://stream.mcquack.net/178/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="MatchArena.ru" tvg-logo="https://i.imgur.com/udTzwzu.png" group-title="Спорт",Матч! Арена
@@ -1924,8 +1778,6 @@ https://flussonic.mkpnet.ru/tv-1bfac9df3d938c1f/tracks-v1a1l1/mono.ts.m3u8
 http://stream.mcquack.net/188/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="MatchIgra.ru" tvg-logo="https://i.imgur.com/5XWpF19.png" group-title="Спорт · резерв",Матч! Игра · резерв 3
 http://stream.mcquack.net/188/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Матч! Планета
-https://stream8.cinerama.uz/1243/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Матч! Премьер
 https://flussonic.mkpnet.ru/tv-ee3651e1e7ce5cbf/tracks-v1a1l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт · резерв",Матч! Премьер · резерв 2
@@ -1950,8 +1802,6 @@ http://176.100.46.245:90/matchfootball3/tracks-v1a1/mono.ts.m3u8
 http://185.57.68.33/110/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/QhdxNsB.png" group-title="Спорт",ММА
 https://streams2.sofast.tv/vglive-sk-462904/tracks-v4a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/QhdxNsB.png" group-title="Спорт · резерв",ММА · резерв 2
-https://stream8.cinerama.uz/1226/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Мото Драйв
 https://stitch.teletarget.ru/vintera/motodrive/ray2/1793139722410c926e9545c24fc6d4ec25d22823e2be5a94a7e531c37c40d42f/lvl1.m3u8
 #EXTINF:-1 tvg-id="RussianExtremeUltra.ru" tvg-logo="https://i.imgur.com/Dk8VbAc.png" group-title="Спорт",Русский Екстреме Ултра
@@ -1968,10 +1818,6 @@ http://live-3.otcnet.ru/sportivny/tracks-v3a1/mono.ts.m3u8
 http://stream.mcquack.net/461/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Спорт ТВ" tvg-logo="https://i.imgur.com/ujS6mMo.png" group-title="Спорт",Спорт ТВ
 https://live-3.otcnet.ru/sportivny/tracks-v3a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Спорт",Траке Спорт Старс
-https://stream8.cinerama.uz/1274/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="TraceSportStars.fr" tvg-logo="https://i.imgur.com/FabFP5A.png" group-title="Спорт",Траке Спорт Старс Россия
-https://stream8.cinerama.uz/1274/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="UDAR.ru" tvg-logo="https://mt.media/upload/iblock/2b3/2b3cf99141bf7f99cda377eec62ec084.png" group-title="Спорт",УДАР
 http://stream.mcquack.net/279/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="UDAR.ru" tvg-logo="https://mt.media/upload/iblock/2b3/2b3cf99141bf7f99cda377eec62ec084.png" group-title="Спорт · резерв",УДАР · резерв 2
@@ -2085,34 +1931,26 @@ https://hls-tvsoyuz.cdnvideo.ru/tvsoyuz2/muzsoyuz.6fw0-58xp-acts-esy0/tracks-v1a
 #EXTINF:-1 tvg-id="MuzSoyuz.ru" tvg-logo="https://i.imgur.com/Puk1Bhx.png" group-title="Музыка · резерв",Муз Союз · резерв 2
 https://hls-tvsoyuz.cdnvideo.ru/tvsoyuz2/muzsoyuz.6fw0-58xp-acts-esy0/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=81bff34f754eb9b7c8ac62a9fc335fa4
 #EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка",Муз-ТВ
-https://stream8.cinerama.uz/1200/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 2
 https://streaming.goodstream.icu/live/618-req_offset_28000000-req_window_0-3k_v5.m3u8
-#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 3
+#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 2
 https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
-#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 4
+#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 3
 http://stream.mcquack.net/86/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 5
+#EXTINF:-1 tvg-id="MuzTV.ru" tvg-logo="https://i.imgur.com/BtqrHmz.png" group-title="Музыка · резерв",Муз-ТВ · резерв 4
 http://stream.mcquack.net/86/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="MuzykaLive.ru" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/LOGO_MUSIC_LIVE.png" group-title="Музыка",Музыка Live
 http://stream.mcquack.net/303/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="MuzykaLive.ru" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/LOGO_MUSIC_LIVE.png" group-title="Музыка · резерв",Музыка Live · резерв 2
 http://stream.mcquack.net/303/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка",Музыка Первого
-https://stream8.cinerama.uz/1201/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/153/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 2
-https://stream8.cinerama.uz/1267/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/153/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 3
-https://stream8.cinerama.uz/1201/tracks-v1a1/mono.m3u8
+http://176.118.197.101/1HD/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 4
-http://stream.mcquack.net/153/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
+http://176.118.197.101/1HD/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 5
-http://stream.mcquack.net/153/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 6
-http://176.118.197.101/1HD/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 7
-http://176.118.197.101/1HD/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="1HDMusicTelevision.ru" tvg-logo="https://i.imgur.com/4Ww7CsR.png" group-title="Музыка · резерв",Музыка Первого · резерв 8
 http://88.212.15.50/live/test_muzyka_pervogo/playlist.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Музыка",Новое Радио
 https://hls-video01.cdnvideo.ru/video01/smil:video01.smil/25de8a44f3d3d83c4519985e19437c29--video01--video01_1080.sdp--chunklist.m3u8?hls_proxy_host=5f62ef406190acc623300157d228c341
@@ -2131,18 +1969,16 @@ http://chanson-video.hostingradio.ru:8080/hls/chansonabr/live_lowq/index.m3u8
 #EXTINF:-1 tvg-id="retro-music-cz" tvg-logo="https://iptvx.one/picons/retro-music-cz.png" group-title="Музыка",Ретро Музыка
 http://stream.mediawork.cz/retrotv/retrotvHQ1/chunklist_w1950340497.m3u8
 #EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка",РУ.ТВ
-https://stream8.cinerama.uz/1202/tracks-v1a1/mono.m3u8
+https://live-gcore-1.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/2j-sLmknoM13L_bKNj9x4w/1793744461/b1eb8e90d7e636677b3eb73b4fcbb717/360p_stream.m3u8
 #EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 2
 https://live-gcore-1.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/2j-sLmknoM13L_bKNj9x4w/1793744461/b1eb8e90d7e636677b3eb73b4fcbb717/360p_stream.m3u8
 #EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 3
-https://live-gcore-1.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/2j-sLmknoM13L_bKNj9x4w/1793744461/b1eb8e90d7e636677b3eb73b4fcbb717/360p_stream.m3u8
-#EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 4
 https://live-gcore-1.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/arghqrFVb7VfTQVwkAmd7Q/1793743965/b1eb8e90d7e636677b3eb73b4fcbb717/360p_stream.m3u8
+#EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 4
+http://stream.mcquack.net/109/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 5
 http://stream.mcquack.net/109/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 6
-http://stream.mcquack.net/109/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="RUTV.ru" tvg-logo="https://rutv.by/wp-content/uploads/2020/09/logo.png" group-title="Музыка · резерв",РУ.ТВ · резерв 7
 http://flussonic.mkpnet.ru/tv-64b2c4ff13365817/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="RussianMusicBox.ru" tvg-logo="https://i.imgur.com/ZkJ3Rh9.png" group-title="Музыка",Русский Мусикбокс
 http://stream.mcquack.net/319/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -2169,14 +2005,10 @@ http://live.stranafm.cdnvideo.ru/stranafm/stranafm_hd.sdp/tracks-v1a1/mono.ts.m3
 #EXTINF:-1 tvg-id="StranaFM.ru" tvg-logo="https://i.imgur.com/WsPlKJJ.png" group-title="Музыка · резерв",Страна FM · резерв 6
 http://live.stranafm.cdnvideo.ru/stranafm/stranafm_hd.sdp/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=4cf1db3cb92056e052625ba031e2e718
 #EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка",ТНТ Music
-https://stream8.cinerama.uz/1272/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка · резерв",ТНТ Music · резерв 2
-https://stream8.cinerama.uz/1272/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка · резерв",ТНТ Music · резерв 3
 https://tntm.mediacdn.ru/cdn/tntmusic/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка · резерв",ТНТ Music · резерв 4
+#EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка · резерв",ТНТ Music · резерв 2
 http://tntm.mediacdn.ru/cdn/tntmusic/tracks-v3a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка · резерв",ТНТ Music · резерв 5
+#EXTINF:-1 tvg-id="FONMusic.ru" tvg-logo="https://i.imgur.com/tXABQDE.png" group-title="Музыка · резерв",ТНТ Music · резерв 3
 http://tntm.mediacdn.ru/cdn/tntmusic/tracks-v3a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="trace-latina" tvg-logo="https://ntvampire.github.io/IPTV/logos/trace-latina.png" group-title="Музыка",Траке Латина
 https://amg01131-tracetv-tracelatina-glewed-vtnk7.amagi.tv/playlist240P.m3u8
@@ -2211,17 +2043,9 @@ http://catchup.videoline.ru/shanson/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="ShansonTV.ru" tvg-logo="https://shanson.tv/wp-content/uploads/2025/12/pics.31.png" group-title="Музыка · резерв",Шансон ТВ · резерв 6
 http://catchup.videoline.ru/shanson/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Nickelodeon.ru" tvg-logo="https://i.imgur.com/w8iE8dV.png" group-title="Детям",Nickelodeon Россия
-https://stream8.cinerama.uz/1500/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/443/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Nickelodeon.ru" tvg-logo="https://i.imgur.com/w8iE8dV.png" group-title="Детям · резерв",Nickelodeon Россия · резерв 2
-https://stream8.cinerama.uz/1500/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="Nickelodeon.ru" tvg-logo="https://i.imgur.com/w8iE8dV.png" group-title="Детям · резерв",Nickelodeon Россия · резерв 3
-https://stream8.cinerama.uz/1500/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="Nickelodeon.ru" tvg-logo="https://i.imgur.com/w8iE8dV.png" group-title="Детям · резерв",Nickelodeon Россия · резерв 4
 http://stream.mcquack.net/443/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Nickelodeon.ru" tvg-logo="https://i.imgur.com/w8iE8dV.png" group-title="Детям · резерв",Nickelodeon Россия · резерв 5
-http://stream.mcquack.net/443/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Nickelodeon.ru" tvg-logo="https://i.imgur.com/w8iE8dV.png" group-title="Детям · резерв",Nickelodeon Россия · резерв 6
-https://stream8.cinerama.uz/1500/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="Ani.ru" tvg-logo="https://i.imgur.com/i2AP0hp.png" group-title="Детям",Ани
 http://194.152.35.17/ani/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Ani.ru" tvg-logo="https://i.imgur.com/i2AP0hp.png" group-title="Детям · резерв",Ани · резерв 2
@@ -2235,48 +2059,22 @@ http://178.134.1.158:8081/babytime/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="BabyFirst.us" tvg-logo="https://i.imgur.com/WxLHBwu.png" group-title="Детям",Бабифирст
 https://cdn.fast.jwp.services/v1/channel/1_jB6940Ei_TvhvIHDL/manifest/1.m3u8
 #EXTINF:-1 tvg-id="Vgostyakhuskazki.ru" tvg-logo="https://i.imgur.com/jNJkLHl.png" group-title="Детям",В гостях у сказки
-https://stream8.cinerama.uz/1270/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="Vgostyakhuskazki.ru" tvg-logo="https://i.imgur.com/jNJkLHl.png" group-title="Детям · резерв",В гостях у сказки · резерв 2
-https://stream8.cinerama.uz/1270/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Vgostyakhuskazki.ru" tvg-logo="https://i.imgur.com/jNJkLHl.png" group-title="Детям · резерв",В гостях у сказки · резерв 3
-https://stream8.cinerama.uz/1270/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Vgostyakhuskazki.ru" tvg-logo="https://i.imgur.com/jNJkLHl.png" group-title="Детям · резерв",В гостях у сказки · резерв 4
-https://stream8.cinerama.uz/1270/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Vgostyakhuskazki.ru" tvg-logo="https://i.imgur.com/jNJkLHl.png" group-title="Детям · резерв",В гостях у сказки · резерв 5
 http://stream.mcquack.net/93/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="GulliGirl.ru" tvg-logo="https://i.imgur.com/lbViDuC.png" group-title="Детям",Гулли Гирл
-https://stream8.cinerama.uz/1445/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/305/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="GulliGirl.ru" tvg-logo="https://i.imgur.com/lbViDuC.png" group-title="Детям · резерв",Гулли Гирл · резерв 2
-https://stream8.cinerama.uz/1445/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="GulliGirl.ru" tvg-logo="https://i.imgur.com/lbViDuC.png" group-title="Детям · резерв",Гулли Гирл · резерв 3
-https://stream8.cinerama.uz/1445/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="GulliGirl.ru" tvg-logo="https://i.imgur.com/lbViDuC.png" group-title="Детям · резерв",Гулли Гирл · резерв 4
 http://stream.mcquack.net/305/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="GulliGirl.ru" tvg-logo="https://i.imgur.com/lbViDuC.png" group-title="Детям · резерв",Гулли Гирл · резерв 5
-http://stream.mcquack.net/305/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Detskiy.ru" tvg-logo="https://mt.media/upload/iblock/c22/pndw8yi2jwgppdrjikm3eusqp8087kr3.png" group-title="Детям",Детский
-https://stream8.cinerama.uz/1033/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Detskiy.ru" tvg-logo="https://mt.media/upload/iblock/c22/pndw8yi2jwgppdrjikm3eusqp8087kr3.png" group-title="Детям · резерв",Детский · резерв 2
-https://stream8.cinerama.uz/1033/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Detskiy.ru" tvg-logo="https://mt.media/upload/iblock/c22/pndw8yi2jwgppdrjikm3eusqp8087kr3.png" group-title="Детям · резерв",Детский · резерв 3
-https://stream8.cinerama.uz/1033/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Детский мир
 https://fl1003.bozztv.com/ushba80/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям · резерв",Детский мир · резерв 2
 http://80.245.95.243:8888/play/ert4862/57093785.m3u8
 #EXTINF:-1 tvg-id="ducktv" tvg-logo="https://iptvx.one/picons/ducktv.png" group-title="Детям",Дукк ТВ
 https://d6lk10bkdgfae.cloudfront.net/DuckTVHDSAMS/DuckTVHDSAMS_720p_AAC.stream/chunks.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Дукктв
-https://stream8.cinerama.uz/1271/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="KapitanFantastika.ru" tvg-logo="https://i.imgur.com/K3PSHiT.png" group-title="Детям",Капитан Фантастика
-https://stream8.cinerama.uz/1406/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/144/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="KapitanFantastika.ru" tvg-logo="https://i.imgur.com/K3PSHiT.png" group-title="Детям · резерв",Капитан Фантастика · резерв 2
-https://stream8.cinerama.uz/1406/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/144/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="KapitanFantastika.ru" tvg-logo="https://i.imgur.com/K3PSHiT.png" group-title="Детям · резерв",Капитан Фантастика · резерв 3
-http://stream.mcquack.net/144/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="KapitanFantastika.ru" tvg-logo="https://i.imgur.com/K3PSHiT.png" group-title="Детям · резерв",Капитан Фантастика · резерв 4
-http://stream.mcquack.net/144/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="KapitanFantastika.ru" tvg-logo="https://i.imgur.com/K3PSHiT.png" group-title="Детям · резерв",Капитан Фантастика · резерв 5
 http://stream.mcquack.net/144/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="karusel-pl4" tvg-logo="https://i.imgur.com/4wmnx1W.png" group-title="Детям",Кароусел +4
 http://185.37.150.46/Karusel/tracks-v1a1/mono.ts.m3u8
@@ -2301,44 +2099,28 @@ http://185.37.150.46/Karusel/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Carousel.ru" tvg-logo="https://i.imgur.com/4wmnx1W.png" group-title="Детям · резерв",Карусель · резерв 7
 http://flussonic.linkintel.ru/Karusel/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям",Мама
-https://stream8.cinerama.uz/1244/tracks-v1a1/mono.m3u8
+http://flussonic.linkintel.ru/mama/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 2
-https://stream8.cinerama.uz/1244/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/79/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 3
 http://flussonic.linkintel.ru/mama/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 4
 http://stream.mcquack.net/79/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 5
-http://flussonic.linkintel.ru/mama/tracks-v1a1/mono.ts.m3u8
+http://stream.mcquack.net/79/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 6
-http://stream.mcquack.net/79/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 7
-http://stream.mcquack.net/79/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Mama.ru" tvg-logo="https://i.imgur.com/kmMIjjf.png" group-title="Детям · резерв",Мама · резерв 8
 http://194.152.35.17/mama/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Маша и Медведь
 https://lbgo.bozztv.com/07/ushba79/tracks-v1a1/mono.ts.m3u8?lb_backend_hint=6
 #EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям",Мульт
-https://stream8.cinerama.uz/1246/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 2
-https://stream8.cinerama.uz/1246/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 3
-https://stream8.cinerama.uz/1246/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 4
 http://stream.mcquack.net/232/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 5
+#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 2
 http://flussonic.mkpnet.ru/tv-c8b065a591077c26/tracks-v1a1l1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 6
+#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 3
 http://194.152.35.17/Mult/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 7
+#EXTINF:-1 tvg-id="Mult.ru" tvg-logo="https://i.imgur.com/xi351Fx.png" group-title="Детям · резерв",Мульт · резерв 4
 http://flussonic.linkintel.ru/Mult/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Multilandia.ru" tvg-logo="https://i.imgur.com/ccwijY0.png" group-title="Детям",Мультиландия
-https://stream8.cinerama.uz/1440/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Multilandia.ru" tvg-logo="https://i.imgur.com/ccwijY0.png" group-title="Детям · резерв",Мультиландия · резерв 2
-https://stream8.cinerama.uz/1440/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Multilandia.ru" tvg-logo="https://i.imgur.com/ccwijY0.png" group-title="Детям · резерв",Мультиландия · резерв 3
-https://stream8.cinerama.uz/1440/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Multilandia.ru" tvg-logo="https://i.imgur.com/ccwijY0.png" group-title="Детям · резерв",Мультиландия · резерв 4
 http://flussonic.mkpnet.ru/tv-89530153f25733fe/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Multimuzyka.ru" tvg-logo="https://i.imgur.com/SYt6BZP.png" group-title="Детям",Мультимузыка
 http://stream.mcquack.net/82/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -2347,15 +2129,9 @@ http://stream.mcquack.net/82/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Мультфильмы
 https://lbgo.bozztv.com/07/ushba80/tracks-v1a1/mono.ts.m3u8?lb_backend_hint=6
 #EXTINF:-1 tvg-id="NickJr.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nick_Jr._logo_2023_(outline).svg/960px-Nick_Jr._logo_2023_(outline).svg.png" group-title="Детям",Никк Йр.
-https://stream8.cinerama.uz/1501/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/220/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="NickJr.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nick_Jr._logo_2023_(outline).svg/960px-Nick_Jr._logo_2023_(outline).svg.png" group-title="Детям · резерв",Никк Йр. · резерв 2
-https://stream8.cinerama.uz/1501/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="NickJr.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nick_Jr._logo_2023_(outline).svg/960px-Nick_Jr._logo_2023_(outline).svg.png" group-title="Детям · резерв",Никк Йр. · резерв 3
 http://stream.mcquack.net/220/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="NickJr.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nick_Jr._logo_2023_(outline).svg/960px-Nick_Jr._logo_2023_(outline).svg.png" group-title="Детям · резерв",Никк Йр. · резерв 4
-http://stream.mcquack.net/220/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/d/d8/Nicktoons_UK_Logo_2014.png" group-title="Детям",Никктоонс
-https://stream8.cinerama.uz/1502/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Никник
 https://hostrec.ru/live/wic2AtEFCLwsZcUkAgtZcjlYgjc.m3u8?hls_ctx=48pqf793
 #EXTINF:-1 tvg-id="O.ru" tvg-logo="https://i.imgur.com/pDc665V.png" group-title="Детям",О!
@@ -2376,24 +2152,12 @@ https://radm.mediacdn.ru/cdn/radost/playlist_sdhigh.m3u8
 http://radm.mediacdn.ru/cdn/radost/playlist_sdhigh.m3u8
 #EXTINF:-1 tvg-id="RadostMoya.ru" tvg-logo="https://i.imgur.com/B5FA62o.png" group-title="Детям · резерв",Радость Моя · резерв 6
 http://radm.mediacdn.ru/cdn/radost/playlist_sdhigh.m3u8
-#EXTINF:-1 tvg-id="Ryzhiy.ru" tvg-logo="https://i.imgur.com/acrU2IE.png" group-title="Детям",Рыжий
-https://stream8.cinerama.uz/1407/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Ryzhiy.ru" tvg-logo="https://i.imgur.com/acrU2IE.png" group-title="Детям · резерв",Рыжий · резерв 2
-https://stream8.cinerama.uz/1407/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Ryzhiy.ru" tvg-logo="https://i.imgur.com/acrU2IE.png" group-title="Детям · резерв",Рыжий · резерв 3
-https://stream8.cinerama.uz/1407/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Ryzhiy.ru" tvg-logo="https://i.imgur.com/acrU2IE.png" group-title="Детям · резерв",Рыжий · резерв 4
-https://stream8.cinerama.uz/1407/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Смайл
 https://5d23269b3ec0c.streamlock.net/WEB_Smilik/Smilik.stream/chunklist_w808125028.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям · резерв",Смайл · резерв 2
-https://stream8.cinerama.uz/1425/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="SmileTV.ru" tvg-logo="https://static.tildacdn.com/tild3936-3138-4234-b536-326531343933/-_13x.png" group-title="Детям",Смайл ТВ
 https://5d23269b3ec0c.streamlock.net/WEB_Smilik/Smilik.stream/chunklist_w625507427.m3u8
 #EXTINF:-1 tvg-id="SmileTV.ru" tvg-logo="https://static.tildacdn.com/tild3936-3138-4234-b536-326531343933/-_13x.png" group-title="Детям · резерв",Смайл ТВ · резерв 2
 https://5d23269b3ec0c.streamlock.net/WEB_Smilik/ngrp:Smilik.stream-adaptive/chunklist_w1715718594_b3631360.m3u8
-#EXTINF:-1 tvg-id="SmileTV.ru" tvg-logo="https://static.tildacdn.com/tild3936-3138-4234-b536-326531343933/-_13x.png" group-title="Детям · резерв",Смайл ТВ · резерв 3
-https://stream8.cinerama.uz/1425/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Smotrim100Detskoe.ru" tvg-logo="https://i.imgur.com/1hsNeTa.png" group-title="Детям",Смотрим 100% Детское
 https://stream.smotrim.ru/hls2/fasttv05/playlist_3.m3u8
 #EXTINF:-1 tvg-id="Smotrim100Detskoe.ru" tvg-logo="https://i.imgur.com/1hsNeTa.png" group-title="Детям · резерв",Смотрим 100% Детское · резерв 2
@@ -2407,12 +2171,10 @@ http://217.114.191.150/Solnce/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Союзмультфильмы
 http://194.26.229.213/souzmultfilm/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="STSkids.ru" tvg-logo="https://i.imgur.com/o9kLpAL.png" group-title="Детям",СТС kids
-https://stream8.cinerama.uz/1437/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/197/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="STSkids.ru" tvg-logo="https://i.imgur.com/o9kLpAL.png" group-title="Детям · резерв",СТС kids · резерв 2
 http://stream.mcquack.net/197/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="STSkids.ru" tvg-logo="https://i.imgur.com/o9kLpAL.png" group-title="Детям · резерв",СТС kids · резерв 3
-http://stream.mcquack.net/197/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="STSkids.ru" tvg-logo="https://i.imgur.com/o9kLpAL.png" group-title="Детям · резерв",СТС kids · резерв 4
 http://flussonic.mkpnet.ru/tv-4af112c31b77e2a8/tracks-v1a1a2l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="SuperGeroi.ru" tvg-logo="https://i.imgur.com/c0zZUR1.png" group-title="Детям",СуперГерои
 http://flussonic.mkpnet.ru/tv-66968914d630446e/tracks-v1a1l1/mono.ts.m3u8
@@ -2425,14 +2187,10 @@ https://bsttv.bonus-tv.ru/cdn/tamyr/tracks-v1a1/mono.ts.m3u8?filter.tracks=v1v2v
 #EXTINF:-1 tvg-id="Tamyr.ru" tvg-logo="https://i.imgur.com/Ia3acCB.png" group-title="Детям · резерв",Тамыр · резерв 3
 https://bsttv.bonus-tv.ru/cdn/tamyr/tracks-v1a1/mono.ts.m3u8?filter.tracks=v1v2v3a1
 #EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям",Тийи
-https://stream8.cinerama.uz/1441/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям · резерв",Тийи · резерв 2
-https://stream8.cinerama.uz/1441/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям · резерв",Тийи · резерв 3
 http://stream.mcquack.net/111/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям · резерв",Тийи · резерв 4
+#EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям · резерв",Тийи · резерв 2
 http://flussonic.mkpnet.ru/tv-3848dd8604a262e0/tracks-v1a1a2/mono.ts.m3u8
-#EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям · резерв",Тийи · резерв 5
+#EXTINF:-1 tvg-id="TiJi.ru" tvg-logo="https://i.imgur.com/QCOUJ30.png" group-title="Детям · резерв",Тийи · резерв 3
 http://stream.mcquack.net/111/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Tooku.ru" tvg-logo="https://tooku.ru/wp-content/uploads/2024/11/tooku-kanal-logo.png" group-title="Детям",Тооку
 http://live-saha.cdnvideo.ru/saha/tooky/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=7fccbb7bbabf781d2b97487b967e3663
@@ -2447,38 +2205,26 @@ http://stream.mcquack.net/420/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Детям",Чип и Дейл
 http://194.26.229.213/chip-n-dale-rescue-rangers/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/NfnAiTR.png" group-title="Документальные",365 дней
-https://stream8.cinerama.uz/1242/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/NfnAiTR.png" group-title="Документальные · резерв",365 дней · резерв 2
 http://stream.mcquack.net/70/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",555 Хунт Фишинг ТВ
 http://193.169.178.29:8081/podsekaiTV/chanelHD/chunks.m3u8?nimblesessionid=1183614
 #EXTINF:-1 tvg-id="discovery-channel" tvg-logo="https://ngrch.github.io/iptv/logos/discovery.png" group-title="Документальные",Discovery
-https://stream8.cinerama.uz/1039/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/177/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="discovery-channel" tvg-logo="https://ngrch.github.io/iptv/logos/discovery.png" group-title="Документальные · резерв",Discovery · резерв 2
-http://stream.mcquack.net/177/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
+http://5.188.159.128:8070/DiscoveryChannel/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="discovery-channel" tvg-logo="https://ngrch.github.io/iptv/logos/discovery.png" group-title="Документальные · резерв",Discovery · резерв 3
-http://5.188.159.128:8070/DiscoveryChannel/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="DiscoveryChannel.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/2019_Discovery_logo.svg/960px-2019_Discovery_logo.svg.png" group-title="Документальные",Discovery Channel
-https://stream8.cinerama.uz/1039/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="DiscoveryChannel.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/2019_Discovery_logo.svg/960px-2019_Discovery_logo.svg.png" group-title="Документальные · резерв",Discovery Channel · резерв 2
 http://stream.mcquack.net/177/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="DiscoveryChannel.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/2019_Discovery_logo.svg/960px-2019_Discovery_logo.svg.png" group-title="Документальные · резерв",Discovery Channel · резерв 3
+#EXTINF:-1 tvg-id="discovery-channel" tvg-logo="https://ngrch.github.io/iptv/logos/discovery.png" group-title="Документальные · резерв",Discovery · резерв 4
 http://5.188.159.128:8070/DiscoveryChannel/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="DiscoveryChannel.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/2019_Discovery_logo.svg/960px-2019_Discovery_logo.svg.png" group-title="Документальные · резерв",Discovery Channel · резерв 4
+#EXTINF:-1 tvg-id="discovery-channel" tvg-logo="https://ngrch.github.io/iptv/logos/discovery.png" group-title="Документальные · резерв",Discovery · резерв 5
 http://stream.mcquack.net/177/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/dYj3XDa.png" group-title="Документальные",Nano Нано
 http://185.23.80.23:8080/NANO_HD/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/dYj3XDa.png" group-title="Документальные · резерв",Nano Нано · резерв 2
 http://stream.mcquack.net/419/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",National Geographic Wild Россия
-https://stream8.cinerama.uz/1042/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="NationalGeographic.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Документальные",National Geographic Россия
-https://stream8.cinerama.uz/1041/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="NationalGeographic.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Документальные · резерв",National Geographic Россия · резерв 2
-https://stream8.cinerama.uz/1041/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="NationalGeographic.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Документальные · резерв",National Geographic Россия · резерв 3
 http://stream.mcquack.net/116/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="NationalGeographic.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Документальные · резерв",National Geographic Россия · резерв 4
+#EXTINF:-1 tvg-id="NationalGeographic.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Документальные · резерв",National Geographic Россия · резерв 2
 http://stream.mcquack.net/116/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/aeu5zIC.png" group-title="Документальные",RT Doc (Россия)
 https://rt-doc.rttv.com/dvr/rtdru/rtdru720.m3u8
@@ -2495,27 +2241,13 @@ http://cdn.universmotri.ru/live/mq.sdp/chunklist_w2024855779.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные · резерв",Univer (Универ) · резерв 4
 http://cdn.universmotri.ru/live/smil:mbr.smil/chunklist_w1590751712_b3628000_slru.m3u8
 #EXTINF:-1 tvg-id="Zooпарк" tvg-logo="https://i.imgur.com/IO5jegK.png" group-title="Документальные",Zooпарк
-https://stream8.cinerama.uz/1417/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Zooпарк" tvg-logo="https://i.imgur.com/IO5jegK.png" group-title="Документальные · резерв",Zooпарк · резерв 2
-https://stream8.cinerama.uz/1417/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Zooпарк" tvg-logo="https://i.imgur.com/IO5jegK.png" group-title="Документальные · резерв",Zooпарк · резерв 3
-https://stream8.cinerama.uz/1417/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Zooпарк" tvg-logo="https://i.imgur.com/IO5jegK.png" group-title="Документальные · резерв",Zooпарк · резерв 4
 http://178.134.1.158:8081/zoopark/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="akwatv" tvg-logo="https://iptvx.one/picons/akwatv.png" group-title="Документальные",Аква ТВ
 http://stitch.teletarget.ru/vintera/aquatv/ray2/1793139633474da70e7faabfedee5c6478ed901b462b5a22556bfc4e5c9a4b78/lvl1.m3u8
 #EXTINF:-1 tvg-id="AnimalPlanet.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/2018_Animal_Planet_logo.svg/960px-2018_Animal_Planet_logo.svg.png" group-title="Документальные",Анимал Планет
-https://stream8.cinerama.uz/1043/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/114/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="AnimalPlanet.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/2018_Animal_Planet_logo.svg/960px-2018_Animal_Planet_logo.svg.png" group-title="Документальные · резерв",Анимал Планет · резерв 2
 http://stream.mcquack.net/114/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="AnimalPlanet.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/2018_Animal_Planet_logo.svg/960px-2018_Animal_Planet_logo.svg.png" group-title="Документальные · резерв",Анимал Планет · резерв 3
-http://stream.mcquack.net/114/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Arsenal.ru" tvg-logo="https://i.imgur.com/DBpVeb0.png" group-title="Документальные",Арсенал
-https://stream8.cinerama.uz/1414/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="Arsenal.ru" tvg-logo="https://i.imgur.com/DBpVeb0.png" group-title="Документальные · резерв",Арсенал · резерв 2
-https://stream8.cinerama.uz/1414/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Arsenal.ru" tvg-logo="https://i.imgur.com/DBpVeb0.png" group-title="Документальные · резерв",Арсенал · резерв 3
-https://stream8.cinerama.uz/1414/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/clWWhB8.png" group-title="Документальные",Бобёр
 https://flussonic.mkpnet.ru/tv-319cadb3fff5fb3e/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/clWWhB8.png" group-title="Документальные · резерв",Бобёр · резерв 2
@@ -2539,14 +2271,10 @@ https://rusbrics.mediacdn.ru/cdn/brics/russian/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные · резерв",БРИКС · резерв 3
 http://185.23.80.23:8080/TVBRICS/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/6uotdVQ.png" group-title="Документальные",В мире животных
-https://stream8.cinerama.uz/1404/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/241/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/6uotdVQ.png" group-title="Документальные · резерв",В мире животных · резерв 2
-https://stream8.cinerama.uz/1404/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/241/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/6uotdVQ.png" group-title="Документальные · резерв",В мире животных · резерв 3
-http://stream.mcquack.net/241/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/6uotdVQ.png" group-title="Документальные · резерв",В мире животных · резерв 4
-http://stream.mcquack.net/241/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/6uotdVQ.png" group-title="Документальные · резерв",В мире животных · резерв 5
 http://stream.mcquack.net/241/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuExplore.ru" tvg-logo="https://i.imgur.com/EGIpLPu.png" group-title="Документальные",вийу Експлоре
 https://flussonic.mkpnet.ru/tv-7c57a4c3f9a896ea/tracks-v1a1a2l1/mono.ts.m3u8
@@ -2559,26 +2287,20 @@ http://46.53.200.153:7777/play/a01i/52981790.m3u8
 #EXTINF:-1 tvg-id="vijuNature.ru" tvg-logo="https://i.imgur.com/8BPZ18l.png" group-title="Документальные",вийу Натуре
 https://flussonic.mkpnet.ru/tv-7a85ea25208f5bf7/tracks-v1a1a2l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="vijuNature.ru" tvg-logo="https://i.imgur.com/8BPZ18l.png" group-title="Документальные · резерв",вийу Натуре · резерв 2
-https://stream8.cinerama.uz/1228/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuNature.ru" tvg-logo="https://i.imgur.com/8BPZ18l.png" group-title="Документальные · резерв",вийу Натуре · резерв 3
-https://stream8.cinerama.uz/1228/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuNature.ru" tvg-logo="https://i.imgur.com/8BPZ18l.png" group-title="Документальные · резерв",вийу Натуре · резерв 4
 https://stream3.cinerama.uz/1228/mono.m3u8
-#EXTINF:-1 tvg-id="vijuNature.ru" tvg-logo="https://i.imgur.com/8BPZ18l.png" group-title="Документальные · резерв",вийу Натуре · резерв 5
+#EXTINF:-1 tvg-id="vijuNature.ru" tvg-logo="https://i.imgur.com/8BPZ18l.png" group-title="Документальные · резерв",вийу Натуре · резерв 3
 http://46.53.200.153:7777/play/a01k/80951591.m3u8
 #EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные",вийу Хистори
-https://stream8.cinerama.uz/1046/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 2
 http://178.124.179.122/HistoryHD/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 2
+http://stream.mcquack.net/101/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 3
-http://stream.mcquack.net/101/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 4
 http://178.124.179.122:8080/HistoryHD/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 5
+#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 4
 http://stream.mcquack.net/101/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 6
+#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 5
 http://flussonic.mkpnet.ru/tv-687ba838ca927b9a/tracks-v1a1a2l1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 7
+#EXTINF:-1 tvg-id="vijuHistory.ru" tvg-logo="https://i.imgur.com/FqWkeXb.png" group-title="Документальные · резерв",вийу Хистори · резерв 6
 http://46.53.200.153:7777/play/a01j/95967292.m3u8
 #EXTINF:-1 tvg-id="vijuPlusPlanet.ru" tvg-logo="https://i.imgur.com/9Weqdsk.png" group-title="Документальные",вийу+ Планет
 http://stream.mcquack.net/240/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -2587,43 +2309,21 @@ http://stream.mcquack.net/240/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="ege-tv" tvg-logo="" group-title="Документальные",ЕГЭ ТВ
 http://tv.streams.baikal-telecom.net:8080/RT_DOC/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/onNv1tM.png" group-title="Документальные",Живая Планета
-https://stream8.cinerama.uz/1250/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/onNv1tM.png" group-title="Документальные · резерв",Живая Планета · резерв 2
-https://stream8.cinerama.uz/1250/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/onNv1tM.png" group-title="Документальные · резерв",Живая Планета · резерв 3
-https://stream8.cinerama.uz/1250/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/onNv1tM.png" group-title="Документальные · резерв",Живая Планета · резерв 4
-https://stream8.cinerama.uz/1250/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/onNv1tM.png" group-title="Документальные · резерв",Живая Планета · резерв 5
 http://stream.mcquack.net/83/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные",Живая природа
-https://stream8.cinerama.uz/1411/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/225/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные · резерв",Живая природа · резерв 2
-https://stream8.cinerama.uz/1411/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/83/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные · резерв",Живая природа · резерв 3
 http://stream.mcquack.net/225/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные · резерв",Живая природа · резерв 4
 http://stream.mcquack.net/83/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные · резерв",Живая природа · резерв 5
 http://stream.mcquack.net/225/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные · резерв",Живая природа · резерв 6
-http://stream.mcquack.net/83/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/9lHQPdN.png" group-title="Документальные · резерв",Живая природа · резерв 7
-http://stream.mcquack.net/225/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Живи активно
 https://flussonic.mkpnet.ru/tv-fa810958620d77d8/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные · резерв",Живи активно · резерв 2
-https://stream8.cinerama.uz/1405/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные · резерв",Живи активно · резерв 3
 http://flussonic.mkpnet.ru/tv-fa810958620d77d8/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Живи!
-https://stream8.cinerama.uz/1419/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/RoYd5pz.png" group-title="Документальные",Загородный
-https://stream8.cinerama.uz/1044/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/RoYd5pz.png" group-title="Документальные · резерв",Загородный · резерв 2
-https://stream8.cinerama.uz/1410/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/RoYd5pz.png" group-title="Документальные · резерв",Загородный · резерв 3
-https://stream8.cinerama.uz/1044/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="zvezda-plus" tvg-logo="https://ngrch.github.io/iptv/logos/zvezda.png" group-title="Документальные",Звезда Плюс
 https://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/tracks-v1a1/mono.ts.m3u8?filter.tracks=v1v2v3a1
 #EXTINF:-1 tvg-id="zvezda-plus" tvg-logo="https://ngrch.github.io/iptv/logos/zvezda.png" group-title="Документальные · резерв",Звезда Плюс · резерв 2
@@ -2634,18 +2334,6 @@ http://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/tracks-v1a1/mono.ts.m3u8?filter.track
 http://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/mono.ts.m3u8
 #EXTINF:-1 tvg-id="zvezda-plus" tvg-logo="https://ngrch.github.io/iptv/logos/zvezda.png" group-title="Документальные · резерв",Звезда Плюс · резерв 5
 http://tvzvezda.bonus-tv.ru/cdn/zvezdaplus/tracks-v2a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://iptvx.one/picons/zdorovoe-tv.png" group-title="Документальные",Здоровое
-https://stream8.cinerama.uz/1428/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="insight-tv-hd" tvg-logo="https://i.imgur.com/slLuRel.png" group-title="Документальные",Инсайт ТВ
-https://stream8.cinerama.uz/1416/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="insight-tv-hd" tvg-logo="https://i.imgur.com/slLuRel.png" group-title="Документальные · резерв",Инсайт ТВ · резерв 2
-http://stream.mcquack.net/361/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="insight-tv-hd" tvg-logo="https://i.imgur.com/slLuRel.png" group-title="Документальные · резерв",Инсайт ТВ · резерв 3
-http://stream.mcquack.net/361/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="istoria" tvg-logo="https://ngrch.github.io/iptv/logos/istoriya.png" group-title="Документальные",История
-https://stream8.cinerama.uz/1266/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="istoria" tvg-logo="https://ngrch.github.io/iptv/logos/istoriya.png" group-title="Документальные · резерв",История · резерв 2
-https://stream8.cinerama.uz/1266/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Каббала ТВ
 https://edge3.uk.kab.tv/live/tvrus-rus-high/chunks.m3u8?nimblesessionid=49554027
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Китай ТВ
@@ -2700,8 +2388,6 @@ http://185.23.80.23:8080/NeizvestnayaRossia/tracks-v1a1/mono.ts.m3u8
 http://185.23.80.23:8080/NeizvestnayaRossia/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/W7ste2f.png" group-title="Документальные · резерв",Неизвестная Россия · резерв 9
 http://cdn.ntv.ru/unknown_russia/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",НХК Ворлд
-https://stream8.cinerama.uz/1449/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://iptvx.one/picons/otkryty-mir.png" group-title="Документальные",Открытый мир
 https://v4.proofix.ru/0mir/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://iptvx.one/picons/otkryty-mir.png" group-title="Документальные · резерв",Открытый мир · резерв 2
@@ -2710,8 +2396,6 @@ http://v4.proofix.ru/0mir/tracks-v1a1/mono.ts.m3u8
 http://v4.proofix.ru/0mir/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Охотник и рыболов Int
 https://live-gcore-1.rtbcdn.ru/stream/genetta-401.ntv.rutube.ru/AtNYCwjVJQ7Is-p9U_T3TQ/1793744437/1da5d92af8c55b16241f1eb12a27f00c/360p_stream.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Первый Космический
-https://stream8.cinerama.uz/1415/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Первый Планет
 http://stream.mcquack.net/448/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Перпетуум Мобиле
@@ -2727,18 +2411,10 @@ http://stitch.teletarget.ru/vintera/flighttv/ray2/17931396376510b486b3d9b896b20c
 #EXTINF:-1 tvg-id="Полет ТВ HD" tvg-logo="" group-title="Документальные",Полет ТВ HD
 http://stitch.teletarget.ru/vintera/flighttv/ray2/17931396380120864ea3d71b4caa8e45cb1d48aa730558788bb95beb0aa2f62d/lvl1.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные",Приключения
-https://stream8.cinerama.uz/1420/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/198/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные · резерв",Приключения · резерв 2
-https://stream8.cinerama.uz/1420/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/198/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные · резерв",Приключения · резерв 3
-https://stream8.cinerama.uz/1420/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные · резерв",Приключения · резерв 4
-https://stream8.cinerama.uz/1420/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные · резерв",Приключения · резерв 5
-http://stream.mcquack.net/198/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные · резерв",Приключения · резерв 6
-http://stream.mcquack.net/198/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/qQ6pPPQ.png" group-title="Документальные · резерв",Приключения · резерв 7
 http://stream.mcquack.net/198/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://iptvx.one/picons/prnk-tv.png" group-title="Документальные",ПРНК
 https://serv25.vintera.tv/1pnk/prnk/chunks.m3u8?nimblesessionid=280025406
@@ -2776,20 +2452,8 @@ http://rtmp.tvpro-online.ru/hls/ch1.m3u8
 https://stitch.teletarget.ru/vintera/terra/ray2/179313963900918226837f444ec8bdb8c69bd5b4a74731209becb1e17bfe5602/lvl1.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные · резерв",Терра Инкогнита · резерв 2
 http://stitch.teletarget.ru/vintera/terra/ray2/17931396445319ccde9d3a73aed4a9534d5fba8663328dc48280ef3418f6b094/lvl1.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/1W6R14o.png" group-title="Документальные",Техно 24 Т24
-https://stream8.cinerama.uz/1037/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/TZiBQDK.png" group-title="Документальные",Точка отрыва
 https://flussonic.mkpnet.ru/tv-025f6f42ae5bcfc6/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/TZiBQDK.png" group-title="Документальные · резерв",Точка отрыва · резерв 2
-https://stream8.cinerama.uz/1031/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/TZiBQDK.png" group-title="Документальные · резерв",Точка отрыва · резерв 3
-https://stream8.cinerama.uz/1031/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/TZiBQDK.png" group-title="Документальные · резерв",Точка отрыва · резерв 4
-https://stream8.cinerama.uz/1031/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/TZiBQDK.png" group-title="Документальные · резерв",Точка отрыва · резерв 5
-https://stream8.cinerama.uz/1031/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Точка РФ
-https://stream8.cinerama.uz/1222/tracks-v3a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/VDt4mKB.png" group-title="Документальные",Трофей
 http://stream.mcquack.net/357/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Документальные",Тхе експлорерс
@@ -2801,30 +2465,24 @@ https://cdn.universmotri.ru/live/smil:univer.smil/chunklist_w2054552696_b3628000
 #EXTINF:-1 tvg-id="univer-tv" tvg-logo="https://i.imgur.com/r3u0mxr.png" group-title="Документальные · резерв",Универ ТВ · резерв 3
 https://cdn.universmotri.ru/live/smil:mbr.smil/chunklist_w95072453_b3628000_slru.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/mf13haG.png" group-title="Документальные",Усадьба
-https://stream8.cinerama.uz/1427/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/211/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/mf13haG.png" group-title="Документальные · резерв",Усадьба · резерв 2
-https://stream8.cinerama.uz/1427/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/211/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/mf13haG.png" group-title="Документальные · резерв",Усадьба · резерв 3
-http://stream.mcquack.net/211/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/mf13haG.png" group-title="Документальные · резерв",Усадьба · резерв 4
-http://stream.mcquack.net/211/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/mf13haG.png" group-title="Документальные · резерв",Усадьба · резерв 5
 http://stream.mcquack.net/211/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Успех" tvg-logo="" group-title="Документальные",Успех
 https://flussonic.mkpnet.ru/tv-324fe9acc597fbc1/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука",Наука
-https://stream8.cinerama.uz/1248/tracks-v1a1/mono.m3u8
+https://stream1.cinerama.uz/1248/index.m3u8
 #EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука · резерв",Наука · резерв 2
-https://stream8.cinerama.uz/1248/tracks-v1a1/mono.m3u8
+https://vod.tuva.ru/nauka2/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука · резерв",Наука · резерв 3
 https://vod.tuva.ru/nauka2/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука · резерв",Наука · резерв 4
-https://vod.tuva.ru/nauka2/tracks-v1a1/mono.ts.m3u8
+http://stream.mcquack.net/125/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука · резерв",Наука · резерв 5
 http://stream.mcquack.net/125/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука · резерв",Наука · резерв 6
-http://stream.mcquack.net/125/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Nauka.ru" tvg-logo="https://i.imgur.com/ZZxzueO.png" group-title="Наука · резерв",Наука · резерв 7
 http://stream.mcquack.net/403/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Наука",Наука 2.0
 https://stream1.cinerama.uz/1248/tracks-v1a1/mono.m3u8
@@ -2863,18 +2521,16 @@ http://5.188.159.128:8070/ntvmir_TV/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура",Россия-К
 https://flussonic.mkpnet.ru/tv-111deaa2142146ee/tracks-v1a1l1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 2
-https://stream8.cinerama.uz/1048/tracks-v1a1/mono.m3u8
+https://stream.smotrim.ru/hls2/russia_k/playlist_5.m3u8
 #EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 3
-https://stream.smotrim.ru/hls2/russia_k/playlist_5.m3u8
-#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 4
 https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
-#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 5
+#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 4
 https://stream.smotrim.ru/hls2/russia_k/playlist_5.m3u8
-#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 6
+#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 5
 https://live.smotrim.ru/vgtrk/0/kultura-hd/track_101_319a299f/chunklist.m3u8
-#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 7
+#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 6
 http://stream.mcquack.net/229/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 8
+#EXTINF:-1 tvg-id="RussiaK.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Russia-Cultura.svg/960px-Russia-Cultura.svg.png" group-title="Культура · резерв",Россия-К · резерв 7
 http://stream.mcquack.net/229/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="AngelTV.in" tvg-logo="https://i.imgur.com/qKLEGU7.png" group-title="Религия",Ангел ТВ Русский
 https://janya-digimix.akamaized.net/vglive-sk-955415/russia/ngrp:angelrussia_all/chunklist_b2000000.m3u8
@@ -2952,14 +2608,6 @@ http://stream.mcquack.net/119/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 http://fashionlive.mediacdn.ru/cdn/fashiontv/tracks-v5a1/mono.ts.m3u8?token=cdn
 #EXTINF:-1 tvg-id="dacha" tvg-logo="https://i.imgur.com/xq6p9BZ.png" group-title="Образ жизни",Дача
 https://dash2.antik.sk/live/test_dacha_tv_atktv/playlist.m3u8
-#EXTINF:-1 tvg-id="DomashnieZhivotnye.ru" tvg-logo="https://i.imgur.com/ISJzQGP.png" group-title="Образ жизни",Домашние животные
-https://stream8.cinerama.uz/1426/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="DomashnieZhivotnye.ru" tvg-logo="https://i.imgur.com/ISJzQGP.png" group-title="Образ жизни · резерв",Домашние животные · резерв 2
-https://stream8.cinerama.uz/1426/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="DomashnieZhivotnye.ru" tvg-logo="https://i.imgur.com/ISJzQGP.png" group-title="Образ жизни · резерв",Домашние животные · резерв 3
-https://stream8.cinerama.uz/1426/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="DomashnieZhivotnye.ru" tvg-logo="https://i.imgur.com/ISJzQGP.png" group-title="Образ жизни · резерв",Домашние животные · резерв 4
-https://stream8.cinerama.uz/1426/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="NTVStyle.ru" tvg-logo="https://i.imgur.com/rX6K6qT.png" group-title="Образ жизни",НТВ Стиль
 https://cdn.ntv.ru/th_style/tracks-v2a1/mono.m3u8
 #EXTINF:-1 tvg-id="NTVStyle.ru" tvg-logo="https://i.imgur.com/rX6K6qT.png" group-title="Образ жизни · резерв",НТВ Стиль · резерв 2
@@ -2976,20 +2624,10 @@ http://live-3.otcnet.ru/wfcrus/tracks-v1a1/mono.ts.m3u8
 http://stream.mcquack.net/168/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="TLC.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/TLC_Logo.svg/960px-TLC_Logo.svg.png" group-title="Образ жизни · резерв",ТЛК · резерв 2
 http://stream.mcquack.net/168/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="AutoPlus.ru" tvg-logo="https://i.imgur.com/sVc8cFt.png" group-title="Авто",Авто Плюс
-https://stream8.cinerama.uz/1036/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="AutoPlus.ru" tvg-logo="https://i.imgur.com/sVc8cFt.png" group-title="Авто · резерв",Авто Плюс · резерв 2
-https://stream8.cinerama.uz/1036/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Avto24.ru" tvg-logo="https://i.imgur.com/GXSXmN2.png" group-title="Авто",Авто24
 http://stream.mcquack.net/78/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Avto24.ru" tvg-logo="https://i.imgur.com/GXSXmN2.png" group-title="Авто · резерв",Авто24 · резерв 2
 http://stream.mcquack.net/78/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Drive.ru" tvg-logo="https://i.imgur.com/FnuwfSC.png" group-title="Авто",Драйв
-https://stream8.cinerama.uz/1421/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Drive.ru" tvg-logo="https://i.imgur.com/FnuwfSC.png" group-title="Авто · резерв",Драйв · резерв 2
-https://stream8.cinerama.uz/1421/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Drive.ru" tvg-logo="https://i.imgur.com/FnuwfSC.png" group-title="Авто · резерв",Драйв · резерв 3
-https://stream8.cinerama.uz/1421/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="CityEdenAutoGid.ru" tvg-logo="https://i.imgur.com/qpe8L27.png" group-title="Авто",Сити Эдем АвтоГид
 https://cityeden.catcast.tv/content/47515/index.m3u8
 #EXTINF:-1 tvg-id="Vkus.ru" tvg-logo="https://www.cableman.ru/sites/default/files/logo%20%287%29%20%281%29.png" group-title="Путешествия",Вкус
@@ -2997,24 +2635,12 @@ http://178.134.1.158:8081/vkus/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Vkus.ru" tvg-logo="https://www.cableman.ru/sites/default/files/logo%20%287%29%20%281%29.png" group-title="Путешествия · резерв",Вкус · резерв 2
 http://178.134.1.158:8081/vkus/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/GXJKWdy.png" group-title="Путешествия",Глазами Туриста
-https://stream8.cinerama.uz/1423/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/GXJKWdy.png" group-title="Путешествия · резерв",Глазами Туриста · резерв 2
-https://stream8.cinerama.uz/1423/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/GXJKWdy.png" group-title="Путешествия · резерв",Глазами Туриста · резерв 3
-https://stream8.cinerama.uz/1423/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/GXJKWdy.png" group-title="Путешествия · резерв",Глазами Туриста · резерв 4
-https://stream8.cinerama.uz/1423/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/GXJKWdy.png" group-title="Путешествия · резерв",Глазами Туриста · резерв 5
 http://stream.mcquack.net/304/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Dikayaokhota.ru" tvg-logo="https://i.imgur.com/EOue13e.png" group-title="Путешествия",Дикая охота
-https://stream8.cinerama.uz/1412/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/274/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Dikayaokhota.ru" tvg-logo="https://i.imgur.com/EOue13e.png" group-title="Путешествия · резерв",Дикая охота · резерв 2
-https://stream8.cinerama.uz/1412/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/274/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Dikayaokhota.ru" tvg-logo="https://i.imgur.com/EOue13e.png" group-title="Путешествия · резерв",Дикая охота · резерв 3
-http://stream.mcquack.net/274/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Dikayaokhota.ru" tvg-logo="https://i.imgur.com/EOue13e.png" group-title="Путешествия · резерв",Дикая охота · резерв 4
-http://stream.mcquack.net/274/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Dikayaokhota.ru" tvg-logo="https://i.imgur.com/EOue13e.png" group-title="Путешествия · резерв",Дикая охота · резерв 5
 http://stream.mcquack.net/274/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/e3BFVgt.png" group-title="Путешествия",Дикая рыбалка
 http://stream.mcquack.net/275/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -3023,20 +2649,14 @@ http://stream.mcquack.net/275/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/e3BFVgt.png" group-title="Путешествия · резерв",Дикая рыбалка · резерв 3
 http://stream.mcquack.net/275/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Dikij.ru" tvg-logo="https://i.imgur.com/VDXDiPC.png" group-title="Путешествия",Дикий
-https://stream8.cinerama.uz/1230/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Dikij.ru" tvg-logo="https://i.imgur.com/VDXDiPC.png" group-title="Путешествия · резерв",Дикий · резерв 2
 https://stream3.cinerama.uz/1230/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Dikij.ru" tvg-logo="https://i.imgur.com/VDXDiPC.png" group-title="Путешествия · резерв",Дикий · резерв 3
+#EXTINF:-1 tvg-id="Dikij.ru" tvg-logo="https://i.imgur.com/VDXDiPC.png" group-title="Путешествия · резерв",Дикий · резерв 2
 https://stream3.cinerama.uz/1230/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="LoveNature.ca" tvg-logo="https://tv.lovenature.com/wp-content/uploads/2024/10/LoveNature2024_Logo_full_colour-copy.png" group-title="Путешествия",Лове Натуре
 https://aegis-cloudfront-1.tubi.video/6d6d0f24-8445-4b4c-bdf6-44f9e38beaa4/240p-cc/index.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/uIiAdBv.png" group-title="Путешествия",Моя Планета
-https://stream8.cinerama.uz/1247/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/uIiAdBv.png" group-title="Путешествия · резерв",Моя Планета · резерв 2
-https://stream8.cinerama.uz/1247/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/uIiAdBv.png" group-title="Путешествия · резерв",Моя Планета · резерв 3
 http://stream.mcquack.net/124/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/uIiAdBv.png" group-title="Путешествия · резерв",Моя Планета · резерв 4
+#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/uIiAdBv.png" group-title="Путешествия · резерв",Моя Планета · резерв 2
 http://vod.tuva.ru/myplanet/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Moyastikhiya.ru" tvg-logo="https://i.imgur.com/Sl8c9eB.png" group-title="Путешествия",Моя стихия
 http://stream.mcquack.net/141/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -3045,30 +2665,20 @@ http://stream.mcquack.net/141/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Moyastikhiya.ru" tvg-logo="https://i.imgur.com/Sl8c9eB.png" group-title="Путешествия · резерв",Моя стихия · резерв 3
 http://stream.mcquack.net/141/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Okhotairybalka.ru" tvg-logo="https://i.imgur.com/nZwBaeW.png" group-title="Путешествия",Охота и рыбалка
-https://stream8.cinerama.uz/1038/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/155/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Okhotairybalka.ru" tvg-logo="https://i.imgur.com/nZwBaeW.png" group-title="Путешествия · резерв",Охота и рыбалка · резерв 2
-https://stream8.cinerama.uz/1038/tracks-v1a1/mono.m3u8
+http://185.121.1.163:8083/OhotaRybalka/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="Okhotairybalka.ru" tvg-logo="https://i.imgur.com/nZwBaeW.png" group-title="Путешествия · резерв",Охота и рыбалка · резерв 3
 http://stream.mcquack.net/155/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Okhotairybalka.ru" tvg-logo="https://i.imgur.com/nZwBaeW.png" group-title="Путешествия · резерв",Охота и рыбалка · резерв 4
-http://185.121.1.163:8083/OhotaRybalka/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Okhotairybalka.ru" tvg-logo="https://i.imgur.com/nZwBaeW.png" group-title="Путешествия · резерв",Охота и рыбалка · резерв 5
-http://stream.mcquack.net/155/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Okhotairybalka.ru" tvg-logo="https://i.imgur.com/nZwBaeW.png" group-title="Путешествия · резерв",Охота и рыбалка · резерв 6
 http://stream.mcquack.net/155/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия",Охотник и рыболов
-https://stream8.cinerama.uz/1413/tracks-v3a1/mono.m3u8
-#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 2
-https://stream8.cinerama.uz/1413/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 3
-https://stream8.cinerama.uz/1413/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 4
 https://live-gcore-1.rtbcdn.ru/stream/genetta-401.ntv.rutube.ru/lw7sCF-4DQb9W5HO0KOSBA/1793744503/1da5d92af8c55b16241f1eb12a27f00c/360p_stream.m3u8
-#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 5
+#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 2
 http://stream.mcquack.net/194/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 6
+#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 3
 http://stream.mcquack.net/194/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 7
+#EXTINF:-1 tvg-id="Ohotnikirybolov.ru" tvg-logo="https://i.imgur.com/Bj1jI7F.png" group-title="Путешествия · резерв",Охотник и рыболов · резерв 4
 http://stream.mcquack.net/194/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="RTGTV.ru" tvg-logo="https://i.imgur.com/ZMKPAho.png" group-title="Путешествия",РТГ ТВ
 http://stream.mcquack.net/164/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -3091,20 +2701,10 @@ https://api.alpaca.t62a.com/hls/9110/stream0.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://smotret.tv/images/kulinar-tv.webp" group-title="Кулинария · резерв",Кулинар · резерв 2
 https://api.alpaca.t62a.com/hls/9110/stream0.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/Kuhnya-mediakit.png" group-title="Кулинария",Кухня
-https://stream8.cinerama.uz/1236/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/Kuhnya-mediakit.png" group-title="Кулинария · резерв",Кухня · резерв 2
-https://stream8.cinerama.uz/1236/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/Kuhnya-mediakit.png" group-title="Кулинария · резерв",Кухня · резерв 3
 http://stream.mcquack.net/179/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/Kuhnya-mediakit.png" group-title="Кулинария · резерв",Кухня · резерв 4
+#EXTINF:-1 tvg-id="" tvg-logo="https://cdn2.red-media.ru/wp-content/uploads/2016/08/Kuhnya-mediakit.png" group-title="Кулинария · резерв",Кухня · резерв 2
 http://stream.mcquack.net/179/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Telecafe.ru" tvg-logo="https://i.imgur.com/1H3h1HL.png" group-title="Кулинария",Телекафе
-https://stream8.cinerama.uz/1035/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Telecafe.ru" tvg-logo="https://i.imgur.com/1H3h1HL.png" group-title="Кулинария · резерв",Телекафе · резерв 2
-https://stream8.cinerama.uz/1035/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Telecafe.ru" tvg-logo="https://i.imgur.com/1H3h1HL.png" group-title="Кулинария · резерв",Телекафе · резерв 3
-https://stream8.cinerama.uz/1035/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Telecafe.ru" tvg-logo="https://i.imgur.com/1H3h1HL.png" group-title="Кулинария · резерв",Телекафе · резерв 4
 http://stream.mcquack.net/314/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="FoodNetwork.ru" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Food_Network_New_Logo.png/960px-Food_Network_New_Logo.png" group-title="Кулинария",Фоод Нетворк
 http://stream.mcquack.net/298/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -3165,26 +2765,18 @@ http://185.23.80.23:8080/DumaTV/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="RadaTV.ua" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Rada_TV_%282021%29.svg/960px-Rada_TV_%282021%29.svg.png" group-title="Политика",Рада ТВ
 https://cdn15.live-tv.cloud/ua_infinitas_tv/rada-abr/rada/rada-720/chunks.m3u8?nimblesessionid=33942041
 #EXTINF:-1 tvg-id="DaVinci.ru" tvg-logo="https://i.imgur.com/iBx7K1M.png" group-title="Образование",Да Винки
-https://stream8.cinerama.uz/1231/tracks-v3a1/mono.m3u8
+http://stream.mcquack.net/238/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="DaVinci.ru" tvg-logo="https://i.imgur.com/iBx7K1M.png" group-title="Образование · резерв",Да Винки · резерв 2
-https://stream8.cinerama.uz/1231/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/238/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="DaVinci.ru" tvg-logo="https://i.imgur.com/iBx7K1M.png" group-title="Образование · резерв",Да Винки · резерв 3
 http://stream.mcquack.net/238/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="DaVinci.ru" tvg-logo="https://i.imgur.com/iBx7K1M.png" group-title="Образование · резерв",Да Винки · резерв 4
-http://stream.mcquack.net/238/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование",Доктор
-https://stream8.cinerama.uz/1409/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/80/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 2
-https://stream8.cinerama.uz/1409/tracks-v1a1/mono.m3u8
+http://stream.mcquack.net/80/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 3
-https://stream8.cinerama.uz/1409/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 4
-http://stream.mcquack.net/80/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 5
-http://stream.mcquack.net/80/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
-#EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 6
 http://178.134.1.158:8081/doktor/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 7
+#EXTINF:-1 tvg-id="Doctor.ru" tvg-logo="https://i.imgur.com/VNirxxn.png" group-title="Образование · резерв",Доктор · резерв 4
 http://45.11.139.43:8555/doctor/97569302.m3u8
 #EXTINF:-1 tvg-id="fauna" tvg-logo="https://i.imgur.com/UwQcDTm.png" group-title="Образование",Фауна
 http://stream.mcquack.net/401/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
@@ -3218,12 +2810,6 @@ https://streaming.astrakhan.ru/astrakhanrusporthd/tracks-v5a1/mono.ts.m3u8
 http://serv25.vintera.tv:8081/gelendzhik/stream_1/chunks.m3u8?nimblesessionid=280025563
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Региональные",GLN 24 | Краснодарский край
 https://serv25.vintera.tv/gelendzhik/stream_1/chunks.m3u8?nimblesessionid=280025642
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Региональные",JTV | Казахстан
-https://stream8.cinerama.uz/1488/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Региональные",Qazaqstan | Казахстан
-https://stream8.cinerama.uz/1431/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Региональные · резерв",Qazaqstan | Казахстан · резерв 2
-https://qazaqstantv-stream.qazcdn.com/international/international/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="sochi-live" tvg-logo="https://iptvx.one/picons/sochi-live.png" group-title="Региональные",Sochi Live HD (Сочи)
 http://serv30.vintera.tv:8081/sochi/sochi_stream/chunks.m3u8?nimblesessionid=97960952
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/IlL57Rm.png" group-title="Региональные",TV Губерния | Воронеж
@@ -3506,8 +3092,6 @@ https://tsv.md/stream/hls/tsv-online/0_1/index.m3u8?tkn=3621391495
 http://5.183.155.8:88/stream.m3u8
 #EXTINF:-1 tvg-id="tumenskoe-vremia" tvg-logo="https://iptvx.one/picons/tumenskoe-vremia.png" group-title="Региональные",Тюменское Время
 https://hls-sibinformburo.cdnvideo.ru/sibinformburo-srt/sibinformburo001/tracks-v1a1/mono.ts.m3u8?hls_proxy_host=1bfd12b93a2cdb28c4c2c38959890540
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Региональные",Хабар 24 | Казахстан
-https://stream8.cinerama.uz/1408/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Региональные",ЧГТРК Грозный
 https://cdn-evacoder-tv.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/1.m3u8
 #EXTINF:-1 tvg-id="echotv24" tvg-logo="https://iptvx.one/picons/echotv24.png" group-title="Региональные",Эхо ТВ 24
@@ -3530,10 +3114,6 @@ https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
 https://sitv.ru/hls/s86512.m3u8
 #EXTINF:-1 tvg-id="86-surgut" tvg-logo="https://iptvx.one/picons/86-surgut.png" group-title="Прочее · резерв",86 Сургут · резерв 2
 https://sitv.ru/hls/s86.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Bloomberg
-https://stream8.cinerama.uz/1255/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",CNN International
-https://stream8.cinerama.uz/1259/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",France 24
 https://live.france24.com/hls/live/2037179-b/F24_FR_HI_HLS/master_5000.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Алания 24
@@ -3546,12 +3126,8 @@ https://live-nntv2.cdnvideo.ru/nntv2/vremyan/tracks-v1a1/mono.ts.m3u8?hls_proxy_
 https://4kfp3cm483g.a.trbcdn.net/livemaster/rxu69_live-d7gbc25zefk.smil/db9fb21885ff9e398c3082a0f34f988b--livemaster--753nqiuemp_VTC-41_tcode1080p--tracks-v1a1--mono.m3u8?hls_proxy_host=4c17238f7fd006d66efb4dd3961cfced
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Галакси ТВ
 http://80.245.95.243:8888/play/a02n/13235665.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Да Винки Леарнинг
-http://stream.mcquack.net/238/tracks-v1a1/mono.ts.m3u8?ads=1&filter.tracks=v1a1
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Деуцче Велле
 https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/stream05/streamPlaylist.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Енглиш Клуб ТВ
-https://stream8.cinerama.uz/1442/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Запад 24 Калининград
 https://live-vestikaliningrad.cdnvideo.ru/vestikaliningrad/vestikaliningrad.sdp/chunklist.m3u8?hls_proxy_host=69bebf17ade794ec3bc10f753ca8a154
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Йимйам
@@ -3562,8 +3138,6 @@ https://live-gtrk.smotrim.ru/vgtrk/stavropol/kavkaz24-hd/track_101_93b61749/chun
 https://zabava-block-htvod.cdn.ngenix.net/rtk_block.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Нано ТВ
 https://s1.tv-nano.com/Nano_rec/tracks-v1/index.fmp4.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Нат Гео Вилд
-https://stream8.cinerama.uz/1042/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",Ники ТВ
 https://serv25.vintera.tv/1pnk/prnk/chunks.m3u8?nimblesessionid=280025588
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Прочее",ННТВ Нижний Новгород

@@ -282,9 +282,9 @@ def category_of(value: str) -> str:
     return "Прочее"
 
 ADULT_WORDS = re.compile(r"\b(?:xxx|adult|porn|erotic|эрот|18\+|sex)\b", re.I)
-BLOCKED_URL_PARTS = ("cache1.cinerama.uz/blocked", "/blocked/")
+BLOCKED_URL_PARTS = ("cache1.cinerama.uz", "stream8.cinerama.uz", "/blocked/")
 CURATED_STREAMS = {
-    "Nauka.ru": ("https://stream8.cinerama.uz/1248/index.m3u8", "curated"),
+    "Nauka.ru": ("https://stream1.cinerama.uz/1248/index.m3u8", "curated"),
 }
 
 
@@ -534,7 +534,7 @@ def resolve(base: str, child: str) -> str:
 def probe_hls(url: str, timeout: float) -> dict | None:
     started = time.monotonic()
     status, headers, body, final_url = fetch(url, timeout, max_bytes=1_500_000)
-    if status != 200 or not body.lstrip().startswith(b"#EXTM3U"):
+    if status != 200 or blocked_url(final_url) or not body.lstrip().startswith(b"#EXTM3U"):
         return None
     text = body.decode("utf-8-sig", "replace")
     manifest_cors = cors_ok(headers)
@@ -548,7 +548,7 @@ def probe_hls(url: str, timeout: float) -> dict | None:
         playlist_url = resolve(final_url, variant["url"]) if variant["url"] != final_url else final_url
         if playlist_url != final_url:
             status2, headers2, body2, playlist_url = fetch(playlist_url, timeout, max_bytes=1_200_000)
-            if status2 != 200 or not body2.lstrip().startswith(b"#EXTM3U"):
+            if status2 != 200 or blocked_url(playlist_url) or not body2.lstrip().startswith(b"#EXTM3U"):
                 continue
             text2 = body2.decode("utf-8-sig", "replace")
             variant_cors = cors_ok(headers2)

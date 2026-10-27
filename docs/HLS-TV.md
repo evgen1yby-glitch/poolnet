@@ -71,7 +71,8 @@ integrated: their links are unstable, unlicensed or already duplicate iptv-org.
    - decode gzip/deflate manifests before parsing;
    - prefer H.264/HEVC video variants over unknown or MPEG-2 variants;
    - keep every surviving source URL as a reserve, not just the first;
-   - reject the `cache1.cinerama.uz/blocked` placeholder and any URL containing `/blocked/`;
+   - reject `cache1.cinerama.uz`, `stream8.cinerama.uz` and any URL containing `/blocked/`;
+   - use the working `stream1.cinerama.uz/1248` source for Наука instead;
    - the page detects an audio-only playback and advances to the next reserve.
 7. Write `web/site/tv/channels.json` atomically (current implementation writes
    after the full run).
@@ -85,7 +86,7 @@ python3 scripts/hls_tv_checker.py \
   --workers 48 --timeout 7 --max-variants 2
 ```
 
-At the time of writing the production run produced 778 live unique channels, 422 web-playable, with 0 duplicate URLs and 0 duplicate names. 377 channels have at least one reserve stream. Counts move with each 30-minute run.
+At the time of writing the production run produced 735 live unique channels, 328 web-playable, with 0 duplicate URLs and 0 duplicate names. 350 channels have at least one reserve stream. Counts move with each 30-minute run.
 BY/KZ are smaller because only Russian-language live streams that survived the
 checker are published.
 
@@ -93,13 +94,13 @@ checker are published.
 
 The raw groups from API and M3U are normalised into one Russian taxonomy. "Кинозалы", "Кино и сериалы" and "Классика" become **Кино**; "Развлечения"/"Entertainment" become **Развлекательные**; "Познавательные" merge into **Документальные**; "Информационные" into **Новости**; "Основные"/"Популярные"/regional country labels into **Общие**; regional labels into **Региональные**. Unknown groups become **Прочее**, never a raw English/emoji group.
 
-Current distribution: Кино — 194, Общие — 96, Региональные — 94, Документальные — 64, Развлекательные — 54, Музыка — 54, Новости — 45, Детям — 40, Спорт — 36, Прочее — 25, Религия — 15, Путешествия — 14, Образ жизни — 8, Сериалы — 7, Магазины — 6, Культура — 5, Кулинария — 5, Авто — 4, Образование — 3, Наука — 2, Бизнес — 2, Политика — 2, Юмор — 2, Семья — 1. Countries are metadata only; the page filters by genre, not by country.
+Current distribution: Кино — 189, Общие — 93, Региональные — 91, Музыка — 54, Развлекательные — 53, Документальные — 52, Новости — 43, Детям — 35, Спорт — 32, Прочее — 20, Религия — 15, Путешествия — 14, Сериалы — 7, Образ жизни — 7, Магазины — 6, Культура — 5, Кулинария — 5, Образование — 3, Наука — 2, Авто — 2, Бизнес — 2, Политика — 2, Юмор — 2, Семья — 1. Countries are metadata only; the page filters by genre, not by country.
 
  Names of Russian channels written in Latin are converted to Cyrillic using iptv-org alt names, an explicit override table and a Russian transliteration fallback. Remaining Latin names are international brands or numeric names: 86, Armenia TV Satellite, Jibek Joly, KTK, TDK 42, 360, BBC World News, Channel 9 (Israel), CNN, DW, Euronews, RT, RT Arabic, RT Balkan, RT en Espanol, Bollywood, Disney XD, Epic Drama, FoxKids, FX, FX Life, Hollywood, Fashion, Fashion TV, Mezzo, Mezzo Live, Discovery, Discovery Channel, TV BRICS, Fashion&LifeStyle, Bloomberg, CNN International, France 24.
 
 ## Logos
 
-Every channel has a visual tile. A real logo is published only after an HTTPS fetch returns an image signature (PNG/JPEG/WebP/GIF/SVG); the logo is resolved by `tvg-id` or the source's `tvg-logo`. A dead, HTML or non-image URL is cleared and the card uses a deterministic monogram built from the channel name. Current snapshot: 513 validated logos, 265 monograms. The page also has an `onerror` fallback, so a logo that dies between runs never leaves a broken image.
+Every channel has a visual tile. A real logo is published only after an HTTPS fetch returns an image signature (PNG/JPEG/WebP/GIF/SVG); the logo is resolved by `tvg-id` or the source's `tvg-logo`. A dead, HTML or non-image URL is cleared and the card uses a deterministic monogram built from the channel name. Current snapshot: 492 validated logos, 243 monograms. The page also has an `onerror` fallback, so a logo that dies between runs never leaves a broken image.
 
 ## Output schema
 
@@ -109,10 +110,10 @@ Every channel has a visual tile. A real logo is published only after an HTTPS fe
   "duration_s": 93.2,
   "sources": [{"id": "iptv-org-api", "ok": true, "items": 31676}],
   "stats": {
-    "channels": 778,
-    "web_playable": 422,
-    "countries": {"RU": 768, "BY": 2, "KZ": 8},
-    "with_logo": 513
+    "channels": 735,
+    "web_playable": 328,
+    "countries": {"RU": 725, "BY": 2, "KZ": 8},
+    "with_logo": 492
   },
   "channels": [{
     "id": "Belarus24.by",
