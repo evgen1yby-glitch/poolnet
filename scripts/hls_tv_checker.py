@@ -88,8 +88,161 @@ NAME_CATEGORY = {
     "dacha": "Образ жизни", "первый вегетарианский": "Образ жизни", "dushevnoe": "Общие",
     "наш дом": "Общие", "новое телевидение": "Общие", "terra": "Общие",
     "kvn tv": "Юмор", "viju comedy": "Юмор", "gagsnetwork": "Юмор", "komedia": "Юмор", "prima": "Общие",
+    "витебск": "Региональные", "гагснетворк": "Юмор", "дача": "Образ жизни",
+    "дождь": "Новости", "квн тв": "Юмор", "санкт петербург": "Региональные", "терра": "Общие",
 }
 
+
+
+# Latin display names that are Russian transliterations are converted to
+# Cyrillic. International brands stay Latin, because "CNN" is not "СНН".
+FOREIGN_NAMES = {
+    "cnn", "dw", "euronews", "bbc", "france 24", "cgtn", "al jazeera",
+    "bloomberg", "cnbc", "disney xd", "foxkids", "fx", "epic drama", "hollywood",
+    "fashion", "fashion tv", "national geographic", "discovery", "sony", "mtv",
+    "vh1", "mezzo", "bollywood", "rt", "rt arabic", "rt balkan", "rt en espanol",
+    "tv brics", "tv brics russian", "jibek joly", "ktk", "ktk 42", "uzreport tv",
+    "dunyo boylab", "dunyo bo'ylab", "o'zbekiston", "armenia tv satellite", "tdk 42", "fashion lifestyle", "fashion&lifestyle", "channel 9", "rt documentary russian",
+}
+NAME_OVERRIDES = {
+    "amedia 1": "Амедиа 1", "amedia 2": "Амедиа 2", "amedia hit": "Амедиа Хит",
+    "amedia premium": "Амедиа Премиум", "viju tv1000": "Вижу TV1000",
+    "viju tv1000 action": "Вижу TV1000 Action", "viju tv1000 novella": "Вижу TV1000 Новелла",
+    "viju tv1000 romantica": "Вижу TV1000 Романтика", "viju+ megahit": "Вижу+ Мегахит",
+    "viju+ premiere": "Вижу+ Премьера", "viju+ serial": "Вижу+ Сериал",
+    "star cinema": "Стар Синема", "star family": "Стар Фэмили", "start air": "Старт Эйр",
+    "illusion+": "Иллюзион+", "kinowalk": "Киноволк",
+    "black sea tv": "Чёрное море ТВ", "big asia": "Большая Азия",
+    "current time tv": "Настоящее время", "freedom": "Свобода",
+    "silk way": "Шёлковый путь", "silk way cinema": "Шёлковый путь Кино",
+    "amedia": "Амедиа", "viju": "Вижу", "city eden": "Сити Эден",
+    "dom kino": "Дом кино", "dom kino premium": "Дом кино Премиум",
+    "muzhskoe kino": "Мужское кино", "nash kinopokaz": "Наш кинопоказ",
+    "nashe novoe kino": "Наше новое кино", "rodnoe kino": "Родное кино",
+    "russkiy roman": "Русский роман", "indiyskoye kino": "Индийское кино",
+    "ostrosyuzhetnoye": "Остросюжетное", "retro": "Ретро", "retrovision": "Ретровижн",
+    "retrovision classic": "Ретровижн Классика", "retrovision movies": "Ретровижн Кино",
+    "retrovision motor": "Ретровижн Мото", "kinopremyera": "Кинопремьера",
+    "kinosemja": "Киносемья", "kinosvidanie": "Киносвидание", "kino hit": "Кинохит",
+    "kinohit": "Кинохит", "kinomix 1": "КиноМикс 1", "kinomix 2": "КиноМикс 2",
+    "tv 21": "ТВ 21", "tv 21 international": "ТВ 21 International",
+    "7 tv": "7 ТВ", "a media": "Амедиа", "a media hit": "Амедиа Хит",
+    "astrahan": "Астрахань", "astrahan 24": "Астрахань 24",
+    "astrahan ru tv": "Астрахань.Ру ТВ", "groznyj": "Грозный",
+    "nizhniy novgorod": "Нижний Новгород", "nizhniy novgorod 24": "Нижний Новгород 24",
+    "sankt-peterburg": "Санкт-Петербург", "yakutsk": "Якутск",
+    "yakutia": "Якутия", "yakutiya 24": "Якутия 24", "osetiya iryston": "Осетия-Ирыстон",
+    "moskva 24": "Москва 24", "moskva doveriye": "Москва. Доверие",
+    "pervyy gorodskoy odessa": "Первый городской. Одесса",
+    "pervyy respublikanskiy": "Первый Республиканский",
+    "obshchestvennoe nezavisimoe televidenie": "Общественное Независимое Телевидение",
+    "vesti fm": "Вести FM", "izvestia": "Известия", "sochi24": "Сочи24",
+    "tavriya": "Таврия", "tolk": "Толк", "krik-tv": "Крик-ТВ", "mir 24": "Мир 24",
+    "belarus-1": "Беларусь 1", "belarus-24": "Беларусь 24",
+    "tv brics russian": "ТВ БРИКС", "channel 5": "5 канал", "channel 12": "12 канал",
+    "channel 8": "8 канал", "channel one": "Первый канал", "belarus-1": "Беларусь 1", "belarus 1": "Беларусь 1",
+    "belarus-24": "Беларусь 24", "belarus 24": "Беларусь 24", "kino 1": "Кино 1", "kino tv": "Кино ТВ",
+    "moldova 1": "Молдова 1", "moldova 2": "Молдова 2", "silk way": "Шёлковый путь",
+    "silk way cinema": "Шёлковый путь Кино", "dasturxon tv": "Дастурхон ТВ",
+    "channel one russia europa": "Первый канал Европа", "channel one europa": "Первый канал Европа",
+    "channel 5 international": "5 канал Международный",
+    "ren tv international": "РЕН ТВ Международный",
+    "sts international": "СТС Международный",
+    "rtr planeta europe": "РТР-Планета Европа", "rtvi us": "РТВи США",
+    "ulytau": "Улытау", "tsv": "ТСВ", "tv rain": "Дождь",
+    "ntv russia 1": "НТВ +1", "ntv russia 2": "НТВ +2",
+    "ntv russia 4": "НТВ +4", "ntv russia 7": "НТВ +7",
+    "ntv 1": "НТВ +1", "ntv 2": "НТВ +2", "ntv 4": "НТВ +4", "ntv 7": "НТВ +7",
+}
+TRANSLIT_WORDS = {
+    "tv": "ТВ", "hd": "HD", "sd": "SD", "channel": "канал", "one": "первый",
+    "kino": "кино", "cinema": "кино", "movies": "кино", "movie": "кино",
+    "dom": "дом", "mir": "мир", "radio": "радио", "music": "музыка",
+    "news": "новости", "sport": "спорт", "sports": "спорт", "kids": "детям",
+    "family": "семья", "retro": "ретро", "classic": "классика", "premium": "премиум",
+    "russia": "Россия", "rossiya": "Россия", "russian": "русский",
+    "moskva": "Москва", "moscow": "Москва", "peterburg": "Петербург",
+    "sankt": "Санкт", "novgorod": "Новгород", "nizhniy": "Нижний",
+    "krasnodar": "Краснодар", "krasnoyarsk": "Красноярск", "novosibirsk": "Новосибирск",
+    "ekaterinburg": "Екатеринбург", "chelyabinsk": "Челябинск", "omsk": "Омск",
+    "tomsk": "Томск", "tyumen": "Тюмень", "surgut": "Сургут", "irkutsk": "Иркутск",
+    "perm": "Пермь", "tula": "Тула", "tver": "Тверь", "yaroslavl": "Ярославль",
+    "vladivostok": "Владивосток", "khabarovsk": "Хабаровск", "abakan": "Абакан",
+    "stavropol": "Ставрополь", "barnaul": "Барнаул", "ufa": "Уфа", "kazan": "Казань",
+    "samara": "Самара", "saratov": "Саратов", "rostov": "Ростов", "volgograd": "Волгоград",
+    "belgorod": "Белгород", "groznyj": "Грозный", "grozny": "Грозный",
+    "astrahan": "Астрахань", "yakutiya": "Якутия", "osetiya": "Осетия",
+    "svoboda": "Свобода", "vremya": "Время", "zhivaya": "Живая", "priroda": "Природа",
+    "muzhskoe": "Мужское", "semja": "Семья", "semia": "Семья", "kinopokaz": "Кинопоказ",
+    "kinopremyera": "Кинопремьера", "kinosvidanie": "Киносвидание",
+    "ostrosyuzhetnoye": "Остросюжетное", "indiyskoye": "Индийское",
+    "russkiy": "Русский", "roman": "Роман", "rodnoe": "Родное", "nashe": "Наше",
+    "novoe": "Новое", "retrovision": "Ретровижн", "kinohit": "Кинохит",
+    "telekanal": "Телеканал", "oblast": "Область", "respublika": "Республика",
+    "informatsionnyy": "Информационный", "informacionnyy": "Информационный",
+    "sputnik": "Спутник", "zvezda": "Звезда", "pervyy": "Первый", "pervyi": "Первый",
+    "kultura": "Культура", "karusel": "Карусель", "match": "Матч", "spas": "Спас",
+    "otr": "ОТР", "ntv": "НТВ", "ren": "РЕН", "sts": "СТС", "tnt": "ТНТ",
+}
+TRANSLIT_PAIRS = (
+    ("shch", "щ"), ("sch", "щ"), ("zh", "ж"), ("kh", "х"), ("ts", "ц"),
+    ("ch", "ч"), ("sh", "ш"), ("yu", "ю"), ("ya", "я"), ("yo", "ё"),
+    ("ye", "е"), ("iy", "ий"), ("yy", "ый"), ("ay", "ай"), ("oy", "ой"),
+    ("ey", "ей"), ("a", "а"), ("b", "б"), ("v", "в"), ("g", "г"), ("d", "д"),
+    ("e", "е"), ("z", "з"), ("i", "и"), ("j", "й"), ("k", "к"), ("l", "л"),
+    ("m", "м"), ("n", "н"), ("o", "о"), ("p", "п"), ("r", "р"), ("s", "с"),
+    ("t", "т"), ("u", "у"), ("f", "ф"), ("h", "х"), ("c", "к"), ("q", "к"),
+    ("w", "в"), ("x", "кс"), ("y", "и"),
+)
+
+
+def translit_word(word: str) -> str:
+    lower = word.lower()
+    out = []
+    index = 0
+    while index < len(lower):
+        for source, target in TRANSLIT_PAIRS:
+            if lower.startswith(source, index):
+                out.append(target)
+                index += len(source)
+                break
+        else:
+            out.append(lower[index])
+            index += 1
+    result = "".join(out)
+    if word.isupper():
+        return result.upper()
+    if word[:1].isupper():
+        return result[:1].upper() + result[1:]
+    return result
+
+
+def translit_name(name: str) -> str:
+    parts = re.split(r"([A-Za-z]+)", name)
+    out = []
+    for part in parts:
+        if re.fullmatch(r"[A-Za-z]+", part or ""):
+            mapped = TRANSLIT_WORDS.get(part.lower())
+            if mapped and part[:1].isupper() and mapped[:1].islower():
+                mapped = mapped[:1].upper() + mapped[1:]
+            out.append(mapped if mapped else translit_word(part))
+        else:
+            out.append(part or "")
+    return re.sub(r"\s+", " ", "".join(out)).strip()
+
+
+def localize_name(name: str, country: str, aliases: dict) -> str:
+    cleaned = clean_name(name)
+    if cleaned in NAME_OVERRIDES:
+        return NAME_OVERRIDES[cleaned]
+    if cleaned in aliases:
+        return aliases[cleaned]
+    if country not in ALLOWED_COUNTRIES or CYRILLIC.search(name):
+        return name
+    if cleaned in FOREIGN_NAMES or any(cleaned.startswith(item + " ") for item in FOREIGN_NAMES):
+        return name
+    localized = translit_name(name)
+    return localized if CYRILLIC.search(localized) else name
 
 def preferred_name(channel: dict) -> str:
     names = [channel.get("name") or ""] + list(channel.get("alt_names") or [])
@@ -234,6 +387,7 @@ def display_name(name: str) -> str:
     text = html.unescape(str(name or "")).replace("\ufeff", "").strip()
     text = re.sub(r"^.*?(?:Safari/\d+(?:\.\d+)*|group-title=\"[^\"]*\")\s*,?\s*", "", text, flags=re.I)
     text = re.sub(r"^.*?group-title=\"[^\"]*\"\s*,?\s*", "", text, flags=re.I)
+    text = re.sub(r"\s*\[(?:geo-blocked|not\s*24/7|24/7)\]\s*", " ", text, flags=re.I)
     text = QUALITY_SUFFIX.sub("", text)
     text = COUNTRY_SUFFIX.sub("", text)
     text = re.sub(r"\s+", " ", text).strip(" -—|,")
@@ -433,6 +587,17 @@ def main() -> int:
     categories = {item["id"]: item["name"] for item in fetch_json(f"{API}/categories.json", 30)}
 
     channels_by_id = {item["id"]: item for item in channels}
+    api_aliases = {}
+    for item in channels:
+        if (item.get("country") or "").upper() not in ALLOWED_COUNTRIES:
+            continue
+        names = [item.get("name") or ""] + list(item.get("alt_names") or [])
+        cyrillic = next((name for name in names if name and CYRILLIC.search(name)), "")
+        if not cyrillic:
+            continue
+        for name in names:
+            if name:
+                api_aliases[clean_name(name)] = cyrillic
     languages_by_channel: dict[str, set[str]] = defaultdict(set)
     for feed in feeds:
         if feed.get("channel") and feed.get("languages"):
@@ -484,7 +649,7 @@ def main() -> int:
         key = f"id:{channel_id.lower()}"
         merged[key] = {
             "id": channel_id,
-            "name": display_name(preferred_name(channel) or channel_id),
+            "name": display_name(localize_name(preferred_name(channel) or channel_id, country, api_aliases)),
             "country": country,
             "country_name": COUNTRY_NAMES.get(country, country),
             "languages": sorted(languages),
@@ -531,7 +696,7 @@ def main() -> int:
             if channel is None:
                 channel = {
                     "id": key,
-                    "name": display_name(base_name(item.get("name", ""))),
+                    "name": display_name(localize_name(display_name(base_name(item.get("name", ""))), country, api_aliases)),
                     "country": country,
                     "country_name": COUNTRY_NAMES.get(country, country),
                     "languages": ["rus"] if russian_name else [],
@@ -546,6 +711,9 @@ def main() -> int:
         item_category = category_of(item.get("group"))
         if item_category not in ("Общие", "Прочее") and channel.get("category") in ("Общие", "Прочее", "Документальные"):
             channel["category"] = item_category
+        item_name = display_name(localize_name(display_name(base_name(item.get("name", ""))), country, api_aliases))
+        if item_name and not CYRILLIC.search(channel.get("name", "")) and CYRILLIC.search(item_name):
+            channel["name"] = item_name
         add_variant(channel, item.get("url", ""), item["source"], quality_from_text(item.get("name", "")))
 
     candidates = []

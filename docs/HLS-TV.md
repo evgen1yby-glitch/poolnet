@@ -79,7 +79,7 @@ python3 scripts/hls_tv_checker.py \
   --workers 48 --timeout 7 --max-variants 2
 ```
 
-At the time of writing the production run produced 709 live unique channels, 294 web-playable, with 0 duplicate URLs and 0 duplicate names. 280 channels have at least one reserve stream. Counts move with each 30-minute run.
+At the time of writing the production run produced 642 live unique channels, 259 web-playable, with 0 duplicate URLs and 0 duplicate names. 274 channels have at least one reserve stream. Counts move with each 30-minute run.
 BY/KZ are smaller because only Russian-language live streams that survived the
 checker are published.
 
@@ -87,11 +87,13 @@ checker are published.
 
 The raw groups from API and M3U are normalised into one Russian taxonomy. "Кинозалы", "Кино и сериалы" and "Классика" become **Кино**; "Развлечения"/"Entertainment" become **Развлекательные**; "Познавательные" merge into **Документальные**; "Информационные" into **Новости**; "Основные"/"Популярные"/regional country labels into **Общие**; regional labels into **Региональные**. Unknown groups become **Прочее**, never a raw English/emoji group.
 
-Current distribution: Кино — 180, Общие — 132, Региональные — 78, Новости — 50, Музыка — 50, Документальные — 49, Развлекательные — 44, Детям — 35, Спорт — 30, Религия — 17, Путешествия — 9, Магазины — 6, Сериалы — 5, Культура — 4, Образ жизни — 4, Юмор — 4, Кулинария — 3, Авто — 2, Бизнес — 2, Семья — 2, Наука — 1, Политика — 1, Образование — 1. Countries are metadata only; the page filters by genre, not by country.
+Current distribution: Кино — 164, Общие — 94, Региональные — 84, Развлекательные — 47, Музыка — 47, Документальные — 42, Новости — 38, Детям — 33, Спорт — 29, Религия — 15, Путешествия — 10, Сериалы — 8, Магазины — 6, Культура — 5, Образ жизни — 5, Кулинария — 3, Авто — 2, Бизнес — 2, Политика — 2, Образование — 2, Юмор — 2, Наука — 1, Семья — 1. Countries are metadata only; the page filters by genre, not by country.
+
+ Names of Russian channels written in Latin are converted to Cyrillic using iptv-org alt names, an explicit override table and a Russian transliteration fallback. Only international brands and numeric names remain Latin: 86, Jibek Joly, KTK, TDK 42, 360, Channel 9 (Israel), CNN, DW, Euronews, RT, RT Arabic, RT Balkan, RT en Espanol, Bollywood, Disney XD, Epic Drama, FoxKids, Fashion, Fashion TV, Mezzo, Mezzo Live, Discovery, RT Documentary Russian, TV BRICS, Fashion&LifeStyle.
 
 ## Logos
 
-Every channel has a visual tile. A real logo is published only after an HTTPS fetch returns an image signature (PNG/JPEG/WebP/GIF/SVG); the logo is resolved by `tvg-id` or the source's `tvg-logo`. A dead, HTML or non-image URL is cleared and the card uses a deterministic monogram built from the channel name. Current snapshot: 469 validated logos, 240 monograms. The page also has an `onerror` fallback, so a logo that dies between runs never leaves a broken image.
+Every channel has a visual tile. A real logo is published only after an HTTPS fetch returns an image signature (PNG/JPEG/WebP/GIF/SVG); the logo is resolved by `tvg-id` or the source's `tvg-logo`. A dead, HTML or non-image URL is cleared and the card uses a deterministic monogram built from the channel name. Current snapshot: 430 validated logos, 212 monograms. The page also has an `onerror` fallback, so a logo that dies between runs never leaves a broken image.
 
 ## Output schema
 
@@ -101,10 +103,10 @@ Every channel has a visual tile. A real logo is published only after an HTTPS fe
   "duration_s": 93.2,
   "sources": [{"id": "iptv-org-api", "ok": true, "items": 31676}],
   "stats": {
-    "channels": 709,
-    "web_playable": 294,
-    "countries": {"RU": 696, "BY": 2, "KZ": 11},
-    "with_logo": 469
+    "channels": 642,
+    "web_playable": 259,
+    "countries": {"RU": 634, "BY": 1, "KZ": 7},
+    "with_logo": 430
   },
   "channels": [{
     "id": "Belarus24.by",
