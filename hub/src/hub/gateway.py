@@ -60,6 +60,8 @@ SITE_TYPES = {
     ".woff2": "font/woff2",
     ".txt": "text/plain; charset=utf-8",
     ".xml": "application/xml; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".m3u": "application/vnd.apple.mpegurl; charset=utf-8",
 }
 
 #: The published proxy files a visitor may download. A fixed allow-list:
@@ -82,7 +84,7 @@ POOL_FILES = {
 }
 
 #: Extensionless page paths the site owns, for the cache policy in `api.py`.
-PAGE_SLUGS = ("vpn", "proxy", "verify", "check", "free", "status", "legal")
+PAGE_SLUGS = ("vpn", "proxy", "tv", "verify", "check", "free", "status", "legal")
 
 _COUNTRY_SHARD = re.compile(r"^[A-Z]{2}\.txt$")
 

@@ -1,0 +1,10 @@
+[Unit]
+Description=PoolNet — refresh HLS TV every 30 minutes
+
+[Timer]
+OnCalendar=*:12/30
+AccuracySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -122,7 +122,7 @@ def main() -> int:
 - Манифест: [vpn/manifest.json]({raw}/vpn/manifest.json)
 
 Импортируйте ссылку в клиенте как подписку. Для личного ключа на 7 дней:
-[poolnet.online/free](https://poolnet.online/free).
+[poolnet.online/download](https://poolnet.online/download).
 
 ## Лицензии
 

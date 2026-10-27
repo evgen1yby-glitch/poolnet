@@ -59,8 +59,8 @@
     page: Math.max(1, parseInt(params.get("page") || "1", 10) || 1),
     per: [10, 25, 50, 100].includes(parseInt(params.get("per") || "", 10))
       ? parseInt(params.get("per"), 10)
-      : window.matchMedia("(max-width:34rem)").matches
-        ? 25
+      : window.matchMedia("(max-width:56rem)").matches
+        ? 10
         : 50,
     q: params.get("q") || "",
     country: (params.get("country") || "").toUpperCase(),

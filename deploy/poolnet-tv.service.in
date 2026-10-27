@@ -1,0 +1,14 @@
+[Unit]
+Description=PoolNet — HLS TV channel checker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+Group=@GROUP@
+WorkingDirectory=@DIR@
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@PYTHON@ @DIR@/scripts/hls_tv_checker.py --output @DIR@/web/site/tv/channels.json --workers 40 --timeout 8 --max-variants 4
+Nice=10
+TimeoutStartSec=20min

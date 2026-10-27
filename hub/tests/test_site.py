@@ -51,7 +51,7 @@ def test_the_root_serves_the_site_index(site_client):
 
 def test_every_site_page_serves(site_client):
     """All six pages answer 200 — a 404 between pages breaks navigation."""
-    for page in ("vpn", "proxy", "verify", "check", "free", "status", "legal"):
+    for page in ("vpn", "proxy", "tv", "verify", "check", "status", "legal"):
         assert site_client.get(f"/{page}").status_code == 200, page
         legacy = site_client.get(f"/{page}.html", follow_redirects=False)
         assert legacy.status_code == 301, page
@@ -72,25 +72,25 @@ def test_none_of_the_site_pages_index_as_operator_panels(site_client):
         assert response.headers.get("x-robots-tag") is None
 
 
-def test_free_vpn_offer_is_one_story_on_index_vpn_and_free():
-    """The three pages must not promise different versions of the same key."""
-    import re
+def test_public_free_key_page_is_retired():
+    """The site must sell the app, not public keys.
 
-    for name in ("index", "vpn", "free", "en/index", "en/vpn", "en/free"):
+    The free-key page is gone, no page links to it, and the visible app CTA
+    stays. The app API is intentionally out of scope: the Android client still
+    uses it internally.
+    """
+    assert not (SITE_DIR / "free.html").exists()
+    assert not (SITE_DIR / "en" / "free.html").exists()
+    for name in ("index", "vpn", "download", "en/index", "en/vpn", "en/download"):
         html = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
-        assert "не пробный период" not in html, name
-        assert "not a trial period" not in html, name
-        assert "ограничений нет" not in html, name
-        assert "no restrictions" not in html, name
-        assert "7 дней" in html or "7-day" in html, name
-
-    for name in ("index", "vpn", "en/index", "en/vpn"):
+        assert 'href="/free"' not in html, name
+        assert 'href="/en/free"' not in html, name
+        assert "Получить ключ" not in html, name
+        assert "Бесплатный ключ" not in html, name
+        assert "Free key" not in html, name
+    for name in ("index", "download", "en/index", "en/download"):
         html = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
-        hero = re.search(r'<section class="hero">.*?<div class="cta-row">(.*?)</div>', html, re.S)
-        assert hero is not None, name
-        expected = 'href="/en/free"' if name.startswith("en/") else 'href="/free"'
-        assert expected in hero.group(1), name
-        assert "7" in hero.group(1), name
+        assert "PoolNet-Mobile-0.5.7.apk" in html, name
 
 
 def test_english_tree_serves_and_matches_the_russian_contract():
@@ -103,7 +103,7 @@ def test_english_tree_serves_and_matches_the_russian_contract():
     """
     import re
 
-    for name in ("index", "vpn", "proxy", "verify", "check", "free", "status", "404", "legal"):
+    for name in ("index", "vpn", "proxy", "tv", "verify", "check", "status", "404", "legal"):
         ru = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
         en = (SITE_DIR / "en" / f"{name}.html").read_text(encoding="utf-8")
         key = lambda page: sorted(  # noqa: E731 - local, one use
@@ -185,7 +185,7 @@ def test_api_routes_do_not_conflict_with_the_site(site_client):
 
 def test_every_english_page_serves(site_client):
     """The EN tree is reachable through the gateway, with English labels."""
-    for page in ("", "vpn", "proxy", "verify", "check", "free", "status", "legal"):
+    for page in ("", "vpn", "proxy", "tv", "verify", "check", "status", "legal"):
         response = site_client.get(f"/en/{page}" if page else "/en/")
         assert response.status_code == 200, page
         assert response.headers["cache-control"] == "no-cache"
@@ -226,7 +226,8 @@ def test_indexable_pages_carry_canonical_hreflang_and_open_graph(site_client):
     for path, canonical in (
         ("/", "https://poolnet.online/"),
         ("/proxy", "https://poolnet.online/proxy"),
-        ("/en/free", "https://poolnet.online/en/free"),
+        ("/en/download", "https://poolnet.online/en/download"),
+        ("/tv", "https://poolnet.online/tv"),
     ):
         html = site_client.get(path).text
         assert f'<link rel="canonical" href="{canonical}">' in html, path

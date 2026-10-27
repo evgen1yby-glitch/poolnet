@@ -29,50 +29,29 @@
 <title>Proxy pool — PoolNet</title>
 <link rel="icon" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<link rel="stylesheet" href="../system.css">
+<link rel="stylesheet" href="../system.css?v=20">
+<link rel="stylesheet" href="/download.css?v=9">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="/en/legal">terms</a></span><a class="freebar-cta" href="/en/free">Get a 7-day key</a></div></div>
-<header class="top">
-  <div class="wrap top-in">
-    <a class="brand" href="/en/" aria-label="PoolNet — home">
-      <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
-      <span class="bn">PoolNet</span>
-    </a>
-    <nav class="main" aria-label="Sections">
-      <a href="/en/">Home</a>
-      <a href="/en/vpn">VPN</a>
-      <a href="/en/proxy" class="on" aria-current="page">Proxy pool</a>
-      <a href="/en/verify">Verification</a>
-      <a href="/en/check">Check node</a>
-      <a href="/en/status">Status</a>
-      <a href="/en/legal">Terms</a>
-    </nav>
-    <div class="lang" role="group" aria-label="Language">
-      <a class="lang-b" href="/proxy" hreflang="ru">RU</a>
-      <a class="lang-b on" href="/en/proxy" hreflang="en" aria-current="true">EN</a>
-      <a class="apk-link" href="/en/download" aria-label="Download the app">Install</a>
-    </div>
-  </div>
-</header>
+<header class="top"><div class="wrap top-in"><a class="brand" href="/en/" aria-label="PoolNet — home"><img class="logo-img" src="/assets/logo.png" srcset="/assets/logo-64.png 64w, /assets/logo-96.png 96w, /assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32"><span class="bn">PoolNet</span></a><nav class="main" aria-label="Sections"><a href="/en/">Home</a><a href="/en/vpn">VPN</a><a href="/en/proxy" class="on" aria-current="page">Proxy pool</a><a href="/en/tv">TV</a><a href="/en/verify">Verification</a><a href="/en/check">Check node</a><a href="/en/status">Status</a><a href="/en/legal">Terms</a></nav><div class="lang" role="group" aria-label="Language"><a class="lang-b" href="/proxy" hreflang="ru">RU</a><a class="lang-b on" href="/en/proxy" hreflang="en" aria-current="true">EN</a><a class="apk-link" href="/en/download" aria-label="Download the app">Download</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><span class="nav-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div><div class="mobile-nav" id="mobile-nav" hidden><div class="mobile-nav-in"><nav aria-label="Mobile sections"><a class="mnav" href="/en/">Home<span>›</span></a><a class="mnav" href="/en/vpn">VPN<span>›</span></a><a class="mnav on" href="/en/proxy">Proxy pool<span>›</span></a><a class="mnav" href="/en/tv">TV<span>›</span></a><a class="mnav" href="/en/verify">Verification<span>›</span></a><a class="mnav" href="/en/check">Check node<span>›</span></a><a class="mnav" href="/en/status">Status<span>›</span></a><a class="mnav" href="/en/legal">Terms<span>›</span></a></nav><div class="mobile-nav-foot"><div class="mlangs" role="group" aria-label="Language"><a class="mlang" href="/proxy" hreflang="ru">RU</a><a class="mlang on" href="/en/proxy" hreflang="en" aria-current="true">EN</a></div><a class="btn btn-1" href="/en/download">Download APK</a></div></div></div></header>
 
 
 <main id="main" tabindex="-1">
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="wrap hero-in">
-      <span class="chip"><i></i>live proxy database · refreshed every 15 minutes · median {{pool.median_ms|127}} ms</span>
-      <h1>Open <span class="grad-txt">proxy pool</span></h1>
-      <p class="sub">{{pool.total|30 576}} live entries: HTTP, SOCKS5, SOCKS4. Anonymity, latency and uptime are measured with real connections — not pings. Output is published immediately.</p>
-      <div class="cta-row">
-        <a class="btn btn-1" href="#pool">Open the pool table</a>
-        <a class="btn btn-2" href="/en/verify">Node verification methodology</a>
-      </div>
-      <div class="dlcard">
-        <div class="dlhead"><span class="dlk">Download the lists free</span><span class="dlnote">no signup · plain text, one address per line</span></div>
-        <div class="dlb"><a href="/pool/http.txt" download>HTTP <b>{{pool.files.http|28 999}}</b></a><a href="/pool/socks5.txt" download>SOCKS5 <b>{{pool.files.socks5|1 179}}</b></a><a href="/pool/socks4.txt" download>SOCKS4 <b>{{pool.files.socks4|398}}</b></a><a href="/pool/all.txt" download>All <b>{{pool.files.all|30 576}}</b></a><a href="/pool/proxies.json" download>JSON</a></div>
-        <div class="dlfoot"><a href="#files">All files and API, including country shards →</a><a class="btn btn-1" href="/en/free">Free VPN</a></div>
+  <section class="dl-hero hero-v2 hero-v2-simple">
+    <div class="dl-hero-bg"></div>
+    <div class="wrap hero-v2-in">
+      <div class="hero-v2-copy">
+        <div class="hero-eyebrow"><span class="hero-dot"></span>PROXY CATALOG · HTTP / SOCKS</div>
+        <h1>Live proxy<br><span class="accent">catalog.</span></h1>
+        <p class="hero-lead">Addresses from public sources. Download lists or check individual nodes.</p>
+        <div class="hero-v2-actions">
+          <a class="btn btn-1" href="#pool">Open catalog</a>
+          <a class="hero-link" href="/en/download">Download the app <span aria-hidden="true">→</span></a>
+        </div>
+        <dl class="hero-specs">
+          <div><dt>Protocols</dt><dd>HTTP / SOCKS5 / SOCKS4</dd></div>
+        </dl>
       </div>
     </div>
   </section>
@@ -103,7 +82,7 @@
         <label class="tool-x sel"><span class="sr-only">Country</span><select id="f-country" aria-label="Country"><option value="">all countries</option></select></label>
         <label class="tool-x sel"><span class="sr-only">Per page</span><select id="f-per" aria-label="Rows per page"><option value="10">10</option><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option></select></label>
       </div>
-      <div class="tcard"><div class="tscroll"><table class="pt"><caption class="sr-only">Proxies</caption><thead><tr><th scope="col">#</th><th scope="col">Proxy</th><th scope="col">Protocol</th><th scope="col">Grade</th><th scope="col">Latency</th><th scope="col">Uptime 30d</th><th scope="col">Country</th></tr></thead><tbody id="ptbody"><!--begin:rows:proxy--><tr><td class="pa">1</td><td class="addr">45.85.119.124:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">7 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="GB">GB</span></td></tr><tr><td class="pa">2</td><td class="addr">172.67.194.35:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">3</td><td class="addr">185.148.105.221:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="RU">RU</span></td></tr><tr><td class="pa">4</td><td class="addr">206.238.238.39:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">8 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="SG">SG</span></td></tr><tr><td class="pa">5</td><td class="addr">172.67.167.117:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">6</td><td class="addr">104.27.19.230:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">7</td><td class="addr">198.41.200.112:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">9 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa">8</td><td class="addr">63.141.128.78:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa">9</td><td class="addr">104.254.140.6:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa">10</td><td class="addr">104.18.14.32:80</td><td><span class="pb">HTTP</span></td><td><span class="pb g-elite">elite</span></td><td class="num">10 ms</td><td class="up"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num"><span class="ccx" data-cc="CA">CA</span></td></tr><!--end:rows:proxy--></tbody></table></div>
+      <div class="tcard"><div class="tscroll"><table class="pt"><caption class="sr-only">Proxies</caption><thead><tr><th scope="col">#</th><th scope="col">Proxy</th><th scope="col">Protocol</th><th scope="col">Grade</th><th scope="col">Latency</th><th scope="col">Uptime 30d</th><th scope="col">Country</th></tr></thead><tbody id="ptbody"><!--begin:rows:proxy--><tr><td class="pa" data-label="#">1</td><td class="addr" data-label="Proxy">45.85.119.124:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">7 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="GB">GB</span></td></tr><tr><td class="pa" data-label="#">2</td><td class="addr" data-label="Proxy">172.67.194.35:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">8 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa" data-label="#">3</td><td class="addr" data-label="Proxy">185.148.105.221:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">8 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="RU">RU</span></td></tr><tr><td class="pa" data-label="#">4</td><td class="addr" data-label="Proxy">206.238.238.39:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">8 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="SG">SG</span></td></tr><tr><td class="pa" data-label="#">5</td><td class="addr" data-label="Proxy">172.67.167.117:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">9 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa" data-label="#">6</td><td class="addr" data-label="Proxy">104.27.19.230:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">9 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa" data-label="#">7</td><td class="addr" data-label="Proxy">198.41.200.112:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">9 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="CA">CA</span></td></tr><tr><td class="pa" data-label="#">8</td><td class="addr" data-label="Proxy">63.141.128.78:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">10 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa" data-label="#">9</td><td class="addr" data-label="Proxy">104.254.140.6:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">10 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="US">US</span></td></tr><tr><td class="pa" data-label="#">10</td><td class="addr" data-label="Proxy">104.18.14.32:80</td><td data-label="Protocol"><span class="pb">HTTP</span></td><td data-label="Grade"><span class="pb g-elite">elite</span></td><td class="num" data-label="Latency">10 ms</td><td class="up" data-label="Uptime 30d"><span class="upb"><i style="width:100%"></i></span>100%</td><td class="num" data-label="Country"><span class="ccx" data-cc="CA">CA</span></td></tr><!--end:rows:proxy--></tbody></table></div>
       <div class="pager pager-bottom"><span id="pg-info-bottom" aria-live="polite"></span><span class="pg-nav"><button type="button" class="pg-btn" id="pg-prev-bottom" disabled aria-label="Previous page">‹</button><span id="pg-page-bottom"><b>1</b> / 1</span><button type="button" class="pg-btn" id="pg-next-bottom" disabled aria-label="Next page">›</button></span></div>
       </div>
       <div class="pager"><span id="pg-info" aria-live="polite">showing 10 of {{pool.total|30 576}}</span><span class="pg-nav"><button type="button" class="pg-btn" id="pg-prev" disabled aria-label="Previous page">‹</button><span id="pg-page"><b>1</b> / 1</span><button type="button" class="pg-btn" id="pg-next" disabled aria-label="Next page">›</button></span></div>
@@ -136,7 +115,7 @@
         <h2>Sources <span class="grad-txt">and their contribution</span></h2>
         <p>Benchmark of external lists: how many addresses survive verification. Data comes alive only after a full pass.</p>
       </div>
-      <div class="tcard"><div class="tscroll"><table class="pt"><caption class="sr-only">Sources</caption><thead><tr><th scope="col">#</th><th scope="col">Source</th><th scope="col">Checked candidates</th><th scope="col">Alive</th><th scope="col">Live %</th><th scope="col">Median</th><th scope="col">Elite %</th><th scope="col">Published</th></tr></thead><tbody><!--begin:rows:sources--><tr><td class="pa">1</td><td class="addr">gnxd3riftt2we-st-http</td><td class="num">15</td><td class="num">15</td><td class="num">100%</td><td class="num">22 ms</td><td class="num">100%</td><td><span class="pb">500</span></td></tr><tr><td class="pa">2</td><td class="addr">thordata-socks5</td><td class="num">27</td><td class="num">23</td><td class="num">85.2%</td><td class="num">1458 ms</td><td class="num">8.7%</td><td><span class="pb">59</span></td></tr><tr><td class="pa">3</td><td class="addr">zloi-user-socks5</td><td class="num">47</td><td class="num">39</td><td class="num">83%</td><td class="num">2251 ms</td><td class="num">28.2%</td><td><span class="pb">139</span></td></tr><tr><td class="pa">4</td><td class="addr">health-list-socks5</td><td class="num">140</td><td class="num">102</td><td class="num">72.9%</td><td class="num">1513 ms</td><td class="num">16.7%</td><td><span class="pb">609</span></td></tr><tr><td class="pa">5</td><td class="addr">zaeem20-socks5</td><td class="num">56</td><td class="num">40</td><td class="num">71.4%</td><td class="num">1291.5 ms</td><td class="num">15%</td><td><span class="pb">203</span></td></tr><tr><td class="pa">6</td><td class="addr">stormsia-socks5</td><td class="num">24</td><td class="num">17</td><td class="num">70.8%</td><td class="num">1678 ms</td><td class="num">5.9%</td><td><span class="pb">42</span></td></tr><tr><td class="pa">7</td><td class="addr">relayglass-all</td><td class="num">76</td><td class="num">53</td><td class="num">69.7%</td><td class="num">1258 ms</td><td class="num">15.1%</td><td><span class="pb">397</span></td></tr><tr><td class="pa">8</td><td class="addr">maximilianfeix-http</td><td class="num">42</td><td class="num">29</td><td class="num">69%</td><td class="num">1271 ms</td><td class="num">17.2%</td><td><span class="pb">190</span></td></tr><!--end:rows:sources--></tbody></table></div></div>
+      <div class="tcard"><div class="tscroll"><table class="pt"><caption class="sr-only">Sources</caption><thead><tr><th scope="col">#</th><th scope="col">Source</th><th scope="col">Checked candidates</th><th scope="col">Alive</th><th scope="col">Live %</th><th scope="col">Median</th><th scope="col">Elite %</th><th scope="col">Published</th></tr></thead><tbody><!--begin:rows:sources--><tr><td class="pa" data-label="#">1</td><td class="addr" data-label="Source">gnxd3riftt2we-st-http</td><td class="num" data-label="Checked candidates">15</td><td class="num" data-label="Alive">15</td><td class="num" data-label="Live %">100%</td><td class="num" data-label="Median">22 ms</td><td class="num" data-label="Elite %">100%</td><td data-label="Published"><span class="pb">500</span></td></tr><tr><td class="pa" data-label="#">2</td><td class="addr" data-label="Source">thordata-socks5</td><td class="num" data-label="Checked candidates">27</td><td class="num" data-label="Alive">23</td><td class="num" data-label="Live %">85.2%</td><td class="num" data-label="Median">1458 ms</td><td class="num" data-label="Elite %">8.7%</td><td data-label="Published"><span class="pb">59</span></td></tr><tr><td class="pa" data-label="#">3</td><td class="addr" data-label="Source">zloi-user-socks5</td><td class="num" data-label="Checked candidates">47</td><td class="num" data-label="Alive">39</td><td class="num" data-label="Live %">83%</td><td class="num" data-label="Median">2251 ms</td><td class="num" data-label="Elite %">28.2%</td><td data-label="Published"><span class="pb">139</span></td></tr><tr><td class="pa" data-label="#">4</td><td class="addr" data-label="Source">health-list-socks5</td><td class="num" data-label="Checked candidates">140</td><td class="num" data-label="Alive">102</td><td class="num" data-label="Live %">72.9%</td><td class="num" data-label="Median">1513 ms</td><td class="num" data-label="Elite %">16.7%</td><td data-label="Published"><span class="pb">609</span></td></tr><tr><td class="pa" data-label="#">5</td><td class="addr" data-label="Source">zaeem20-socks5</td><td class="num" data-label="Checked candidates">56</td><td class="num" data-label="Alive">40</td><td class="num" data-label="Live %">71.4%</td><td class="num" data-label="Median">1291.5 ms</td><td class="num" data-label="Elite %">15%</td><td data-label="Published"><span class="pb">203</span></td></tr><tr><td class="pa" data-label="#">6</td><td class="addr" data-label="Source">stormsia-socks5</td><td class="num" data-label="Checked candidates">24</td><td class="num" data-label="Alive">17</td><td class="num" data-label="Live %">70.8%</td><td class="num" data-label="Median">1678 ms</td><td class="num" data-label="Elite %">5.9%</td><td data-label="Published"><span class="pb">42</span></td></tr><tr><td class="pa" data-label="#">7</td><td class="addr" data-label="Source">relayglass-all</td><td class="num" data-label="Checked candidates">76</td><td class="num" data-label="Alive">53</td><td class="num" data-label="Live %">69.7%</td><td class="num" data-label="Median">1258 ms</td><td class="num" data-label="Elite %">15.1%</td><td data-label="Published"><span class="pb">397</span></td></tr><tr><td class="pa" data-label="#">8</td><td class="addr" data-label="Source">maximilianfeix-http</td><td class="num" data-label="Checked candidates">42</td><td class="num" data-label="Alive">29</td><td class="num" data-label="Live %">69%</td><td class="num" data-label="Median">1271 ms</td><td class="num" data-label="Elite %">17.2%</td><td data-label="Published"><span class="pb">190</span></td></tr><!--end:rows:sources--></tbody></table></div></div>
       <p class="pa" style="margin-top:.8rem">top 8 of {{pool.sources_total|194}} sources · updated with each run · <a href="/pool/benchmark.json">full benchmark</a></p>
     </div>
   </section>
@@ -151,26 +130,7 @@
       <p style="margin-top:1rem;color:var(--mut);font-size:.88rem">Treat every entry as hostile: a public proxy can intercept and alter traffic. Do not send accounts, passwords or private data through it.</p>
     </div>
   </section>
-
-  <section>
-    <div class="wrap">
-      <div class="bento">
-        <div class="b-mod b6">
-          <div class="pk">LEGAL FRAMEWORK</div>
-          <h3>A catalog, not an operator</h3>
-          <p>The connection is established directly between the client and the node. We publish verified addresses from open lists and do not participate in traffic transmission.</p>
-        </div>
-        <div class="b-mod b6">
-          <div class="pk">BOUNDARY</div>
-          <h3>what the pool should not be used for</h3>
-          <p>The node operator is responsible for actions on the nodes. For sensitive data, use the platform VPN configurations.</p>
-          <a class="golink" href="/en/vpn">VPN — configurations with full verification</a>
-        </div>
-      </div>
-    </div>
-  </section>
 </main>
-
 <footer class="site">
   <div class="wrap foot">
     <div>
@@ -183,14 +143,15 @@
     </div>
     <nav aria-label="Links">
       <a href="/en/">Home</a>
-      <a href="/en/proxy">Proxy pool</a>
+      <a href="/en/proxy">Proxy pool</a><a href="/en/tv">TV</a>
       <a href="/en/verify">Verification</a>
       <a href="/en/check">Check node</a>
       <a href="/en/status">Status</a>
     <a href="/en/download">App</a></nav>
   </div>
 </footer>
-<script src="../proxy-list.js" defer></script>
+<script src="../proxy-list.js?v=2" defer></script>
 <script src="../flags.js" defer></script>
+<script src="/site-nav.js?v=3" defer></script>
 </body>
 </html>

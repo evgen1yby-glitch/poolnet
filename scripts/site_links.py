@@ -34,7 +34,7 @@ def main() -> int:
     required = {
         f"{tree}{name}.html"
         for tree in ("", "en/")
-        for name in ("index", "vpn", "proxy", "verify", "check", "free", "status", "404", "legal", "download")
+        for name in ("index", "vpn", "proxy", "tv", "verify", "check", "status", "404", "legal", "download")
     }
     seen = {p.relative_to(SITE).as_posix() for p in pages}
     missing = required - seen
@@ -54,7 +54,7 @@ def main() -> int:
         for href in LINK.findall(html):
             if href.startswith(("http://", "https://", "data:", "mailto:", "#")):
                 continue
-            path = href.split("#")[0]
+            path = href.split("#")[0].split("?")[0]
             if not path:
                 continue
             if path.endswith(".html"):

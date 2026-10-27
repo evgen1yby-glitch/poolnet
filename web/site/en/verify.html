@@ -28,41 +28,29 @@
 <title>Node verification — PoolNet</title>
 <link rel="icon" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<link rel="stylesheet" href="../system.css">
+<link rel="stylesheet" href="../system.css?v=20">
+<link rel="stylesheet" href="/download.css?v=9">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="freebar"><div class="wrap freebar-in"><span><b>Free</b> · public sources · no warranty — <a href="/en/legal">terms</a></span><a class="freebar-cta" href="/en/free">Get a 7-day key</a></div></div>
-<header class="top">
-  <div class="wrap top-in">
-    <a class="brand" href="/en/" aria-label="PoolNet — home">
-      <img class="logo-img" src="../assets/logo.png" srcset="../assets/logo-64.png 64w, ../assets/logo-96.png 96w, ../assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32">
-      <span class="bn">PoolNet</span>
-    </a>
-    <nav class="main" aria-label="Sections">
-      <a href="/en/">Home</a>
-      <a href="/en/vpn">VPN</a>
-      <a href="/en/proxy">Proxy pool</a>
-      <a href="/en/verify" class="on" aria-current="page">Verification</a>
-      <a href="/en/check">Check node</a>
-      <a href="/en/status">Status</a>
-      <a href="/en/legal">Terms</a>
-    </nav>
-    <div class="lang" role="group" aria-label="Language">
-      <a class="lang-b" href="/verify" hreflang="ru">RU</a>
-      <a class="lang-b on" href="/en/verify" hreflang="en" aria-current="true">EN</a>
-      <a class="apk-link" href="/en/download" aria-label="Download the app">Install</a>
-    </div>
-  </div>
-</header>
+<header class="top"><div class="wrap top-in"><a class="brand" href="/en/" aria-label="PoolNet — home"><img class="logo-img" src="/assets/logo.png" srcset="/assets/logo-64.png 64w, /assets/logo-96.png 96w, /assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32"><span class="bn">PoolNet</span></a><nav class="main" aria-label="Sections"><a href="/en/">Home</a><a href="/en/vpn">VPN</a><a href="/en/proxy">Proxy pool</a><a href="/en/tv">TV</a><a href="/en/verify" class="on" aria-current="page">Verification</a><a href="/en/check">Check node</a><a href="/en/status">Status</a><a href="/en/legal">Terms</a></nav><div class="lang" role="group" aria-label="Language"><a class="lang-b" href="/verify" hreflang="ru">RU</a><a class="lang-b on" href="/en/verify" hreflang="en" aria-current="true">EN</a><a class="apk-link" href="/en/download" aria-label="Download the app">Download</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><span class="nav-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div><div class="mobile-nav" id="mobile-nav" hidden><div class="mobile-nav-in"><nav aria-label="Mobile sections"><a class="mnav" href="/en/">Home<span>›</span></a><a class="mnav" href="/en/vpn">VPN<span>›</span></a><a class="mnav" href="/en/proxy">Proxy pool<span>›</span></a><a class="mnav" href="/en/tv">TV<span>›</span></a><a class="mnav on" href="/en/verify">Verification<span>›</span></a><a class="mnav" href="/en/check">Check node<span>›</span></a><a class="mnav" href="/en/status">Status<span>›</span></a><a class="mnav" href="/en/legal">Terms<span>›</span></a></nav><div class="mobile-nav-foot"><div class="mlangs" role="group" aria-label="Language"><a class="mlang" href="/verify" hreflang="ru">RU</a><a class="mlang on" href="/en/verify" hreflang="en" aria-current="true">EN</a></div><a class="btn btn-1" href="/en/download">Download APK</a></div></div></div></header>
 
 <main id="main" tabindex="-1">
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="wrap hero-in">
-      <span class="chip"><i></i>6 stages · real connections</span>
-      <h1>Verification <span class="grad-txt">by real connections</span></h1>
-      <p class="sub">Each stage is a network connection, not a ping. A node that fails any stage is excluded from the output.</p>
+  <section class="dl-hero hero-v2 hero-v2-simple">
+    <div class="dl-hero-bg"></div>
+    <div class="wrap hero-v2-in">
+      <div class="hero-v2-copy">
+        <div class="hero-eyebrow"><span class="hero-dot"></span>METHOD · REAL CONNECTIONS</div>
+        <h1>How nodes<br><span class="accent">are verified.</span></h1>
+        <p class="hero-lead">Six stages: from a public list to an HTTP request through the tunnel.</p>
+        <div class="hero-v2-actions">
+          <a class="btn btn-1" href="/en/check">Check a node</a>
+          <a class="hero-link" href="/en/status">Status <span aria-hidden="true">→</span></a>
+        </div>
+        <dl class="hero-specs">
+          <div><dt>Protocols</dt><dd>TCP / TLS / CONFIG / HTTP</dd></div>
+        </dl>
+      </div>
     </div>
   </section>
 
@@ -115,7 +103,6 @@
     </div>
   </section>
 </main>
-
 <footer class="site">
   <div class="wrap foot">
     <div>
@@ -129,12 +116,13 @@
     <nav aria-label="Links">
       <a href="/en/">Home</a>
       <a href="/en/vpn">VPN</a>
-      <a href="/en/proxy">Proxy pool</a>
+      <a href="/en/proxy">Proxy pool</a><a href="/en/tv">TV</a>
       <a href="/en/check">Check node</a>
       <a href="/en/status">Status</a>
     <a href="/en/download">App</a></nav>
   </div>
 </footer>
 <script src="../flags.js" defer></script>
+<script src="/site-nav.js?v=3" defer></script>
 </body>
 </html>
