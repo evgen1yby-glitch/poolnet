@@ -5,7 +5,7 @@
 <p align="center"><a href="README.md">Русский</a> · English</p>
 
 <p align="center"><strong>Open VPN and proxy lists verified with real connections.</strong><br>
-Updated every 15 minutes · free 7-day key · no account required</p>
+Updated every 15 minutes</p>
 
 <p align="center">
   <a href="https://poolnet.online"><img src="https://img.shields.io/badge/site-poolnet.online-7c5cff" alt="site"></a>
@@ -25,7 +25,6 @@ PoolNet is a public catalog of two pools sharing one verification engine:
   uptime are measured with a full request through the proxy, not a ping.
 - **VPN** — VLESS, Shadowsocks, VMess and Trojan. A node must pass TCP → TLS →
   a raised client configuration → an end-to-end HTTP request to be published.
-- **Free key** — a personal 7-day subscription without Telegram or payment.
 
 Traffic goes **directly from the client to the node**. PoolNet is not the
 operator, does not relay traffic and does not guarantee third-party
@@ -46,16 +45,16 @@ Add a URL to your client as a subscription.
 | VPN for Xray / v2rayNG | [verified-xray.base64](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-xray.base64) |
 | Clash / mihomo | [verified-sing-box.clash](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.clash) |
 
-The branch is a snapshot, not a personal key: it has no subscription term.
-For a personal 7-day key use [poolnet.online/free](https://poolnet.online/free):
-one key per IP per 24 hours after a short verification pause.
+The branch is a snapshot, not a personal subscription: it has no subscription
+term. To connect, use the Android app:
+[poolnet.online/download](https://poolnet.online/download).
 
 ## Screenshots
 
 | Proxy pool | VPN |
 | --- | --- |
 | <img src="docs/screenshots/proxy.webp" alt="Proxy pool" width="100%"> | <img src="docs/screenshots/vpn.webp" alt="VPN" width="100%"> |
-| <img src="docs/screenshots/free.webp" alt="Free key" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="Mobile" width="58%"> |
+| <img src="docs/screenshots/app-home.webp" alt="PoolNet Android app" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="Mobile" width="58%"> |
 
 ## Quick start
 
@@ -87,7 +86,7 @@ More: [methodology](https://poolnet.online/verify) and
 
 | Path | Purpose | License |
 | --- | --- | --- |
-| `web/site/` | bilingual site: pools, verification, free key, status | AGPL-3.0 |
+| `web/site/` | bilingual site: pools, verification, status | AGPL-3.0 |
 | `hub/` | VPN pool: collection, 6-stage checks, subscriptions, bot, APIs | AGPL-3.0 |
 | `pool/` | proxy pool: sources, checks, benchmark, JSON/TXT publication | MIT |
 | `mobile/` | Expo/React Native app: countries, key, proxies, profile | AGPL-3.0 |

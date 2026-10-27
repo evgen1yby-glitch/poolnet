@@ -5,6 +5,7 @@ const KEY_SUB = 'poolnet.subscription';
 const KEY_COUNTRY = 'poolnet.country';
 const KEY_ONBOARDED = 'poolnet.onboarded';
 const KEY_LANG = 'poolnet.language';
+const KEY_INSTALL = 'poolnet.install';
 
 async function setItem(key: string, value: string): Promise<void> {
   if (Platform.OS === 'web') {
@@ -28,7 +29,7 @@ async function removeItem(key: string): Promise<void> {
 }
 
 export type StoredLanguage = 'ru' | 'en';
-export type StoredSubscription = { token: string; url: string; expiresAt: string };
+export type StoredSubscription = { token: string; url: string; expiresAt: string | null; unlimited?: boolean };
 export type StoredCountry = { cc: string; name: string; nodes: number };
 
 export const storage = {
@@ -37,7 +38,8 @@ export const storage = {
     if (!raw) return null;
     try {
       const parsed = JSON.parse(raw) as StoredSubscription;
-      if (!parsed.token || !parsed.url || !parsed.expiresAt) return null;
+      if (!parsed.token || !parsed.url) return null;
+      if (!parsed.unlimited && !parsed.expiresAt) return null;
       return parsed;
     } catch {
       return null;
@@ -52,6 +54,8 @@ export const storage = {
   },
   setCountry: (value: StoredCountry) => setItem(KEY_COUNTRY, JSON.stringify(value)),
   clearCountry: () => removeItem(KEY_COUNTRY),
+  getInstallId: () => getItem(KEY_INSTALL),
+  setInstallId: (value: string) => setItem(KEY_INSTALL, value),
   getLanguage: async (): Promise<StoredLanguage | null> => {
     const value = await getItem(KEY_LANG);
     return value === 'ru' || value === 'en' ? value : null;

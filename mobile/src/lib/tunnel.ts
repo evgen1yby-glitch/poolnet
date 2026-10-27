@@ -26,7 +26,7 @@ export async function stopTunnel(): Promise<void> {
   await nativeTunnel.stop();
 }
 
-export async function verifyTunnel(timeoutMs = 8000): Promise<void> {
+async function probeOnce(timeoutMs: number): Promise<void> {
   const endpoints = ['https://api.ipify.org', 'https://icanhazip.com'];
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -52,6 +52,25 @@ export async function verifyTunnel(timeoutMs = 8000): Promise<void> {
     clearTimeout(timer);
   }
 }
+
+export async function verifyTunnel(timeoutMs = 6000): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  let lastError: unknown = new Error('tunnel probe failed');
+  while (Date.now() < deadline) {
+    const remaining = deadline - Date.now();
+    try {
+      await probeOnce(Math.min(2500, remaining));
+      return;
+    } catch (error) {
+      lastError = error;
+      if (deadline - Date.now() > 1200) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+  }
+  throw lastError;
+}
+
 export async function tunnelStatus(): Promise<{ running: boolean; error: string | null }> {
   if (!nativeTunnel) return { running: false, error: null };
   return nativeTunnel.status();

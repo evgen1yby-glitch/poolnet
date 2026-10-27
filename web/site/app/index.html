@@ -3,48 +3,223 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#07070a">
+<meta name="theme-color" content="#050505">
+<title>PoolNet Mobile — интерактивный макет</title>
+<meta name="description" content="Интерактивный макет PoolNet Mobile: децентрализованный бесплатный VPN. Чёрно-белый интерфейс, страны, RU/EN, автопереключение шлюза.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="PoolNet Mobile — подключение VPN, серверы, прокси и бесплатный ключ.">
-<title>Подключение · PoolNet Mobile</title>
 <link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
-<link rel="stylesheet" href="/app/app.css">
-<script src="/app/app.js" defer></script>
+<link rel="stylesheet" href="./styles.css?v=9">
 </head>
 <body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 2.9 8.2 7.2 10.4 4.3-2.2 7.2-6 7.2-10.4V5.6L12 2.8Z" fill="none" stroke="currentColor" stroke-width="1.35"/><path d="m8.7 12 2.1 2.1 4.6-4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-power" viewBox="0 0 24 24"><path d="M12 3.5v8M6.8 6.4a8 8 0 1 0 10.4 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="ic-network" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5.5" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="18.5" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="m11 6.9-4.2 9M13 6.9l4.2 9M7.5 18h9" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+  <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 19.5c.8-3.7 3.1-5.4 6.5-5.4s5.7 1.7 6.5 5.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="m15 15 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="ic-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="10.5" height="10.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M15.5 8.5V6.8a1.8 1.8 0 0 0-1.8-1.8H6.8A1.8 1.8 0 0 0 5 6.8v6.9a1.8 1.8 0 0 0 1.8 1.8h1.7" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+  <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.25"/><path d="M4 12h16M12 4c2.1 2.2 3.2 4.9 3.2 8s-1.1 5.8-3.2 8c-2.1-2.2-3.2-4.9-3.2-8S9.9 6.2 12 4Z" fill="none" stroke="currentColor" stroke-width="1.15"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24"><path d="m5.5 12.5 4.2 4.2 8.8-9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
 <div class="stage">
-<div class="phone">
-<div class="statusbar"><span class="clock">9:41</span><span class="island"></span><span class="status-icons" aria-hidden="true"><svg viewBox="0 0 18 14" fill="currentColor"><rect x="0" y="9" width="2.5" height="5" rx="1"/><rect x="4" y="6.5" width="2.5" height="7.5" rx="1"/><rect x="8" y="4" width="2.5" height="10" rx="1"/><rect x="12" y="1" width="2.5" height="13" rx="1"/></svg><svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5.5a10 10 0 0 1 14 0M5 8.5a5.5 5.5 0 0 1 8 0"/><circle cx="9" cy="11.5" r="1" fill="currentColor" stroke="none"/></svg><svg viewBox="0 0 24 14" fill="none"><rect x="1" y="2" width="19" height="10" rx="2.6" stroke="currentColor" stroke-width="1.3"/><rect x="3" y="4" width="14" height="6" rx="1.2" fill="currentColor"/><path d="M22 5.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
-<header class="appbar"><a class="brand" href="/app/" aria-label="PoolNet — приложение"><img src="/assets/logo-96.png" alt=""><b>PoolNet</b><small>mobile</small></a><a class="iconbtn" href="/app/profile" aria-label="Профиль"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M5 20c.7-3.5 3.1-5.4 7-5.4s6.3 1.9 7 5.4"/></svg></a></header>
-<main class="screen">
-<div class="hero-state"><span class="eyebrow">Соединение</span><span class="status-pill" id="conn-pill"><i></i><span id="conn-pill-text">Защищено</span></span></div>
-<div class="orb-stage">
-  <span class="orb-ring r3"></span><span class="orb-ring r2"></span><span class="orb-ring r1"></span>
-  <button class="orb connected" id="connect" type="button" aria-pressed="true" aria-label="Отключить VPN">
-    <svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg><b id="orb-label">ЗАЩИЩЕНО</b><span class="hint" id="orb-hint">нажмите, чтобы отключить</span>
-  </button>
+  <header class="stage-head" data-chrome>
+    <a class="wordmark" href="https://poolnet.online" aria-label="PoolNet">
+      <span class="wordmark-mark"><svg><use href="#ic-shield"/></svg></span>
+      <span>PoolNet</span><span class="wordmark-slash">/</span><span class="wordmark-sub">mobile</span>
+    </a>
+    <div class="proto">
+      <span data-i18n="chrome.proto">Интерактивный макет</span>
+      <b>04</b>
+    </div>
+  </header>
+
+  <div class="stage-field" aria-hidden="true"></div>
+
+  <aside class="note note-a" data-chrome>
+    <span class="note-k" data-i18n="chrome.noteAK">Соединение</span>
+    <p data-i18n="chrome.noteA">Один жест. Поле реагирует.</p>
+  </aside>
+  <aside class="note note-b" data-chrome>
+    <span class="note-k" data-i18n="chrome.noteBK">Маршрут</span>
+    <p data-i18n="chrome.noteB">Без счётчиков. Только страны.</p>
+    <button class="demo" id="demoDrop" type="button" disabled>
+      <span class="demo-dot"></span>
+      <span data-i18n="chrome.demo">Смоделировать обрыв шлюза</span>
+    </button>
+  </aside>
+
+  <main class="phone" aria-label="PoolNet Mobile">
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="statusbar" aria-hidden="true">
+          <span id="clock">9:41</span>
+          <span class="statusbar-mid"><i class="sig"></i><i class="sig"></i><i class="sig"></i><span class="wifi"></span><span class="battery"><b></b></span></span>
+        </div>
+        <div class="island" aria-hidden="true"><span></span></div>
+
+        <div class="app" id="app" data-phase="idle">
+          <header class="appbar">
+            <button class="brand" id="brandHome" type="button" aria-label="PoolNet — VPN">
+              <span class="brand-mark"><svg><use href="#ic-shield"/></svg></span>
+              <span class="brand-name">PoolNet</span>
+              <span class="brand-tag">MOBILE</span>
+            </button>
+            <button class="icon-btn" id="openProfile" type="button" aria-label="Профиль" data-i18n-aria="aria.profile">
+              <svg><use href="#ic-user"/></svg>
+            </button>
+          </header>
+
+          <div class="screens">
+            <section class="screen screen-vpn is-active" id="screen-vpn" aria-label="VPN">
+              <div class="topline">
+                <span class="micro" data-i18n="vpn.kicker">Децентрализованный VPN</span>
+                <span class="status-pill" id="statusPill" aria-live="polite">Ключ активен</span>
+              </div>
+
+              <div class="orb-stage">
+                <span class="orb-ticks" aria-hidden="true"></span>
+                <span class="orb-scan" aria-hidden="true"></span>
+                <span class="orb-halo" aria-hidden="true"></span>
+                <span class="orb-aura" aria-hidden="true"></span>
+                <button class="orb" id="orb" type="button" aria-label="Подключить VPN" data-i18n-aria="aria.connect" aria-pressed="false">
+                  <svg class="orb-progress" viewBox="0 0 240 240" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="silverRing" x1="20" y1="20" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+                        <stop offset="0.48" stop-color="#ffffff" stop-opacity="0.2"/>
+                        <stop offset="1" stop-color="#ffffff" stop-opacity="0.8"/>
+                      </linearGradient>
+                    </defs>
+                    <circle class="orb-track" cx="120" cy="120" r="114"/>
+                    <circle class="orb-arc" cx="120" cy="120" r="114"/>
+                  </svg>
+                  <span class="orb-sheen" aria-hidden="true"></span>
+                  <span class="orb-burst" aria-hidden="true"></span>
+                  <span class="orb-core">
+                    <svg class="orb-icon" id="orbIcon"><use href="#ic-power"/></svg>
+                  </span>
+                </button>
+              </div>
+              <div class="orb-caption">
+                <span class="orb-label" id="orbLabel">Подключить</span>
+                <span class="orb-hint" id="orbHint">нажмите, чтобы включить</span>
+              </div>
+
+              <div class="hero">
+                <h1 id="heroTitle">Свобода без границ.</h1>
+                <p id="heroSub">Один жест — и интернет снова без границ.</p>
+              </div>
+
+              <button class="route" id="openCountries" type="button" aria-haspopup="dialog">
+                <span class="route-flag"><img id="routeFlag" src="./assets/flags/nl.png" alt=""><svg class="route-globe" id="routeGlobe" hidden><use href="#ic-globe"/></svg></span>
+                <span class="route-copy"><b id="routeName">Нидерланды</b><small data-i18n="vpn.change">Сменить страну</small></span>
+                <svg class="route-chevron"><use href="#ic-chevron"/></svg>
+              </button>
+
+              <button class="keystrip" id="openKey" type="button" aria-haspopup="dialog">
+                <span class="key-main"><span class="key-num">∞</span><span class="key-unit" id="keyUnit">Бессрочно</span></span>
+                <span class="key-meta"><small data-i18n="vpn.key">Ключ</small><span id="keyUntil">до 1 ноября</span></span>
+                <span class="key-open"><span data-i18n="vpn.open">Открыть</span><svg><use href="#ic-arrow"/></svg></span>
+              </button>
+            </section>
+
+            <section class="screen screen-proxy" id="screen-proxy" aria-label="Прокси" hidden>
+              <div class="topline">
+                <span class="micro" data-i18n="proxy.kicker">Прокси-база</span>
+                <span class="live"><i></i> live</span>
+              </div>
+              <h1 class="screen-title" data-i18n="proxy.title">Прокси</h1>
+              <p class="screen-lead" data-i18n="proxy.lead">Живые адреса из открытого каталога.</p>
+              <div class="segmented" role="group" aria-label="Protocol">
+                <button class="seg is-active" type="button" data-proto="all" data-i18n="proxy.all">Все</button>
+                <button class="seg" type="button" data-proto="http">HTTP</button>
+                <button class="seg" type="button" data-proto="socks5">SOCKS5</button>
+              </div>
+              <div class="proxy-list" id="proxyList"></div>
+            </section>
+
+            <section class="screen screen-profile" id="screen-profile" aria-label="Профиль" hidden>
+              <div class="topline"><span class="micro" data-i18n="profile.kicker">Приложение</span></div>
+              <h1 class="screen-title" data-i18n="profile.title">Профиль</h1>
+              <p class="screen-lead" data-i18n="profile.lead">Локальный профиль. Без аккаунта и облака.</p>
+              <div class="identity">
+                <span class="identity-mark">P</span>
+                <span class="identity-copy"><b data-i18n="profile.guest">Гость</b><small data-i18n="profile.meta">без аккаунта · без истории</small></span>
+                <span class="identity-tag" data-i18n="profile.key">КЛЮЧ</span>
+              </div>
+              <div class="section-line"><span data-i18n="profile.language">Язык</span><small data-i18n="profile.languageHint">интерфейс и страны</small></div>
+              <div class="lang-switch" role="group" aria-label="Language">
+                <button class="lang-option" type="button" data-lang="ru"><img src="./assets/flags/ru.png" alt=""><span>RU</span></button>
+                <button class="lang-option" type="button" data-lang="en"><img src="./assets/flags/gb.png" alt=""><span>EN</span></button>
+              </div>
+              <div class="section-line"><span data-i18n="profile.app">Приложение</span></div>
+              <div class="menu">
+                <button class="menu-row" type="button"><span data-i18n="profile.how">Как это работает</span><svg><use href="#ic-chevron"/></svg></button>
+                <button class="menu-row" type="button"><span data-i18n="profile.method">Методика проверки</span><svg><use href="#ic-chevron"/></svg></button>
+                <button class="menu-row" type="button"><span data-i18n="profile.status">Статус сервиса</span><svg><use href="#ic-chevron"/></svg></button>
+                <button class="menu-row" type="button"><span data-i18n="profile.diag">Диагностика</span><svg><use href="#ic-chevron"/></svg></button>
+              </div>
+              <p class="fine" data-i18n="profile.fine">Публичные сторонние узлы. PoolNet не оператор и не даёт гарантий.</p>
+            </section>
+          </div>
+
+          <nav class="tabbar" role="tablist" aria-label="Разделы">
+            <button class="tab is-active" type="button" role="tab" aria-selected="true" data-tab="vpn" aria-controls="screen-vpn">
+              <svg><use href="#ic-power"/></svg><span data-i18n="tabs.vpn">VPN</span>
+            </button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-tab="proxy" aria-controls="screen-proxy">
+              <svg><use href="#ic-network"/></svg><span data-i18n="tabs.proxy">Прокси</span>
+            </button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-tab="profile" aria-controls="screen-profile">
+              <svg><use href="#ic-user"/></svg><span data-i18n="tabs.profile">Профиль</span>
+            </button>
+          </nav>
+
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+          <div class="sheet-layer" id="sheetLayer" hidden>
+            <button class="sheet-scrim" id="sheetScrim" type="button" aria-label="Закрыть" data-i18n-aria="aria.close"></button>
+            <section class="sheet countries-sheet" id="countriesSheet" role="dialog" aria-modal="true" aria-labelledby="countriesTitle" hidden>
+              <div class="sheet-handle" aria-hidden="true"></div>
+              <header class="sheet-head">
+                <div><span class="micro" data-i18n="countries.kicker">Страны</span><h2 id="countriesTitle" data-i18n="countries.title">Куда подключиться</h2></div>
+                <button class="icon-btn close-sheet" type="button" aria-label="Закрыть" data-i18n-aria="aria.close"><svg><use href="#ic-close"/></svg></button>
+              </header>
+              <div class="search">
+                <svg><use href="#ic-search"/></svg>
+                <input id="countrySearch" type="search" autocomplete="off" spellcheck="false" placeholder="Поиск страны" data-i18n-placeholder="countries.search">
+              </div>
+              <div class="country-list" id="countryList"></div>
+            </section>
+            <section class="sheet key-sheet" id="keySheet" role="dialog" aria-modal="true" aria-labelledby="keyTitle" hidden>
+              <div class="sheet-handle" aria-hidden="true"></div>
+              <header class="sheet-head">
+                <div><span class="micro" data-i18n="key.kicker">Подписка</span><h2 id="keyTitle" data-i18n="key.title">Ключ</h2></div>
+                <button class="icon-btn close-sheet" type="button" aria-label="Закрыть" data-i18n-aria="aria.close"><svg><use href="#ic-close"/></svg></button>
+              </header>
+              <div class="key-hero"><span>∞</span><span data-i18n="key.days">Бессрочно</span></div>
+              <div class="key-progress"><i></i></div>
+              <div class="key-row"><span data-i18n="key.until">Без срока действия</span><span data-i18n="key.week">Бесплатно</span></div>
+              <div class="key-link"><code>poolnet.online/sub/••••••••••••</code><button class="icon-btn" id="copyKey" type="button" aria-label="Скопировать ссылку" data-i18n-aria="aria.copy"><svg><use href="#ic-copy"/></svg></button></div>
+              <button class="primary" id="closeKeyDone" type="button"><span data-i18n="key.done">Готово — к подключению</span><svg><use href="#ic-arrow"/></svg></button>
+              <p class="fine" data-i18n="key.fine">Ключ не истекает. Узлы сторонние — не используйте для чувствительных данных.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-shadow" aria-hidden="true"></div>
+  </main>
+
+  <footer class="stage-foot" data-chrome>
+    <span data-i18n="chrome.foot">Интерактивный макет · 390 × 844 · RU / EN</span>
+    <span class="foot-hint" data-i18n="chrome.hint">Нажмите на круг, откройте страны, смените язык в профиле.</span>
+  </footer>
 </div>
-<div class="conn-title"><h1 id="conn-title">Соединение защищено</h1><p id="conn-sub">Трафик идёт напрямую к узлу Amsterdam</p></div>
-<a class="server-row" href="/app/servers" id="selected-server">
-  <span class="cc" data-cc>NL</span>
-  <span class="server-meta"><b data-city>Амстердам</b><span data-country>Нидерланды · <span data-ping>24</span> ms</span></span>
-  <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-</a>
-<div class="stats">
-  <div class="stat" data-stat="down"><span>Download</span><b>84.2<small>Mbps</small></b></div>
-  <div class="stat" data-stat="up"><span>Upload</span><b>12.4<small>Mbps</small></b></div>
-  <div class="stat" data-stat="ip"><span>IP-адрес</span><b class="mono">185.218.4.77</b></div>
-</div>
-<a class="key-strip" href="/app/key">
-  <span class="kicon"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="12" r="3.5"/><path d="M12 12h8m-3 0v3m-3-3v2"/></svg></span>
-  <span class="kmeta"><b>7-дневный ключ активен</b><span>осталось 4 дня · персональная ссылка</span></span>
-  <span>Открыть</span>
-</a>
-</main>
-<nav class="tabbar" aria-label="Приложение"><a class="tab active" href="/app/"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg><span>Подключение</span></a><a class="tab" href="/app/servers"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.8 9h16.4M3.8 15h16.4M12 3.5c2.1 2.4 3.2 5.3 3.2 8.5s-1.1 6.1-3.2 8.5c-2.1-2.4-3.2-5.3-3.2-8.5S9.9 5.9 12 3.5Z"/></svg><span>Серверы</span></a><a class="tab" href="/app/proxy"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h5a3 3 0 0 1 3 3v2a3 3 0 0 0 3 3h-1M6 8v4a2 2 0 0 0 2 2h2"/></svg><span>Прокси</span></a><a class="tab" href="/app/key"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="12" r="3.5"/><path d="M12 12h8m-3 0v3m-3-3v2"/></svg><span>Ключ</span></a><a class="tab" href="/app/profile"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M5 20c.7-3.5 3.1-5.4 7-5.4s6.3 1.9 7 5.4"/></svg><span>Профиль</span></a></nav>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-</div>
-<div class="stage-note"><b>PoolNet Mobile</b><span>интерактивный концепт · 390 × 844</span></div>
-</div>
+<script src="./app.js?v=9"></script>
 </body>
 </html>

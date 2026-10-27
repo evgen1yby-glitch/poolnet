@@ -1380,3 +1380,126 @@ def test_an_unknown_token_is_not_stored_either(client):
     response = api.get("/sub/not-a-real-token")
     assert response.status_code == 404
     assert response.headers.get("cache-control") == "no-store"
+
+
+def test_app_ping_stores_anonymous_presence_and_admin_sees_it(client, monkeypatch):
+    api, store = client
+    monkeypatch.setenv("HUB_BOT_SECRET", "admin-secret")
+    monkeypatch.setenv("HUB_ANALYTICS_SECRET", "analytics-secret")
+    install_id = "a" * 32
+    response = api.post(
+        "/api/app/ping",
+        json={
+            "id": install_id,
+            "version": "0.5.2",
+            "platform": "android",
+            "locale": "ru-RU",
+            "connected": True,
+        },
+    )
+    assert response.status_code == 200
+    assert response.json() == {"ok": True}
+    # A second heartbeat updates the same anonymous installation, never doubles it.
+    assert api.post(
+        "/api/app/ping",
+        json={"id": install_id, "version": "0.5.2", "platform": "android", "locale": "ru-RU", "connected": False},
+    ).status_code == 200
+    stats = store.app_instance_stats()
+    assert stats["total"] == 1
+    assert stats["active_24h"] == 1
+    assert stats["active_7d"] == 1
+    assert stats["active_30d"] == 1
+    assert stats["online"] == 0
+    assert stats["rows"][0]["version"] == "0.5.2"
+    assert len(stats["rows"][0]["id"]) == 12
+    # The raw installation id is not in the database.
+    conn = store.connect()
+    try:
+        raw = conn.execute("SELECT instance_hash FROM app_instances").fetchone()[0]
+    finally:
+        conn.close()
+    assert raw != install_id
+    assert install_id not in raw
+
+    admin = api.get("/admin/data", headers={"x-hub-secret": "admin-secret"})
+    assert admin.status_code == 200
+    assert admin.json()["apps"]["total"] == 1
+    assert admin.json()["apps"]["active_24h"] == 1
+
+
+def test_app_ping_rejects_a_bad_install_id(client):
+    api, _ = client
+    response = api.post("/api/app/ping", json={"id": "short"})
+    assert response.status_code == 400
+
+
+def test_app_access_issues_hidden_key_once_per_installation(client, monkeypatch):
+    api, store = client
+    monkeypatch.setenv("HUB_ANALYTICS_SECRET", "app-secret")
+    install_id = "b" * 32
+    response = api.post(
+        "/api/app/access",
+        json={"id": install_id, "version": "0.5.3", "platform": "android", "locale": "ru-RU"},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["unlimited"] is True
+    assert body["subscription"].startswith("https://nodes.example/sub/")
+    assert api.get(f"/sub/{body['token']}").status_code == 200
+    # One installation gets exactly one hidden key.
+    again = api.post(
+        "/api/app/access",
+        json={"id": install_id, "version": "0.5.3", "platform": "android", "locale": "ru-RU"},
+    )
+    assert again.status_code == 409
+    rotated = api.post(
+        "/api/app/access",
+        json={"id": install_id, "version": "0.5.3", "platform": "android", "locale": "ru-RU", "rotate": True},
+    )
+    assert rotated.status_code == 200
+    assert rotated.json()["token"] != body["token"]
+    assert api.get(f"/sub/{body['token']}").status_code == 404
+    assert api.get(f"/sub/{rotated.json()['token']}").status_code == 200
+    conn = store.connect()
+    try:
+        row = conn.execute("SELECT token_hash FROM app_access").fetchone()
+        token_rows = conn.execute("SELECT source FROM subscription_tokens").fetchall()
+    finally:
+        conn.close()
+    assert row is not None
+    assert body["token"] != row[0]
+    assert token_rows and token_rows[0]["source"] == "app"
+
+
+def test_app_access_rejects_bad_install_id(client):
+    api, _ = client
+    assert api.post("/api/app/access", json={"id": "bad"}).status_code == 400
+
+
+def test_app_diagnostics_are_sanitized_and_visible_to_admin(client, monkeypatch):
+    api, store = client
+    monkeypatch.setenv("HUB_BOT_SECRET", "admin-secret")
+    monkeypatch.setenv("HUB_ANALYTICS_SECRET", "diag-secret")
+    install_id = "c" * 32
+    response = api.post(
+        "/api/app/diagnostics",
+        json={
+            "id": install_id,
+            "version": "0.5.4",
+            "platform": "android",
+            "locale": "ru-RU",
+            "logs": "ERROR connect https://poolnet.online/sub/abcdefghijklmnopqrstuvwxyz0123456789 token abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGH ip 203.0.113.9",
+            "meta": {"connection": "error", "tunnelRunning": False},
+        },
+    )
+    assert response.status_code == 200, response.text
+    report = response.json()["report"]
+    assert report > 0
+    data = api.get("/admin/data", headers={"x-hub-secret": "admin-secret"}).json()
+    row = data["diagnostics"][0]
+    assert row["id"] == report
+    assert "poolnet.online/sub" not in row["logs"]
+    assert "203.0.113.9" not in row["logs"]
+    assert "[url]" in row["logs"]
+    assert "[token]" in row["logs"]
+    assert "[ip]" in row["logs"]

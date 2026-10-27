@@ -385,7 +385,7 @@ class _CachePolicy:
         path = scope.get("path", "")
         policy = next((p for prefix, p in self.POLICY if path.startswith(prefix)), None)
         if policy is None and (
-            path.endswith((".html", ".css", ".js", ".png", ".jpg", ".svg", ".ico", ".woff", ".woff2"))
+            path.endswith((".html", ".css", ".js", ".json", ".m3u", ".png", ".jpg", ".svg", ".ico", ".woff", ".woff2"))
             or (path == "/" and self.site_index)
             or path in self.site_slugs
             or path == "/en"
@@ -610,6 +610,10 @@ def create_app(store: Store | None, sources: dict | None = None):
     # The challenge is cheap but still a database read; a script must not be
     # able to hammer it into a denial of service for real visitors.
     free_challenge_limiter = RateLimiter(rate=30 / 60.0, burst=30, max_buckets=4096)
+    # App presence heartbeats are cheap, but a public endpoint still needs a
+    # ceiling. The app sends one every few minutes, not per request.
+    app_ping_limiter = RateLimiter(rate=60 / 60.0, burst=60, max_buckets=4096)
+    app_diagnostics_limiter = RateLimiter(rate=5 / 600.0, burst=5, max_buckets=4096)
 
     #: The interface mockup is a design artifact, not a product surface, and it
     #: lives in the repository rather than in the package. It is served from
@@ -648,6 +652,8 @@ def create_app(store: Store | None, sources: dict | None = None):
     app.state.bot_username = bot_username
     app.state.limiter = limiter
     app.state.ip_limiter = ip_limiter
+    app.state.app_ping_limiter = app_ping_limiter
+    app.state.app_diagnostics_limiter = app_diagnostics_limiter
     app.state.mockup_path = mockup_path
     app.state.site_dir = site_dir
 
@@ -946,13 +952,12 @@ def create_app(store: Store | None, sources: dict | None = None):
 
     @app.post("/api/free-subscription")
     async def free_subscription(request: Request) -> JSONResponse:
-        """A seven-day key for anyone, one per network per cooldown.
+        """A free key with no expiry for anyone, one per network per cooldown.
 
-        The key is free, but it is not unlimited: a signed challenge enforces a
-        short human pause, a persistent hashed-network claim prevents a reload
-        from minting a second key, and the daily global budget caps a botnet
-        spreading across many networks. The panel still sees source=web next to
-        bot- and panel-issued keys.
+        The credential never expires. The issue path still uses a signed
+        challenge, a persistent hashed-network claim, and a daily global budget
+        so a script cannot mint an unlimited number of permanent tokens. The
+        panel still sees source=web next to bot- and panel-issued keys.
         """
         ip_key = _free_ip_key(request)
         if ip_key is None:
@@ -1007,21 +1012,25 @@ def create_app(store: Store | None, sources: dict | None = None):
                 headers=_free_headers(**{"Retry-After": "3600"}),
             )
 
-        expires = datetime.now(timezone.utc) + timedelta(days=7)
+        # Store no term for new public keys. The response keeps a far-future
+        # ISO timestamp for older clients that require an `expires_at` string;
+        # new clients read `unlimited` and never show a countdown.
+        compatibility_expiry = datetime.fromtimestamp(NO_EXPIRY, timezone.utc).isoformat()
         for _ in range(3):
             token = _mint_token(0)
             if store.issue_subscription(
                 token,
                 0,
                 label="free-web",
-                expires_at=expires.isoformat(),
+                expires_at=None,
                 source="web",
             ):
                 base = base_url.rstrip("/")
                 return JSONResponse(
                     {
                         "token": token,
-                        "expires_at": expires.isoformat(),
+                        "expires_at": compatibility_expiry,
+                        "unlimited": True,
                         "subscription": f"{base}/sub/{token}" if base else f"/sub/{token}",
                     },
                     headers=_free_headers(),
@@ -1029,6 +1038,177 @@ def create_app(store: Store | None, sources: dict | None = None):
         store.release_free_slot(ip_key)
         return JSONResponse(
             {"error": "could not issue token"}, status_code=503, headers=_free_headers()
+        )
+
+    @app.post("/api/app/ping")
+    async def app_ping(request: Request) -> JSONResponse:
+        """Anonymous app presence heartbeat.
+
+        The client generates a random installation id once; the server stores
+        only a keyed digest. No IP, token, account or device identifier is kept
+        in `app_instances`. This powers aggregate install/active counts in the
+        operator panel, not per-user tracking.
+        """
+        ip_key = hash_ip(client_address(request))
+        if not app_ping_limiter.allow(ip_key):
+            return JSONResponse(
+                {"error": "too many requests"},
+                status_code=429,
+                headers={"Cache-Control": "no-store", "Retry-After": "60"},
+            )
+        try:
+            payload = await request.json()
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            payload = None
+        if not isinstance(payload, dict):
+            return JSONResponse({"error": "invalid payload"}, status_code=400)
+        install_id = payload.get("id")
+        if not isinstance(install_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{16,128}", install_id):
+            return JSONResponse({"error": "invalid install id"}, status_code=400)
+        version = str(payload.get("version") or "unknown").strip()[:32]
+        platform = str(payload.get("platform") or "android").strip()[:16]
+        locale = str(payload.get("locale") or "").strip()[:16]
+        if platform not in ("android", "ios", "web"):
+            platform = "other"
+        connected = payload.get("connected") is True
+        secret = (
+            os.environ.get("HUB_ANALYTICS_SECRET", "")
+            or os.environ.get("HUB_FREE_SECRET", "")
+            or os.environ.get("HUB_BOT_SECRET", "")
+        )
+        instance_hash = hashlib.sha256(
+            (secret + "\x00" + install_id).encode("utf-8")
+        ).hexdigest()
+        store.touch_app_instance(
+            instance_hash,
+            version=version,
+            platform=platform,
+            locale=locale,
+            connected=connected,
+        )
+        return JSONResponse({"ok": True}, headers={"Cache-Control": "no-store"})
+
+    @app.post("/api/app/access")
+    async def app_access(request: Request) -> JSONResponse:
+        """Issue a hidden access key for an anonymous app installation.
+
+        This is separate from the web free-key cooldown: an app can be
+        reinstalled on the same network, and the user must not see or copy a
+        key. Issuance is limited per installation and per IP; the raw token is
+        returned once and stored by the app in SecureStore.
+        """
+        ip_key = hash_ip(client_address(request))
+        if not app_ping_limiter.allow(ip_key):
+            return JSONResponse(
+                {"error": "too many requests"},
+                status_code=429,
+                headers={"Cache-Control": "no-store", "Retry-After": "60"},
+            )
+        try:
+            payload = await request.json()
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            payload = None
+        if not isinstance(payload, dict):
+            return JSONResponse({"error": "invalid payload"}, status_code=400)
+        install_id = payload.get("id")
+        if not isinstance(install_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{16,128}", install_id):
+            return JSONResponse({"error": "invalid install id"}, status_code=400)
+        try:
+            daily_limit = max(0, int(os.environ.get("HUB_APP_DAILY_LIMIT", "2000")))
+        except ValueError:
+            daily_limit = 2000
+        day_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        if daily_limit and store.count_subscriptions_since(
+            day_start.isoformat(), source="app"
+        ) >= daily_limit:
+            return JSONResponse(
+                {"error": "daily app-key budget exhausted; try again tomorrow"},
+                status_code=429,
+                headers={"Cache-Control": "no-store", "Retry-After": "3600"},
+            )
+        secret = (
+            os.environ.get("HUB_ANALYTICS_SECRET", "")
+            or os.environ.get("HUB_FREE_SECRET", "")
+            or os.environ.get("HUB_BOT_SECRET", "")
+        )
+        instance_hash = hashlib.sha256(
+            (secret + "\x00" + install_id).encode("utf-8")
+        ).hexdigest()
+        rotate = payload.get("rotate") is True
+        token = _mint_token(0)
+        if not store.issue_app_access(instance_hash, token, rotate=rotate):
+            return JSONResponse(
+                {"error": "access already issued for this installation"},
+                status_code=409,
+                headers={"Cache-Control": "no-store"},
+            )
+        base = base_url.rstrip("/")
+        return JSONResponse(
+            {
+                "token": token,
+                "subscription": f"{base}/sub/{token}" if base else f"/sub/{token}",
+                "expires_at": datetime.fromtimestamp(NO_EXPIRY, timezone.utc).isoformat(),
+                "unlimited": True,
+            },
+            headers={"Cache-Control": "no-store"},
+        )
+
+    @app.post("/api/app/diagnostics")
+    async def app_diagnostics(request: Request) -> JSONResponse:
+        """Receive an explicit, user-triggered diagnostic report.
+
+        Reports are sanitized on both sides. Tokens, subscription URLs and raw
+        IPs are removed before anything reaches SQLite; only an anonymous
+        installation digest is attached. This is not automatic telemetry.
+        """
+        ip_key = hash_ip(client_address(request))
+        if not app_diagnostics_limiter.allow(ip_key):
+            return JSONResponse(
+                {"error": "too many reports"},
+                status_code=429,
+                headers={"Cache-Control": "no-store", "Retry-After": "600"},
+            )
+        try:
+            payload = await request.json()
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            payload = None
+        if not isinstance(payload, dict):
+            return JSONResponse({"error": "invalid payload"}, status_code=400)
+        install_id = payload.get("id")
+        logs = payload.get("logs")
+        meta = payload.get("meta")
+        if not isinstance(install_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{16,128}", install_id):
+            return JSONResponse({"error": "invalid install id"}, status_code=400)
+        if not isinstance(logs, str) or len(logs) > 40_000:
+            return JSONResponse({"error": "invalid logs"}, status_code=400)
+        if meta is not None and not isinstance(meta, dict):
+            return JSONResponse({"error": "invalid meta"}, status_code=400)
+
+        def clean(value: str) -> str:
+            value = re.sub(r"https?://\S+", "[url]", value)
+            value = re.sub(r"\b[A-Za-z0-9_-]{32,}\b", "[token]", value)
+            value = re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", "[ip]", value)
+            return value[:32_000]
+
+        secret = (
+            os.environ.get("HUB_ANALYTICS_SECRET", "")
+            or os.environ.get("HUB_FREE_SECRET", "")
+            or os.environ.get("HUB_BOT_SECRET", "")
+        )
+        instance_hash = hashlib.sha256(
+            (secret + "\x00" + install_id).encode("utf-8")
+        ).hexdigest()
+        report_id = store.add_app_diagnostics(
+            instance_hash,
+            version=str(payload.get("version") or "unknown")[:32],
+            platform=str(payload.get("platform") or "android")[:16],
+            locale=str(payload.get("locale") or "")[:16],
+            logs=clean(logs),
+            meta=clean(json.dumps(meta or {}, ensure_ascii=False, sort_keys=True)),
+        )
+        return JSONResponse(
+            {"ok": True, "report": report_id},
+            headers={"Cache-Control": "no-store"},
         )
 
     @app.post("/api/v1/bot/issue")
@@ -1056,23 +1236,22 @@ def create_app(store: Store | None, sources: dict | None = None):
             return JSONResponse({"error": "telegram_id required"}, status_code=400)
         username = str(payload.get("username") or "").strip()[:64]
         source = str(payload.get("source") or "bot").strip()[:40] or "bot"
-        expires_at = (datetime.now(timezone.utc) + timedelta(days=7)).isoformat()
         token = _mint_token(telegram_id)
         if not store.issue_subscription(
-            token, telegram_id, expires_at=expires_at, username=username, source=source
+            token, telegram_id, expires_at=None, username=username, source=source
         ):
             # A collision is cryptographically negligible, but retrying is cheap
             # and avoids returning an already-issued bearer credential.
             for _ in range(3):
                 token = _mint_token(telegram_id)
                 if store.issue_subscription(
-                    token, telegram_id, expires_at=expires_at, username=username, source=source
+                    token, telegram_id, expires_at=None, username=username, source=source
                 ):
                     break
             else:
                 return JSONResponse({"error": "could not issue token"}, status_code=503)
         url = f"{base_url}/sub/{token}" if base_url else f"/sub/{token}"
-        return JSONResponse({"token": token, "url": url})
+        return JSONResponse({"token": token, "url": url, "unlimited": True})
 
     @app.post("/api/v1/sub/revoke")
     async def revoke_token(request: Request) -> JSONResponse:
@@ -1330,6 +1509,8 @@ def create_app(store: Store | None, sources: dict | None = None):
                 "generations": _admin_generations(conn),
                 "tokens": _admin_tokens(conn),
                 "subscriptions": _admin_subscription_stats(conn),
+                "apps": store.app_instance_stats(),
+                "diagnostics": store.app_diagnostics(),
                 "funnel": _last_funnel(store),
             }
         finally:

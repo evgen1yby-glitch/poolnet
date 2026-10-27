@@ -1,0 +1,12 @@
+{
+  "versionName": "0.5.7",
+  "versionCode": 13,
+  "apkUrl": "https://poolnet.online/app/PoolNet-Mobile-0.5.7.apk",
+  "sha256": "a3e796ce1986261811e653d1f4084b408a0c40887ade1408366bfc8a5b3eb2e9",
+  "size": 123790390,
+  "publishedAt": "2026-10-27T12:45:00Z",
+  "releaseNotes": {
+    "ru": "Ускорено подключение: живой узел выбирается сразу, конфиг кэшируется, проверка короче, гонки подключений устранены. Добавлена вкладка «Поддержать».",
+    "en": "Faster connect: a live node is used immediately, config is cached, probes are shorter, overlapping connects are gone. Added a Support tab."
+  }
+}

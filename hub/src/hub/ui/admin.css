@@ -232,3 +232,11 @@ td code { font-size: 0.82rem; }
   .issue .btn{width:100%}
   .tscroll table{min-width:46rem}
 }
+
+/* App diagnostic reports */
+.diag-list{display:grid;gap:.55rem}
+.diag-item{border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.012);padding:.65rem .8rem}
+.diag-item summary{cursor:pointer;color:var(--mut);font-size:.78rem;overflow-wrap:anywhere}
+.diag-item summary code{color:var(--txt)}
+.diag-item pre{margin:.7rem 0 0;padding:.7rem;border:1px solid var(--line);border-radius:8px;background:#07070a;color:var(--mut);font:400 .7rem/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:18rem;overflow:auto}
+.diag-item .caption{margin-top:.5rem}

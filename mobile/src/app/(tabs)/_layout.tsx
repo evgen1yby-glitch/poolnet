@@ -9,6 +9,7 @@ export default function TabsLayout() {
     <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen name="index" options={{ title: t('tabs.vpn') }} />
       <Tabs.Screen name="proxy" options={{ title: t('tabs.proxy') }} />
+      <Tabs.Screen name="support" options={{ title: t('tabs.support') }} />
       <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
     </Tabs>
   );

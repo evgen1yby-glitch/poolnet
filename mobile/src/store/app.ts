@@ -1,8 +1,10 @@
 import { create } from 'zustand';
 
 import { translate, type Lang } from '@/i18n';
+import { logEvent } from '@/lib/diagnostics';
+import { pingPresence, requestAppAccess } from '@/lib/presence';
 import { storage, type StoredCountry, type StoredSubscription } from '@/lib/storage';
-import { buildXrayConfig } from '@/lib/xray';
+import { buildXrayConfig, prefetchXrayConfig } from '@/lib/xray';
 import { prepareTunnel, startTunnel, stopTunnel, tunnelStatus, tunnelSupported, verifyTunnel } from '@/lib/tunnel';
 
 type Connection = 'disconnected' | 'connecting' | 'reconnecting' | 'connected' | 'error';
@@ -33,14 +35,32 @@ function deviceLanguage(): Lang {
   }
 }
 
+let provisioning: Promise<StoredSubscription> | null = null;
+let attemptSeq = 0;
+
+async function provisionSubscription(language: Lang): Promise<StoredSubscription> {
+  const key = await requestAppAccess();
+  const subscription: StoredSubscription = {
+    token: key.token,
+    url: key.subscription,
+    expiresAt: key.expires_at,
+    unlimited: key.unlimited !== false,
+  };
+  await storage.setSubscription(subscription);
+  return subscription;
+}
+
+
 const FALLBACKS: StoredCountry[] = [
   { cc: 'NL', name: 'Нидерланды', nodes: 0 },
   { cc: 'US', name: 'США', nodes: 0 },
   { cc: 'DE', name: 'Германия', nodes: 0 },
+  { cc: 'FR', name: 'Франция', nodes: 0 },
 ];
 
 function friendlyError(raw: string, language: Lang): string {
   if (/permission|разреш/i.test(raw)) return translate(language, 'error.permission');
+  if (/доступ|access|free-status|free-challenge|free-subscription|ключ/i.test(raw)) return translate(language, 'error.access');
   if (/подписк|xray-конфиг|outbound|config/i.test(raw)) return translate(language, 'error.noConfig');
   return translate(language, 'error.tunnel');
 }
@@ -62,11 +82,13 @@ export const useAppStore = create<AppState>((set, get) => ({
     const initialLanguage = language ?? deviceLanguage();
     if (!language) await storage.setLanguage(initialLanguage);
     set({ subscription, country, language: initialLanguage, hydrated: true });
+    if (subscription) prefetchXrayConfig(subscription.url, country?.name);
     const status = await tunnelStatus();
     set({ connection: status.running ? 'connected' : 'disconnected', connectionError: status.error });
   },
 
   setSubscription: async (value) => {
+    attemptSeq += 1;
     if (get().connection === 'connected' || get().connection === 'reconnecting') await stopTunnel();
     if (value) await storage.setSubscription(value);
     else await storage.clearSubscription();
@@ -74,6 +96,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   setCountry: async (value) => {
+    attemptSeq += 1;
     if (get().connection === 'connected') await stopTunnel();
     if (value) await storage.setCountry(value);
     else await storage.clearCountry();
@@ -86,41 +109,96 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   connect: async (options) => {
-    const { subscription, country, language } = get();
-    if (!subscription) throw new Error(translate(language, 'error.keyFirst'));
+    const { country, language } = get();
     if (!tunnelSupported) throw new Error(translate(language, 'error.androidOnly'));
+    const attempt = ++attemptSeq;
     set({ connection: options?.recovery ? 'reconnecting' : 'connecting', connectionError: null });
+    logEvent('info', 'connect', options?.recovery ? 'recovery start' : 'connect start', { country: country?.cc || 'auto' });
 
     try {
+      // A newer tap/country change owns the tunnel. Stop the previous attempt
+      // before touching the native service so two connections never overlap.
+      await stopTunnel().catch(() => undefined);
+      if (attempt !== attemptSeq) return;
+      let subscription = get().subscription;
+      if (!subscription) {
+        if (!provisioning) {
+          provisioning = provisionSubscription(language).finally(() => {
+            provisioning = null;
+          });
+        }
+        logEvent('info', 'access', 'provisioning');
+        subscription = await provisioning;
+        set({ subscription });
+        logEvent('info', 'access', 'ready');
+      }
+      if (attempt !== attemptSeq) return;
       const granted = await prepareTunnel();
+      if (attempt !== attemptSeq) return;
       if (!granted) throw new Error(translate(language, 'error.permission'));
+      logEvent('info', 'vpn', 'permission granted');
 
       const rest = FALLBACKS.filter((candidate) => candidate.cc !== country?.cc);
-      const candidates = options?.recovery
+      let candidates = options?.recovery
         ? [...rest, ...(country ? [country] : [])]
         : [...(country ? [country] : []), ...rest];
 
+      // A stored free/app key from an older install can be revoked or gone.
+      // Validate it before opening the VPN; rotate once if the server no
+      // longer serves this subscription. No key material is shown or logged.
+      try {
+        await buildXrayConfig(subscription.url, candidates[0]?.name);
+      } catch (error) {
+        const raw = error instanceof Error ? error.message : String(error);
+        if (/subscription\s+40[134]|no Xray|нет Xray|конфиг/i.test(raw)) {
+          logEvent('warn', 'access', 'stored key rejected, rotating');
+          const key = await requestAppAccess(true);
+          subscription = {
+            token: key.token,
+            url: key.subscription,
+            expiresAt: key.expires_at,
+            unlimited: key.unlimited !== false,
+          };
+          await storage.setSubscription(subscription);
+          set({ subscription });
+          logEvent('info', 'access', 'rotated');
+        }
+      }
+      if (attempt !== attemptSeq) return;
+
       let lastError: unknown = null;
-      for (const candidate of candidates.slice(0, 3)) {
+      for (const candidate of candidates.slice(0, 4)) {
+        if (attempt !== attemptSeq) return;
         try {
+          logEvent('info', 'ax', 'candidate', { country: candidate.cc });
           const config = await buildXrayConfig(subscription.url, candidate.name);
+          logEvent('info', 'ax', 'config ready', { bytes: config.length });
           await startTunnel(config);
-          await new Promise((resolve) => setTimeout(resolve, options?.recovery ? 600 : 900));
-          await verifyTunnel(options?.recovery ? 4500 : 8000);
+          if (attempt !== attemptSeq) return;
+          logEvent('info', 'vpn', 'service started', { country: candidate.cc });
+          await new Promise((resolve) => setTimeout(resolve, options?.recovery ? 350 : 500));
+          await verifyTunnel(options?.recovery ? 5000 : 6000);
+          if (attempt !== attemptSeq) return;
+          logEvent('info', 'vpn', 'probe ok', { country: candidate.cc });
           await get().setCountry(candidate);
           set({ connection: 'connected', connectionError: null });
+          void pingPresence(true, true);
           return;
         } catch (error) {
           lastError = error;
-          await stopTunnel().catch(() => undefined);
+          logEvent('warn', 'ax', 'candidate failed', { country: candidate.cc, error: error instanceof Error ? error.message : String(error) });
+          if (attempt === attemptSeq) await stopTunnel().catch(() => undefined);
         }
       }
       throw lastError ?? new Error(translate(language, 'error.noNode'));
     } catch (error) {
+      if (attempt !== attemptSeq) return;
       const raw = error instanceof Error ? error.message : String(error);
       if (__DEV__) console.warn('tunnel start failed', raw);
+      logEvent('error', 'connect', 'failed', { error: raw });
       const friendly = friendlyError(raw, language);
       set({ connection: 'error', connectionError: friendly });
+      void pingPresence(false, true);
       throw new Error(friendly);
     }
   },
@@ -132,8 +210,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   disconnect: async () => {
+    attemptSeq += 1;
+    logEvent('info', 'vpn', 'disconnect requested');
     await stopTunnel();
     set({ connection: 'disconnected', connectionError: null });
+    void pingPresence(false, true);
   },
 
   syncTunnel: async () => {

@@ -5,7 +5,7 @@
 <p align="center"><a href="README.en.md">English</a> · Русский</p>
 
 <p align="center"><strong>Открытые списки VPN и прокси, проверенные реальными соединениями.</strong><br>
-Автообновление каждые 15 минут · бесплатный ключ на 7 дней · без аккаунта</p>
+Автообновление каждые 15 минут</p>
 
 <p align="center">
   <a href="https://poolnet.online"><img src="https://img.shields.io/badge/site-poolnet.online-7c5cff" alt="site"></a>
@@ -29,7 +29,6 @@ PoolNet — публичный каталог двух пулов на одно�
 - **VPN**: VLESS, Shadowsocks, VMess и Trojan. Узел проходит TCP → TLS →
   поднятую конфигурацию → сквозной HTTP-запрос. Не прошёл этап — не попал в
   выдачу.
-- **Бесплатный ключ**: персональная подписка на 7 дней без Telegram и оплаты.
 
 Соединение всегда идёт **напрямую клиент → узел**. PoolNet не оператор узлов,
 не проксирует и не перепродаёт трафик. Мы не обещаем безопасность чужой
@@ -51,23 +50,24 @@ PoolNet — публичный каталог двух пулов на одно�
 | Clash / mihomo | [verified-sing-box.clash](https://raw.githubusercontent.com/evgen1yby-glitch/poolnet/lists/vpn/verified-sing-box.clash) |
 | Страновые срезы | [`pool/country/`](https://github.com/evgen1yby-glitch/poolnet/tree/lists/pool/country) |
 
-Публичная ветка — снимок, а не персональный ключ: у неё нет срока и
-статистики подписки. Для личного ключа на 7 дней с датой окончания:
-[poolnet.online/free](https://poolnet.online/free).
+Публичная ветка — снимок, а не персональная подписка: у неё нет срока и
+статистики подписки. Чтобы подключиться, используйте Android-приложение:
+[poolnet.online/download](https://poolnet.online/download).
 
 ## Скриншоты
 
 | Прокси-пул | VPN |
 | --- | --- |
 | <img src="docs/screenshots/proxy.webp" alt="Прокси-пул PoolNet" width="100%"> | <img src="docs/screenshots/vpn.webp" alt="VPN PoolNet" width="100%"> |
-| <img src="docs/screenshots/free.webp" alt="Бесплатная подписка PoolNet" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="PoolNet на телефоне" width="58%"> |
+| <img src="docs/screenshots/app-home.webp" alt="Android-приложение PoolNet" width="100%"> | <img src="docs/screenshots/mobile-proxy.webp" alt="PoolNet на телефоне" width="58%"> |
 
 ## Мобильное приложение
 
 Android-клиент с встроенным VPN-туннелем (Xray TUN) — `mobile/`.
 HTML-прототип со всеми экранами — `/app/`. Исходники: Expo/React Native,
 [Скачать Android APK](https://poolnet.online/download) ·
-[Релиз и SHA-256](https://github.com/evgen1yby-glitch/poolnet/releases/tag/mobile-v0.3.0),
+[Проверка файла и версия](https://poolnet.online/download) ·
+[HLS TV — публичные русскоязычные каналы](https://poolnet.online/tv),
 план — [docs/MOBILE-APP-PLAN.md](docs/MOBILE-APP-PLAN.md).
 
 [**Открыть на домене**](https://poolnet.online/app/) · [**Открыть по IP**](http://193.34.212.154:8098/app/)
@@ -81,9 +81,8 @@ HTML-прототип со всеми экранами — `/app/`. Исходн
 
 ## Быстрый старт
 
-**VPN.** Открой [poolnet.online/free](https://poolnet.online/free), подожди
-несколько секунд проверки и добавь ссылку в Happ, Hiddify, v2rayNG или Clash.
-Один ключ на IP в 24 часа, без установки и аккаунта.
+**VPN.** Установи Android-приложение:
+[poolnet.online/download](https://poolnet.online/download).
 
 **Прокси.**
 ```sh
@@ -114,7 +113,7 @@ HUB_SITE=web/site POOLNET_POOL_DIR=pool/data python3 -m hub serve --port 8090
 
 | Каталог | Назначение | Лицензия |
 | --- | --- | --- |
-| `web/site/` | двуязычный сайт: пул, проверка, бесплатный ключ, статус | AGPL-3.0 |
+| `web/site/` | двуязычный сайт: пул, проверка, статус | AGPL-3.0 |
 | `hub/` | VPN-пул: сбор, 6 этапов проверки, подписки, статус/админ API, бот | AGPL-3.0 |
 | `pool/` | прокси-пул: источники, проверка, бенчмарк, публикация JSON/TXT | MIT |
 | `mobile/` | нативное приложение Expo/React Native: страны, ключ, прокси, профиль | AGPL-3.0 |

@@ -5,7 +5,8 @@ import * as Linking from 'expo-linking';
 import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Flag } from '@/components/flag';
 
-import { AppBar, Eyebrow, Lead, Pill, ProfileButton, Screen, Title } from '@/components/ui';
+import { AppBar, Eyebrow, Lead, ProfileButton, Screen, Title } from '@/components/ui';
+import { sendDiagnostics } from '@/lib/presence';
 import { languageOptions } from '@/i18n';
 import { countryName } from '@/lib/format';
 import { tunnelStatus } from '@/lib/tunnel';
@@ -42,25 +43,8 @@ export default function ProfileScreen() {
   const t = useT();
   const language = useLanguage();
   const router = useRouter();
-  const subscription = useAppStore((state) => state.subscription);
-  const setSubscription = useAppStore((state) => state.setSubscription);
   const setLanguage = useAppStore((state) => state.setLanguage);
   const version = Constants.expoConfig?.version ?? '0.1.0';
-
-  const clear = () => {
-    Alert.alert(
-      t('profile.alertTitle'),
-      t('profile.alertBody'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: () => void setSubscription(null),
-        },
-      ],
-    );
-  };
 
   return (
     <>
@@ -78,7 +62,7 @@ export default function ProfileScreen() {
             <Text style={[styles.name, { color: theme.text }]}>{t('profile.guest')}</Text>
             <Text style={[styles.meta, { color: theme.dim }]}>{t('profile.noAccount')}</Text>
           </View>
-          <Pill tone={subscription ? 'success' : 'neutral'}>{subscription ? t('profile.badgeKey') : 'FREE'}</Pill>
+          <Text style={[styles.meta, { color: theme.dim }]}>FREE</Text>
         </View>
 
         <Text style={[styles.section, { color: theme.text }]}>{t('common.language')}</Text>
@@ -109,6 +93,28 @@ export default function ProfileScreen() {
         <Text style={[styles.section, { color: theme.text }]}>{t('profile.sectionApp')}</Text>
         <View style={[styles.menu, { borderColor: theme.line }]}>
           <MenuRow icon="shield-checkmark-outline" title={t('profile.how')} onPress={() => router.push('/onboarding')} />
+          <MenuRow icon="cloud-download-outline" title={t('profile.update')} onPress={() => router.push('/update')} />
+          <MenuRow
+            icon="cloud-upload-outline"
+            title={t('profile.sendLogs')}
+            onPress={() => {
+              const state = useAppStore.getState();
+              void tunnelStatus().then((status) =>
+                sendDiagnostics({
+                  connection: state.connection,
+                  country: state.country?.cc || 'auto',
+                  subscriptionPresent: Boolean(state.subscription),
+                  tunnelRunning: status.running,
+                  tunnelError: status.error || null,
+                  connectionError: state.connectionError || null,
+                  language: state.language,
+                }),
+              )
+                .then((report) => Alert.alert(t('profile.logsSentTitle'), t('profile.logsSentBody', { report })))
+                .catch(() => Alert.alert(t('profile.logsErrorTitle'), t('profile.logsErrorBody')));
+            }}
+          />
+
           <MenuRow icon="pulse-outline" title={t('profile.method')} onPress={() => void Linking.openURL(`${SITE}/verify`)} />
           <MenuRow icon="stats-chart-outline" title={t('profile.status')} onPress={() => void Linking.openURL(`${SITE}/status`)} />
           <MenuRow
@@ -137,7 +143,6 @@ export default function ProfileScreen() {
         <View style={[styles.menu, { borderColor: theme.line }]}>
           <MenuRow icon="document-text-outline" title={t('profile.terms')} onPress={() => void Linking.openURL(`${SITE}/legal`)} />
           <MenuRow icon="lock-closed-outline" title={t('profile.privacy')} onPress={() => void Linking.openURL(`${SITE}/legal`)} />
-          {subscription ? <MenuRow icon="trash-outline" title={t('profile.removeKey')} onPress={clear} destructive /> : null}
         </View>
 
         <Pressable

@@ -13,9 +13,10 @@ type TabBarProps = {
   navigateToTab: (routeKey: string) => void;
 };
 
-const ITEMS: { name: string; key: 'tabs.vpn' | 'tabs.proxy' | 'tabs.profile'; icon: keyof typeof Ionicons.glyphMap }[] = [
+const ITEMS: { name: string; key: 'tabs.vpn' | 'tabs.proxy' | 'tabs.support' | 'tabs.profile'; icon: keyof typeof Ionicons.glyphMap }[] = [
   { name: 'index', key: 'tabs.vpn', icon: 'power-outline' },
   { name: 'proxy', key: 'tabs.proxy', icon: 'git-network-outline' },
+  { name: 'support', key: 'tabs.support', icon: 'heart-outline' },
   { name: 'profile', key: 'tabs.profile', icon: 'person-outline' },
 ];
 

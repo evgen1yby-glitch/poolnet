@@ -136,6 +136,43 @@ class Store:
                 claimed_at TEXT NOT NULL
             );
 
+            -- Anonymous app installations. The client sends a random install
+            -- id; only its keyed digest is stored. No IP, account or device
+            -- identifier is kept here.
+            CREATE TABLE IF NOT EXISTS app_instances (
+                instance_hash TEXT PRIMARY KEY,
+                first_seen    TEXT NOT NULL,
+                last_seen     TEXT NOT NULL,
+                version       TEXT NOT NULL DEFAULT '',
+                platform      TEXT NOT NULL DEFAULT '',
+                locale        TEXT NOT NULL DEFAULT '',
+                connected     INTEGER NOT NULL DEFAULT 0,
+                connected_at  TEXT
+            );
+            CREATE INDEX IF NOT EXISTS app_instances_seen
+                ON app_instances (last_seen DESC);
+
+            -- One anonymous access key per app installation. The raw token is
+            -- returned once to the app and never stored here.
+            CREATE TABLE IF NOT EXISTS app_access (
+                instance_hash TEXT PRIMARY KEY,
+                token_hash    TEXT NOT NULL,
+                issued_at     TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS app_diagnostics (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                instance_hash TEXT NOT NULL,
+                created_at    TEXT NOT NULL,
+                version       TEXT NOT NULL DEFAULT '',
+                platform      TEXT NOT NULL DEFAULT '',
+                locale        TEXT NOT NULL DEFAULT '',
+                logs          TEXT NOT NULL,
+                meta          TEXT NOT NULL DEFAULT '{}'
+            );
+            CREATE INDEX IF NOT EXISTS app_diagnostics_created
+                ON app_diagnostics (created_at DESC);
+
             -- One row per *payload* (tier x core x format, plus one per
             -- country shard). The generation is part of the key rather than the
             -- whole of it, because a run writes many payloads into one
@@ -327,7 +364,7 @@ class Store:
 
         `telegram_id` is 0 for a key minted on the web or in the panel rather
         than by the bot. `expires_at` is an ISO timestamp or None for a token
-        with no term; new public keys always carry a term.
+        with no term; new public keys have no term.
         """
         import sqlite3
 
@@ -523,6 +560,221 @@ class Store:
             return cursor.rowcount == 1
         finally:
             conn.close()
+
+    # -- anonymous app presence ------------------------------------------
+
+    def add_app_diagnostics(
+        self,
+        instance_hash: str,
+        *,
+        version: str,
+        platform: str,
+        locale: str,
+        logs: str,
+        meta: str,
+    ) -> int:
+        conn = self.connect()
+        try:
+            cur = conn.execute(
+                "INSERT INTO app_diagnostics"
+                " (instance_hash, created_at, version, platform, locale, logs, meta)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (
+                    instance_hash,
+                    datetime.now(timezone.utc).isoformat(),
+                    version[:32],
+                    platform[:16],
+                    locale[:16],
+                    logs[:32_000],
+                    meta[:8_000],
+                ),
+            )
+            conn.commit()
+            return int(cur.lastrowid or 0)
+        finally:
+            conn.close()
+
+    def app_diagnostics(self, *, limit: int = 30) -> list[dict]:
+        conn = self.connect()
+        try:
+            rows = conn.execute(
+                "SELECT id, instance_hash, created_at, version, platform, locale, logs, meta"
+                " FROM app_diagnostics ORDER BY id DESC LIMIT ?",
+                (int(limit),),
+            ).fetchall()
+        finally:
+            conn.close()
+        return [
+            {
+                "id": row["id"],
+                "instance": row["instance_hash"][:12],
+                "created_at": row["created_at"],
+                "version": row["version"] or "—",
+                "platform": row["platform"] or "—",
+                "locale": row["locale"] or "—",
+                "logs": row["logs"],
+                "meta": row["meta"],
+            }
+            for row in rows
+        ]
+
+    def issue_app_access(self, instance_hash: str, token: str, *, rotate: bool = False) -> bool:
+        """Issue one hidden access key per anonymous app installation.
+
+        The app stores the subscription URL in SecureStore; this table keeps
+        only the token digest and never leaks the bearer token again. Returns
+        False when the installation already has a key and `rotate` is false.
+        Rotation is an explicit recovery path for a stored key that no longer
+        resolves; the previous token is revoked before the new one is issued.
+        """
+        conn = self.connect()
+        try:
+            conn.execute("BEGIN IMMEDIATE")
+            existing = conn.execute(
+                "SELECT token_hash FROM app_access WHERE instance_hash = ?", (instance_hash,)
+            ).fetchone()
+            if existing:
+                if not rotate:
+                    conn.rollback()
+                    return False
+                conn.execute(
+                    "UPDATE subscription_tokens SET status = 'revoked' WHERE token_hash = ?",
+                    (existing["token_hash"],),
+                )
+                conn.execute("DELETE FROM app_access WHERE instance_hash = ?", (instance_hash,))
+            digest = self._subscription_key(token)
+            now = datetime.now(timezone.utc).isoformat()
+            conn.execute(
+                "INSERT INTO subscription_tokens"
+                " (token_hash, telegram_id, status, created_at, label, expires_at, username, source)"
+                " VALUES (?, ?, 'active', ?, ?, NULL, '', 'app')",
+                (digest, 0, now, "app-install"),
+            )
+            conn.execute(
+                "INSERT INTO app_access (instance_hash, token_hash, issued_at) VALUES (?, ?, ?)",
+                (instance_hash, digest, now),
+            )
+            conn.commit()
+            return True
+        except Exception:
+            conn.rollback()
+            return False
+        finally:
+            conn.close()
+
+    def touch_app_instance(
+        self,
+        instance_hash: str,
+        *,
+        version: str = "",
+        platform: str = "",
+        locale: str = "",
+        connected: bool = False,
+    ) -> None:
+        """Upsert one anonymous installation heartbeat.
+
+        `instance_hash` is derived server-side from a random client install id.
+        The raw id, IP, account and device identifiers are never stored.
+        """
+        now = datetime.now(timezone.utc).isoformat()
+        conn = self.connect()
+        try:
+            conn.execute(
+                "INSERT INTO app_instances"
+                " (instance_hash, first_seen, last_seen, version, platform, locale, connected, connected_at)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                " ON CONFLICT(instance_hash) DO UPDATE SET"
+                " last_seen=excluded.last_seen,"
+                " version=excluded.version,"
+                " platform=excluded.platform,"
+                " locale=excluded.locale,"
+                " connected=excluded.connected,"
+                " connected_at=CASE WHEN excluded.connected=1"
+                "   THEN excluded.last_seen ELSE app_instances.connected_at END",
+                (
+                    instance_hash,
+                    now,
+                    now,
+                    version[:32],
+                    platform[:16],
+                    locale[:16],
+                    1 if connected else 0,
+                    now if connected else None,
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
+    @staticmethod
+    def _iso_cutoff(seconds: int) -> str:
+        return (datetime.now(timezone.utc) - timedelta(seconds=seconds)).isoformat()
+
+    def app_instance_stats(self, *, row_limit: int = 200) -> dict:
+        """Aggregate unique anonymous app installations for the admin panel."""
+        conn = self.connect()
+        try:
+            total = conn.execute("SELECT COUNT(*) FROM app_instances").fetchone()[0]
+            active_24h = conn.execute(
+                "SELECT COUNT(*) FROM app_instances WHERE last_seen >= ?",
+                (self._iso_cutoff(24 * 3600),),
+            ).fetchone()[0]
+            active_7d = conn.execute(
+                "SELECT COUNT(*) FROM app_instances WHERE last_seen >= ?",
+                (self._iso_cutoff(7 * 24 * 3600),),
+            ).fetchone()[0]
+            active_30d = conn.execute(
+                "SELECT COUNT(*) FROM app_instances WHERE last_seen >= ?",
+                (self._iso_cutoff(30 * 24 * 3600),),
+            ).fetchone()[0]
+            cutoff = self._iso_cutoff(10 * 60)
+            online = conn.execute(
+                "SELECT COUNT(*) FROM app_instances WHERE connected=1 AND last_seen >= ?",
+                (cutoff,),
+            ).fetchone()[0]
+            by_version = [
+                {"name": row[0] or "unknown", "n": row[1]}
+                for row in conn.execute(
+                    "SELECT version, COUNT(*) FROM app_instances"
+                    " GROUP BY version ORDER BY COUNT(*) DESC"
+                ).fetchall()
+            ]
+            by_platform = [
+                {"name": row[0] or "unknown", "n": row[1]}
+                for row in conn.execute(
+                    "SELECT platform, COUNT(*) FROM app_instances"
+                    " GROUP BY platform ORDER BY COUNT(*) DESC"
+                ).fetchall()
+            ]
+            rows = [
+                {
+                    "id": row["instance_hash"][:12],
+                    "first_seen": row["first_seen"],
+                    "last_seen": row["last_seen"],
+                    "version": row["version"] or "—",
+                    "platform": row["platform"] or "—",
+                    "locale": row["locale"] or "—",
+                    "connected": bool(row["connected"]),
+                    "online": bool(row["connected"] and row["last_seen"] >= cutoff),
+                }
+                for row in conn.execute(
+                    "SELECT instance_hash, first_seen, last_seen, version, platform, locale, connected"
+                    " FROM app_instances ORDER BY last_seen DESC LIMIT ?",
+                    (int(row_limit),),
+                ).fetchall()
+            ]
+        finally:
+            conn.close()
+        return {
+            "total": total,
+            "active_24h": active_24h,
+            "active_7d": active_7d,
+            "active_30d": active_30d,
+            "online": online,
+            "by_version": by_version,
+            "by_platform": by_platform,
+            "rows": rows,
+        }
 
     def count_subscriptions_since(self, since: str, *, source: str | None = None) -> int:
         conn = self.connect()

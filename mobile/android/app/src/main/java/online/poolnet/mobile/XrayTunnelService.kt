@@ -106,7 +106,7 @@ class XrayTunnelService : VpnService() {
                 root.put("env", env)
 
                 try {
-                    LibXray.setDNS(protectController, "1.1.1.1:53")
+                    LibXray.setDNS(protectController, "77.88.8.8:53")
                 } catch (_: Exception) {
                     // DNS protection is best-effort on older Android builds.
                 }
@@ -119,7 +119,7 @@ class XrayTunnelService : VpnService() {
                     throw IllegalStateException(response.optString("error", "Xray failed to start"))
                 }
                 running = true
-                updateNotification("Защищено")
+                updateNotification("Подключено")
             } catch (error: Throwable) {
                 lastError = error.message ?: error.javaClass.simpleName
                 running = false

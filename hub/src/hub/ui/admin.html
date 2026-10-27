@@ -150,8 +150,56 @@
       stat("Выдано за 24 ч", s.issued_24h, "новые") +
       "</div>";
 
+    // Anonymous app installs. Counting unique installation ids, not people:
+    // the client id is random and only its digest is stored.
+    var a = d.apps || {};
+    html += '<div class="stats">' +
+      stat("Установок", a.total, "уникальных") +
+      stat("Активны 24 ч", a.active_24h, "были в приложении") +
+      stat("Активны 7 дней", a.active_7d, "за неделю") +
+      stat("Активны 30 дней", a.active_30d, "за месяц") +
+      stat("Сейчас с VPN", a.online, "heartbeat < 10 мин") +
+      "</div>";
+    var appRows = (a.rows || []).map(function (x) {
+      var status = x.online
+        ? '<span class="state" data-s="ok">сейчас с VPN</span>'
+        : x.connected
+          ? '<span class="state" data-s="warn">был с VPN</span>'
+          : '<span class="state" data-s="off">не подключён</span>';
+      return [
+        { html: "<code>" + esc(x.id) + "</code>" },
+        x.version,
+        x.platform,
+        x.locale,
+        dt(x.first_seen),
+        dt(x.last_seen),
+        { html: status }
+      ];
+    });
+    var appBreakdown = [];
+    (a.by_version || []).forEach(function (x) { appBreakdown.push(esc(x.name) + ": " + x.n); });
+    html += block("Приложения", "уникальные установки",
+      appRows.length
+        ? table([["ID"], ["Версия"], ["Платформа"], ["Язык"], ["Первый запуск"], ["Последняя активность"], ["VPN"]], appRows) +
+          '<p class="caption">' + (appBreakdown.length ? 'Версии: ' + appBreakdown.join(" · ") + '. ' : '') +
+          'ID — первые 12 символов хеша случайного идентификатора установки; IP и устройство не хранятся.</p>'
+        : '<p class="caption">Пока нет heartbeat от приложения. Установите 0.5.2+ и откройте приложение.</p>');
+
+    var diagRows = d.diagnostics || [];
+    html += block("Диагностика приложений", diagRows.length + " отчётов",
+      diagRows.length
+        ? '<div class="diag-list">' + diagRows.map(function (x) {
+            var meta = x.meta || "{}";
+            return '<details class="diag-item"><summary><code>#' + esc(x.id) + '</code> · ' +
+              esc(x.version) + ' · ' + esc(x.platform) + ' · ' + dt(x.created_at) +
+              ' · установка ' + esc(x.instance) + '</summary>' +
+              '<pre>' + esc(x.logs || '—') + '</pre>' +
+              '<p class="caption">Meta: ' + esc(meta) + '</p></details>';
+          }).join("") + '</div>'
+        : '<p class="caption">Отчётов пока нет. Пользователь отправляет их вручную: Профиль → Отправить логи.</p>');
+
     // Subscriptions, last: issuing is an action and actions come after state.
-    html += block("Подписки", "срок и источник", 
+    html += block("Подписки", "срок и источник",
       '<form id="issue" class="issue">' +
       '<input name="label" placeholder="метка (необязательно)" maxlength="120" aria-label="Метка">' +
       '<input name="username" placeholder="Telegram username" maxlength="64" aria-label="Получатель">' +

@@ -1,10 +1,9 @@
-"""Free public subscription: seven days, one key per network per cooldown.
+"""Free public subscription: unlimited lifetime, one key per network per cooldown.
 
 The site's free CTA issues a key directly, while the bot remains an optional
-funnel. These tests pin the contract the page relies on: a seven-day term, a
-working `/sub/` URL, expiry enforced at fetch time, a signed proof-of-wait
-challenge, and a persistent claim so a reload or a script cannot mint a second
-key from the same address.
+funnel. These tests pin the contract the page relies on: a permanent key, a
+working `/sub/` URL, a signed proof-of-wait challenge, and a persistent claim so
+a reload or a script cannot mint a second key from the same address.
 """
 
 from __future__ import annotations
@@ -55,16 +54,17 @@ def _issue(api, ip: str | None = None):
     )
 
 
-def test_free_key_is_seven_days_and_works(client):
+def test_free_key_has_no_expiry_and_works(client):
     api, store = client
     response = _issue(api)
     assert response.status_code == 200
     body = response.json()
     assert body["subscription"].startswith("https://poolnet.online/sub/")
+    assert body["unlimited"] is True
     expires = datetime.fromisoformat(body["expires_at"])
-    left = expires - datetime.now(timezone.utc)
-    assert timedelta(days=6, hours=23) < left <= timedelta(days=7, minutes=1)
+    assert expires.year >= 2100
     assert store.subscription_status(body["token"]) == "active"
+    assert store.subscription_expiry(body["token"]) is None
     assert api.get(f"/sub/{body['token']}?format=base64").status_code == 200
 
 

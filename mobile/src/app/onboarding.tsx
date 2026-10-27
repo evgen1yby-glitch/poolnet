@@ -62,7 +62,6 @@ export default function OnboardingScreen() {
         </View>
         <View style={styles.cta}>
           <PrimaryButton label={t('onboarding.start')} onPress={() => router.replace('/(tabs)')} />
-          <PrimaryButton label={t('onboarding.haveKey')} tone="ghost" onPress={() => router.replace('/key')} />
         </View>
       </View>
     </SafeAreaView>

@@ -93,7 +93,11 @@ export type FreeStatus = {
 };
 
 export type FreeChallenge = { challenge: string; wait_seconds: number; claim_hours: number };
-export type FreeKey = { token: string; expires_at: string; subscription: string };
+export type FreeKey = { token: string; expires_at: string | null; unlimited?: boolean; subscription: string };
+export type AppPing = { id: string; version: string; platform: string; locale: string; connected: boolean };
+export type AppAccessKey = { token: string; subscription: string; expires_at: string | null; unlimited?: boolean };
+export type AppAccessPayload = Omit<AppPing, 'connected'> & { rotate?: boolean };
+export type DiagnosticsPayload = { id: string; version: string; platform: string; locale: string; logs: string; meta: Record<string, unknown> };
 
 export const api = {
   status: () => request<StatusPayload>('/api/status.json'),
@@ -108,6 +112,24 @@ export const api = {
   },
   freeStatus: () => request<FreeStatus>('/api/free-status'),
   freeChallenge: () => request<FreeChallenge>('/api/free-challenge'),
+  appDiagnostics: (payload: DiagnosticsPayload) =>
+    request<{ ok: boolean; report: number }>('/api/app/diagnostics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
+  appAccess: (payload: AppAccessPayload) =>
+    request<AppAccessKey>('/api/app/access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
+  appPing: (payload: AppPing) =>
+    request<{ ok: boolean }>('/api/app/ping', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
   freeClaim: (challenge: string) =>
     request<FreeKey>('/api/free-subscription', {
       method: 'POST',
