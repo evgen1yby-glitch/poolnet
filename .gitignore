@@ -40,7 +40,3 @@ Thumbs.db
 
 # Local signed APK artifacts; deployed out-of-band
 web/site/app/*.apk
-
-!web/site/vendor/
-!web/site/vendor/hls.min.js
-!web/site/vendor/hls.LICENSE

@@ -385,7 +385,7 @@ class _CachePolicy:
         path = scope.get("path", "")
         policy = next((p for prefix, p in self.POLICY if path.startswith(prefix)), None)
         if policy is None and (
-            path.endswith((".html", ".css", ".js", ".json", ".m3u", ".png", ".jpg", ".svg", ".ico", ".woff", ".woff2"))
+            path.endswith((".html", ".css", ".js", ".json", ".png", ".jpg", ".svg", ".ico", ".woff", ".woff2"))
             or (path == "/" and self.site_index)
             or path in self.site_slugs
             or path == "/en"

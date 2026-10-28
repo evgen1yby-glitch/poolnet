@@ -67,7 +67,6 @@ Android-клиент с встроенным VPN-туннелем (Xray TUN) —
 HTML-прототип со всеми экранами — `/app/`. Исходники: Expo/React Native,
 [Скачать Android APK](https://poolnet.online/download) ·
 [Проверка файла и версия](https://poolnet.online/download) ·
-[HLS TV — публичные русскоязычные каналы](https://poolnet.online/tv),
 план — [docs/MOBILE-APP-PLAN.md](docs/MOBILE-APP-PLAN.md).
 
 [**Открыть на домене**](https://poolnet.online/app/) · [**Открыть по IP**](http://193.34.212.154:8098/app/)

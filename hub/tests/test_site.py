@@ -51,7 +51,7 @@ def test_the_root_serves_the_site_index(site_client):
 
 def test_every_site_page_serves(site_client):
     """All six pages answer 200 — a 404 between pages breaks navigation."""
-    for page in ("vpn", "proxy", "tv", "verify", "check", "status", "legal"):
+    for page in ("vpn", "proxy", "verify", "check", "status", "legal"):
         assert site_client.get(f"/{page}").status_code == 200, page
         legacy = site_client.get(f"/{page}.html", follow_redirects=False)
         assert legacy.status_code == 301, page
@@ -103,7 +103,7 @@ def test_english_tree_serves_and_matches_the_russian_contract():
     """
     import re
 
-    for name in ("index", "vpn", "proxy", "tv", "verify", "check", "status", "404", "legal"):
+    for name in ("index", "vpn", "proxy", "verify", "check", "status", "404", "legal"):
         ru = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
         en = (SITE_DIR / "en" / f"{name}.html").read_text(encoding="utf-8")
         key = lambda page: sorted(  # noqa: E731 - local, one use
@@ -185,7 +185,7 @@ def test_api_routes_do_not_conflict_with_the_site(site_client):
 
 def test_every_english_page_serves(site_client):
     """The EN tree is reachable through the gateway, with English labels."""
-    for page in ("", "vpn", "proxy", "tv", "verify", "check", "status", "legal"):
+    for page in ("", "vpn", "proxy", "verify", "check", "status", "legal"):
         response = site_client.get(f"/en/{page}" if page else "/en/")
         assert response.status_code == 200, page
         assert response.headers["cache-control"] == "no-cache"
@@ -227,7 +227,6 @@ def test_indexable_pages_carry_canonical_hreflang_and_open_graph(site_client):
         ("/", "https://poolnet.online/"),
         ("/proxy", "https://poolnet.online/proxy"),
         ("/en/download", "https://poolnet.online/en/download"),
-        ("/tv", "https://poolnet.online/tv"),
     ):
         html = site_client.get(path).text
         assert f'<link rel="canonical" href="{canonical}">' in html, path
