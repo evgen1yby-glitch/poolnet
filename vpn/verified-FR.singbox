@@ -1,0 +1,191 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "local"
+      },
+      {
+        "type": "udp",
+        "server": "198.18.0.2",
+        "tag": "dns-remote"
+      },
+      {
+        "type": "tls",
+        "server": "198.18.0.2",
+        "tag": "dns-remote-doh"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "🇫🇷 Франция 1",
+      "server": "162.159.244.91",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "humanity",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.calmlunch.com"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/assignment",
+        "headers": {
+          "Host": "www.calmlunch.com"
+        }
+      }
+    },
+    {
+      "tag": "🇫🇷 Франция 2",
+      "server": "104.16.72.41",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "humanity",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.calmlunch.com"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/assignment",
+        "headers": {
+          "Host": "www.calmlunch.com"
+        }
+      }
+    },
+    {
+      "tag": "🇫🇷 Франция 3",
+      "server": "104.16.0.1",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "humanity",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.calmlunch.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "http/1.1"
+        ]
+      },
+      "transport": {
+        "type": "ws",
+        "path": "//assignment",
+        "headers": {
+          "Host": "www.calmlunch.com"
+        }
+      }
+    },
+    {
+      "tag": "🇫🇷 Франция 4",
+      "server": "212.183.88.136",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "humanity",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.calmlunch.com"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "//assignment",
+        "headers": {
+          "Host": "www.calmlunch.com"
+        }
+      }
+    },
+    {
+      "type": "urltest",
+      "tag": "🇫🇷 Франция",
+      "outbounds": [
+        "🇫🇷 Франция 1",
+        "🇫🇷 Франция 2",
+        "🇫🇷 Франция 3",
+        "🇫🇷 Франция 4"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "10m",
+      "tolerance": 150,
+      "idle_timeout": "30m",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "🇫🇷 Франция",
+        "direct"
+      ]
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "action": "hijack-dns",
+        "inbound": "mixed-in"
+      },
+      {
+        "action": "route",
+        "outbound": "direct",
+        "port": 53
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "action": "route",
+        "outbound": "dns-remote",
+        "rule_set": [
+          "geosite-ru"
+        ]
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "action": "route",
+        "outbound": "proxy"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-ru",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-ru.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "proxy"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "cache_id": "1d46c6e811536a41"
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "local"
+      },
+      {
+        "type": "udp",
+        "server": "198.18.0.2",
+        "tag": "dns-remote"
+      },
+      {
+        "type": "tls",
+        "server": "198.18.0.2",
+        "tag": "dns-remote-doh"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "🇨🇦 Канада 1",
+      "server": "149.22.95.183",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇨🇦 Канада 2",
+      "server": "137.184.174.93",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "rc4-md5",
+      "password": "14fFPrbezE3HDZzsMOr6"
+    },
+    {
+      "type": "urltest",
+      "tag": "🇨🇦 Канада",
+      "outbounds": [
+        "🇨🇦 Канада 1",
+        "🇨🇦 Канада 2"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "10m",
+      "tolerance": 150,
+      "idle_timeout": "30m",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "🇨🇦 Канада",
+        "direct"
+      ]
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "action": "hijack-dns",
+        "inbound": "mixed-in"
+      },
+      {
+        "action": "route",
+        "outbound": "direct",
+        "port": 53
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "action": "route",
+        "outbound": "dns-remote",
+        "rule_set": [
+          "geosite-ru"
+        ]
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "action": "route",
+        "outbound": "proxy"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-ru",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-ru.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "proxy"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "cache_id": "5b473cd74f399007"
+    }
+  }
+}

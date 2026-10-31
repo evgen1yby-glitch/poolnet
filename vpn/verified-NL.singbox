@@ -1,0 +1,523 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "local"
+      },
+      {
+        "type": "udp",
+        "server": "198.18.0.2",
+        "tag": "dns-remote"
+      },
+      {
+        "type": "tls",
+        "server": "198.18.0.2",
+        "tag": "dns-remote-doh"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "🇳🇱 Нидерланды 1",
+      "server": "82.38.31.66",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 2",
+      "server": "82.38.31.54",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 3",
+      "server": "82.38.31.48",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 4",
+      "server": "82.38.31.35",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 5",
+      "server": "82.38.31.3",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 6",
+      "server": "82.38.31.34",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 7",
+      "server": "82.38.31.61",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 8",
+      "server": "82.38.31.47",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 9",
+      "server": "82.38.31.69",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 10",
+      "server": "82.38.31.62",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 11",
+      "server": "82.38.31.189",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 12",
+      "server": "82.38.31.187",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 13",
+      "server": "82.38.31.185",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 14",
+      "server": "82.38.31.186",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 15",
+      "server": "82.38.31.39",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 16",
+      "server": "82.38.31.9",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 17",
+      "server": "104.239.12.81",
+      "server_port": 43385,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "AwW1fV6oDDQKh8r2znmptv59tPgt4eHVTgFaTqgKS2jiSdikJ7GyGCBYehDaK38S8yMgHFdbJqcTmRJSfYS5CFw345bNhFZa"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 18",
+      "server": "82.38.31.7",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 19",
+      "server": "82.38.31.195",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 20",
+      "server": "82.38.31.174",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 21",
+      "server": "82.38.31.49",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 22",
+      "server": "82.38.31.46",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 23",
+      "server": "82.38.31.171",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 24",
+      "server": "sql.popmintxo.cc",
+      "server_port": 43385,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "AwW1fV6oDDQKh8r2znmptv59tPgt4eHVTgFaTqgKS2jiSdikJ7GyGCBYehDaK38S8yMgHFdbJqcTmRJSfYS5CFw345bNhFZa"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 25",
+      "server": "82.38.31.28",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 26",
+      "server": "82.38.31.26",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 27",
+      "server": "82.38.31.175",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 28",
+      "server": "82.38.31.175",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 29",
+      "server": "82.38.31.194",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 30",
+      "server": "82.38.31.203",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 31",
+      "server": "82.38.31.174",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 32",
+      "server": "82.38.31.204",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 33",
+      "server": "82.38.31.181",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 34",
+      "server": "193.29.139.132",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 35",
+      "server": "82.38.31.17",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "oZIoA69Q8yhcQV8ka3Pa3A"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 36",
+      "server": "82.38.31.180",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 37",
+      "server": "193.29.139.223",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 38",
+      "server": "162.159.133.152",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "humanity",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.pleadcourt.org"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/assignment",
+        "headers": {
+          "Host": "www.pleadcourt.org"
+        }
+      }
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 39",
+      "server": "193.29.139.147",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 40",
+      "server": "82.38.31.176",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 41",
+      "server": "82.38.31.179",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 42",
+      "server": "82.38.31.192",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 43",
+      "server": "dns24.m3hrzd.ir",
+      "server_port": 8044,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "hNfeLCN3XzYgLFSAWo_fxOl4HC1gNw0V"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 44",
+      "server": "82.38.31.191",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "tag": "🇳🇱 Нидерланды 45",
+      "server": "82.38.31.201",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "k1dBOmOB4oqi7Ump37a1bQ"
+    },
+    {
+      "type": "urltest",
+      "tag": "🇳🇱 Нидерланды",
+      "outbounds": [
+        "🇳🇱 Нидерланды 1",
+        "🇳🇱 Нидерланды 2",
+        "🇳🇱 Нидерланды 3",
+        "🇳🇱 Нидерланды 4",
+        "🇳🇱 Нидерланды 5",
+        "🇳🇱 Нидерланды 6",
+        "🇳🇱 Нидерланды 7",
+        "🇳🇱 Нидерланды 8",
+        "🇳🇱 Нидерланды 9",
+        "🇳🇱 Нидерланды 10",
+        "🇳🇱 Нидерланды 11",
+        "🇳🇱 Нидерланды 12",
+        "🇳🇱 Нидерланды 13",
+        "🇳🇱 Нидерланды 14",
+        "🇳🇱 Нидерланды 15",
+        "🇳🇱 Нидерланды 16",
+        "🇳🇱 Нидерланды 17",
+        "🇳🇱 Нидерланды 18",
+        "🇳🇱 Нидерланды 19",
+        "🇳🇱 Нидерланды 20",
+        "🇳🇱 Нидерланды 21",
+        "🇳🇱 Нидерланды 22",
+        "🇳🇱 Нидерланды 23",
+        "🇳🇱 Нидерланды 24",
+        "🇳🇱 Нидерланды 25",
+        "🇳🇱 Нидерланды 26",
+        "🇳🇱 Нидерланды 27",
+        "🇳🇱 Нидерланды 28",
+        "🇳🇱 Нидерланды 29",
+        "🇳🇱 Нидерланды 30",
+        "🇳🇱 Нидерланды 31",
+        "🇳🇱 Нидерланды 32",
+        "🇳🇱 Нидерланды 33",
+        "🇳🇱 Нидерланды 34",
+        "🇳🇱 Нидерланды 35",
+        "🇳🇱 Нидерланды 36",
+        "🇳🇱 Нидерланды 37",
+        "🇳🇱 Нидерланды 38",
+        "🇳🇱 Нидерланды 39",
+        "🇳🇱 Нидерланды 40",
+        "🇳🇱 Нидерланды 41",
+        "🇳🇱 Нидерланды 42",
+        "🇳🇱 Нидерланды 43",
+        "🇳🇱 Нидерланды 44",
+        "🇳🇱 Нидерланды 45"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "10m",
+      "tolerance": 150,
+      "idle_timeout": "30m",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "🇳🇱 Нидерланды",
+        "direct"
+      ]
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "action": "hijack-dns",
+        "inbound": "mixed-in"
+      },
+      {
+        "action": "route",
+        "outbound": "direct",
+        "port": 53
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "action": "route",
+        "outbound": "dns-remote",
+        "rule_set": [
+          "geosite-ru"
+        ]
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "action": "route",
+        "outbound": "proxy"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-ru",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-ru.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "proxy"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "cache_id": "a4512d9950de507a"
+    }
+  }
+}

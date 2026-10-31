@@ -1,0 +1,129 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "local"
+      },
+      {
+        "type": "udp",
+        "server": "198.18.0.2",
+        "tag": "dns-remote"
+      },
+      {
+        "type": "tls",
+        "server": "198.18.0.2",
+        "tag": "dns-remote-doh"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "🇵🇱 Польша 1",
+      "server": "70.34.252.255",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "0ab6c98dae3b48e8b9c4a776b6c9c19a",
+      "tls": {
+        "enabled": true,
+        "server_name": "browseexecutivejobopeningsandenhanceleadershipcareer.com"
+      }
+    },
+    {
+      "tag": "🇵🇱 Польша 2",
+      "server": "pl140.vpnbook.com",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "6heexyz"
+    },
+    {
+      "type": "urltest",
+      "tag": "🇵🇱 Польша",
+      "outbounds": [
+        "🇵🇱 Польша 1",
+        "🇵🇱 Польша 2"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "10m",
+      "tolerance": 150,
+      "idle_timeout": "30m",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "🇵🇱 Польша",
+        "direct"
+      ]
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "action": "hijack-dns",
+        "inbound": "mixed-in"
+      },
+      {
+        "action": "route",
+        "outbound": "direct",
+        "port": 53
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "action": "route",
+        "outbound": "dns-remote",
+        "rule_set": [
+          "geosite-ru"
+        ]
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "action": "route",
+        "outbound": "proxy"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-ru",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-ru.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "proxy"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "cache_id": "e290608c8c1ab5ca"
+    }
+  }
+}

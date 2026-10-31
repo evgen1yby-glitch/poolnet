@@ -1,0 +1,275 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "local"
+      },
+      {
+        "type": "udp",
+        "server": "198.18.0.2",
+        "tag": "dns-remote"
+      },
+      {
+        "type": "tls",
+        "server": "198.18.0.2",
+        "tag": "dns-remote-doh"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "🇺🇸 США 1",
+      "server": "156.146.38.167",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 2",
+      "server": "185.230.230.18",
+      "server_port": 19999,
+      "type": "shadowsocks",
+      "method": "aes-256-gcm",
+      "password": "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    },
+    {
+      "tag": "🇺🇸 США 3",
+      "server": "193.151.163.18",
+      "server_port": 19999,
+      "type": "shadowsocks",
+      "method": "aes-256-gcm",
+      "password": "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    },
+    {
+      "tag": "🇺🇸 США 4",
+      "server": "15.204.233.41",
+      "server_port": 8882,
+      "type": "shadowsocks",
+      "method": "aes-256-gcm",
+      "password": "kDWvXYZoTBcGkC4"
+    },
+    {
+      "tag": "🇺🇸 США 5",
+      "server": "156.146.38.169",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 6",
+      "server": "156.146.38.168",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 7",
+      "server": "15.204.246.132",
+      "server_port": 7307,
+      "type": "shadowsocks",
+      "method": "aes-256-gcm",
+      "password": "FoOiGlkAA9yPEGP"
+    },
+    {
+      "tag": "🇺🇸 США 8",
+      "server": "23.251.121.242",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "rc4-md5",
+      "password": "14fFPrbezE3HDZzsMOr6"
+    },
+    {
+      "tag": "🇺🇸 США 9",
+      "server": "resources.findlocaljobnetworkandbuildcommunityconnections.com",
+      "server_port": 443,
+      "type": "trojan",
+      "password": "f0eb8c92ce8946aaba856569cff1a16b",
+      "tls": {
+        "enabled": true
+      }
+    },
+    {
+      "tag": "🇺🇸 США 10",
+      "server": "193.151.160.18",
+      "server_port": 19999,
+      "type": "shadowsocks",
+      "method": "aes-256-gcm",
+      "password": "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4="
+    },
+    {
+      "tag": "🇺🇸 США 11",
+      "server": "156.146.38.170",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 12",
+      "server": "37.19.198.160",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 13",
+      "server": "37.19.198.243",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 14",
+      "server": "107.155.57.51",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "rc4-md5",
+      "password": "14fFPrbezE3HDZzsMOr6"
+    },
+    {
+      "tag": "🇺🇸 США 15",
+      "server": "79.110.53.169",
+      "server_port": 8080,
+      "type": "shadowsocks",
+      "method": "rc4-md5",
+      "password": "14fFPrbezE3HDZzsMOr6"
+    },
+    {
+      "tag": "🇺🇸 США 16",
+      "server": "37.19.198.244",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "aes-128-gcm",
+      "password": "shadowsocks"
+    },
+    {
+      "tag": "🇺🇸 США 17",
+      "server": "us001.zestapp778.com",
+      "server_port": 57277,
+      "type": "trojan",
+      "password": "5t6i121em5lkmsmk",
+      "tls": {
+        "enabled": true,
+        "server_name": "us001.zestapp778.com"
+      }
+    },
+    {
+      "tag": "🇺🇸 США 18",
+      "server": "198.98.53.130",
+      "server_port": 443,
+      "type": "shadowsocks",
+      "method": "chacha20-ietf-poly1305",
+      "password": "eDfN7SODQceIOmIAbtJJtK"
+    },
+    {
+      "type": "urltest",
+      "tag": "🇺🇸 США",
+      "outbounds": [
+        "🇺🇸 США 1",
+        "🇺🇸 США 2",
+        "🇺🇸 США 3",
+        "🇺🇸 США 4",
+        "🇺🇸 США 5",
+        "🇺🇸 США 6",
+        "🇺🇸 США 7",
+        "🇺🇸 США 8",
+        "🇺🇸 США 9",
+        "🇺🇸 США 10",
+        "🇺🇸 США 11",
+        "🇺🇸 США 12",
+        "🇺🇸 США 13",
+        "🇺🇸 США 14",
+        "🇺🇸 США 15",
+        "🇺🇸 США 16",
+        "🇺🇸 США 17",
+        "🇺🇸 США 18"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "10m",
+      "tolerance": 150,
+      "idle_timeout": "30m",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "🇺🇸 США",
+        "direct"
+      ]
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "action": "hijack-dns",
+        "inbound": "mixed-in"
+      },
+      {
+        "action": "route",
+        "outbound": "direct",
+        "port": 53
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "action": "route",
+        "outbound": "dns-remote",
+        "rule_set": [
+          "geosite-ru"
+        ]
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "action": "route",
+        "outbound": "proxy"
+      }
+    ],
+    "rule_set": [
+      {
+        "tag": "geosite-ru",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-ru.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "proxy"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "cache_id": "56a0cc61e1a9a803"
+    }
+  }
+}

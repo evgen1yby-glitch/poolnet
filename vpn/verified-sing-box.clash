@@ -1,0 +1,467 @@
+# hub-verified-sing-box
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: warning
+ipv6: false
+external-controller: 127.0.0.1:9090
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 198.18.0.2
+
+proxies:
+  - {name: "🇵🇱 Польша 1", server: "70.34.252.255", port: 443, type: trojan, password: "0ab6c98dae3b48e8b9c4a776b6c9c19a", udp: true, tls: true, servername: "browseexecutivejobopeningsandenhanceleadershipcareer.com"}
+  - {name: "🇮🇹 Италия 1", server: "202.50.253.27", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇮🇹 Италия 2", server: "202.50.253.81", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇳🇱 Нидерланды 1", server: "82.38.31.66", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 2", server: "82.38.31.54", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇮🇹 Италия 3", server: "202.50.253.63", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇳🇱 Нидерланды 3", server: "82.38.31.48", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 4", server: "82.38.31.35", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 5", server: "82.38.31.3", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇩🇪 Германия 1", server: "5.252.179.15", port: 443, type: vless, uuid: "0ab273e4-cea6-41d0-bbab-41071d2fc455", udp: true, tls: true, servername: "www.bing.com", client-fingerprint: "chrome", flow: "xtls-rprx-vision", reality-opts: {public-key: "XQB2zIgrhD8AtxgYFM8UiiWYt1sLVBLhMg1M4-sGMAY", short-id: "296f27de82dad7ff"}}
+  - {name: "🇳🇱 Нидерланды 6", server: "82.38.31.34", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 7", server: "82.38.31.61", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 8", server: "82.38.31.47", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇦🇹 Австрия 1", server: "82.110.60.9", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇳🇱 Нидерланды 9", server: "82.38.31.69", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 10", server: "82.38.31.62", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 11", server: "82.38.31.189", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 12", server: "82.38.31.187", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 13", server: "82.38.31.185", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇬🇧 Великобритания 1", server: "98.98.207.163", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇩🇪 Германия 2", server: "169.150.210.233", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇳🇱 Нидерланды 14", server: "82.38.31.186", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇬🇧 Великобритания 2", server: "98.98.142.161", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇫🇷 Франция 1", server: "162.159.244.91", port: 443, type: trojan, password: "humanity", udp: true, tls: true, servername: "www.calmlunch.com"}
+  - {name: "🇳🇱 Нидерланды 15", server: "82.38.31.39", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 16", server: "82.38.31.9", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 17", server: "104.239.12.81", port: 43385, type: ss, cipher: "chacha20-ietf-poly1305", password: "AwW1fV6oDDQKh8r2znmptv59tPgt4eHVTgFaTqgKS2jiSdikJ7GyGCBYehDaK38S8yMgHFdbJqcTmRJSfYS5CFw345bNhFZa", udp: true}
+  - {name: "🇳🇱 Нидерланды 18", server: "82.38.31.7", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 19", server: "82.38.31.195", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇬🇧 Великобритания 3", server: "146.70.61.37", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇺🇸 США 1", server: "156.146.38.167", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇳🇱 Нидерланды 20", server: "82.38.31.174", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇮🇹 Италия 4", server: "185.164.175.81", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇵🇱 Польша 2", server: "pl140.vpnbook.com", port: 443, type: ss, cipher: "chacha20-ietf-poly1305", password: "6heexyz", udp: true}
+  - {name: "🇪🇸 Испания 1", server: "45.198.55.200", port: 25152, type: vless, uuid: "056405e8-de9f-4d0d-8145-956f13cc34da", udp: true, tls: true, servername: "www.samsung.com", client-fingerprint: "firefox", flow: "xtls-rprx-vision", reality-opts: {public-key: "ZIZIfEd-cs4jAgYIav5ZAkfWaqvpG8DQP-SH6xhGDmc", short-id: "08c379434f36cdbe"}}
+  - {name: "🇮🇹 Италия 5", server: "202.50.253.18", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇨🇦 Канада 1", server: "149.22.95.183", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇺🇸 США 2", server: "185.230.230.18", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇪🇸 Испания 2", server: "45.198.55.200", port: 25150, type: vless, uuid: "056405e8-de9f-4d0d-8145-956f13cc34da", udp: true, tls: true, servername: "www.samsung.com", client-fingerprint: "firefox", reality-opts: {public-key: "Qvn7tV54mdqxJ40LmmoI1PRM1QKXEbfFOZS-omPKhGY", short-id: "4301a484cc762aa6"}}
+  - {name: "🇺🇸 США 3", server: "193.151.163.18", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇨🇦 Канада 2", server: "137.184.174.93", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇫🇷 Франция 2", server: "104.16.72.41", port: 443, type: trojan, password: "humanity", udp: true, tls: true, servername: "www.calmlunch.com"}
+  - {name: "🇮🇹 Италия 6", server: "202.50.253.54", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇳🇱 Нидерланды 21", server: "82.38.31.49", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇫🇷 Франция 3", server: "104.16.0.1", port: 443, type: trojan, password: "humanity", udp: true, tls: true, servername: "www.calmlunch.com"}
+  - {name: "🇳🇱 Нидерланды 22", server: "82.38.31.46", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇬🇧 Великобритания 4", server: "146.70.46.199", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇳🇱 Нидерланды 23", server: "82.38.31.171", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇺🇸 США 4", server: "15.204.233.41", port: 8882, type: ss, cipher: "aes-256-gcm", password: "kDWvXYZoTBcGkC4", udp: true}
+  - {name: "🇺🇸 США 5", server: "156.146.38.169", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇺🇸 США 6", server: "156.146.38.168", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇳🇱 Нидерланды 24", server: "sql.popmintxo.cc", port: 43385, type: ss, cipher: "chacha20-ietf-poly1305", password: "AwW1fV6oDDQKh8r2znmptv59tPgt4eHVTgFaTqgKS2jiSdikJ7GyGCBYehDaK38S8yMgHFdbJqcTmRJSfYS5CFw345bNhFZa", udp: true}
+  - {name: "🇺🇸 США 7", server: "15.204.246.132", port: 7307, type: ss, cipher: "aes-256-gcm", password: "FoOiGlkAA9yPEGP", udp: true}
+  - {name: "🇳🇱 Нидерланды 25", server: "82.38.31.28", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇬🇧 Великобритания 5", server: "146.70.46.214", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇺🇸 США 8", server: "23.251.121.242", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇲🇽 Мексика 1", server: "149.104.87.33", port: 15083, type: trojan, password: "5t6i121em5lkmsmk", udp: true, tls: true, servername: "mx001.zestapp778.com"}
+  - {name: "🇯🇵 Япония 1", server: "149.22.87.241", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇺🇸 США 9", server: "resources.findlocaljobnetworkandbuildcommunityconnections.com", port: 443, type: trojan, password: "f0eb8c92ce8946aaba856569cff1a16b", udp: true, tls: true, servername: "resources.findlocaljobnetworkandbuildcommunityconnections.com"}
+  - {name: "🇳🇱 Нидерланды 26", server: "82.38.31.26", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 27", server: "82.38.31.175", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 28", server: "82.38.31.175", port: 443, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 29", server: "82.38.31.194", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇰🇷 Корея 1", server: "168.110.119.243", port: 20039, type: trojan, password: "dc9e33c7a6df4164", udp: true, tls: true, servername: "ikr100a.zxom.eu.org"}
+  - {name: "🇺🇸 США 10", server: "193.151.160.18", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇸🇬 Сингапур 1", server: "68.183.227.4", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇺🇸 США 11", server: "156.146.38.170", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇮🇹 Италия 7", server: "202.50.253.45", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇮🇹 Италия 8", server: "202.50.253.90", port: 19999, type: ss, cipher: "aes-256-gcm", password: "ZRpgaBeGxtENIXgvhpkZBKz9GnWRS2dYcx9O+a2iwN4=", udp: true}
+  - {name: "🇩🇪 Германия 3", server: "146.70.20.147", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇫🇷 Франция 4", server: "212.183.88.136", port: 443, type: trojan, password: "humanity", udp: true, tls: true, servername: "www.calmlunch.com"}
+  - {name: "🇺🇸 США 12", server: "37.19.198.160", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇺🇸 США 13", server: "37.19.198.243", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇳🇱 Нидерланды 30", server: "82.38.31.203", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 31", server: "82.38.31.174", port: 443, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇳🇱 Нидерланды 32", server: "82.38.31.204", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 33", server: "82.38.31.181", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇷🇴 Румыния 1", server: "155.117.5.208", port: 2052, type: vless, uuid: "1a8ecc41-6e62-431b-8eca-87c2fa4dc286", udp: true, tls: false}
+  - {name: "🇳🇱 Нидерланды 34", server: "193.29.139.132", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 35", server: "82.38.31.17", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "oZIoA69Q8yhcQV8ka3Pa3A", udp: true}
+  - {name: "🇺🇸 США 14", server: "107.155.57.51", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇸🇬 Сингапур 2", server: "68.183.235.122", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇳🇱 Нидерланды 36", server: "82.38.31.180", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 37", server: "193.29.139.223", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 38", server: "162.159.133.152", port: 443, type: trojan, password: "humanity", udp: true, tls: true, servername: "www.pleadcourt.org"}
+  - {name: "🇳🇱 Нидерланды 39", server: "193.29.139.147", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇳🇱 Нидерланды 40", server: "82.38.31.176", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇯🇵 Япония 2", server: "84.247.155.196", port: 80, type: ss, cipher: "aes-256-gcm", password: "3eOFeNssde7PYYMv", udp: true}
+  - {name: "🇷🇴 Румыния 2", server: "2.26.89.192", port: 443, type: vless, uuid: "07680ffb-0666-4836-b6ad-ec0de62bc38f", udp: true, tls: true, servername: "assets-ms-90.next-gen-shopping.com", client-fingerprint: "firefox", flow: "xtls-rprx-vision", reality-opts: {public-key: "HA8RX24k72lyACy0T1mCDeYcUQh22XRlT4wuhj3Onl4", short-id: "36b707a341db758d"}}
+  - {name: "🇳🇱 Нидерланды 41", server: "82.38.31.179", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇺🇸 США 15", server: "79.110.53.169", port: 8080, type: ss, cipher: "rc4-md5", password: "14fFPrbezE3HDZzsMOr6", udp: true}
+  - {name: "🇳🇱 Нидерланды 42", server: "82.38.31.192", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇺🇸 США 16", server: "37.19.198.244", port: 443, type: ss, cipher: "aes-128-gcm", password: "shadowsocks", udp: true}
+  - {name: "🇺🇸 США 17", server: "us001.zestapp778.com", port: 57277, type: trojan, password: "5t6i121em5lkmsmk", udp: true, tls: true, servername: "us001.zestapp778.com"}
+  - {name: "🇯🇵 Япония 3", server: "84.247.155.196", port: 443, type: ss, cipher: "aes-256-gcm", password: "3eOFeNssde7PYYMv", udp: true}
+  - {name: "🇿🇦 ЮАР 1", server: "102.37.156.224", port: 443, type: ss, cipher: "chacha20-ietf-poly1305", password: "aduB9HGxQHjA2SBMRjkHX6", udp: true}
+  - {name: "🇳🇱 Нидерланды 43", server: "dns24.m3hrzd.ir", port: 8044, type: ss, cipher: "chacha20-ietf-poly1305", password: "hNfeLCN3XzYgLFSAWo_fxOl4HC1gNw0V", udp: true}
+  - {name: "🇳🇱 Нидерланды 44", server: "82.38.31.191", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+  - {name: "🇺🇸 США 18", server: "198.98.53.130", port: 443, type: ss, cipher: "chacha20-ietf-poly1305", password: "eDfN7SODQceIOmIAbtJJtK", udp: true}
+  - {name: "🇳🇱 Нидерланды 45", server: "82.38.31.201", port: 8080, type: ss, cipher: "chacha20-ietf-poly1305", password: "k1dBOmOB4oqi7Ump37a1bQ", udp: true}
+
+proxy-groups:
+  - name: 🇳🇱 Нидерланды
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇳🇱 Нидерланды 1
+      - 🇳🇱 Нидерланды 2
+      - 🇳🇱 Нидерланды 3
+      - 🇳🇱 Нидерланды 4
+      - 🇳🇱 Нидерланды 5
+      - 🇳🇱 Нидерланды 6
+      - 🇳🇱 Нидерланды 7
+      - 🇳🇱 Нидерланды 8
+      - 🇳🇱 Нидерланды 9
+      - 🇳🇱 Нидерланды 10
+      - 🇳🇱 Нидерланды 11
+      - 🇳🇱 Нидерланды 12
+      - 🇳🇱 Нидерланды 13
+      - 🇳🇱 Нидерланды 14
+      - 🇳🇱 Нидерланды 15
+      - 🇳🇱 Нидерланды 16
+      - 🇳🇱 Нидерланды 17
+      - 🇳🇱 Нидерланды 18
+      - 🇳🇱 Нидерланды 19
+      - 🇳🇱 Нидерланды 20
+      - 🇳🇱 Нидерланды 21
+      - 🇳🇱 Нидерланды 22
+      - 🇳🇱 Нидерланды 23
+      - 🇳🇱 Нидерланды 24
+      - 🇳🇱 Нидерланды 25
+      - 🇳🇱 Нидерланды 26
+      - 🇳🇱 Нидерланды 27
+      - 🇳🇱 Нидерланды 28
+      - 🇳🇱 Нидерланды 29
+      - 🇳🇱 Нидерланды 30
+      - 🇳🇱 Нидерланды 31
+      - 🇳🇱 Нидерланды 32
+      - 🇳🇱 Нидерланды 33
+      - 🇳🇱 Нидерланды 34
+      - 🇳🇱 Нидерланды 35
+      - 🇳🇱 Нидерланды 36
+      - 🇳🇱 Нидерланды 37
+      - 🇳🇱 Нидерланды 38
+      - 🇳🇱 Нидерланды 39
+      - 🇳🇱 Нидерланды 40
+      - 🇳🇱 Нидерланды 41
+      - 🇳🇱 Нидерланды 42
+      - 🇳🇱 Нидерланды 43
+      - 🇳🇱 Нидерланды 44
+      - 🇳🇱 Нидерланды 45
+  - name: 🇺🇸 США
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇺🇸 США 1
+      - 🇺🇸 США 2
+      - 🇺🇸 США 3
+      - 🇺🇸 США 4
+      - 🇺🇸 США 5
+      - 🇺🇸 США 6
+      - 🇺🇸 США 7
+      - 🇺🇸 США 8
+      - 🇺🇸 США 9
+      - 🇺🇸 США 10
+      - 🇺🇸 США 11
+      - 🇺🇸 США 12
+      - 🇺🇸 США 13
+      - 🇺🇸 США 14
+      - 🇺🇸 США 15
+      - 🇺🇸 США 16
+      - 🇺🇸 США 17
+      - 🇺🇸 США 18
+  - name: 🇮🇹 Италия
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇮🇹 Италия 1
+      - 🇮🇹 Италия 2
+      - 🇮🇹 Италия 3
+      - 🇮🇹 Италия 4
+      - 🇮🇹 Италия 5
+      - 🇮🇹 Италия 6
+      - 🇮🇹 Италия 7
+      - 🇮🇹 Италия 8
+  - name: 🇬🇧 Великобритания
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇬🇧 Великобритания 1
+      - 🇬🇧 Великобритания 2
+      - 🇬🇧 Великобритания 3
+      - 🇬🇧 Великобритания 4
+      - 🇬🇧 Великобритания 5
+  - name: 🇫🇷 Франция
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇫🇷 Франция 1
+      - 🇫🇷 Франция 2
+      - 🇫🇷 Франция 3
+      - 🇫🇷 Франция 4
+  - name: 🇩🇪 Германия
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇩🇪 Германия 1
+      - 🇩🇪 Германия 2
+      - 🇩🇪 Германия 3
+  - name: 🇯🇵 Япония
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇯🇵 Япония 1
+      - 🇯🇵 Япония 2
+      - 🇯🇵 Япония 3
+  - name: 🇨🇦 Канада
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇨🇦 Канада 1
+      - 🇨🇦 Канада 2
+  - name: 🇪🇸 Испания
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇪🇸 Испания 1
+      - 🇪🇸 Испания 2
+  - name: 🇵🇱 Польша
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇵🇱 Польша 1
+      - 🇵🇱 Польша 2
+  - name: 🇷🇴 Румыния
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇷🇴 Румыния 1
+      - 🇷🇴 Румыния 2
+  - name: 🇸🇬 Сингапур
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇸🇬 Сингапур 1
+      - 🇸🇬 Сингапур 2
+  - name: 🇦🇹 Австрия
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇦🇹 Австрия 1
+  - name: 🇰🇷 Корея
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇰🇷 Корея 1
+  - name: 🇲🇽 Мексика
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇲🇽 Мексика 1
+  - name: 🇿🇦 ЮАР
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇿🇦 ЮАР 1
+  - name: auto
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 600
+    tolerance: 150
+    lazy: false
+    proxies:
+      - 🇵🇱 Польша 1
+      - 🇮🇹 Италия 1
+      - 🇮🇹 Италия 2
+      - 🇳🇱 Нидерланды 1
+      - 🇳🇱 Нидерланды 2
+      - 🇮🇹 Италия 3
+      - 🇳🇱 Нидерланды 3
+      - 🇳🇱 Нидерланды 4
+      - 🇳🇱 Нидерланды 5
+      - 🇩🇪 Германия 1
+      - 🇳🇱 Нидерланды 6
+      - 🇳🇱 Нидерланды 7
+      - 🇳🇱 Нидерланды 8
+      - 🇦🇹 Австрия 1
+      - 🇳🇱 Нидерланды 9
+      - 🇳🇱 Нидерланды 10
+      - 🇳🇱 Нидерланды 11
+      - 🇳🇱 Нидерланды 12
+      - 🇳🇱 Нидерланды 13
+      - 🇬🇧 Великобритания 1
+      - 🇩🇪 Германия 2
+      - 🇳🇱 Нидерланды 14
+      - 🇬🇧 Великобритания 2
+      - 🇫🇷 Франция 1
+      - 🇳🇱 Нидерланды 15
+      - 🇳🇱 Нидерланды 16
+      - 🇳🇱 Нидерланды 17
+      - 🇳🇱 Нидерланды 18
+      - 🇳🇱 Нидерланды 19
+      - 🇬🇧 Великобритания 3
+      - 🇺🇸 США 1
+      - 🇳🇱 Нидерланды 20
+      - 🇮🇹 Италия 4
+      - 🇵🇱 Польша 2
+      - 🇪🇸 Испания 1
+      - 🇮🇹 Италия 5
+      - 🇨🇦 Канада 1
+      - 🇺🇸 США 2
+      - 🇪🇸 Испания 2
+      - 🇺🇸 США 3
+      - 🇨🇦 Канада 2
+      - 🇫🇷 Франция 2
+      - 🇮🇹 Италия 6
+      - 🇳🇱 Нидерланды 21
+      - 🇫🇷 Франция 3
+      - 🇳🇱 Нидерланды 22
+      - 🇬🇧 Великобритания 4
+      - 🇳🇱 Нидерланды 23
+      - 🇺🇸 США 4
+      - 🇺🇸 США 5
+      - 🇺🇸 США 6
+      - 🇳🇱 Нидерланды 24
+      - 🇺🇸 США 7
+      - 🇳🇱 Нидерланды 25
+      - 🇬🇧 Великобритания 5
+      - 🇺🇸 США 8
+      - 🇲🇽 Мексика 1
+      - 🇯🇵 Япония 1
+      - 🇺🇸 США 9
+      - 🇳🇱 Нидерланды 26
+      - 🇳🇱 Нидерланды 27
+      - 🇳🇱 Нидерланды 28
+      - 🇳🇱 Нидерланды 29
+      - 🇰🇷 Корея 1
+      - 🇺🇸 США 10
+      - 🇸🇬 Сингапур 1
+      - 🇺🇸 США 11
+      - 🇮🇹 Италия 7
+      - 🇮🇹 Италия 8
+      - 🇩🇪 Германия 3
+      - 🇫🇷 Франция 4
+      - 🇺🇸 США 12
+      - 🇺🇸 США 13
+      - 🇳🇱 Нидерланды 30
+      - 🇳🇱 Нидерланды 31
+      - 🇳🇱 Нидерланды 32
+      - 🇳🇱 Нидерланды 33
+      - 🇷🇴 Румыния 1
+      - 🇳🇱 Нидерланды 34
+      - 🇳🇱 Нидерланды 35
+      - 🇺🇸 США 14
+      - 🇸🇬 Сингапур 2
+      - 🇳🇱 Нидерланды 36
+      - 🇳🇱 Нидерланды 37
+      - 🇳🇱 Нидерланды 38
+      - 🇳🇱 Нидерланды 39
+      - 🇳🇱 Нидерланды 40
+      - 🇯🇵 Япония 2
+      - 🇷🇴 Румыния 2
+      - 🇳🇱 Нидерланды 41
+      - 🇺🇸 США 15
+      - 🇳🇱 Нидерланды 42
+      - 🇺🇸 США 16
+      - 🇺🇸 США 17
+      - 🇯🇵 Япония 3
+      - 🇿🇦 ЮАР 1
+      - 🇳🇱 Нидерланды 43
+      - 🇳🇱 Нидерланды 44
+      - 🇺🇸 США 18
+      - 🇳🇱 Нидерланды 45
+  - name: proxy
+    type: select
+    proxies:
+      - 🇳🇱 Нидерланды
+      - 🇺🇸 США
+      - 🇮🇹 Италия
+      - 🇬🇧 Великобритания
+      - 🇫🇷 Франция
+      - 🇩🇪 Германия
+      - 🇯🇵 Япония
+      - 🇨🇦 Канада
+      - 🇪🇸 Испания
+      - 🇵🇱 Польша
+      - 🇷🇴 Румыния
+      - 🇸🇬 Сингапур
+      - 🇦🇹 Австрия
+      - 🇰🇷 Корея
+      - 🇲🇽 Мексика
+      - 🇿🇦 ЮАР
+      - auto
+      - DIRECT
+      - REJECT
+
+rules:
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,private,DIRECT
+  - GEOIP,private,DIRECT
+  - GEOSITE,geolocation-!cn,proxy
+  - MATCH,proxy
