@@ -1,0 +1,281 @@
+{
+  "generatedAt": 1794070473742,
+  "generatedIso": "2026-11-07T16:54:33.742Z",
+  "count": 2183,
+  "byProtocol": {
+    "http": 1572,
+    "socks5": 611
+  },
+  "files": [
+    {
+      "name": "all.txt",
+      "bytes": 58061,
+      "sha256": "c4459349fbe4c42db98145b7249a84b35ff98afe20b723b0636761c218cee6c6"
+    },
+    {
+      "name": "http.txt",
+      "bytes": 41257,
+      "sha256": "5c4120e151951d9788c533eb70b5c44b08e94216f6dc9846f27df902df35f12d"
+    },
+    {
+      "name": "socks4.txt",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "name": "socks5.txt",
+      "bytes": 16804,
+      "sha256": "9b65fb6e756c96c8ce431a7a2e068f74273fb9ecf7937c23260de66bc66877b5"
+    },
+    {
+      "name": "top1000.txt",
+      "bytes": 26612,
+      "sha256": "ba4e06dff722ff5e9bdeb62a06a526e6c86608663f17907d2f33c20d651b1afe"
+    },
+    {
+      "name": "top100.txt",
+      "bytes": 2670,
+      "sha256": "4dcb6d0fbc5784fe95eef6ed92ae953e57df50c31ac7b0612033eba13f670ca0"
+    },
+    {
+      "name": "proxies.json",
+      "bytes": 830758,
+      "sha256": "376011b7e00bfd1dc4ff0f82577368f2db6b8afc43171762d6224c6b8a1ef3bf"
+    },
+    {
+      "name": "country/US.txt",
+      "bytes": 12238,
+      "sha256": "ce09c108e29474dee4fadfbd5dec0a5f55fc8edac9a0a4f3d9e4b1d94cbe8103"
+    },
+    {
+      "name": "country/ID.txt",
+      "bytes": 6176,
+      "sha256": "525140cae1b3de8b2cee833f793148ad133a7dbd3add0a04260a7a54229e1375"
+    },
+    {
+      "name": "country/JP.txt",
+      "bytes": 3709,
+      "sha256": "1faf7aa6ef4443f033b3c4107dddddccb050aa712bfc4d4a63fe76f24c8226e5"
+    },
+    {
+      "name": "country/DE.txt",
+      "bytes": 2555,
+      "sha256": "c8eed1de5210708fa1561cf7e2873fa28b4209dde406c816ca6c2f54894a3794"
+    },
+    {
+      "name": "country/CA.txt",
+      "bytes": 2118,
+      "sha256": "2b1f1c27ac7b23cf780af5793d8c14e09cce8c75e17e2aa40e71d8b0a01fbbd2"
+    },
+    {
+      "name": "country/SG.txt",
+      "bytes": 2032,
+      "sha256": "90178666995f6a351f6d43fadc34b6781f192ac57e2755965e7a813325ee0d05"
+    },
+    {
+      "name": "country/AU.txt",
+      "bytes": 1662,
+      "sha256": "0d94a8c0d503bf7fd9469d6910cf6df966d33fcf8ca9eb57907efde4c6d162a1"
+    },
+    {
+      "name": "country/MX.txt",
+      "bytes": 1634,
+      "sha256": "0d0f361eae3b6998d3d75e05373a153f04d1938f249ea3f6b8ca5427ad8d47fa"
+    },
+    {
+      "name": "country/IN.txt",
+      "bytes": 1599,
+      "sha256": "9ac6f4da6a9ecb7444adc88cb6564b58d6d63f49ccc230399d65850f2c8245ba"
+    },
+    {
+      "name": "country/NL.txt",
+      "bytes": 1491,
+      "sha256": "b72bbb755c823565368f108f1eee485faa8e6419aa5761e01657802f428d8e17"
+    },
+    {
+      "name": "country/BR.txt",
+      "bytes": 1320,
+      "sha256": "b66d3b17c2e2889cf3cb6b20b5239e2f16bd589ca94f33a044cbc0ec482fe5ed"
+    },
+    {
+      "name": "country/HK.txt",
+      "bytes": 1306,
+      "sha256": "8be4a7664299b1ef55dd34fbb6368bfd13ec3ec297d5e9b4976dba929726956d"
+    },
+    {
+      "name": "country/TH.txt",
+      "bytes": 1128,
+      "sha256": "224af009292ecb6327b61adcad4e391aa27e65e809afc9433501fdffab21782e"
+    },
+    {
+      "name": "country/IL.txt",
+      "bytes": 1108,
+      "sha256": "706ec6b53f632cd96c21284c1acbac0c536e87fa833101f461c015605b2acf04"
+    },
+    {
+      "name": "country/ZA.txt",
+      "bytes": 1151,
+      "sha256": "cdd171f9d43c19664ab9a6e2dd10073613084124aefcd57c8fa073e9a3e016ca"
+    },
+    {
+      "name": "country/RO.txt",
+      "bytes": 1082,
+      "sha256": "b50563dd5e8a92a27db9333af6063a55e8b7cf8bf387c32438f2746912812cb5"
+    },
+    {
+      "name": "country/TR.txt",
+      "bytes": 1073,
+      "sha256": "348384b3ddeded9f14b751a5972722f02797104b211591de417ae3df3d56beb1"
+    },
+    {
+      "name": "country/PH.txt",
+      "bytes": 960,
+      "sha256": "e9e08e1f646f93c7142446e5219bdc2a8093e7e255117a2bfda061a8b97e14d4"
+    },
+    {
+      "name": "country/RU.txt",
+      "bytes": 938,
+      "sha256": "38195e26f81a3b1ca7030d7b4a5761d6d831ad1be68afd3d1adf6e1f5a0c63bf"
+    },
+    {
+      "name": "country/FR.txt",
+      "bytes": 837,
+      "sha256": "3ad98636ad42a56a38df7246a6e5fbf6ade4cf596c0a18074cc6f3948cabbc99"
+    },
+    {
+      "name": "country/CO.txt",
+      "bytes": 790,
+      "sha256": "a09e4c702aaffaf9c3febf9facfe726b31291f8ab2e1844c1e56545f0290ab2c"
+    },
+    {
+      "name": "country/BD.txt",
+      "bytes": 771,
+      "sha256": "efc2a07795ed539e074e8d471f2726e2efe6853dff6fe2438f45e1f2029f0348"
+    },
+    {
+      "name": "country/GB.txt",
+      "bytes": 690,
+      "sha256": "936299703d821503569d2e58aea739f146b5562f6783f1a601b29b432f308095"
+    },
+    {
+      "name": "country/ES.txt",
+      "bytes": 668,
+      "sha256": "a123cadb3e0f6436d96936525f19ff0cd68eadd33236848b3be0ed874c1c82ab"
+    },
+    {
+      "name": "country/KR.txt",
+      "bytes": 669,
+      "sha256": "994f996aa879aa265c6c51be17114d8428039a65a1f4606ae19b00f436035c58"
+    },
+    {
+      "name": "country/MY.txt",
+      "bytes": 628,
+      "sha256": "2fb989d5dc7f876c51152bc49014c6e87826d32ac5f732a202122ab5780f1d5e"
+    },
+    {
+      "name": "country/VN.txt",
+      "bytes": 647,
+      "sha256": "e529f110d1284c454d8ad3d87c08a739776ef191a86955e43387d8456d78a1b8"
+    },
+    {
+      "name": "country/PK.txt",
+      "bytes": 578,
+      "sha256": "c3a16ec6325e337e17951765fa58354430bd5be05a50b1155d05087e0e7139fd"
+    },
+    {
+      "name": "country/CN.txt",
+      "bytes": 521,
+      "sha256": "fa27ca52caff3a78c2ea84e0fac8929714b1578cd29e4d59c9973c8477662e59"
+    },
+    {
+      "name": "country/VE.txt",
+      "bytes": 399,
+      "sha256": "53c9db517773fe4765eded9dda811f7b5c260cceaf0eeebc621db63aa04568db"
+    },
+    {
+      "name": "country/EC.txt",
+      "bytes": 418,
+      "sha256": "0252505e47ec56b986027c7151137486fe8346d24fac99008b89b4910221c0e4"
+    },
+    {
+      "name": "country/IE.txt",
+      "bytes": 441,
+      "sha256": "98155a780e1bf45da642ddbe53beb5482e847328002aedd4a2268533180e5d0b"
+    },
+    {
+      "name": "country/AR.txt",
+      "bytes": 364,
+      "sha256": "774c3cfe437160f26a0ec9b13093c3c0163b52f3dc40a57ce66c98ab13441b13"
+    },
+    {
+      "name": "country/SE.txt",
+      "bytes": 342,
+      "sha256": "df53c2cbd29fee765fc546a4116225ecfc49b9ccae3ccbb199d4185605b2d53d"
+    },
+    {
+      "name": "country/CM.txt",
+      "bytes": 286,
+      "sha256": "06696563c6703572e9a2f0820faac1294c9f0fe9e138c3bc8e9fae64052422d2"
+    },
+    {
+      "name": "country/PL.txt",
+      "bytes": 304,
+      "sha256": "43bd7e7a40955dc5f089e619096e12fdf9b5bda648b66a53c10bc5e03e36797e"
+    },
+    {
+      "name": "country/CH.txt",
+      "bytes": 264,
+      "sha256": "c6efc50722858d6888eee1ff58f4afa896da7c0212a42c54720735808fb9a305"
+    },
+    {
+      "name": "country/UA.txt",
+      "bytes": 244,
+      "sha256": "3cf47248ffbd1049cae05fa203f1f0e86b145e2667263ba45d35e7c9d294e529"
+    },
+    {
+      "name": "country/DO.txt",
+      "bytes": 222,
+      "sha256": "baa9f7c6257b422b15d148b5e577a16d07f93d1f72764cd8b6157b2ccf7fab56"
+    },
+    {
+      "name": "country/CL.txt",
+      "bytes": 205,
+      "sha256": "55e9497c22d0a1954c595514489d8f7e0ab9bf25e18f14a86af18aba17c4dee6"
+    },
+    {
+      "name": "country/IR.txt",
+      "bytes": 185,
+      "sha256": "2bb82df4944171f6f3bfa9bd88f40d438b3be1a2dcf8674b4e08c5f6701d9765"
+    },
+    {
+      "name": "country/CZ.txt",
+      "bytes": 138,
+      "sha256": "ff1df7bc5474f86b5e58a9c1cbb1e0c5900b23ae6ddfa3c527d72a08551da2ae"
+    },
+    {
+      "name": "country/PE.txt",
+      "bytes": 130,
+      "sha256": "3f06451a0256c2f739153eb9b833c6a1d6b5c408ba45d69b2761029d2292026e"
+    },
+    {
+      "name": "country/TW.txt",
+      "bytes": 133,
+      "sha256": "2c7b9d5ae980f27642a7d559e5d755b7494b5b4a1ea59cd7157be09b5006148a"
+    },
+    {
+      "name": "country/SY.txt",
+      "bytes": 132,
+      "sha256": "65063338c4f398328a04295cf497ae64719b8051944ffa7fbe42b6657cac2ff4"
+    },
+    {
+      "name": "country/LY.txt",
+      "bytes": 133,
+      "sha256": "df125a08b8b53da127b407935ca89359e8d384b14983b0df7927cf5cdeead8b3"
+    },
+    {
+      "name": "stats.json",
+      "bytes": 4597,
+      "sha256": "e076bdc4e0f2f649ebabefe74d77e0fa6f7256c8fc016a9b596cc6553f846112"
+    }
+  ]
+}
