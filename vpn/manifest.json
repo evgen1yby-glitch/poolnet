@@ -1,0 +1,427 @@
+{
+  "created_at": "2026-11-14T17:34:52.223914+00:00",
+  "generation": "gen-dc3d9646bb75",
+  "payloads": [
+    {
+      "name": "verified-xray.base64",
+      "nodes": 80,
+      "sha256": "3524eccdd0b861f7aa858bfd8df90958a3f0b252a0d8bf9189262a1eaee17b28",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-sing-box.base64",
+      "nodes": 100,
+      "sha256": "01da476bfa8d36be1bf182223b3ee95287efb8f0c08c08f23af10f5adba4a309",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-sing-box.singbox",
+      "nodes": 100,
+      "sha256": "a504008a36977dec5eb822fdcc6f7db2c583c4a809d818df96906c84d0524d93",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-sing-box.clash",
+      "nodes": 100,
+      "sha256": "8ea392fce39f65a78091ceac531b027d289f12494e458a874496de9d8ba09e85",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-mihomo.base64",
+      "nodes": 100,
+      "sha256": "01da476bfa8d36be1bf182223b3ee95287efb8f0c08c08f23af10f5adba4a309",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-mihomo.singbox",
+      "nodes": 100,
+      "sha256": "a504008a36977dec5eb822fdcc6f7db2c583c4a809d818df96906c84d0524d93",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-mihomo.clash",
+      "nodes": 100,
+      "sha256": "5d193f4a99d5f4782ea08076f7bd0204c93038b1ba43ea453647236773b8f021",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-xray.json",
+      "nodes": 80,
+      "sha256": "5631e20d37961d6d52b79b45925f1c596071ef6369fbcf535cf3f7f6f58ebe35",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot0.base64",
+      "nodes": 80,
+      "sha256": "6d640d8954e7300fa493efa8a45d8df05b6a07b8360c5ecedfc4d3350c711ad4",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot1.base64",
+      "nodes": 80,
+      "sha256": "c333a8c330be29c2dc7f6eb382f6a58977d51dd16859d2272433b8aef62d3be9",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot2.base64",
+      "nodes": 80,
+      "sha256": "ddd552accc06e96cefec4f8b365b4975a9d467459437065111627ec38abc431d",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot3.base64",
+      "nodes": 80,
+      "sha256": "1a88ce3a02d491123dfdea703732f524e7fe65ad681e3d866eff08cb22bf0364",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot4.base64",
+      "nodes": 80,
+      "sha256": "ec442822c07a1c7162f65614d58bc02e9fb6ceb1bc26f7d9d5dfef260f65e24b",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot5.base64",
+      "nodes": 80,
+      "sha256": "96c081d6a486abfb573890d0df985b0a8453c94323f72b4359221ece4d0b4ed8",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot6.base64",
+      "nodes": 80,
+      "sha256": "8f633370b411b3cf66aa577df694f1ebc8311d0f6bce2e880b1fb7919e135cc6",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot7.base64",
+      "nodes": 80,
+      "sha256": "1de5197be8099f6967a61818501ddf75175988702473d09bb141ad7c1e708f2b",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot8.base64",
+      "nodes": 80,
+      "sha256": "5877effc008082c17eb134dbc1c00bbecd8a9d65636b68718e0dd8a448623845",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot9.base64",
+      "nodes": 80,
+      "sha256": "7efa5667a0bbe6236bb4b9d036dc68ed3adbca916c21332e3c0920b16e07425e",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot10.base64",
+      "nodes": 80,
+      "sha256": "dc499fbb38d9a544cbdb8ea674faa6d7aac9d0a0c12976a75067e4b829a51526",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot11.base64",
+      "nodes": 80,
+      "sha256": "8cd85b30063df3435410c66fd6086e2eebc01b7abc20f200b9d3a913448f9bd1",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot12.base64",
+      "nodes": 80,
+      "sha256": "bf1c93e6cdf4fecb3cd92b687b2d3918c5b12a939144282d6c8c86b1f29d61f9",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot13.base64",
+      "nodes": 80,
+      "sha256": "7f05a3453281bd3df2ea51c6892c014076c14f392742a2986a58b4d2908caa8d",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot14.base64",
+      "nodes": 80,
+      "sha256": "d8ebb0bb5b30e4d94187855b077ed54c7bb451f3b8b85c21a3817f2ce0077a31",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot15.base64",
+      "nodes": 80,
+      "sha256": "7cd500017410b8d8d15c5228e5804acde442e439d334626b42f9d9823cc5df73",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot16.base64",
+      "nodes": 80,
+      "sha256": "4328ffc0c471bc564384a1168fcb49b51040cf2c93b60c16f8df8cbc28eaf7aa",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot17.base64",
+      "nodes": 80,
+      "sha256": "56f82b305bf0c333422ad0277ef299310959960e73d008772737a74ae006e109",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot18.base64",
+      "nodes": 80,
+      "sha256": "59eabb204614a21bde7ca5811ae598a06daf3bf9069855a814afd50c52c7e220",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot19.base64",
+      "nodes": 80,
+      "sha256": "29fc07188d9c9b4e74390c508206584ac913a0b6d70435267426bf356617b620",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot20.base64",
+      "nodes": 80,
+      "sha256": "092c5b1eb8fa258b97d3b86051467235a2b71ab8dd606bf09326177c0edba4b7",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot21.base64",
+      "nodes": 80,
+      "sha256": "287c90af257e8e61b024d9ef14c6184317e7f56b68cb703ceab90b695951e21d",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot22.base64",
+      "nodes": 80,
+      "sha256": "54527081ecb89895ae097b269f57e98b5900dca1cb84d18ac6903f77f371a857",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot23.base64",
+      "nodes": 80,
+      "sha256": "d41f544b977e2449856cf5473769f29f5bf53b026ef2c33d4769ee87e1e0ec63",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot24.base64",
+      "nodes": 80,
+      "sha256": "cec5624a66f100f9cee3f82602ee55de4dfc76c6c1ee3109c26ff1520770d354",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot25.base64",
+      "nodes": 80,
+      "sha256": "5271737a27114b69d69173b0d9c5804e9ce800e38617eb695c9c5d01f06fe3df",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot26.base64",
+      "nodes": 80,
+      "sha256": "9b7095414e8ce75074e4ef92ebfbbc9d4680f5bccd98275a213e029fa8d57106",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot27.base64",
+      "nodes": 80,
+      "sha256": "5610ae0d3c1a92d584fff546893ff9e86d514cf1b106abca8a4104d70351c23b",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot28.base64",
+      "nodes": 80,
+      "sha256": "fdd2bca510abd4b112a04384602596108b835723f9532e1cac612dfae834e0b0",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot29.base64",
+      "nodes": 80,
+      "sha256": "567a16da6df6dab70d93c464ca8d2a90e15853f9ddd1f598afb79423380207f2",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot30.base64",
+      "nodes": 80,
+      "sha256": "cbc9199558988eadd1e946b3703c89dc99cf31f370913c7394bb3a2ad8811fea",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-unique-rot31.base64",
+      "nodes": 80,
+      "sha256": "24c6511ec846b6e230f8314e94e4e3ae1faa3c2b080524aaef7a351465a0ada4",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-NL.base64",
+      "nodes": 32,
+      "sha256": "5149df0f628817959f68035641c96601b40e8387b4cdd5fcd96122c23e520e9e",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-NL.singbox",
+      "nodes": 32,
+      "sha256": "1af87496b555df22d1b1b4bb4991b250c1e3d9c4de5683ad41c286b457869bf8",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-US.base64",
+      "nodes": 29,
+      "sha256": "0d37a6c40acc7d57a60e7029c24ff6022f328709def9dcf4e8bce06866805f16",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-US.singbox",
+      "nodes": 29,
+      "sha256": "dd31c2d7326492dee5ae831cf3ea86a7b12c714bd1e7a5aa26a15bd8d436e6e9",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-FR.base64",
+      "nodes": 6,
+      "sha256": "044d3f416560ccacece6f666749cbd5f281d0c235dcbf6f1f73bebcfac93147d",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-FR.singbox",
+      "nodes": 6,
+      "sha256": "90f7c8cf23f0e1d287e81b6efbb28761de21183e07b33a38bc5e95c21304e4d8",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-DE.base64",
+      "nodes": 5,
+      "sha256": "7ca0bb5040a6239ce34cae7a63f6b93ba0124a26efdb8b80b3656b9eb95aae26",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-DE.singbox",
+      "nodes": 5,
+      "sha256": "3f4098e42f7a9c8c061536d7b125a54971437fe596aee5465ac94891da295f62",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-ES.base64",
+      "nodes": 5,
+      "sha256": "8212c9bbbebef72c704bd7e9b04c32b075b84e4e2888f81a5dc7be2d761ba0bf",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-ES.singbox",
+      "nodes": 5,
+      "sha256": "b496f55405c69f15716e55d10eefceba9bcdb71a7a74444ae5d4a06e2bf323bf",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-GB.base64",
+      "nodes": 5,
+      "sha256": "8b098e3b4ed9e6222bba19d0fc47dabeb859a7a464db655555af258fd24d0e19",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-GB.singbox",
+      "nodes": 5,
+      "sha256": "6566520c238d55715ce7bc31752338708b21786b4abdecc45cd3c05b736785c9",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-SG.base64",
+      "nodes": 4,
+      "sha256": "0fd4058922f4faa4776b2c9425fbca8a6f81bd6bdc38f8dcb9928dd3b40826c6",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-SG.singbox",
+      "nodes": 4,
+      "sha256": "24643ba3af66fcf3433277828402100ee27d35386f815b3ef350344ef20abf37",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-CA.base64",
+      "nodes": 3,
+      "sha256": "4a219437545cb7674f0e92435b0f17fae6b8956947827cc22277fd7f232154d7",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-CA.singbox",
+      "nodes": 3,
+      "sha256": "25445c73df5bf725d9c3be8f0c10436e0295c4ef73b9ee8ca180ba496bd44fa1",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-CH.base64",
+      "nodes": 3,
+      "sha256": "98cd25fb9b64a080f79e84f3616f49face0db805ec9b48684b1529c6e9da8fa5",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-CH.singbox",
+      "nodes": 3,
+      "sha256": "65cf1109e82db822a5b417f5f201993945211867a53fda879088bd8124fd4aad",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-PL.base64",
+      "nodes": 3,
+      "sha256": "316486438713061be69a6cd97d1c610f413af75ca12e7026e5b294a60a26447f",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-PL.singbox",
+      "nodes": 3,
+      "sha256": "bfc9cb78641d6403de065790dec5e5bb8e0fefadac02e0c2aed24353b9a44d62",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-AT.base64",
+      "nodes": 1,
+      "sha256": "36d89b4c9b052c66e6bede348700a6829a58592afa742585ddb0d85449e1029e",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-AT.singbox",
+      "nodes": 1,
+      "sha256": "1b4f85436a77eb670f2740d4419272bf466623fb0c6268082400ca8edfa504f5",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-FI.base64",
+      "nodes": 1,
+      "sha256": "a13e7c2f92ee9129f9fdd32c8a07a08609cc6e14ee568813c9d6919b440dfeb9",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-FI.singbox",
+      "nodes": 1,
+      "sha256": "5deb8fa033780fb2d28d89dcd986c9ab249ccba66d1c18091515de32f8b07cf8",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-JP.base64",
+      "nodes": 1,
+      "sha256": "681162663dc10599ed1b18780f8cc65627f766190e36ce70b4305f71b3c0b42c",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-JP.singbox",
+      "nodes": 1,
+      "sha256": "977672b8f8475fff554906530543ba7561107316ef22a6a122c862d26f45a5fd",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-KR.base64",
+      "nodes": 1,
+      "sha256": "84abe149326311d465ee88b665f335d22e6a04f328032663fa138d2dcb7c4bda",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-KR.singbox",
+      "nodes": 1,
+      "sha256": "61a7524dbe69199c77da0dcf55fba49c83c14ba5535405ff53e09cffa26486d9",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-SE.base64",
+      "nodes": 1,
+      "sha256": "361e17d9758662c654d53cce9a43338b714c2eb6093fa2b27659cecb36d0431b",
+      "tier": "verified"
+    },
+    {
+      "name": "verified-SE.singbox",
+      "nodes": 1,
+      "sha256": "dd6c2ad3cb60c9eb3db5cd6eaad1f81099c0744e2d691e8fec2dfa1e977a78b1",
+      "tier": "verified"
+    }
+  ],
+  "sha256": "dc3d9646bb7562e3777a601f7c0269f3bbb3519cf54ecf261be39013c3f24260"
+}
