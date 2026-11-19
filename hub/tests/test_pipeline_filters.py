@@ -38,7 +38,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from tests.test_pipeline import Pipeline  # noqa: E402
-from tests.test_prober import FakeDriver  # noqa: E402
+from tests.test_prober import FakeDriver, _dial_nowhere as _dial_ok  # noqa: E402
 from hub.fetcher import QUARANTINE_CAP, QUARANTINE_ROUNDS  # noqa: E402
 from hub.store import Store  # noqa: E402
 
@@ -619,6 +619,117 @@ def test_the_pool_is_the_union_of_recently_proven_nodes(tmp_path):
     assert "b.example.com" not in by_address, "a day-old check must not count"
     # And the rebuilt node carries its credentials, not just its address.
     assert by_address["a.example.com"].uuid == "11111111-2222-3333-4444-555555555555"
+
+
+def _store_node_with_success(
+    conn, node, *, success_at, failure_at=None, failure_stage="config"
+):
+    from hub.store_state import node_to_json
+
+    conn.execute(
+        "INSERT INTO nodes (dedup_key, protocol, address, port, country, source,"
+        " first_seen, last_ok, score, rounds, state) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+        (node.dedup_key, node.protocol.value, node.address, node.port,
+         node.country, "s", success_at, success_at, 40, 1, node_to_json(node)),
+    )
+    conn.execute(
+        "INSERT INTO checks (dedup_key, run_at, ok, stage, http_ms, jitter_ms, error)"
+        " VALUES (?,?,1,'http',10.0,1.0,'')", (node.dedup_key, success_at)
+    )
+    if failure_at is not None:
+        conn.execute(
+            "INSERT INTO checks (dedup_key, run_at, ok, stage, http_ms, jitter_ms, error)"
+            " VALUES (?,?,0,?,NULL,NULL,'failed')",
+            (node.dedup_key, failure_at, failure_stage),
+        )
+    conn.commit()
+
+
+@pytest.mark.parametrize("stage", ["config", "tls", "tcp"])
+def test_a_later_failure_in_any_stage_invalidates_an_http_success(tmp_path, stage):
+    """A config/TLS/TCP failure after an HTTP success still means the node is dead.
+
+    The old NOT EXISTS guard checked only later `stage='http'` failures, so an
+    HTTP success survived a later failure in any other stage and the dead node
+    was carried for the rest of the freshness window.
+    """
+    from hub.models import Node, Protocol
+    from hub.pipeline import Pipeline
+
+    pipeline = Pipeline(root=tmp_path, **_offline())
+    conn = pipeline.store.connect()
+    node = Node(protocol=Protocol.VLESS, address="a.example.com", port=443,
+                uuid="11111111-2222-3333-4444-555555555555", country="NL")
+    _store_node_with_success(
+        conn, node,
+        success_at="2026-10-16T10:00:00+00:00",
+        failure_at="2026-10-16T10:30:00+00:00",
+        failure_stage=stage,
+    )
+
+    nodes = pipeline.recent_nodes(conn, hours=8, now="2026-10-16T11:00:00+00:00")
+    assert node.dedup_key not in {n.dedup_key for n in nodes}
+
+
+def test_a_recent_http_success_without_a_later_failure_is_still_carried(tmp_path):
+    """The fix must not reject a success just because older history exists."""
+    from hub.models import Node, Protocol
+    from hub.pipeline import Pipeline
+
+    pipeline = Pipeline(root=tmp_path, **_offline())
+    conn = pipeline.store.connect()
+    node = Node(protocol=Protocol.VLESS, address="a.example.com", port=443,
+                uuid="11111111-2222-3333-4444-555555555555", country="NL")
+    _store_node_with_success(conn, node, success_at="2026-10-16T10:00:00+00:00")
+
+    nodes = pipeline.recent_nodes(conn, hours=8, now="2026-10-16T11:00:00+00:00")
+    assert node.dedup_key in {n.dedup_key for n in nodes}
+
+
+async def test_a_carried_node_keeps_its_real_last_ok(tmp_path):
+    """Carry-over must not stamp an unprobed node with the current run's time.
+
+    The node was last measured an hour ago and this round probes only a
+    different node. Carrying it into the pool is correct; recording it as
+    freshly probed is not, because `last_ok` is the evidence the freshness
+    window and the operator both rely on.
+    """
+    from datetime import datetime, timedelta, timezone
+
+    from hub.models import Node, Protocol
+    from hub.pipeline import Pipeline
+
+    old = Node(protocol=Protocol.VLESS, address="old.example.com", port=443,
+               uuid="11111111-2222-3333-4444-555555555555", country="NL")
+    last_ok = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
+
+    pipeline = Pipeline(
+        root=tmp_path,
+        sources={
+            "sources": [{"url": "https://example.test/sub", "name": "fixture"}],
+            "protocol_reliability": 0.85,
+            "fetch_client": _make_client([_uri_body(1)]),
+        },
+        driver_factory=lambda: FakeDriver(http_ok=True),
+        recent_hours=8,
+        concurrency=Concurrency(tcp=5, tls=5, http=5, round2_gap_s=0.0),
+        connect=_dial_ok,
+        handshake=_handshake_ok,
+    )
+    conn = pipeline.store.connect()
+    _store_node_with_success(conn, old, success_at=last_ok)
+
+    report = await pipeline.run_once()
+    assert report["stage_survivors"]["carried_over"] == 1, report
+    row = conn.execute(
+        "SELECT last_ok FROM nodes WHERE dedup_key = ?", (old.dedup_key,)
+    ).fetchone()
+    assert row["last_ok"] == last_ok
+    latest = conn.execute(
+        "SELECT MAX(run_at) FROM checks WHERE dedup_key = ? AND ok = 1",
+        (old.dedup_key,),
+    ).fetchone()[0]
+    assert latest == last_ok, "carry-over must not insert a synthetic success check"
 
 
 async def test_a_run_without_network_does_not_republish_the_pool(tmp_path):

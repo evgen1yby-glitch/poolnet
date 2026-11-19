@@ -32,14 +32,26 @@ not supported by the checkers and are skipped.
 
 ## What "json" accepts
 
-A geonode-style payload:
+A JSON payload whose entries are proxies. `src/parse/json.ts` auto-detects
+four shapes published by the APIs we consume:
 
 ```json
-{ "data": [{ "ip": "1.2.3.4", "port": 1080, "protocols": ["socks5"] }] }
+{ "data": [ { "ip": "1.2.3.4", "port": 1080, "protocols": ["socks5"] } ] }
 ```
 
-String ports are accepted (geonode sends them). When `protocols` lists
-several, `socks5` beats `http` beats `socks4`.
+- **geonode / roundproxies** — `{data:[{ip, port, protocols:[…]}]}` (the
+  original shape; string ports accepted).
+- **charlespikachu** — `{data:[{ip, port, protocol:"Socks5"}]}` (singular
+  `protocol` string; case-insensitive, and combined values such as
+  `"Http, Socks5"` are split).
+- **mauricegift** — `{proxies:["ip:port", …]}` (plain string array).
+- **proxytee** — `{proxies:[{host, port, proxy_type, types:[{type}]}]}`.
+
+The protocol is the first supported one in the project's precedence
+(`socks5` > `http` > `socks4`); when a row declares none, the entry's
+`protocol` is used. `https` folds to `http`. Rows without a usable public
+IPv4 or a valid port are dropped. A top-level object with a `data` or
+`proxies` array is required; anything else yields an empty set.
 
 ## Health rules
 
@@ -142,3 +154,61 @@ Rules that keep this safe:
 
 Getting a key: <https://getfreeproxy.com> (free tier, 10 proxies per
 request; filtered by `protocol`).
+
+## Discover sweep 2026-11-19: +37 SOCKS5 + 3 JSON sources
+
+A deep audit on 2026-11-19 ran two parallel research subagents plus manual
+curl verification against every candidate. The result: **37 new `plain`
+SOCKS5 sources** appended to `sources.yaml`, all returning `ip:port` or
+`socks5://ip:port` on stable `raw.githubusercontent.com` / jsdelivr URLs,
+plus **3 JSON sources** enabled after extending `src/parse/json.ts` (see
+above). Owners are disjoint from the pre-existing registry. Total raw
+candidates added: ~70 000 lines per cycle (pre-deduplication), with the
+largest single sources being `noctiro-getproxy` (16 378),
+`meid1981101-socks5-3` (9 991), `anonym0uswork1221` (5 976),
+`runoneall-raw` (5 523), `shubhamshendre` (4 251), `z3a4` (3 470),
+`komutan234` (3 414), `tianndev` (3 289), `meid1981101-socks5` (2 668),
+`proxyscraper` (2 216), `fusionproxies` (1 906), `dinoz0rg` (1 264).
+
+The CN-aggregator repos (`meid1981101-ui/*`, `komutan234`, `Dahono`,
+`denisyoya`) label their files `socks5` but mix in occasional HTTP
+(80/8080/3128) rows; the downstream SOCKS5 handshake check in
+`src/check/proxy-client.ts` filters them, so no parser change is needed.
+
+### JSON sources enabled after parser extension
+
+Three verified sources returned socks5 proxies in non-geonode JSON shapes.
+`src/parse/json.ts` was extended on 2026-11-19 to auto-detect them, and all
+three are enabled:
+
+- **CharlesPikachu/freeproxy** — `proxies.json`, 11 782 entries (5 529 socks5,
+  plus http/https/socks4 that the parser keeps under their own protocol).
+  Shape: `{data:[{ip,port,protocol:"Socks5",…}]}`.
+- **mauricegift/free-proxies** — `socks5.json`, 492 entries.
+  Shape: `{proxies:["ip:port",…]}`.
+- **proxytee.com** — `free-proxies.json`, 46 entries (25 socks5, 21 http).
+  Shape: `{proxies:[{host,port,proxy_type:"SOCKS5",types:[{type:"SOCKS5"}],…}]}`.
+
+### Sources disabled / flagged for review
+
+- `advname-1..5` — HTTP 200 but 0 parsed (Cloudflare 403 challenge page).
+  Flagged `enabled: false` pending parser/fetcher fix.
+- `ebrasha-abdal-socks5` — 404, dead URL. Flagged `enabled: false`.
+- `mrmarble-all` — 404, dead URL. Flagged `enabled: false`.
+- `gfp-http/https/socks4/socks5` — HTTP 429 (rate-limited even with key).
+  Left enabled; skipped quietly each cycle until the provider resets.
+
+## Known scaling limits
+
+- `OPP_MAX_NEW_PER_CYCLE` (default 120 000) is the real throughput ceiling:
+  with 244 sources, the guaranteed per-source share is
+  `min(120, floor(120000/244)) ≈ 491` candidates, so no source is starved.
+- Fetch parallelism is hard-coded to 12 in `src/sources/fetcher.ts` with a
+  60 s timeout — adding many sources grows wall-clock linearly. No env knob
+  exists yet; bumping to ~24 would halve fetch time.
+- `OPP_MAX_PER_SUBNET` (512) caps any single /24 in the published list. CN
+  aggregator sources that draw from the same /24s will be truncated.
+- Discover workflow (`src/cli/discover.ts`) is GitHub-only, capped at 120
+  repos / 14 fixed paths / 100 search results per query; it cannot find
+  non-GitHub sources and re-probes the same repos weekly. The 2026-11-19
+  sweep above was done manually to work around this.

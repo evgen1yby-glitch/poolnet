@@ -1,12 +1,12 @@
 {
-  "versionName": "0.5.7",
-  "versionCode": 13,
-  "apkUrl": "https://poolnet.online/app/PoolNet-Mobile-0.5.7.apk",
-  "sha256": "a3e796ce1986261811e653d1f4084b408a0c40887ade1408366bfc8a5b3eb2e9",
-  "size": 123790390,
-  "publishedAt": "2026-10-27T12:45:00Z",
+  "versionName": "0.5.11",
+  "versionCode": 17,
+  "apkUrl": "https://poolnet.online/app/PoolNet-Mobile-0.5.11.apk",
+  "sha256": "6c86aa7159cf93801e2ba4ae8c2dc9297ce2a5b7b44f59495217ec12ff97cada",
+  "size": 123807390,
+  "publishedAt": "2026-10-28T11:12:10Z",
   "releaseNotes": {
-    "ru": "Ускорено подключение: живой узел выбирается сразу, конфиг кэшируется, проверка короче, гонки подключений устранены. Добавлена вкладка «Поддержать».",
-    "en": "Faster connect: a live node is used immediately, config is cached, probes are shorter, overlapping connects are gone. Added a Support tab."
+    "ru": "Автоматическая ротация узлов: сначала проверяются все хосты выбранной страны, затем резервные. После переключения выбранная страна синхронизируется с фактической. Исправлены запуск и остановка VPN на Android 12+.",
+    "en": "Automatic host rotation: every host in the selected country is tried first, then fallback countries. After a fallback, the selected country now follows the active one. Fixed VPN start/stop on Android 12+."
   }
 }

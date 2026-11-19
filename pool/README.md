@@ -168,7 +168,7 @@ COORDINATOR_URL=https://… npx tsx src/index.ts node    # on a volunteer box
 
 ## Roadmap
 
-- [x] 202 sources, tolerant parsing, dedupe with provenance
+- [x] 242 sources (111 socks5), tolerant parsing, dedupe with provenance
 - [x] Two-phase verification: liveness + anonymity grading
 - [x] Enrichment: latency, uptime windows, geo, TLS-MITM flag
 - [x] Text lists, JSON, country shards, shields badges

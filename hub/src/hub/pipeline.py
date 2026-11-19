@@ -668,13 +668,15 @@ class Pipeline:
             # measurement from that hour, overwriting what the real probe had
             # just produced.
             probed = [r for r in results if r.ok and r.stage_reached.value == "http"]
+            carried_keys: set[str] = set()
             if self.recent_hours and probed:
-                current = {r.dedup_key for r in verified}
+                current = {r.dedup_key for r in results}
                 carried = 0
                 for node in self.recent_nodes(conn, hours=self.recent_hours, now=now):
                     if node.dedup_key in current:
                         continue
                     current.add(node.dedup_key)
+                    carried_keys.add(node.dedup_key)
                     seen_keys[node.dedup_key] = node
                     # No timings on purpose: the scorer must see that nothing
                     # was measured this round rather than a fabricated fast
@@ -779,7 +781,20 @@ class Pipeline:
             report.stage_survivors["geo.filled"] = geo_filled
 
             # 4. score, and record checks for the history table
+            carried_last_ok: dict[str, str] = {}
+            if carried_keys:
+                placeholders = ",".join("?" for _ in carried_keys)
+                carried_last_ok = {
+                    row["dedup_key"]: row["run_at"]
+                    for row in conn.execute(
+                        "SELECT dedup_key, MAX(run_at) AS run_at FROM checks"
+                        f" WHERE dedup_key IN ({placeholders})"
+                        " AND stage = 'http' AND ok = 1 GROUP BY dedup_key",
+                        tuple(carried_keys),
+                    )
+                }
             entries = []
+            last_ok_by_key: dict[str, str] = {}
             for result in verified:
                 node = seen_keys.get(result.dedup_key)
                 if node is None:
@@ -796,11 +811,17 @@ class Pipeline:
                 history = self._history(conn, result.dedup_key)
                 computed = score_node(node, history, result, self.weights)
                 entries.append((node, computed, history.node_rounds + 1))
-                conn.execute(
-                    "INSERT INTO checks (dedup_key, run_at, ok, stage, http_ms, jitter_ms, error)"
-                    " VALUES (?, ?, 1, 'http', ?, ?, '')",
-                    (result.dedup_key, now, result.http_ms, result.jitter_ms),
+                last_ok_by_key[result.dedup_key] = (
+                    carried_last_ok.get(result.dedup_key)
+                    if result.dedup_key in carried_keys
+                    else now
                 )
+                if result.dedup_key not in carried_keys:
+                    conn.execute(
+                        "INSERT INTO checks (dedup_key, run_at, ok, stage, http_ms, jitter_ms, error)"
+                        " VALUES (?, ?, 1, 'http', ?, ?, '')",
+                        (result.dedup_key, now, result.http_ms, result.jitter_ms),
+                    )
 
             failed = [r for r in results if not r.ok]
             for result in failed:
@@ -822,7 +843,8 @@ class Pipeline:
                 "INSERT INTO nodes (dedup_key, protocol, address, port, country, source, first_seen, last_ok, score, rounds, state)"
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 " ON CONFLICT(dedup_key) DO UPDATE SET"
-                "   last_ok=excluded.last_ok, score=excluded.score,"
+                "   last_ok=COALESCE(excluded.last_ok, nodes.last_ok),"
+                "   score=excluded.score,"
                 "   rounds=excluded.rounds, country=excluded.country,"
                 "   state=excluded.state",
                 [
@@ -834,7 +856,7 @@ class Pipeline:
                         node.country,
                         node.source,
                         now,
-                        now if result_ok else None,
+                        last_ok_by_key[node.dedup_key],
                         computed.total,
                         rounds,
                         # Stored whole: the flat columns identify a node, they
@@ -842,7 +864,6 @@ class Pipeline:
                         node_to_json(node),
                     )
                     for node, computed, rounds in entries
-                    for result_ok in (True,)
                 ],
             )
             conn.commit()
@@ -1322,7 +1343,7 @@ class Pipeline:
             # for the whole freshness window after the probe had seen it fail.
             " AND NOT EXISTS ("
             "   SELECT 1 FROM checks f WHERE f.dedup_key = c.dedup_key"
-            "   AND f.stage = 'http' AND f.run_at > c.run_at"
+            "   AND f.ok = 0 AND f.run_at > c.run_at"
             " )",
             (cutoff.isoformat(),),
         ).fetchall()

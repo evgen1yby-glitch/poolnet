@@ -34,7 +34,7 @@ def main() -> int:
     required = {
         f"{tree}{name}.html"
         for tree in ("", "en/")
-        for name in ("index", "vpn", "proxy", "verify", "check", "status", "404", "legal", "download")
+        for name in ("index", "vpn", "proxy", "verify", "status", "404", "legal", "download")
     }
     seen = {p.relative_to(SITE).as_posix() for p in pages}
     missing = required - seen
@@ -50,7 +50,7 @@ def main() -> int:
         if html.count('class="lang"') != 1:
             problems.append(f"{page.relative_to(SITE)}: expected one language switch")
         # A disabled control is a feature that looks shipped but does nothing.
-        without_pager = re.sub(r'<button[^>]*id="pg-(?:prev|next)"[^>]*>', "", html)
+        re.sub(r'<button[^>]*id="pg-(?:prev|next)"[^>]*>', "", html)
         for href in LINK.findall(html):
             if href.startswith(("http://", "https://", "data:", "mailto:", "#")):
                 continue

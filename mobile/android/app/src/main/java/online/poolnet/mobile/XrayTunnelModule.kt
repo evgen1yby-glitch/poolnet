@@ -50,6 +50,10 @@ class XrayTunnelModule(private val context: ReactApplicationContext) :
 
     @ReactMethod
     fun start(config: String, promise: Promise) {
+        if (XrayTunnelService.running || XrayTunnelService.starting || XrayTunnelService.stopping) {
+            promise.reject("tunnel_busy", "VPN is already running")
+            return
+        }
         XrayTunnelService.lastError = null
         if (VpnService.prepare(context) != null) {
             promise.reject("permission_required", "VPN permission was not granted")
@@ -84,18 +88,41 @@ class XrayTunnelModule(private val context: ReactApplicationContext) :
 
     @ReactMethod
     fun stop(promise: Promise) {
-        val intent = Intent(context, XrayTunnelService::class.java).apply {
-            action = XrayTunnelService.ACTION_STOP
+        // A VpnService is bound by the system, so stopService() alone does not
+        // tear it down. Do not start a service just to stop it: on Android 12+
+        // that caused a foreground-service timeout when the tunnel was idle.
+        if (!XrayTunnelService.running && !XrayTunnelService.starting && !XrayTunnelService.stopping) {
+            promise.resolve(true)
+            return
         }
-        context.startService(intent)
-        promise.resolve(true)
+        if (!XrayTunnelService.stopping) {
+            val intent = Intent(context, XrayTunnelService::class.java).apply {
+                action = XrayTunnelService.ACTION_STOP
+            }
+            context.startService(intent)
+        }
+        Thread {
+            val deadline = System.currentTimeMillis() + 3_000
+            while (System.currentTimeMillis() < deadline) {
+                if (!XrayTunnelService.running && !XrayTunnelService.starting && !XrayTunnelService.stopping) {
+                    promise.resolve(true)
+                    return@Thread
+                }
+                try { Thread.sleep(50) } catch (_: InterruptedException) { break }
+            }
+            promise.reject("tunnel_stop_timeout", "VPN did not stop within 3 seconds")
+        }.start()
     }
 
     @ReactMethod
     fun status(promise: Promise) {
         val out = Arguments.createMap()
+        val stats = XrayTunnelService.statsSnapshot()
         out.putBoolean("running", XrayTunnelService.running)
         out.putString("error", XrayTunnelService.lastError)
+        out.putDouble("startedAt", stats[0].toDouble())
+        out.putDouble("rxBytes", stats[1].toDouble())
+        out.putDouble("txBytes", stats[2].toDouble())
         promise.resolve(out)
     }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="How PoolNet verifies nodes: CONNECT, exit IP, TLS and honest uptime history.">
+<meta name="description" content="Check a single node and see how PoolNet verifies the whole pool: TCP, TLS, config and an end-to-end HTTP request.">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://poolnet.online/en/verify">
 <link rel="alternate" hreflang="ru" href="https://poolnet.online/verify">
@@ -12,20 +12,20 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PoolNet">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Node verification — PoolNet">
-<meta property="og:description" content="How PoolNet verifies nodes: CONNECT, exit IP, TLS and honest uptime history.">
+<meta property="og:title" content="Node checks — PoolNet">
+<meta property="og:description" content="Check a single node and see how PoolNet verifies the whole pool: TCP, TLS, config and an end-to-end HTTP request.">
 <meta property="og:url" content="https://poolnet.online/en/verify">
 <meta property="og:image" content="https://poolnet.online/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="PoolNet — бесплатные списки проверенных VPN и прокси">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Node verification — PoolNet">
-<meta name="twitter:description" content="How PoolNet verifies nodes: CONNECT, exit IP, TLS and honest uptime history.">
+<meta name="twitter:title" content="Node checks — PoolNet">
+<meta name="twitter:description" content="Check a single node and see how PoolNet verifies the whole pool: TCP, TLS, config and an end-to-end HTTP request.">
 <meta name="twitter:image" content="https://poolnet.online/assets/og.png">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080b">
-<title>Node verification — PoolNet</title>
+<title>Node checks — PoolNet</title>
 <link rel="icon" href="../assets/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../system.css?v=20">
@@ -33,28 +33,69 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="top"><div class="wrap top-in"><a class="brand" href="/en/" aria-label="PoolNet — home"><img class="logo-img" src="/assets/logo.png" srcset="/assets/logo-64.png 64w, /assets/logo-96.png 96w, /assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32"><span class="bn">PoolNet</span></a><nav class="main" aria-label="Sections"><a href="/en/">Home</a><a href="/en/vpn">VPN</a><a href="/en/proxy">Proxy pool</a><a href="/en/verify" class="on" aria-current="page">Verification</a><a href="/en/check">Check node</a><a href="/en/status">Status</a><a href="/en/legal">Terms</a></nav><div class="lang" role="group" aria-label="Language"><a class="lang-b" href="/verify" hreflang="ru">RU</a><a class="lang-b on" href="/en/verify" hreflang="en" aria-current="true">EN</a><a class="apk-link" href="/en/download" aria-label="Download the app">Download</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><span class="nav-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div><div class="mobile-nav" id="mobile-nav" hidden><div class="mobile-nav-in"><nav aria-label="Mobile sections"><a class="mnav" href="/en/">Home<span>›</span></a><a class="mnav" href="/en/vpn">VPN<span>›</span></a><a class="mnav" href="/en/proxy">Proxy pool<span>›</span></a><a class="mnav on" href="/en/verify">Verification<span>›</span></a><a class="mnav" href="/en/check">Check node<span>›</span></a><a class="mnav" href="/en/status">Status<span>›</span></a><a class="mnav" href="/en/legal">Terms<span>›</span></a></nav><div class="mobile-nav-foot"><div class="mlangs" role="group" aria-label="Language"><a class="mlang" href="/verify" hreflang="ru">RU</a><a class="mlang on" href="/en/verify" hreflang="en" aria-current="true">EN</a></div><a class="btn btn-1" href="/en/download">Download APK</a></div></div></div></header>
+<header class="top"><div class="wrap top-in"><a class="brand" href="/en/" aria-label="PoolNet — home"><img class="logo-img" src="/assets/logo.png" srcset="/assets/logo-64.png 64w, /assets/logo-96.png 96w, /assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32"><span class="bn">PoolNet</span></a><nav class="main" aria-label="Sections"><a href="/en/">Home</a><a href="/en/vpn">VPN</a><a href="/en/proxy">Proxy pool</a><a href="/en/verify" class="on" aria-current="page">Verification</a><a href="/en/status">Status</a><a href="/en/legal">Terms</a></nav><div class="lang" role="group" aria-label="Language"><a class="lang-b" href="/verify" hreflang="ru">RU</a><a class="lang-b on" href="/en/verify" hreflang="en" aria-current="true">EN</a><a class="apk-link" href="/en/download" aria-label="Download the app">Download</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><span class="nav-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div><div class="mobile-nav" id="mobile-nav" hidden><div class="mobile-nav-in"><nav aria-label="Mobile sections"><a class="mnav" href="/en/">Home<span>›</span></a><a class="mnav" href="/en/vpn">VPN<span>›</span></a><a class="mnav" href="/en/proxy">Proxy pool<span>›</span></a><a class="mnav on" href="/en/verify">Verification<span>›</span></a><a class="mnav" href="/en/status">Status<span>›</span></a><a class="mnav" href="/en/legal">Terms<span>›</span></a></nav><div class="mobile-nav-foot"><div class="mlangs" role="group" aria-label="Language"><a class="mlang" href="/verify" hreflang="ru">RU</a><a class="mlang on" href="/en/verify" hreflang="en" aria-current="true">EN</a></div><a class="btn btn-1" href="/en/download">Download APK</a></div></div></div></header>
 
 <main id="main" tabindex="-1">
   <section class="dl-hero hero-v2 hero-v2-simple">
     <div class="dl-hero-bg"></div>
     <div class="wrap hero-v2-in">
       <div class="hero-v2-copy">
-        <div class="hero-eyebrow"><span class="hero-dot"></span>METHOD · REAL CONNECTIONS</div>
-        <h1>How nodes<br><span class="accent">are verified.</span></h1>
-        <p class="hero-lead">Six stages: from a public list to an HTTP request through the tunnel.</p>
+        <div class="hero-eyebrow"><span class="hero-dot"></span>CHECKS · MANUAL AND AUTOMATIC</div>
+        <h1>Node<br><span class="accent">checks.</span></h1>
+        <p class="hero-lead">Check one address manually, or see how PoolNet checks the whole pool before publishing it.</p>
         <div class="hero-v2-actions">
-          <a class="btn btn-1" href="/en/check">Check a node</a>
-          <a class="hero-link" href="/en/status">Status <span aria-hidden="true">→</span></a>
+          <a class="btn btn-1" href="#check-form">Check an address</a>
+          <a class="hero-link" href="#method">Method <span aria-hidden="true">→</span></a>
         </div>
         <dl class="hero-specs">
-          <div><dt>Protocols</dt><dd>TCP / TLS / CONFIG / HTTP</dd></div>
+          <div><dt>Protocols</dt><dd>HTTP / SOCKS5 / SOCKS4</dd></div>
+          <div><dt>Pool stages</dt><dd>TCP / TLS / CONFIG / HTTP</dd></div>
         </dl>
       </div>
     </div>
   </section>
 
+<section id="check-form">
+    <div class="wrap">
+      <div class="checker">
+        <form class="chk-form" id="chk-form" autocomplete="off">
+          <div class="fchips" role="group" aria-label="Protocol">
+            <button type="button" class="fchip on" data-proto="http" aria-pressed="true">HTTP</button>
+            <button type="button" class="fchip" data-proto="socks5" aria-pressed="false">SOCKS5</button>
+            <button type="button" class="fchip" data-proto="socks4" aria-pressed="false">SOCKS4</button>
+          </div>
+          <div class="chk-row">
+            <input type="text" id="chk-input" class="chk-input" spellcheck="false" autocomplete="off" placeholder="1.2.3.4:8080" aria-label="Proxy address">
+            <button type="submit" class="btn btn-1" id="chk-run">Check</button>
+          </div>
+          <p class="chk-examples">Examples:
+            <button type="button" class="chk-ex" data-example="145.220.227.208:8080" data-example-proto="socks5">145.220.227.208:8080</button>
+            <button type="button" class="chk-ex" data-example="45.12.30.157:80" data-example-proto="http">45.12.30.157:80</button>
+          </p>
+        </form>
+        <div class="chk-res" id="chk-res" aria-live="polite">
+          <p class="chk-idle">Enter an address and start the check. The result describes only this moment: a minute later the node may already be unavailable.</p>
+        </div>
+        <p class="chk-note">The check runs from the PoolNet server, not from your network — the node sees the server's address and latency. Private and service addresses are not checked.</p>
+      </div>
+    </div>
+  </section>
+
   <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>What the <span class="grad-txt">verdict</span> means</h2>
+        <p>One HTTP request through the proxy to an echo server. The response is considered successful if the tunnel opened and the request returned a page.</p>
+      </div>
+      <div class="mrow">
+        <div class="mcard"><div class="mv">alive</div><div class="mk">the tunnel opened, the request went through</div></div>
+        <div class="mcard"><div class="mv">failed</div><div class="mk">handshake failure, timeout or HTTP error</div></div>
+        <div class="mcard"><div class="mv">exit address</div><div class="mk">the address seen by the echo server</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="method">
     <div class="wrap">
       <div class="sec-head">
         <h2>Six stages of <span class="grad-txt">node verification</span></h2>
@@ -117,7 +158,7 @@
       <a href="/en/">Home</a>
       <a href="/en/vpn">VPN</a>
       <a href="/en/proxy">Proxy pool</a>
-      <a href="/en/check">Check node</a>
+      <a href="/en/verify">Verification</a>
       <a href="/en/status">Status</a>
     <a href="/en/download">App</a></nav>
   </div>

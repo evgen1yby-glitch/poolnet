@@ -2,7 +2,7 @@
   "expo": {
     "name": "PoolNet",
     "slug": "poolnet-mobile",
-    "version": "0.5.7",
+    "version": "0.5.11",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "poolnet",
@@ -14,7 +14,7 @@
     },
     "android": {
       "package": "online.poolnet.mobile",
-      "versionCode": 13,
+      "versionCode": 17,
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "android.permission.REQUEST_INSTALL_PACKAGES"

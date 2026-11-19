@@ -83,7 +83,7 @@ POOL_FILES = {
 }
 
 #: Extensionless page paths the site owns, for the cache policy in `api.py`.
-PAGE_SLUGS = ("vpn", "proxy", "verify", "check", "free", "status", "legal")
+PAGE_SLUGS = ("vpn", "proxy", "verify", "free", "status", "legal")
 
 _COUNTRY_SHARD = re.compile(r"^[A-Z]{2}\.txt$")
 
@@ -432,6 +432,15 @@ def register_gateway(
         """The retired demo's data URLs, kept as redirects to `/pool/`."""
         return RedirectResponse(f"/pool/{name}", status_code=307)
 
+    @app.get("/check", include_in_schema=False)
+    @app.get("/en/check", include_in_schema=False)
+    async def old_check_page(request: Request) -> RedirectResponse:
+        """The manual checker now lives on the unified verification page."""
+        target = "/en/verify" if request.url.path.startswith("/en/") else "/verify"
+        if request.url.query:
+            target += "?" + request.url.query
+        return RedirectResponse(target, status_code=301)
+
     @app.get("/{path:path}", include_in_schema=False)
     async def site_page(path: str, request: Request) -> Response:
         """Every public page and asset of the merged site.
@@ -448,6 +457,10 @@ def register_gateway(
                 target = "/"
             elif clean.endswith("/index"):
                 target = "/" + clean[:-6] + "/"
+            elif clean == "check":
+                target = "/verify"
+            elif clean == "en/check":
+                target = "/en/verify"
             else:
                 target = "/" + clean
             if request.url.query:

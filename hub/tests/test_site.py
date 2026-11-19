@@ -8,6 +8,7 @@ site and keeps its own landing.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -51,11 +52,14 @@ def test_the_root_serves_the_site_index(site_client):
 
 def test_every_site_page_serves(site_client):
     """All six pages answer 200 — a 404 between pages breaks navigation."""
-    for page in ("vpn", "proxy", "verify", "check", "status", "legal"):
+    for page in ("vpn", "proxy", "verify", "status", "legal"):
         assert site_client.get(f"/{page}").status_code == 200, page
         legacy = site_client.get(f"/{page}.html", follow_redirects=False)
         assert legacy.status_code == 301, page
         assert legacy.headers["location"] == f"/{page}", page
+    check = site_client.get("/check", follow_redirects=False)
+    assert check.status_code == 301
+    assert check.headers["location"] == "/verify"
 
 
 def test_none_of_the_site_pages_index_as_operator_panels(site_client):
@@ -88,9 +92,10 @@ def test_public_free_key_page_is_retired():
         assert "Получить ключ" not in html, name
         assert "Бесплатный ключ" not in html, name
         assert "Free key" not in html, name
+    version = json.loads((SITE_DIR / "app" / "version.json").read_text(encoding="utf-8"))["versionName"]
     for name in ("index", "download", "en/index", "en/download"):
         html = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
-        assert "PoolNet-Mobile-0.5.7.apk" in html, name
+        assert f"PoolNet-Mobile-{version}.apk" in html, name
 
 
 def test_english_tree_serves_and_matches_the_russian_contract():
@@ -103,7 +108,7 @@ def test_english_tree_serves_and_matches_the_russian_contract():
     """
     import re
 
-    for name in ("index", "vpn", "proxy", "verify", "check", "status", "404", "legal"):
+    for name in ("index", "vpn", "proxy", "verify", "status", "404", "legal"):
         ru = (SITE_DIR / f"{name}.html").read_text(encoding="utf-8")
         en = (SITE_DIR / "en" / f"{name}.html").read_text(encoding="utf-8")
         key = lambda page: sorted(  # noqa: E731 - local, one use
@@ -185,13 +190,16 @@ def test_api_routes_do_not_conflict_with_the_site(site_client):
 
 def test_every_english_page_serves(site_client):
     """The EN tree is reachable through the gateway, with English labels."""
-    for page in ("", "vpn", "proxy", "verify", "check", "status", "legal"):
+    for page in ("", "vpn", "proxy", "verify", "status", "legal"):
         response = site_client.get(f"/en/{page}" if page else "/en/")
         assert response.status_code == 200, page
         assert response.headers["cache-control"] == "no-cache"
     verify = site_client.get("/en/verify").text
     assert "SOURCES" in verify or "Sources" in verify
     assert "{{" not in verify
+    check = site_client.get("/en/check", follow_redirects=False)
+    assert check.status_code == 301
+    assert check.headers["location"] == "/en/verify"
     missing = site_client.get("/en/does-not-exist")
     assert missing.status_code == 404
     assert "not found" in missing.text.lower()

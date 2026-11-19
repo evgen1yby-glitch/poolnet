@@ -11,7 +11,7 @@ release-подпись PoolNet, но не сборка для Google Play.
 
 ## APK
 
-Android VPN client: [PoolNet Mobile 0.5.7](https://poolnet.online/download).
+Android VPN client: [PoolNet Mobile 0.5.11](https://poolnet.online/download).
 Release-signed with the PoolNet key; contains the embedded Xray TUN tunnel.
 Do not upload this APK to Google Play.
 

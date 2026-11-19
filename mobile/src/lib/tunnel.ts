@@ -1,10 +1,18 @@
 import { NativeModules, Platform } from 'react-native';
 
+type TunnelStatus = {
+  running: boolean;
+  error: string | null;
+  startedAt: number;
+  rxBytes: number;
+  txBytes: number;
+};
+
 type TunnelModule = {
   prepare: () => Promise<boolean>;
   start: (config: string) => Promise<boolean>;
   stop: () => Promise<boolean>;
-  status: () => Promise<{ running: boolean; error: string | null }>;
+  status: () => Promise<Partial<TunnelStatus> & { running: boolean; error: string | null }>;
 };
 
 const nativeTunnel = NativeModules.XrayTunnel as TunnelModule | undefined;
@@ -26,7 +34,7 @@ export async function stopTunnel(): Promise<void> {
   await nativeTunnel.stop();
 }
 
-async function probeOnce(timeoutMs: number): Promise<void> {
+async function probeOnce(timeoutMs: number): Promise<string> {
   const endpoints = ['https://api.ipify.org', 'https://icanhazip.com'];
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -45,22 +53,23 @@ async function probeOnce(timeoutMs: number): Promise<void> {
         return body;
       }),
     );
-    if (!results.some((result) => result.status === 'fulfilled')) {
-      throw new Error('tunnel probe failed');
-    }
+    const ip = results.find(
+      (result): result is PromiseFulfilledResult<string> => result.status === 'fulfilled',
+    )?.value;
+    if (!ip) throw new Error('tunnel probe failed');
+    return ip;
   } finally {
     clearTimeout(timer);
   }
 }
 
-export async function verifyTunnel(timeoutMs = 6000): Promise<void> {
+export async function verifyTunnel(timeoutMs = 6000): Promise<string> {
   const deadline = Date.now() + timeoutMs;
   let lastError: unknown = new Error('tunnel probe failed');
   while (Date.now() < deadline) {
     const remaining = deadline - Date.now();
     try {
-      await probeOnce(Math.min(2500, remaining));
-      return;
+      return await probeOnce(Math.min(2500, remaining));
     } catch (error) {
       lastError = error;
       if (deadline - Date.now() > 1200) {
@@ -71,7 +80,20 @@ export async function verifyTunnel(timeoutMs = 6000): Promise<void> {
   throw lastError;
 }
 
-export async function tunnelStatus(): Promise<{ running: boolean; error: string | null }> {
-  if (!nativeTunnel) return { running: false, error: null };
-  return nativeTunnel.status();
+export async function fetchExitIp(timeoutMs = 5000): Promise<string> {
+  return probeOnce(timeoutMs);
+}
+
+export async function tunnelStatus(): Promise<TunnelStatus> {
+  if (!nativeTunnel) {
+    return { running: false, error: null, startedAt: 0, rxBytes: 0, txBytes: 0 };
+  }
+  const status = await nativeTunnel.status();
+  return {
+    running: Boolean(status.running),
+    error: status.error ?? null,
+    startedAt: Number(status.startedAt) || 0,
+    rxBytes: Math.max(0, Number(status.rxBytes) || 0),
+    txBytes: Math.max(0, Number(status.txBytes) || 0),
+  };
 }

@@ -33,28 +33,69 @@
 </head>
 <body>
 <a class="skip" href="#main">К содержанию</a>
-<header class="top"><div class="wrap top-in"><a class="brand" href="/" aria-label="PoolNet — на главную"><img class="logo-img" src="/assets/logo.png" srcset="/assets/logo-64.png 64w, /assets/logo-96.png 96w, /assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32"><span class="bn">PoolNet</span></a><nav class="main" aria-label="Разделы"><a href="/">Главная</a><a href="/vpn">VPN</a><a href="/proxy">Прокси-пул</a><a href="/verify" class="on" aria-current="page">Проверка</a><a href="/check">Проверить узел</a><a href="/status">Статус</a><a href="/legal">Условия</a></nav><div class="lang" role="group" aria-label="Language"><a class="lang-b on" href="/verify" hreflang="ru" aria-current="true">RU</a><a class="lang-b" href="/en/verify" hreflang="en">EN</a><a class="apk-link" href="/download" aria-label="Скачать приложение">Скачать</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню"><span class="nav-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div><div class="mobile-nav" id="mobile-nav" hidden><div class="mobile-nav-in"><nav aria-label="Мобильные разделы"><a class="mnav" href="/">Главная<span>›</span></a><a class="mnav" href="/vpn">VPN<span>›</span></a><a class="mnav" href="/proxy">Прокси-пул<span>›</span></a><a class="mnav on" href="/verify">Проверка<span>›</span></a><a class="mnav" href="/check">Проверить узел<span>›</span></a><a class="mnav" href="/status">Статус<span>›</span></a><a class="mnav" href="/legal">Условия<span>›</span></a></nav><div class="mobile-nav-foot"><div class="mlangs" role="group" aria-label="Language"><a class="mlang on" href="/verify" hreflang="ru" aria-current="true">RU</a><a class="mlang" href="/en/verify" hreflang="en">EN</a></div><a class="btn btn-1" href="/download">Скачать APK</a></div></div></div></header>
+<header class="top"><div class="wrap top-in"><a class="brand" href="/" aria-label="PoolNet — на главную"><img class="logo-img" src="/assets/logo.png" srcset="/assets/logo-64.png 64w, /assets/logo-96.png 96w, /assets/logo.png 512w" sizes="1.9rem" alt="" width="32" height="32"><span class="bn">PoolNet</span></a><nav class="main" aria-label="Разделы"><a href="/">Главная</a><a href="/vpn">VPN</a><a href="/proxy">Прокси-пул</a><a href="/verify" class="on" aria-current="page">Проверка</a><a href="/status">Статус</a><a href="/legal">Условия</a></nav><div class="lang" role="group" aria-label="Language"><a class="lang-b on" href="/verify" hreflang="ru" aria-current="true">RU</a><a class="lang-b" href="/en/verify" hreflang="en">EN</a><a class="apk-link" href="/download" aria-label="Скачать приложение">Скачать</a></div><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню"><span class="nav-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div><div class="mobile-nav" id="mobile-nav" hidden><div class="mobile-nav-in"><nav aria-label="Мобильные разделы"><a class="mnav" href="/">Главная<span>›</span></a><a class="mnav" href="/vpn">VPN<span>›</span></a><a class="mnav" href="/proxy">Прокси-пул<span>›</span></a><a class="mnav on" href="/verify">Проверка<span>›</span></a><a class="mnav" href="/status">Статус<span>›</span></a><a class="mnav" href="/legal">Условия<span>›</span></a></nav><div class="mobile-nav-foot"><div class="mlangs" role="group" aria-label="Language"><a class="mlang on" href="/verify" hreflang="ru" aria-current="true">RU</a><a class="mlang" href="/en/verify" hreflang="en">EN</a></div><a class="btn btn-1" href="/download">Скачать APK</a></div></div></div></header>
 
 <main id="main" tabindex="-1">
   <section class="dl-hero hero-v2 hero-v2-simple">
     <div class="dl-hero-bg"></div>
     <div class="wrap hero-v2-in">
       <div class="hero-v2-copy">
-        <div class="hero-eyebrow"><span class="hero-dot"></span>МЕТОДИКА · РЕАЛЬНЫЕ СОЕДИНЕНИЯ</div>
-        <h1>Как проверяются<br><span class="accent">узлы.</span></h1>
-        <p class="hero-lead">Шесть этапов: от публичного списка до HTTP-запроса через туннель.</p>
+        <div class="hero-eyebrow"><span class="hero-dot"></span>ПРОВЕРКА · РУЧНАЯ И АВТОМАТИЧЕСКАЯ</div>
+        <h1>Проверка<br><span class="accent">узлов.</span></h1>
+        <p class="hero-lead">Проверьте конкретный адрес вручную или посмотрите, как PoolNet проверяет весь пул перед публикацией.</p>
         <div class="hero-v2-actions">
-          <a class="btn btn-1" href="/check">Проверить узел</a>
-          <a class="hero-link" href="/status">Статус <span aria-hidden="true">→</span></a>
+          <a class="btn btn-1" href="#check-form">Проверить адрес</a>
+          <a class="hero-link" href="#method">Методика <span aria-hidden="true">→</span></a>
         </div>
         <dl class="hero-specs">
-          <div><dt>Этапы</dt><dd>TCP · TLS · CONFIG · HTTP</dd></div>
+          <div><dt>Протоколы</dt><dd>HTTP · SOCKS5 · SOCKS4</dd></div>
+          <div><dt>Этапы пула</dt><dd>TCP · TLS · CONFIG · HTTP</dd></div>
         </dl>
       </div>
     </div>
   </section>
 
+<section id="check-form">
+    <div class="wrap">
+      <div class="checker">
+        <form class="chk-form" id="chk-form" autocomplete="off">
+          <div class="fchips" role="group" aria-label="Протокол">
+            <button type="button" class="fchip on" data-proto="http" aria-pressed="true">HTTP</button>
+            <button type="button" class="fchip" data-proto="socks5" aria-pressed="false">SOCKS5</button>
+            <button type="button" class="fchip" data-proto="socks4" aria-pressed="false">SOCKS4</button>
+          </div>
+          <div class="chk-row">
+            <input type="text" id="chk-input" class="chk-input" spellcheck="false" autocomplete="off" placeholder="1.2.3.4:8080" aria-label="Адрес прокси">
+            <button type="submit" class="btn btn-1" id="chk-run">Проверить</button>
+          </div>
+          <p class="chk-examples">Примеры:
+            <button type="button" class="chk-ex" data-example="145.220.227.208:8080" data-example-proto="socks5">145.220.227.208:8080</button>
+            <button type="button" class="chk-ex" data-example="45.12.30.157:80" data-example-proto="http">45.12.30.157:80</button>
+          </p>
+        </form>
+        <div class="chk-res" id="chk-res" aria-live="polite">
+          <p class="chk-idle">Введите адрес и запустите проверку. Результат описывает только этот момент: через минуту узел может быть уже недоступен.</p>
+        </div>
+        <p class="chk-note">Проверка идёт с сервера PoolNet, а не из вашей сети — узел видит адрес и задержку сервера. Приватные и служебные адреса не проверяются.</p>
+      </div>
+    </div>
+  </section>
+
   <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Что значит <span class="grad-txt">вердикт</span></h2>
+        <p>Один HTTP-запрос через прокси к эхо-серверу. Ответ считается успешным, если туннель открылся и запрос вернул страницу.</p>
+      </div>
+      <div class="mrow">
+        <div class="mcard"><div class="mv">живой</div><div class="mk">туннель открылся, запрос прошёл</div></div>
+        <div class="mcard"><div class="mv">не прошёл</div><div class="mk">отказ на рукопожатии, таймаут или ошибка HTTP</div></div>
+        <div class="mcard"><div class="mv">адрес выхода</div><div class="mk">адрес, который увидел эхо-сервер</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="method">
     <div class="wrap">
       <div class="sec-head">
         <h2>Шесть этапов <span class="grad-txt">проверки узла</span></h2>
@@ -118,11 +159,77 @@
       <a href="/">Главная</a>
       <a href="/vpn">VPN</a>
       <a href="/proxy">Прокси-пул</a>
-      <a href="/check">Проверить узел</a>
+      <a href="/verify">Проверка</a>
       <a href="/status">Статус</a>
     <a href="/download">Приложение</a></nav>
   </div>
 </footer>
+<script>
+(function () {
+  var form = document.getElementById("chk-form");
+  var input = document.getElementById("chk-input");
+  var run = document.getElementById("chk-run");
+  var res = document.getElementById("chk-res");
+  var proto = "http";
+  var busy = false;
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function show(html) { res.innerHTML = html; }
+  document.querySelectorAll("[data-proto]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      proto = b.dataset.proto;
+      document.querySelectorAll("[data-proto]").forEach(function (x) {
+        x.classList.toggle("on", x === b);
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
+    });
+  });
+  document.querySelectorAll("[data-example]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      input.value = b.dataset.example;
+      var p = b.dataset.exampleProto;
+      document.querySelectorAll("[data-proto]").forEach(function (x) {
+        if (x.dataset.proto === p) x.click();
+      });
+      input.focus();
+    });
+  });
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    if (busy) return;
+    var addr = input.value.trim();
+    if (!/^\d{1,3}(\.\d{1,3}){3}:\d{1,5}$/.test(addr)) {
+      show('<p class="chk-bad">Нужен адрес вида 1.2.3.4:8080.</p>');
+      return;
+    }
+    busy = true;
+    run.disabled = true;
+    show('<p class="chk-idle">Проверяем ' + esc(addr) + "…</p>");
+    fetch("/api/check?proxy=" + encodeURIComponent(addr) + "&proto=" + encodeURIComponent(proto), { cache: "no-store" })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (out) {
+        var j = out.body || {};
+        if (!out.ok) { show('<p class="chk-bad">' + esc(j.error || "запрос отклонён") + "</p>"); return; }
+        if (j.alive) {
+          show('<div class="chk-head chk-ok">живой</div>' +
+            '<div class="chk-rows">' +
+            '<div><span>задержка</span><b>' + esc(j.latency_ms) + " ms</b></div>" +
+            '<div><span>адрес выхода</span><b>' + esc(j.remote_ip || "не раскрыт") + "</b></div>" +
+            '<div><span>протокол</span><b>' + esc(proto.toUpperCase()) + "</b></div>" +
+            "</div>");
+        } else {
+          show('<div class="chk-head chk-bad">не прошёл</div>' +
+            '<div class="chk-rows"><div><span>ошибка</span><b>' + esc(j.error || "нет ответа") + "</b></div></div>");
+        }
+      })
+      .catch(function () { show('<p class="chk-bad">Сервер проверки недоступен.</p>'); })
+      .then(function () { busy = false; run.disabled = false; });
+  });
+})();
+</script>
 <script src="flags.js" defer></script>
 <script src="/site-nav.js?v=3" defer></script>
 </body>

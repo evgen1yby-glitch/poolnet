@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.TrafficStats
 import android.net.VpnService
 import android.os.Build
 import android.os.ParcelFileDescriptor
@@ -14,6 +15,9 @@ import libXray.DialerController
 import libXray.LibXray
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.net.NetworkInterface
+import java.util.Collections
 import java.util.concurrent.atomic.AtomicBoolean
 
 class XrayTunnelService : VpnService() {
@@ -25,12 +29,79 @@ class XrayTunnelService : VpnService() {
         private const val NOTIFICATION_ID = 4107
 
         @Volatile var running = false
+        @Volatile var starting = false
+        @Volatile var stopping = false
         @Volatile var lastError: String? = null
+        @Volatile private var currentInstance: XrayTunnelService? = null
+        @Volatile private var startedAt = 0L
+        @Volatile private var interfaceName: String? = null
+        @Volatile private var rxBase = 0L
+        @Volatile private var txBase = 0L
+
+        fun statsSnapshot(): LongArray {
+            if (!running) return longArrayOf(0L, 0L, 0L)
+            val name = interfaceName ?: findInterfaceName("10.111.222.1")?.also {
+                interfaceName = it
+                rxBase = 0L
+                txBase = 0L
+            } ?: return longArrayOf(startedAt, 0L, 0L)
+            val rx = readCounter(name, true)
+            val tx = readCounter(name, false)
+            return longArrayOf(
+                startedAt,
+                (rx - rxBase).coerceAtLeast(0L),
+                (tx - txBase).coerceAtLeast(0L),
+            )
+        }
+
+        private fun markStarted(address: String) {
+            val name = findInterfaceName(address)
+            interfaceName = name
+            rxBase = if (name != null) readCounter(name, true) else 0L
+            txBase = if (name != null) readCounter(name, false) else 0L
+            startedAt = System.currentTimeMillis()
+        }
+
+        private fun resetStats() {
+            startedAt = 0L
+            interfaceName = null
+            rxBase = 0L
+            txBase = 0L
+        }
+
+        private fun findInterfaceName(address: String): String? {
+            return try {
+                val interfaces = NetworkInterface.getNetworkInterfaces() ?: return null
+                for (iface in Collections.list(interfaces)) {
+                    for (inet in Collections.list(iface.inetAddresses)) {
+                        if (inet.hostAddress == address) return iface.name
+                    }
+                }
+                null
+            } catch (_: Throwable) {
+                null
+            }
+        }
+
+        private fun readCounter(name: String, rx: Boolean): Long {
+            return try {
+                val traffic = if (rx) TrafficStats.getRxBytes(name) else TrafficStats.getTxBytes(name)
+                if (traffic != TrafficStats.UNSUPPORTED.toLong()) {
+                    traffic
+                } else {
+                    val file = if (rx) "rx_bytes" else "tx_bytes"
+                    File("/sys/class/net/$name/statistics/$file").readText().trim().toLong()
+                }
+            } catch (_: Throwable) {
+                0L
+            }
+        }
     }
 
     private var tunFd: Int? = null
     private val started = AtomicBoolean(false)
     private var worker: Thread? = null
+    @Volatile private var runToken = 0
 
     private val protectController = object : DialerController {
         override fun protectFd(fd: Long): Boolean = protect(fd.toInt())
@@ -38,6 +109,7 @@ class XrayTunnelService : VpnService() {
 
     override fun onCreate() {
         super.onCreate()
+        currentInstance = this
         LibXray.registerDialerController(protectController)
         LibXray.registerListenerController(protectController)
     }
@@ -64,9 +136,15 @@ class XrayTunnelService : VpnService() {
     }
 
     private fun startTunnel(configJson: String) {
-        if (!started.compareAndSet(false, true)) return
+        if (!started.compareAndSet(false, true)) {
+            lastError = "tunnel already active"
+            return
+        }
+        val token = ++runToken
         lastError = null
+        starting = true
         worker = Thread {
+            var pendingFd: ParcelFileDescriptor? = null
             try {
                 val builder = Builder()
                     .setSession("PoolNet")
@@ -81,8 +159,14 @@ class XrayTunnelService : VpnService() {
                 // Xray's outbound sockets are protected by the controller below.
                 // The app itself stays inside the tunnel so a post-start probe
                 // measures the same path the user's browser will take.
-                val pfd = builder.establish() ?: throw IllegalStateException("VPN interface was not established")
-                val fd = pfd.detachFd()
+                pendingFd = builder.establish() ?: throw IllegalStateException("VPN interface was not established")
+                if (token != runToken) return@Thread
+                val fd = pendingFd.detachFd()
+                pendingFd = null
+                if (token != runToken) {
+                    closeFd(fd)
+                    return@Thread
+                }
                 tunFd = fd
 
                 val root = JSONObject(configJson)
@@ -115,21 +199,48 @@ class XrayTunnelService : VpnService() {
                     .put("method", "runXray")
                     .put("payload", JSONObject().put("xrayJson", root.toString()))
                 val response = JSONObject(LibXray.invoke(request.toString()))
+                if (token != runToken) {
+                    stopXray()
+                    if (tunFd == fd) tunFd = null
+                    closeFd(fd)
+                    return@Thread
+                }
                 if (!response.optBoolean("success")) {
                     throw IllegalStateException(response.optString("error", "Xray failed to start"))
                 }
                 running = true
+                markStarted("10.111.222.1")
                 updateNotification("Подключено")
             } catch (error: Throwable) {
-                lastError = error.message ?: error.javaClass.simpleName
-                running = false
-                stopTunnel()
+                if (token == runToken) {
+                    lastError = error.message ?: error.javaClass.simpleName
+                    running = false
+                    stopTunnel()
+                }
+            } finally {
+                try { pendingFd?.close() } catch (_: Throwable) {}
+                if (token == runToken) starting = false
             }
         }.also { it.start() }
     }
 
     private fun stopTunnel() {
+        runToken += 1
+        stopping = true
+        starting = false
         running = false
+        resetStats()
+        stopXray()
+        try { LibXray.resetDNS() } catch (_: Throwable) {}
+        tunFd?.let { closeFd(it) }
+        tunFd = null
+        started.set(false)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+        stopping = false
+    }
+
+    private fun stopXray() {
         try {
             LibXray.invoke(
                 JSONObject()
@@ -140,14 +251,10 @@ class XrayTunnelService : VpnService() {
             )
         } catch (_: Throwable) {
         }
-        try { LibXray.resetDNS() } catch (_: Throwable) {}
-        tunFd?.let { fd ->
-            try { ParcelFileDescriptor.adoptFd(fd).close() } catch (_: Throwable) {}
-        }
-        tunFd = null
-        started.set(false)
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
+    }
+
+    private fun closeFd(fd: Int) {
+        try { ParcelFileDescriptor.adoptFd(fd).close() } catch (_: Throwable) {}
     }
 
     override fun onRevoke() {
@@ -156,7 +263,12 @@ class XrayTunnelService : VpnService() {
     }
 
     override fun onDestroy() {
-        if (running) stopTunnel()
+        // If a new service instance already owns the tunnel, an old instance
+        // must not tear it down during the replacement race.
+        if (currentInstance === this) {
+            if (running || starting || stopping) stopTunnel()
+            currentInstance = null
+        }
         super.onDestroy()
     }
 

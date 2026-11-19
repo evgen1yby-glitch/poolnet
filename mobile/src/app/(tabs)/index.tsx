@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ConnectOrb, type ConnectOrbPhase } from '@/components/connect-orb';
 import { Flag } from '@/components/flag';
+import { SessionStats } from '@/components/session-stats';
 
 import { AppBar, Eyebrow, Lead, Pill, ProfileButton, Screen, Title } from '@/components/ui';
 import { countryName } from '@/lib/format';
@@ -16,6 +17,8 @@ export default function HomeScreen() {
   const t = useT();
   const router = useRouter();
   const country = useAppStore((state) => state.country);
+  const activeCountry = useAppStore((state) => state.activeCountry);
+  const rotation = useAppStore((state) => state.rotation);
   const language = useAppStore((state) => state.language);
   const connection = useAppStore((state) => state.connection);
   const connectionError = useAppStore((state) => state.connectionError);
@@ -37,6 +40,7 @@ export default function HomeScreen() {
           ? 'error'
           : 'idle';
   const selectedName = country ? countryName(country.cc, language) : t('home.country.auto');
+  const activeName = activeCountry ? countryName(activeCountry.cc, language) : selectedName;
 
   const title = connected
     ? t('home.title.protected')
@@ -49,14 +53,20 @@ export default function HomeScreen() {
           : t('home.title.ready');
 
   const subtitle = connected
-    ? t('home.sub.protected', { country: selectedName })
-    : reconnecting
-      ? t('home.sub.switching')
-      : connecting
-        ? t('home.sub.connecting')
-        : failed
-          ? connectionError || t('home.sub.failed')
-          : t('home.sub.ready');
+    ? t('home.sub.protected', { country: activeName })
+    : busy && rotation
+      ? t('home.sub.rotating', {
+          country: countryName(rotation.countryCc, language),
+          attempt: rotation.hostIndex,
+          total: rotation.hostTotal,
+        })
+      : reconnecting
+        ? t('home.sub.switching')
+        : connecting
+          ? t('home.sub.connecting')
+          : failed
+            ? connectionError || t('home.sub.failed')
+            : t('home.sub.ready');
 
   const orbLabel = connected
     ? t('home.orb.protected')
@@ -134,6 +144,7 @@ export default function HomeScreen() {
           <Ionicons name="chevron-forward" size={18} color={theme.dim} />
         </Pressable>
 
+        <SessionStats />
       </Screen>
     </>
   );

@@ -12,14 +12,19 @@ export function TunnelSupervisor() {
     if (connection !== 'connected') return;
     let cancelled = false;
     let checking = false;
+    let failures = 0;
 
     const check = async () => {
       if (cancelled || checking || useAppStore.getState().connection !== 'connected') return;
       checking = true;
       try {
         await verifyTunnel(4000);
+        failures = 0;
       } catch {
-        if (!cancelled) await useAppStore.getState().recover();
+        failures += 1;
+        // A single slow probe is usually a transient packet loss. Reconnecting
+        // after every one caused unnecessary tunnel churn; require two.
+        if (!cancelled && failures >= 2) await useAppStore.getState().recover();
       } finally {
         checking = false;
       }

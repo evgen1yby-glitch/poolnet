@@ -27,8 +27,6 @@ PAGES = [
     ("/en/vpn", "0.7", "weekly"),
     ("/verify", "0.6", "monthly"),
     ("/en/verify", "0.5", "monthly"),
-    ("/check", "0.5", "monthly"),
-    ("/en/check", "0.4", "monthly"),
     ("/status", "0.6", "daily"),
     ("/en/status", "0.5", "daily"),
     ("/legal", "0.4", "yearly"),

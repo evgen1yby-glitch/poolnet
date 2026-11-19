@@ -63,6 +63,29 @@ export function formatRetry(seconds: number, lang: 'ru' | 'en' = 'ru'): string {
   return `${minutes} мин`;
 }
 
+export function formatDuration(seconds: number): string {
+  const safe = Math.max(0, Math.floor(Number.isFinite(seconds) ? seconds : 0));
+  const hours = Math.floor(safe / 3600);
+  const minutes = Math.floor((safe % 3600) / 60);
+  const secs = safe % 60;
+  return [hours, minutes, secs].map((part) => String(part).padStart(2, '0')).join(':');
+}
+
+export function formatBytes(bytes: number, lang: 'ru' | 'en' = 'ru'): string {
+  const safe = Math.max(0, Number.isFinite(bytes) ? bytes : 0);
+  const units = lang === 'en' ? ['B', 'KB', 'MB', 'GB', 'TB'] : ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'];
+  let value = safe;
+  let index = 0;
+  while (value >= 1024 && index < units.length - 1) {
+    value /= 1024;
+    index += 1;
+  }
+  if (index === 0) return `${Math.round(value)} ${units[index]}`;
+  const rounded = value >= 100 ? Math.round(value) : Math.round(value * 10) / 10;
+  const text = String(rounded).replace('.', lang === 'ru' ? ',' : '.');
+  return `${text} ${units[index]}`;
+}
+
 export function formatDate(iso: string, lang: 'ru' | 'en' = 'ru'): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '—';

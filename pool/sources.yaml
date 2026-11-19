@@ -114,6 +114,7 @@ sources:
     url: https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/refs/heads/main/socks5-proxy-list-by-EbraSha.txt
     format: plain
     protocol: socks5
+    enabled: false # 2026-11-19: 404, dead URL
   - id: r00tee-socks5
     url: https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt
     format: plain
@@ -689,6 +690,7 @@ sources:
     url: https://raw.githubusercontent.com/MrMarble/proxy-list/HEAD/all.txt
     format: plain
     protocol: http
+    enabled: false # 2026-11-19: 404, dead URL
   - id: proxmint-branch-socks5
     url: https://raw.githubusercontent.com/proxmint/free-proxy-list/HEAD/proxies/socks5.txt
     format: plain
@@ -802,18 +804,23 @@ sources:
   - id: advname-1
     url: https://advanced.name/freeproxy?page=1
     format: advname
+    enabled: false # 2026-11-19: Cloudflare 403 challenge page, 0 parsed
   - id: advname-2
     url: https://advanced.name/freeproxy?page=2
     format: advname
+    enabled: false
   - id: advname-3
     url: https://advanced.name/freeproxy?page=3
     format: advname
+    enabled: false
   - id: advname-4
     url: https://advanced.name/freeproxy?page=4
     format: advname
+    enabled: false
   - id: advname-5
     url: https://advanced.name/freeproxy?page=5
     format: advname
+    enabled: false
 
   # ---------------- roundproxies.com (public JSON API, 8x500) ----------------
   # /api/get-free-proxies returns the whole pool the "Download all" button
@@ -843,3 +850,182 @@ sources:
   - id: roundproxies-api-8
     url: https://roundproxies.com/api/get-free-proxies/?limit=500&page=8
     format: json
+
+  # ---------------- Discover sweep 2026-11-19: new SOCKS5 sources ----------------
+  # Verified live 2026-11-19: each URL returns ip:port (or socks5://ip:port)
+  # lines, public IPv4, parseable by the existing plain parser. The downstream
+  # socks5 handshake check filters any HTTP/80 entries that slip into the
+  # socks5-labelled files (some CN repos mix protocols under one file name).
+  # Owners here are disjoint from the existing registry.
+
+  # --- Large aggregates (>=1000 lines) ---
+  - id: noctiro-getproxy-socks5 # 16378 lines, refreshed daily
+    url: https://raw.githubusercontent.com/Noctiro/getproxy/master/file/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: meid1981101-socks5-3 # 8991 lines, VPSLab-Cloud-style CN aggregate
+    url: https://raw.githubusercontent.com/meid1981101-ui/SOCKS5-3/main/all.txt
+    format: plain
+    protocol: socks5
+  - id: anonym0uswork1221-socks5 # 5976 lines
+    url: https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt
+    format: plain
+    protocol: socks5
+  - id: runoneall-raw-socks5 # 5523 lines, socks5:// scheme, cron-updated
+    url: https://raw.githubusercontent.com/runoneall/free-socks5-proxy-api/main/data/raw.txt
+    format: plain
+    protocol: socks5
+  - id: runoneall-canuse-socks5 # 225 lines, pre-checked subset
+    url: https://raw.githubusercontent.com/runoneall/free-socks5-proxy-api/main/data/canuse.txt
+    format: plain
+    protocol: socks5
+  - id: shubhamshendre-socks5 # 4251 lines
+    url: https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: z3a4-socks5 # 3470 lines, unchecked tier
+    url: https://raw.githubusercontent.com/z3a4/free-proxy-list/main/proxies/unchecked/socks5-proxies.txt
+    format: plain
+    protocol: socks5
+  - id: komutan234-socks5 # 3414 lines, 2-min upstream
+    url: https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: tianndev-socks5 # 3289 lines
+    url: https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: meid1981101-socks5 # 2668 lines, distinct from VPSLabCloud repo
+    url: https://raw.githubusercontent.com/meid1981101-ui/SOCKS5/main/all.txt
+    format: plain
+    protocol: socks5
+  - id: proxyscraper-socks5 # 2216 lines, distinct from ProxyScrape
+    url: https://raw.githubusercontent.com/ProxyScraper/ProxyScraper/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: fusionproxies-socks5 # 1906 lines
+    url: https://raw.githubusercontent.com/FusionProxies/free-proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: dinoz0rg-socks5 # 1264 lines, checked
+    url: https://raw.githubusercontent.com/dinoz0rg/proxy-list/main/checked_proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: kangproxy-socks5 # 710 lines, jsdelivr mirror
+    url: https://cdn.jsdelivr.net/gh/officialputuid/KangProxy@main/socks5/socks5.txt
+    format: plain
+    protocol: socks5
+
+  # --- Medium (100-999 lines) ---
+  - id: dahono-socks5 # 563 lines
+    url: https://raw.githubusercontent.com/Dahono-com/free-proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: meid1981101-socks5-2 # 544 lines
+    url: https://raw.githubusercontent.com/meid1981101-ui/SOCKS5-2/main/all.txt
+    format: plain
+    protocol: socks5
+  - id: clearproxy-socks5 # 545 lines, checked upstream
+    url: https://raw.githubusercontent.com/ClearProxy/checked-proxy-list/main/socks5/raw/all.txt
+    format: plain
+    protocol: socks5
+  - id: ahahaabas-socks5 # 500 lines
+    url: https://raw.githubusercontent.com/ahahaabas/free-socks5-proxy-list/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: moleway-socks5 # 434 lines
+    url: https://raw.githubusercontent.com/Moleway/Free-Proxy-List/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: nikolait-socks5-working # 386 lines, lastUpdated field in repo
+    url: https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/socks5_working.txt
+    format: plain
+    protocol: socks5
+  - id: cmahmud-proxies-socks5 # 356 lines, "alive" checked
+    url: https://raw.githubusercontent.com/cmahmud/proxies/main/alive/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: soraaaid-socks5 # 292 lines
+    url: https://raw.githubusercontent.com/SoraaaID/proxy-scraper/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: mmpx12-socks5 # 279 lines
+    url: https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: b4rc0de-tm-socks5 # 257 lines
+    url: https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/SOCKS5.txt
+    format: plain
+    protocol: socks5
+  - id: rdavydov-socks5 # 247 lines
+    url: https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: proxylistto-socks5 # 195 lines (2023, live but stale)
+    url: https://raw.githubusercontent.com/proxylist-to/proxy-list/main/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: yakumo-socks5 # 118 lines, checked global
+    url: https://raw.githubusercontent.com/elliottophellia/yakumo/master/results/socks5/global/socks5_checked.txt
+    format: plain
+    protocol: socks5
+  - id: hanknovic-proxyclean-socks5 # 100 lines, #cc comment tails
+    url: https://raw.githubusercontent.com/HankNovic/ProxyClean/main/SOCKS5_RAW.txt
+    format: plain
+    protocol: socks5
+  - id: fmw86-socks5-alive # 501 lines, alive subset
+    url: https://raw.githubusercontent.com/fmw86/free-proxy-pool/main/socks5_alive.txt
+    format: plain
+    protocol: socks5
+  - id: fmw86-socks5-fast # 114 lines, fast subset
+    url: https://raw.githubusercontent.com/fmw86/free-proxy-pool/main/socks5_fast.txt
+    format: plain
+    protocol: socks5
+  - id: fmw86-socks5-residential # 143 lines, residential subset
+    url: https://raw.githubusercontent.com/fmw86/free-proxy-pool/main/socks5_residential.txt
+    format: plain
+    protocol: socks5
+
+  # --- Small (<100 lines, still verified live) ---
+  - id: 7and1-socks5 # 47 lines
+    url: https://raw.githubusercontent.com/7and1/free-proxy-list/main/proxies/protocols/socks5/data.txt
+    format: plain
+    protocol: socks5
+  - id: webunblocker-socks5 # 55 lines
+    url: https://raw.githubusercontent.com/webunblocker/free-proxy-list/main/proxies/protocols/socks5/data.txt
+    format: plain
+    protocol: socks5
+  - id: kae-lodin-socks5 # 56 lines
+    url: https://raw.githubusercontent.com/kael-odin/awesome-free-proxy-list/main/proxies/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: riommo-socks5 # 33 lines
+    url: https://raw.githubusercontent.com/RioMMO/ProxyFree/main/SOCKS5.txt
+    format: plain
+    protocol: socks5
+  - id: vakhov-fresh-socks5 # 21 lines, updated every 5-20 min
+    url: https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/socks5.txt
+    format: plain
+    protocol: socks5
+  - id: wanted000-socks5 # 12 lines
+    url: https://raw.githubusercontent.com/Wanted000/Socks5-Proxies/main/socks5.txt
+    format: plain
+    protocol: socks5
+
+  # --- JSON sources (non-geonode shapes, parsed by src/parse/json.ts) ---
+  # charlespikachu: data[].protocol="Socks5" (5 529 socks5 of 11 782 total,
+  # includes http/https; the parser keeps the declared protocol per row).
+  - id: charlespikachu-socks5-json
+    url: https://raw.githubusercontent.com/CharlesPikachu/freeproxy/master/proxies.json
+    format: json
+    protocol: socks5
+  # mauricegift: proxies[] = ["ip:port", ...] (492 socks5 entries).
+  - id: mauricegift-socks5-json
+    url: https://raw.githubusercontent.com/mauricegift/free-proxies/main/files/socks5.json
+    format: json
+    protocol: socks5
+  # proxytee: proxies[].proxy_type / types[].type (25 socks5 of 46 total).
+  - id: proxytee-socks5-json
+    url: https://app.proxytee.com/static/free-proxies.json
+    format: json
+    protocol: socks5
