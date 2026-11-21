@@ -1,0 +1,19 @@
+{
+  "generatedAt": 1795260265949,
+  "generatedIso": "2026-11-21T11:24:25.949Z",
+  "runId": null,
+  "pipeline": "fetch->validate(matrix)->merge->publish",
+  "store": "fs",
+  "counts": {
+    "poolSize": 1747,
+    "freshPool": 1747,
+    "afterSubnetCap": 1747,
+    "published": 1274,
+    "pendingNextRun": 470,
+    "storeRecords": 1747
+  },
+  "byProtocol": {
+    "http": 873,
+    "socks5": 401
+  }
+}
